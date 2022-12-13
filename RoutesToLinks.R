@@ -1,5 +1,6 @@
 source("ex1prog_page.R")
 source("realdataROC_1_page.R")
+source("conditionalAUCbig_page.R")
 
 router = make_router(
   route("/", home_page),

@@ -3,6 +3,9 @@
 library(rBeta2009)
 source("ShinyHelperFunctions.R")
 
+# NOTE: will give same results in the beginning, but will change overtime.
+addTaskCallback(function(...) {set.seed(0);TRUE})
+
 page_realdataROC_1 = div(
   titlePanel("Section 3.2: realdataROC"),
   sidebarLayout(
@@ -24,7 +27,10 @@ page_realdataROC_1 = div(
                 value = "14, 11, 29, 28, 18"),
       numericInput(inputId = "realdataROC_p",
                    tags$p('P', style = "font-size: 90%;"),
-                   value = 0.5)
+                   value = 0.5),
+      numericInput(inputId = "realdataROC_ngrid",
+                   tags$p('The size of the grid', style = "font-size: 90%;"),
+                   value = 100, min = 1),
     ),
     # Main panel for displaying outputs ----
     mainPanel(
@@ -33,6 +39,7 @@ page_realdataROC_1 = div(
                   tabPanel("Calculator_1", verbatimTextOutput("realdataROC_value_1")),
                   tabPanel("Calculator_2", verbatimTextOutput("realdataROC_value_2")),
                   tabPanel("Calculator_3", verbatimTextOutput("realdataROC_value_3")),
+                  tabPanel("Calculator_4", verbatimTextOutput("realdataROC_value_4")),
       )
     )
   )
@@ -127,22 +134,14 @@ post_distribution_c_opt = function(nMontepost, fND, fD, p){
 #6. this part of the program computes RB(i|fD, fND) i=1,...,m, c_opt(D, fND), Pl(fD, fND) and 
 # posterior content of Pl(D, fND) printing out results as well
 
-# BUG TESTING
-#fND="25, 16, 18, 21, 20"
-#fD="14,11, 29, 28, 18"
-#nMonteprior=100000
-#nMontepost=100000 # used later I think
-#p = 0.5
-
-#testing = realdataROC_placeholder_1(nMonteprior, nMontepost, fND, fD, p)
-
-
 # need to change the placeholder name... lol
 realdataROC_placeholder_1 = function(nMonteprior, nMontepost, fND, fD, p){
-  fND = convert_char_to_vector(fND)
-  fD = convert_char_to_vector(fD)
-  if (!(valid_vector(fND) == TRUE & valid_vector(fD) == TRUE)) {
-    return("Error: Either fND or fD provide invalid responses.")
+  if (!is.double(fND) & !is.double(fD)) {
+    fND = convert_char_to_vector(fND)
+    fD = convert_char_to_vector(fD)
+    if (!(valid_vector(fND) == TRUE & valid_vector(fD) == TRUE)) {
+      return("Error: Either fND or fD provide invalid responses.")
+    }
   }
   if (length(fND) == length(fD)) {
     m = length(fND)
@@ -161,5 +160,57 @@ realdataROC_placeholder_1 = function(nMonteprior, nMontepost, fND, fD, p){
                  "postPlfDfND" = postPlfDfND)
   return(newlist)
 }
+
+#7. estimtating FN(c_opt(f_ND,f_D)), FP(c_opt(f_ND,f_D)) and ERROR(c_opt(f_ND,f_D))
+
+#NOTE TO SELF: I have a feeling these variables can be changed depending on the research
+
+#fND = "25, 16, 18, 21, 20"
+#fD = "14, 11, 29, 28, 18"
+#nMonteprior=100000
+#nMontepost=100000 # used later I think
+#p = 0.5
+#ngrid = 100
+
+#test = realdataROC_placeholder_2(ngrid, nMonteprior, nMontepost, fND, fD, p)
+#test
+
+realdataROC_placeholder_2 = function(ngrid, nMonteprior, nMontepost, fND, fD, p){
+  grid = (c(1:(ngrid+1))-1)/ngrid
+  # making the assumption this function isn't dependent on anything else -- MIGHT BE SOURCE OF FUTURE BUGS
+  fND = convert_char_to_vector(fND)
+  fD = convert_char_to_vector(fD)
+  if (length(fND) == length(fD)){
+    m = length(fND)
+    results = realdataROC_placeholder_1(nMonteprior, nMontepost, fND, fD, p)
+    #note: these two are from monte carlo; the variable names were becoming too long
+    prior_result = prior_monte_carlo(m, ngrid, results, nMonteprior, p)
+    post_result = post_monte_carlo(m, ngrid, results, nMontepost, fND, fD, p)
+    
+    RBFNc_opt = post_result$FNc_optpost/prior_result$FNc_optprior
+    index = which.max(RBFNc_opt) # do we need this?
+    FNc_optest = (grid[index]+grid[index+1])/2
+    FPc_optpost = post_result$FPc_optpost/nMontepost
+    #sum(FPc_optpost)
+    RBFPc_opt = post_result$FPc_optpost/prior_result$FPc_optprior
+    index = which.max(RBFPc_opt) # do we need this?
+    FPc_optest = (grid[index]+grid[index+1])/2
+    ERRORc_optpost = post_result$ERRORc_optpost/nMontepost
+    #sum(ERRORc_optpost)
+    RBERRORc_opt = ERRORc_optpost/prior_result$ERRORc_optprior
+    index = which.max(RBERRORc_opt) # do we need this?
+    ERRORc_optest = (grid[index]+grid[index+1])/2
+    #outputs
+    newlist = list("c_optfDfND" = results$c_optfDfND, "PlfDfND" = results$PlfDfND, 
+                   "postPlfDfND" = results$postPlfDfND, "FNc_optest" = FNc_optest,
+                   "FPc_optest" = FPc_optest, "ERRORc_optest" = ERRORc_optest)
+    return(newlist)
+  } else {
+    return("Invalid fND and fD; their lengths must be equal.")
+  }
+}
+
+
+
 
 
