@@ -10,7 +10,7 @@ convert_char_to_vector = function(x){
   x = str_replace_all(x, fixed(" "), "") # removes all spaces
   x = as.integer(strsplit(x, ",")[[1]]) # converts to vector
   x = x[!is.na(x)]
-  return(x)
+  return(as.double(x))
 }
 
 valid_vector = function(x){

@@ -22,10 +22,7 @@ source("RoutesToLinks.R")
 
 server = function(input, output, session) {
   router$server(input, output, session)
-  #may not use this due to weird formatting issues
-  output$values = renderPrint({
-    prior_distribution_c_opt(input$nMonteprior, input$fND, input$fD, input$p)
-  })
+  # FILES FROM ex_1prog_values
   output$ex1_prog_values = renderPrint({
     ex1prog(input$w, input$q)
   })
@@ -34,6 +31,17 @@ server = function(input, output, session) {
     plot(ex1prog_data$p, ex1prog_data$ROC1, type = "l", lty = 1, ylab = "ROC", xlab = "p",
          main = "template title")
     lines(ex1prog_data$p, ex1prog_data$ROC2, lty=2)
+  })
+  # FILES FROM realdataROC
+  output$realdataROC_value_1 = renderPrint({
+    prior_distribution_c_opt(input$nMonteprior, input$fND, input$fD, input$realdataROC_p)
+  })
+  output$realdataROC_value_2 = renderPrint({
+    post_distribution_c_opt(input$nMontepost, input$fND, input$fD, input$realdataROC_p)
+  })
+  output$realdataROC_value_3 = renderPrint({
+    realdataROC_placeholder_1(input$nMonteprior, input$nMontepost, input$fND, 
+                              input$fD, input$realdataROC_p)
   })
 }
 
