@@ -1,0 +1,40 @@
+ul {
+    background-color: #80a2ff;
+      display: flex;
+    justify-content: flex-start;
+    list-style-type: none;
+  }
+  
+  ul li a {
+    color: #c8e7f5;
+      display: block;
+    font-size: 1.5rem;
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+    text-decoration: none;
+    transition: all, 0.1s;
+  }
+  
+   /* unvisited link */
+a:link {
+    color: #1c0583;
+  }
+  
+  /* visited link */
+  a:visited {
+    color: #1c0583;
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color:#5b3dda ;
+  }
+  
+  /* selected link */
+  a:active {
+    color: #de68b7;
+  } 
+  
+  ul li a:hover {
+    background-color: #3b33d3;
+      color:  #ffffff;
+  }

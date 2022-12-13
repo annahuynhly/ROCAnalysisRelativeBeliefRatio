@@ -14,6 +14,7 @@ router = make_router(
 )
 
 ui = fluidPage(
+  theme = "main.css",
   tags$ul(
     tags$li(a(href = route_link("/"), "Home Page")),
     tags$li(a(href = route_link("conditionalROC_1"), "Section 3.2: conditionalROC")),
