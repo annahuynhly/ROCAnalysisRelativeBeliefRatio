@@ -1,18 +1,3 @@
-
-# Working directory for now; subject to change!
-setwd("C:\\Users\\AnnaH\\OneDrive\\Desktop\\Stats RA\\ShinyWebpage")
-
-library(shiny)
-library(shiny.router)
-
-# Other dependencies
-library(rBeta2009)
-source("ShinyHelperFunctions.R")
-source("pages_that_need_updating.R")
-source("RoutesToLinks.R")
-
-#The following is to ensure we obtain the same result EVERY time!
-
 # TODO LIST:
 # conditionalROC.txt -> CANNOT RUN; waiting for fixed bugs
 # conditiononAUCbig.txt -> Need review for plot titles & sanity checks
@@ -21,13 +6,29 @@ source("RoutesToLinks.R")
 # realdataROC.txt -> need to sanity check math & waiting for fixed bugs
 # ROC.txt -> some error here?
 
-#testing to see if we can put the functions out
+# Working directory for now; subject to change!
+setwd("C:\\Users\\AnnaH\\OneDrive\\Desktop\\Stats RA\\ShinyWebpage")
 
+# Libraries for website creation
+library(shiny)
+library(shiny.router)
+
+# Other libraries used for the code
+library(rBeta2009)
+
+# Accessing other R-codes (for proper coding structure)
+source("ShinyHelperFunctions.R")
+source("RoutesToLinks.R")
+
+# TODO: ensure we obtain the same result EVERY time!
+# Might be impossible within R.
+
+# The server (inputs and outputs)
 server = function(input, output, session) {
   router$server(input, output, session)
   # FILES FROM conditionalAUCbig
   output$conditionalAUCbig_values = renderPrint({
-    # NOTE: shows all crit values; might be an issue since it's long lol
+    # NOTE: shows all crit values; might need to change issue since code is quite long
     conditionalAUCbig(input$conditionalAUCbig_nMonte, input$conditionalAUCbig_fND, 
                       input$conditionalAUCbig_fD)
   })
@@ -63,7 +64,15 @@ server = function(input, output, session) {
     realdataROC_placeholder_2(input$realdataROC_ngrid, input$nMonteprior, input$nMontepost, 
                               input$fND, input$fD, input$realdataROC_p)
   })
+  # FILES FROM ROC
+  # inputs: pND, pD, nND, nD
+  output$ROC_value_1 = renderPrint({
+    simulate_data_ROC(input$ROC_pND, input$ROC_pD, input$ROC_nND, input$ROC_nD)
+  })
+  
 }
 
+
+# Running the actual website
 shinyApp(ui, server)
 

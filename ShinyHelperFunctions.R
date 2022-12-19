@@ -4,11 +4,13 @@ library(stringr)
 
 # Helper Functions for: realdataROC_1_page.R
 
+# NEED TO IMPROVE THE FOLLOWING FUNCTION
 convert_char_to_vector = function(x){
   # This function turns characters, such as "1, 2, 3", 
   # into a vector: c(1, 2, 3)
   x = str_replace_all(x, fixed(" "), "") # removes all spaces
-  x = as.integer(strsplit(x, ",")[[1]]) # converts to vector
+  x = as.numeric(strsplit(x, ",")[[1]]) # converts to vector
+  #x = as.integer(strsplit(x, ",")[[1]]) # converts to vector
   x = x[!is.na(x)]
   return(as.double(x))
 }

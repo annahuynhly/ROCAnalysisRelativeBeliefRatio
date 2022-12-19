@@ -1,6 +1,14 @@
-source("ex1prog_page.R")
-source("realdataROC_1_page.R")
-source("conditionalAUCbig_page.R")
+# Source all of the different pages.
+# They are ordered.
+
+source("./pages/home_page.R")
+source("./pages/conditionalROC_1_page.R")
+source("./pages/conditionalAUCbig_page.R")
+source("./pages/ex1prog_page.R")
+source("./pages/readdata_page.R")
+source("./pages/realdataROC_1_page.R")
+source("./pages/ROC_page.R")
+source("./pages/contact_page.R")
 
 router = make_router(
   route("/", home_page),
