@@ -2,6 +2,7 @@
 
 library(stringr)
 
+
 # Helper Functions for: realdataROC_1_page.R
 
 # NEED TO IMPROVE THE FOLLOWING FUNCTION
@@ -29,7 +30,7 @@ valid_vector = function(x){
   }
 }
 
-# Helper functions for realdataROC_placeholder_2
+# Helper functions for realdataROC_placeholder_2 -> found in realdataROC
 
 # Below is supposed to be a helper function to make the code look neater long-term
 prior_monte_carlo = function(m, ngrid, results, nMonteprior, p){
@@ -86,6 +87,28 @@ post_monte_carlo = function(m, ngrid, results, nMontepost, fND, fD, p){
                  "ERRORc_optpost" = ERRORc_optpost)
   return(newlist)
 }
+
+##############################################
+# Helper functions for ROC_page_R
+
+generate_A_and_grid = function(L){
+  # L= number of subintervals of [0,1] for estimating densities of continuous quantities 
+  A = rep(0,L+1)
+  for (i in 1:(L+1)) {
+    A[i] = (i-1)/L
+  }
+  grid = rep(0,L)
+  for (i in 1:L) {
+    grid[i] = (i-1/2)/L
+  }
+  newlist = list("A" = A, "grid" = grid)
+  return(newlist)
+}
+
+##############################################
+# The following are specifically for ROC_compute_some_outputs_2
+
+
 
 
 

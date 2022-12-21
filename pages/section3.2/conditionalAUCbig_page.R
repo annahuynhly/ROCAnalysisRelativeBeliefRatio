@@ -28,7 +28,6 @@ page_conditionalAUCbig = div(
   )
 )
 
-
 conditionalAUCbig = function(nmonte, fND, fD){
   # NOTE: making the assumption that this isn't going to be a re-used helper function
   fND = convert_char_to_vector(fND)

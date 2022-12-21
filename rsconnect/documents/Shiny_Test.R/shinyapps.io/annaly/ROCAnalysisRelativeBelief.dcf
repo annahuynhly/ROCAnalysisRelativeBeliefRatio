@@ -1,0 +1,13 @@
+name: ROCAnalysisRelativeBelief
+title: ROCAnalysisRelativeBelief
+username:
+account: annaly
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7928413
+bundleId: 6662060
+url: https://annaly.shinyapps.io/ROCAnalysisRelativeBelief/
+when: 1671646125.40858
+lastSyncTime: 1671646125.40859
+asMultiple: FALSE
+asStatic: FALSE

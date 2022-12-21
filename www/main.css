@@ -1,40 +1,46 @@
+
 ul {
-    background-color: #80a2ff;
-      display: flex;
-    justify-content: flex-start;
+    background-color: #05386B;
     list-style-type: none;
   }
   
-  ul li a {
-    color: #c8e7f5;
-      display: block;
-    font-size: 1.5rem;
-    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
-    text-decoration: none;
-    transition: all, 0.1s;
-  }
+.navbar-default {
+    background-color: #564F6F;
+}
+
+.navbar-default .navbar-brand {
+  color: #D1D7E0;}
+
+.content-wrapper, .right-side {
+  background-color: rgb(255,0,0);
+}
+
   
+body {
+  background-color: #2D283E;
+}
+  
+h1, p, div {
+  color: #D1D7E0;
+}
+
+
    /* unvisited link */
 a:link {
-    color: #1c0583;
+    color: #2E9CCA;
   }
   
   /* visited link */
   a:visited {
-    color: #1c0583;
+    color: #2E9CCA;
   }
   
   /* mouse over link */
   a:hover {
-    color:#5b3dda ;
+    color:#FFFFFF ;
   }
   
   /* selected link */
   a:active {
     color: #de68b7;
   } 
-  
-  ul li a:hover {
-    background-color: #3b33d3;
-      color:  #ffffff;
-  }

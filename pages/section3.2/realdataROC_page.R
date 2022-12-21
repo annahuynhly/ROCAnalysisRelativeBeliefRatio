@@ -6,7 +6,7 @@ source("ShinyHelperFunctions.R")
 # NOTE: will give same results in the beginning, but will change overtime.
 addTaskCallback(function(...) {set.seed(0);TRUE})
 
-page_realdataROC_1 = div(
+page_realdataROC = div(
   titlePanel("Section 3.2: realdataROC"),
   sidebarLayout(
     # Sidebar panel for inputs ----
