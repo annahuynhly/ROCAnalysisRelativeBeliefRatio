@@ -1,6 +1,19 @@
 
 library(rBeta2009)
 
+################################################################
+# DESCRIPTION                                                  #
+################################################################
+
+conditionalAUCbig_description = div(
+  titlePanel("Page Description"),
+  p("Insert a description here!"),
+)
+
+################################################################
+# PAGE LOGIC                                                   #
+################################################################
+
 page_conditionalAUCbig = div(
   titlePanel("Section 3.2: conditionalROCbig"),
   sidebarLayout(
@@ -21,12 +34,17 @@ page_conditionalAUCbig = div(
     mainPanel(
       # OUTPUTTING THE VALUES
       tabsetPanel(type = "tabs",
+                  tabPanel("Description", conditionalAUCbig_description),
                   tabPanel("Calculator", verbatimTextOutput("conditionalAUCbig_values")),
                   tabPanel("Plot", plotOutput(outputId = "conditionalAUCbig_hist")),
       )
     )
   )
 )
+
+################################################################
+# MAIN FUNCTIONS                                               #
+################################################################
 
 conditionalAUCbig = function(nmonte, fND, fD){
   # NOTE: making the assumption that this isn't going to be a re-used helper function

@@ -1,6 +1,16 @@
-# File is ex1prog.R
 
-# Function related to the webpage on ex1prog.R
+################################################################
+# DESCRIPTION                                                  #
+################################################################
+
+ex1prog_description = div(
+  titlePanel("Page Description"),
+  p("Insert a description here!"),
+)
+
+################################################################
+# PAGE LOGIC                                                   #
+################################################################
 
 page_ex1prog = div(
   titlePanel("Section 3.2: ex1prog"),
@@ -20,6 +30,7 @@ page_ex1prog = div(
     mainPanel(
       # OUTPUTTING THE VALUES
       tabsetPanel(type = "tabs",
+                  tabPanel("Description", ex1prog_description),
                   tabPanel("Calculator", verbatimTextOutput("ex1_prog_values")),
                   tabPanel("Plot", plotOutput(outputId = "Test_Plot")),
       )
@@ -27,7 +38,9 @@ page_ex1prog = div(
   )
 )
 
-# Functions related to ex1prog.R
+################################################################
+# MAIN FUNCTIONS                                               #
+################################################################
 
 ex1prog = function(w, q){
   w = as.numeric(w) # these lines are to ensure that the values are numeric...

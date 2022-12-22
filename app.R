@@ -6,8 +6,9 @@
 # realdataROC.txt -> need to sanity check math & waiting for fixed bugs
 # ROC.txt -> some error here?
 
-# Working directory for now; subject to change!
-#setwd("C:\\Users\\AnnaH\\OneDrive\\Desktop\\Stats RA\\ShinyWebpage")
+################################################################
+# LIBRARIES                                                    #
+################################################################
 
 # Libraries for website creation
 library(shiny)
@@ -15,17 +16,12 @@ library(shiny)
 # Other libraries used for the code
 library(rBeta2009)
 
-# Accessing other R-codes (for proper coding structure)
+# Accessing other R-codes
 source("routes.R")
-#source("ShinyHelperFunctions.R")
-#source("./pages/section3.2/home_page.R")
-#source("./pages/section3.2/conditionalROC_page.R")
-#source("./pages/section3.2/conditionalAUCbig_page.R")
-#source("./pages/section3.2/ex1prog_page.R")
-#source("./pages/section3.2/readdata_page.R")
-#source("./pages/section3.2/realdataROC_page.R")
-#source("./pages/section3.2/ROC_page.R")
-#source("./pages/section3.2/contact_page.R")
+
+################################################################
+# FRONTEND                                                     #
+################################################################
 
 ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                  tabPanel("Home", home_page),
@@ -40,25 +36,25 @@ ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                             tabPanel("ROC", page_ROC)
                  ),
                  navbarMenu("Section 3.3",
-                            tabPanel("BinormalAUCEqualVariance", "placeholder page"),
-                            tabPanel("BinormalAUCUnequalVariance", "placeholder page"),
-                            tabPanel("BinormalCoptEqualVariance", "placeholder page"),
-                            tabPanel("BinormalCoptUnequalVariance", "placeholder page"),
-                            tabPanel("CoptPriorPrevalence", "placeholder page"),
-                            tabPanel("plotROC", "placeholder page")
+                            tabPanel("BinormalAUCEqualVariance", page_binormalAUCequalvariance),
+                            tabPanel("BinormalAUCUnequalVariance", page_binormalAUCunequalvariance),
+                            tabPanel("BinormalCoptEqualVariance", page_binormalcoptequalvariance),
+                            tabPanel("BinormalCoptUnequalVariance", page_binormalcoptunequalvariance),
+                            tabPanel("CoptPriorPrevalence", page_coptpriorprevalence),
+                            tabPanel("plotROC", page_plotROC)
                  ),
                  navbarMenu("Section 3.4",
-                            tabPanel("BetaPrior", "placeholder page"),
-                            tabPanel("BNPAUCFemales", "placeholder page"),
-                            tabPanel("BNPAUCMales", "placeholder page"),
-                            tabPanel("BNPcFixedMales", "placeholder page"),
-                            tabPanel("BNPCoptFemales", "placeholder page"),
-                            tabPanel("BNPCoptMales", "placeholder page"),
-                            tabPanel("BNPData", "placeholder page"),
-                            tabPanel("Empiricals", "placeholder page"),
-                            tabPanel("ForGammaPrior", "placeholder page"),
-                            tabPanel("Smoother", "placeholder page"),
-                            tabPanel("StoreBNPCoptFemales", "placeholder page")
+                            tabPanel("BetaPrior", page_betaprior),
+                            tabPanel("BNPAUCFemales", page_BNPAUCFemales),
+                            tabPanel("BNPAUCMales", page_BNPAUCMales),
+                            tabPanel("BNPcFixedMales", page_BNPcfixedMales),
+                            tabPanel("BNPCoptFemales", page_BNPcoptFemales),
+                            tabPanel("BNPCoptMales", page_BNPcoptMales),
+                            tabPanel("BNPData", page_BNPdata),
+                            tabPanel("Empiricals", page_empiricals),
+                            tabPanel("ForGammaPrior", page_itsforgammaprior),
+                            tabPanel("Smoother", page_smoother),
+                            tabPanel("StoreBNPCoptFemales", page_storeBNPcoptFemales)
                  ),
                  tabPanel("Contact", contact_page),
                  id = "navbarID",
@@ -66,7 +62,12 @@ ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                  #theme = "main.css"
 )
 
+################################################################
+# BACKEND                                                      #
+################################################################
+
 server <- function(input, output, session) {
+  # Making it so the tab changes when the user clicks to another tab
   observeEvent(session$clientData$url_hash, {
     currentHash <- utils::URLdecode(sub("#", "", session$clientData$url_hash))
     if(is.null(input$navbarID) || !is.null(currentHash) && currentHash != input$navbarID){
@@ -83,6 +84,10 @@ server <- function(input, output, session) {
       updateQueryString(pushQueryString, mode = "push", session)
     }
   }, priority = 0)
+  ################################################################
+  # SECTION 3.2                                                  #
+  ################################################################
+  # OUTPUTS FROM conditionalAUCbig
   output$conditionalAUCbig_values = renderPrint({
     # NOTE: shows all crit values; might need to change issue since code is quite long
     conditionalAUCbig(input$conditionalAUCbig_nMonte, input$conditionalAUCbig_fND, 
@@ -95,7 +100,9 @@ server <- function(input, output, session) {
     hist(conditionalAUCbig_results$crit, freq=F, ylab = "y-axis label", xlab = "x-axis label",
          main = "Placeholder Histogram Title", col = "#9fcbec", border = F)
   })
-  # FILES FROM ex_1prog_values
+  # OUTPUTS FROM conditionalROC
+  # ...
+  # OUTPUTS FROM ex_1prog
   output$ex1_prog_values = renderPrint({
     ex1prog(input$w, input$q)
   })
@@ -105,7 +112,9 @@ server <- function(input, output, session) {
          main = "template title")
     lines(ex1prog_data$p, ex1prog_data$ROC2, lty=2)
   })
-  # FILES FROM realdataROC
+  # OUTPUTS FROM readdata
+  # ...
+  # OUTPUTS FROM realdataROC
   output$realdataROC_value_1 = renderPrint({
     prior_distribution_c_opt(input$nMonteprior, input$fND, input$fD, input$realdataROC_p)
   })
@@ -120,15 +129,53 @@ server <- function(input, output, session) {
     realdataROC_placeholder_2(input$realdataROC_ngrid, input$nMonteprior, input$nMontepost, 
                               input$fND, input$fD, input$realdataROC_p)
   })
-  # FILES FROM ROC
-  # inputs: pND, pD, nND, nD
+  # OUTPUTS FROM ROC
   output$ROC_value_1 = renderPrint({
     simulate_data_ROC(input$ROC_pND, input$ROC_pD, input$ROC_nND, input$ROC_nD)
   })
   output$ROC_value_2 = renderPrint({
     ROC_compute_some_outputs_1(input$ROC_w, input$ROC_pND, input$ROC_pD)
   })
-  
+  ################################################################
+  # SECTION 3.3                                                  #
+  ################################################################
+  # OUTPUTS FROM binormalAUCequalvariance
+  # ...
+  # OUTPUTS FROM binormalAUCunequalvariance
+  # ...
+  # OUTPUTS FROM binormalcoptequalvariance
+  # ...
+  # OUTPUTS FROM binormalcoptunequalvariance
+  # ...
+  # OUTPUTS FROM coptpriorprevalence
+  # ...
+  # OUTPUTS FROM plotROC
+  # ...
+  ################################################################
+  # SECTION 3.4                                                  #
+  ################################################################
+  # OUTPUTS FROM betaprior
+  # ...
+  # OUTPUTS FROM BNPAUCFemales
+  # ...
+  # OUTPUTS FROM BNPAUCMales
+  # ...
+  # OUTPUTS FROM BNPcfixedMales
+  # ...
+  # OUTPUTS FROM BNPcoptFemales
+  # ...
+  # OUTPUTS FROM BNPcoptMales
+  # ...
+  # OUTPUTS FROM BNPdata
+  # ...
+  # OUTPUTS FROM empiricals
+  # ...
+  # OUTPUTS FROM itsforgammaprior
+  # ...
+  # OUTPUTS FROM smoother
+  # ...
+  # OUTPUTS FROM storeBNPcoptFemales
+  # ...
 }
 
 shinyApp(ui, server)

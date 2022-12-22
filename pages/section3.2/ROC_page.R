@@ -1,8 +1,18 @@
 
-source("ShinyHelperFunctions.R")
-# Try to have each page be on a separate file? Same with server?
+#source("helperfunctions3.2.R")
 
-# the '_1' at the end to signify it's the first webpage
+################################################################
+# DESCRIPTION                                                  #
+################################################################
+
+ROC_description = div(
+  titlePanel("Page Description"),
+  p("Currently there are some bugs in the code. Come back later!"),
+)
+
+################################################################
+# PAGE LOGIC                                                   #
+################################################################
 
 page_ROC = div(
   titlePanel("Section 3.2: ROC"),
@@ -29,6 +39,7 @@ page_ROC = div(
     mainPanel(
       # OUTPUTTING THE VALUES
       tabsetPanel(type = "tabs",
+                  tabPanel("Description", ROC_description),
                   tabPanel("Calculator_1", verbatimTextOutput("ROC_value_1")),
                   tabPanel("Calculator_2", verbatimTextOutput("ROC_value_2")),
       #            tabPanel("Calculator_3", verbatimTextOutput("realdataROC_value_3")),
@@ -44,6 +55,10 @@ page_ROC = div(
 #nD = 100
 
 #simulate_data_ROC(pND, pD, nND, nD)
+
+################################################################
+# MAIN FUNCTIONS                                               #
+################################################################
 
 simulate_data_ROC = function(pND, pD, nND, nD){
   if (!is.double(pND) & !is.double(pD)) {

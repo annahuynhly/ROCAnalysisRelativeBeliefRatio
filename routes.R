@@ -1,9 +1,10 @@
 
 # Source to all different tabs
 
-# Helper functions # NOTE: helper functions may be based on sections in the future to make
-# the code easier.
-source("ShinyHelperFunctions.R")
+# Helper functions
+source("./pages/section3.2/helperfunctions3.2.R")
+source("./pages/section3.3/helperfunctions3.3.R")
+source("./pages/section3.4/helperfunctions3.4.R")
 
 # Other Pages
 source("./pages/home_page.R")

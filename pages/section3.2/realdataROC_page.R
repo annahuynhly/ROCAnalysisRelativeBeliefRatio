@@ -1,10 +1,24 @@
 # File is realdataROC_1
 
 library(rBeta2009)
-source("ShinyHelperFunctions.R")
+#source("helperfunctions3.2.R")
 
+# THIS IS FOR SETTING SEED. TODO: might not really be that useful... Need to test later
 # NOTE: will give same results in the beginning, but will change overtime.
 addTaskCallback(function(...) {set.seed(0);TRUE})
+
+################################################################
+# DESCRIPTION                                                  #
+################################################################
+
+realdataROC_description = div(
+  titlePanel("Page Description"),
+  p("Insert a description here!"),
+)
+
+################################################################
+# PAGE LOGIC                                                   #
+################################################################
 
 page_realdataROC = div(
   titlePanel("Section 3.2: realdataROC"),
@@ -36,6 +50,7 @@ page_realdataROC = div(
     mainPanel(
       # OUTPUTTING THE VALUES
       tabsetPanel(type = "tabs",
+                  tabPanel("Description", realdataROC_description),
                   tabPanel("Calculator_1", verbatimTextOutput("realdataROC_value_1")),
                   tabPanel("Calculator_2", verbatimTextOutput("realdataROC_value_2")),
                   tabPanel("Calculator_3", verbatimTextOutput("realdataROC_value_3")),
@@ -44,6 +59,10 @@ page_realdataROC = div(
     )
   )
 )
+
+################################################################
+# MAIN FUNCTIONS                                               #
+################################################################
 
 prior_distribution_c_opt = function(nMonteprior, fND, fD, p){
   if (!is.double(fND) & !is.double(fD)) {
