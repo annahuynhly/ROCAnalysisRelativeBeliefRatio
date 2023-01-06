@@ -19,6 +19,7 @@ source("./pages/section3.2/realdataROC_page.R")
 source("./pages/section3.2/ROC_page.R")
 
 # Section 3.3
+source("./pages/section3.3/variables_page.R")
 source("./pages/section3.3/binormalAUCequalvariance_page.R")
 source("./pages/section3.3/binormalAUCunequalvariance_page.R")
 source("./pages/section3.3/binormalcoptequalvariance_page.R")
