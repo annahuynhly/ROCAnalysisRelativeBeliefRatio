@@ -3,7 +3,7 @@
 # DESCRIPTION                                                  #
 ################################################################
 
-variables_description = div( # CHANGE THIS
+variables3.3_description = div( # CHANGE THIS
   titlePanel("Page Description"),
   p("General idea: if you need to change values for this section, please change them here."),
   p("The reason for this section is because we have a lot of variables that seem to be consistent
@@ -15,7 +15,7 @@ variables_description = div( # CHANGE THIS
 # DETERMINING THE INPUTS                                       #
 ################################################################
 
-variables_control_panel = fluidPage( # CHANGE THIS
+variables3.3_control_panel = fluidPage( # CHANGE THIS
   
   fluidRow(
     column(3, 
@@ -75,13 +75,13 @@ variables_control_panel = fluidPage( # CHANGE THIS
 # PAGE LOGIC                                                   #
 ################################################################
 
-page_variables = div( # CHANGE THIS
+page_variables3.3 = div( # CHANGE THIS
   titlePanel("Control Variables"), # CHANGE THIS
   mainPanel(
       # OUTPUTTING THE VALUES
       tabsetPanel(type = "tabs",
-                  tabPanel("Description", variables_description),
-                  tabPanel("Control Panel", variables_control_panel), # CHANGE THIS
+                  tabPanel("Description", variables3.3_description),
+                  tabPanel("Control Panel", variables3.3_control_panel), # CHANGE THIS
     )
   )
 )

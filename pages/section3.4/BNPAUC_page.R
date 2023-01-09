@@ -3,7 +3,7 @@
 # DESCRIPTION                                                  #
 ################################################################
 
-BNPAUCFemales_description = div( # CHANGE THIS
+BNPAUC_description = div( # CHANGE THIS
   titlePanel("Page Description"),
   p("Need to work on this section. Come back later!"),
 )
@@ -12,13 +12,13 @@ BNPAUCFemales_description = div( # CHANGE THIS
 # PAGE LOGIC                                                   #
 ################################################################
 
-page_BNPAUCFemales = div( # CHANGE THIS
-  titlePanel("Section 3.4: BNPAUCFemales"), # CHANGE THIS
+page_BNPAUC = div( # CHANGE THIS
+  titlePanel("Section 3.4: BNPAUC"), # CHANGE THIS
   sidebarLayout(
     # Sidebar panel for inputs ----
     sidebarPanel(
       # Input: Slider for the number of bins ----
-      numericInput(inputId = "BNPAUCFemales_placeholder", # CHANGE THIS
+      numericInput(inputId = "BNPAUC_placeholder", # CHANGE THIS
                    tags$p('Placeholder input that does absolutely nothing.', 
                           style = "font-size: 90%;"),value = 100000, min = 1),
     ),
@@ -26,7 +26,7 @@ page_BNPAUCFemales = div( # CHANGE THIS
     mainPanel(
       # OUTPUTTING THE VALUES
       tabsetPanel(type = "tabs",
-                  tabPanel("Description", BNPAUCFemales_description), # CHANGE THIS
+                  tabPanel("Description", BNPAUC_description), # CHANGE THIS
       )
     )
   )

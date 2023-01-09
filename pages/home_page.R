@@ -2,6 +2,7 @@
 
 home_page = div(
   titlePanel("Home Page"),
+  hr(style = "border-top: 1px solid #363e4f;"),
   p("Hello and welcome! This is the home page. Please click on one of the following links 
     to use the calculator!"),
   p("Note that some of the computations take a long time to run, hence, switching between 
