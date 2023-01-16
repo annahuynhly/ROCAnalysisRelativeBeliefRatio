@@ -52,6 +52,9 @@ source("routes.R")
 
 ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                  tabPanel("Home", home_page),
+                 navbarMenu("Section 3.1",
+                            tabPanel("RelativeBeliefSetup", page_RB_setup),
+                 ),
                  navbarMenu("Section 3.2",
                             # To avoid the need to parse encoded URLs via utils::URLdecode use e.g.:
                             # tabPanel(title = "Section 3.2.1", "3.2.1 content", value = "section_3.2.1"),
@@ -112,6 +115,47 @@ server <- function(input, output, session) {
       updateQueryString(pushQueryString, mode = "push", session)
     }
   }, priority = 0)
+  ################################################################
+  # SECTION 3.1                                                  #
+  ################################################################
+  section3.2_grid_length = 200
+  section3.2_grid = seq(0, 1, length= 1 + section3.2_grid_length)
+  sect_3.1_info_1 = reactive(RB_compute_values(input$RB_setup_alpha1w, 
+                    input$RB_setup_alpha2w, input$RB_setup_n, input$RB_setup_nD))
+  #formula_test <- reactive({
+  #  RB_setup_alpha1w = input$RB_setup_alpha1w
+  #  RB_setup_alpha2w = input$RB_setup_alpha2w
+  #  RB_setup_n = input$RB_setup_n
+  #  RB_setup_nD = input$RB_setup_nD
+  #  RB_setup_w0 = input$RB_setup_w0
+  #  test_val = RB_compute_values(alpha1w, alpha2w, RB_setup_n, RB_setup_nD)
+  #  test_val$relative_belief
+  #})
+  sect_3.1_info_2 = reactive(w0_compute_values(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
+                    input$RB_setup_n, input$RB_setup_nD, input$RB_setup_w0, 
+                    sect_3.1_info_1()$relative_belief))
+  
+  output$RB_setup_values1 = renderPrint({
+    list("pr_interval" = sect_3.1_info_1()$pr_interval,
+         "max_w" = sect_3.1_info_1()$max_w)
+    #sect_3.1_info_1()
+  })
+  output$RB_setup_values2 = renderPrint({
+    #sect_3.1_info_2()
+    w0_compute_values(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
+                      input$RB_setup_n, input$RB_setup_nD, input$RB_setup_w0, 
+                      sect_3.1_info_1()$relative_belief)
+  })
+  output$RB_setup_postprior_graph = renderPlot({
+    generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post)
+  })
+  output$RB_setup_RB_graph = renderPlot({
+    generate_rb_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_1()$pr_interval)
+  })
+  output$RB_setup_w0_graph = renderPlot({
+    generate_w0_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_2()$relative_belief_w0,
+                      sect_3.1_info_2()$w0_interval)
+  })
   ################################################################
   # SECTION 3.2                                                  #
   ################################################################

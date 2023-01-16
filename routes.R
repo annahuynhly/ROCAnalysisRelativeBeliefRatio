@@ -10,6 +10,9 @@ source("./pages/section3.4/helperfunctions3.4.R")
 source("./pages/home_page.R")
 source("./pages/contact_page.R")
 
+# Section 3.1
+source("./pages/section3.1/RB_setup_page.R")
+
 # Section 3.2
 source("./pages/section3.2/conditionalROC_page.R")
 source("./pages/section3.2/conditionalAUCbig_page.R")
