@@ -37,7 +37,11 @@
 
 # Libraries for website creation
 library(shiny)
-library(DT)
+library(DT) # for tables
+library(varhandle)
+#library(sendmailR) # for emails
+#library(shinyAce) #for emails
+
 
 # Other libraries used for the code
 library(rBeta2009)
@@ -53,7 +57,7 @@ source("routes.R")
 ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                  tabPanel("Home", home_page),
                  navbarMenu("Section 3.1",
-                            tabPanel("RelativeBeliefSetup", page_RB_setup),
+                            tabPanel("RelativeBeliefRatioSetup", page_RB_setup),
                  ),
                  navbarMenu("Section 3.2",
                             # To avoid the need to parse encoded URLs via utils::URLdecode use e.g.:
@@ -66,7 +70,7 @@ ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                             tabPanel("ROC", page_ROC)
                  ),
                  navbarMenu("Section 3.3",
-                            tabPanel("Variables", page_variables3.3),
+                            tabPanel("3.3 Variables", page_variables3.3),
                             tabPanel("BinormalAUCEqualVariance", page_binormalAUCequalvariance),
                             tabPanel("BinormalAUCUnequalVariance", page_binormalAUCunequalvariance),
                             tabPanel("BinormalCoptEqualVariance", page_binormalcoptequalvariance),
@@ -75,7 +79,7 @@ ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                             tabPanel("plotROC", page_plotROC)
                  ),
                  navbarMenu("Section 3.4",
-                            tabPanel("Variables", page_variables3.4),
+                            tabPanel("3.4 Variables", page_variables3.4),
                             tabPanel("BetaPrior", page_betaprior),
                             tabPanel("BNPAUC", page_BNPAUC),
                             tabPanel("BNPcFixedMales", page_BNPcfixedMales),
@@ -115,47 +119,87 @@ server <- function(input, output, session) {
       updateQueryString(pushQueryString, mode = "push", session)
     }
   }, priority = 0)
+  # specifically for emails
+  observe({
+    if(is.null(input$send) || input$send==0) return(NULL)
+    from <- isolate(input$from)
+    to <- isolate(input$to)
+    subject <- isolate(input$subject)
+    msg <- isolate(input$message)
+    sendmail(from, to, subject, msg)
+  })
   ################################################################
   # SECTION 3.1                                                  #
   ################################################################
-  section3.2_grid_length = 200
-  section3.2_grid = seq(0, 1, length= 1 + section3.2_grid_length)
+  sect_3.1_grid = reactive(RB_distance_that_matters(input$RB_delta))
   sect_3.1_info_1 = reactive(RB_compute_values(input$RB_setup_alpha1w, 
-                    input$RB_setup_alpha2w, input$RB_setup_n, input$RB_setup_nD))
-  #formula_test <- reactive({
-  #  RB_setup_alpha1w = input$RB_setup_alpha1w
-  #  RB_setup_alpha2w = input$RB_setup_alpha2w
-  #  RB_setup_n = input$RB_setup_n
-  #  RB_setup_nD = input$RB_setup_nD
-  #  RB_setup_w0 = input$RB_setup_w0
-  #  test_val = RB_compute_values(alpha1w, alpha2w, RB_setup_n, RB_setup_nD)
-  #  test_val$relative_belief
-  #})
+                    input$RB_setup_alpha2w, input$RB_setup_n, input$RB_setup_nD, sect_3.1_grid()))
   sect_3.1_info_2 = reactive(w0_compute_values(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
                     input$RB_setup_n, input$RB_setup_nD, input$RB_setup_w0, 
-                    sect_3.1_info_1()$relative_belief))
+                    sect_3.1_info_1()$relative_belief, sect_3.1_grid()))
+  sect_3.1_cred_region = reactive(compute_credible_region(input$RB_gamma, 
+                         sect_3.1_info_1()$relative_belief, sect_3.1_grid(), 
+                         sect_3.1_info_1()$sup_gamma, sect_3.1_info_1()$pr_interval))
   
   output$RB_setup_values1 = renderPrint({
     list("pr_interval" = sect_3.1_info_1()$pr_interval,
-         "max_w" = sect_3.1_info_1()$max_w)
-    #sect_3.1_info_1()
+         "max_w" = sect_3.1_info_1()$max_w,
+         "prior_content" = sect_3.1_info_1()$prior_content,
+         "posterior_content" = sect_3.1_info_1()$posterior_content,
+         "sup_gamma" = sect_3.1_info_1()$sup_gamma,
+         "credible_region" = sect_3.1_cred_region()$credible_region,
+         "rb_line" = sect_3.1_cred_region()$rb_line)
   })
   output$RB_setup_values2 = renderPrint({
     #sect_3.1_info_2()
-    w0_compute_values(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
-                      input$RB_setup_n, input$RB_setup_nD, input$RB_setup_w0, 
-                      sect_3.1_info_1()$relative_belief)
+    list("relative_belief_ratio_at_w0" = sect_3.1_info_2()$relative_belief_ratio_at_w0,
+         "strength" = sect_3.1_info_2()$strength)
   })
   output$RB_setup_postprior_graph = renderPlot({
-    generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post)
+    if(check.numeric(input$RB_gamma) == FALSE){
+      generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
+                                sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+    } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$sup_gamma){
+      # Couldn't do the or statement for if because of the case where you can't do
+      # as.numeric() for input$gamma
+      generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
+                                sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+    } else {
+      generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
+                                sect_3.1_info_1()$pr_interval, sect_3.1_grid(),
+                                sect_3.1_cred_region()$credible_region)
+    }
   })
   output$RB_setup_RB_graph = renderPlot({
-    generate_rb_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_1()$pr_interval)
+    if(check.numeric(input$RB_gamma) == FALSE){
+      generate_rb_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+    } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$sup_gamma){
+      generate_rb_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+    } else {
+      generate_rb_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_1()$pr_interval, sect_3.1_grid(),
+                        sect_3.1_cred_region()$credible_region, sect_3.1_cred_region()$rb_line)
+    }
   })
   output$RB_setup_w0_graph = renderPlot({
-    generate_w0_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_2()$relative_belief_w0,
-                      sect_3.1_info_2()$w0_interval)
+    generate_relative_belief_ratio_at_w0_graph(sect_3.1_info_1()$relative_belief, 
+                                               sect_3.1_info_2()$relative_belief_ratio_at_w0,
+                                               sect_3.1_info_2()$w0_interval, sect_3.1_grid())
   })
+  RB_download = reactive(
+    RB_generate_dataframe(sect_3.1_grid(), sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
+                          sect_3.1_info_1()$relative_belief)
+  )
+  output$RB_dataframe <- renderDataTable({
+    RB_download()
+  })
+  output$RB_downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$RB_filename, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(RB_download(), file, row.names = FALSE)
+    }
+  )
   ################################################################
   # SECTION 3.2                                                  #
   ################################################################

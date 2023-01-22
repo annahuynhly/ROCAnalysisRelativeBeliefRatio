@@ -1,4 +1,3 @@
-# This is specifically for the home page
 
 home_page = div(
   titlePanel("Home Page"),
