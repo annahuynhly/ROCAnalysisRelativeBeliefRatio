@@ -136,17 +136,20 @@ server <- function(input, output, session) {
                     input$RB_setup_alpha2w, input$RB_setup_n, input$RB_setup_nD, sect_3.1_grid()))
   sect_3.1_info_2 = reactive(w0_compute_values(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
                     input$RB_setup_n, input$RB_setup_nD, input$RB_setup_w0, 
-                    sect_3.1_info_1()$relative_belief, sect_3.1_grid()))
-  sect_3.1_cred_region = reactive(compute_credible_region(input$RB_gamma, 
-                         sect_3.1_info_1()$relative_belief, sect_3.1_grid(), 
-                         sect_3.1_info_1()$sup_gamma, sect_3.1_info_1()$pr_interval))
+                    sect_3.1_info_1()$relative_belief_ratio, sect_3.1_grid()))
+  #sect_3.1_cred_region = reactive(compute_credible_region(input$RB_gamma, 
+  #                       sect_3.1_info_1()$relative_belief_ratio, sect_3.1_grid(), 
+  #                       sect_3.1_info_1()$sup_gamma, sect_3.1_info_1()$pr_interval))
+  sect_3.1_cred_region = reactive(compute_credible_region(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
+                                  input$RB_setup_n, input$RB_setup_nD, sect_3.1_grid(), input$RB_gamma, 
+                                  input$RB_delta, sect_3.1_info_1()$relative_belief_ratio, 
+                                  sect_3.1_info_1()$posterior_content, sect_3.1_info_1()$pr_interval))
   
   output$RB_setup_values1 = renderPrint({
     list("pr_interval" = sect_3.1_info_1()$pr_interval,
          "max_w" = sect_3.1_info_1()$max_w,
          "prior_content" = sect_3.1_info_1()$prior_content,
          "posterior_content" = sect_3.1_info_1()$posterior_content,
-         "sup_gamma" = sect_3.1_info_1()$sup_gamma,
          "credible_region" = sect_3.1_cred_region()$credible_region,
          "rb_line" = sect_3.1_cred_region()$rb_line)
   })
@@ -159,7 +162,7 @@ server <- function(input, output, session) {
     if(check.numeric(input$RB_gamma) == FALSE){
       generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
                                 sect_3.1_info_1()$pr_interval, sect_3.1_grid())
-    } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$sup_gamma){
+    } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$posterior_content){
       # Couldn't do the or statement for if because of the case where you can't do
       # as.numeric() for input$gamma
       generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
@@ -172,16 +175,16 @@ server <- function(input, output, session) {
   })
   output$RB_setup_RB_graph = renderPlot({
     if(check.numeric(input$RB_gamma) == FALSE){
-      generate_rb_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_1()$pr_interval, sect_3.1_grid())
-    } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$sup_gamma){
-      generate_rb_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+    } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$posterior_content){
+      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$pr_interval, sect_3.1_grid())
     } else {
-      generate_rb_graph(sect_3.1_info_1()$relative_belief, sect_3.1_info_1()$pr_interval, sect_3.1_grid(),
+      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$pr_interval, sect_3.1_grid(),
                         sect_3.1_cred_region()$credible_region, sect_3.1_cred_region()$rb_line)
     }
   })
   output$RB_setup_w0_graph = renderPlot({
-    generate_relative_belief_ratio_at_w0_graph(sect_3.1_info_1()$relative_belief, 
+    generate_relative_belief_ratio_at_w0_graph(sect_3.1_info_1()$relative_belief_ratio, 
                                                sect_3.1_info_2()$relative_belief_ratio_at_w0,
                                                sect_3.1_info_2()$w0_interval, sect_3.1_grid())
   })
