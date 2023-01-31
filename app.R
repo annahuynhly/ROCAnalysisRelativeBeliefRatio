@@ -3,7 +3,7 @@
 ################################################################
 
 # SECTION 3.2 #######################################################
-# conditionalROC.txt -> CANNOT RUN; waiting for fixed bugs
+# conditionalROC.txt -> CHANGED 
 # conditiononAUCbig.txt -> Need review for plot titles & sanity checks
 # ex1prog.txt -> Need review for plot titles & sanity checks
 # readdata.txt -> CANNOT RUN; waiting for fixed bugs
@@ -46,6 +46,7 @@ library(varhandle)
 # Other libraries used for the code
 library(rBeta2009)
 library(tidyverse)
+library(stringr)
 
 # Accessing other R-codes
 source("routes.R")
@@ -57,39 +58,39 @@ source("routes.R")
 ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                  tabPanel("Home", home_page),
                  navbarMenu("Section 3.1",
-                            tabPanel("RelativeBeliefRatioSetup", page_RB_setup),
+                            tabPanel("ThePrevalence", page_RB_setup),
                  ),
                  navbarMenu("Section 3.2",
                             # To avoid the need to parse encoded URLs via utils::URLdecode use e.g.:
                             # tabPanel(title = "Section 3.2.1", "3.2.1 content", value = "section_3.2.1"),
-                            tabPanel("ConditionalROC", page_conditionalROC),
+                            tabPanel("TheAUC", page_theAUC),
                             tabPanel("ConditionalAUCbig", page_conditionalAUCbig),
                             tabPanel("Example1Program", page_ex1prog),
-                            tabPanel("ReadData", page_readdata),
-                            tabPanel("RealDataROC", page_realdataROC),
-                            tabPanel("ROC", page_ROC)
+                            #tabPanel("ReadData", page_readdata),
+                            #tabPanel("RealDataROC", page_realdataROC),
+                            #tabPanel("ROC", page_ROC)
                  ),
                  navbarMenu("Section 3.3",
                             tabPanel("3.3 Variables", page_variables3.3),
                             tabPanel("BinormalAUCEqualVariance", page_binormalAUCequalvariance),
                             tabPanel("BinormalAUCUnequalVariance", page_binormalAUCunequalvariance),
-                            tabPanel("BinormalCoptEqualVariance", page_binormalcoptequalvariance),
-                            tabPanel("BinormalCoptUnequalVariance", page_binormalcoptunequalvariance),
-                            tabPanel("CoptPriorPrevalence", page_coptpriorprevalence),
-                            tabPanel("plotROC", page_plotROC)
+                            #tabPanel("BinormalCoptEqualVariance", page_binormalcoptequalvariance),
+                            #tabPanel("BinormalCoptUnequalVariance", page_binormalcoptunequalvariance),
+                            #tabPanel("CoptPriorPrevalence", page_coptpriorprevalence),
+                            #tabPanel("plotROC", page_plotROC)
                  ),
                  navbarMenu("Section 3.4",
                             tabPanel("3.4 Variables", page_variables3.4),
                             tabPanel("BetaPrior", page_betaprior),
                             tabPanel("BNPAUC", page_BNPAUC),
-                            tabPanel("BNPcFixedMales", page_BNPcfixedMales),
-                            tabPanel("BNPCoptFemales", page_BNPcoptFemales),
-                            tabPanel("BNPCoptMales", page_BNPcoptMales),
-                            tabPanel("BNPData", page_BNPdata),
-                            tabPanel("Empiricals", page_empiricals),
-                            tabPanel("ForGammaPrior", page_itsforgammaprior),
-                            tabPanel("Smoother", page_smoother),
-                            tabPanel("StoreBNPCoptFemales", page_storeBNPcoptFemales)
+                            #tabPanel("BNPcFixedMales", page_BNPcfixedMales),
+                            #tabPanel("BNPCoptFemales", page_BNPcoptFemales),
+                            #tabPanel("BNPCoptMales", page_BNPcoptMales),
+                            #tabPanel("BNPData", page_BNPdata),
+                            #tabPanel("Empiricals", page_empiricals),
+                            #tabPanel("ForGammaPrior", page_itsforgammaprior),
+                            #tabPanel("Smoother", page_smoother),
+                            #tabPanel("StoreBNPCoptFemales", page_storeBNPcoptFemales)
                  ),
                  tabPanel("Contact", contact_page),
                  id = "navbarID",
@@ -119,34 +120,26 @@ server <- function(input, output, session) {
       updateQueryString(pushQueryString, mode = "push", session)
     }
   }, priority = 0)
-  # specifically for emails
-  observe({
-    if(is.null(input$send) || input$send==0) return(NULL)
-    from <- isolate(input$from)
-    to <- isolate(input$to)
-    subject <- isolate(input$subject)
-    msg <- isolate(input$message)
-    sendmail(from, to, subject, msg)
-  })
+  
   ################################################################
   # SECTION 3.1                                                  #
   ################################################################
   sect_3.1_grid = reactive(RB_distance_that_matters(input$RB_delta))
-  sect_3.1_info_1 = reactive(RB_compute_values(input$RB_setup_alpha1w, 
+  sect_3.1_info_1 = reactive(RBR_compute_values(input$RB_setup_alpha1w, 
                     input$RB_setup_alpha2w, input$RB_setup_n, input$RB_setup_nD, sect_3.1_grid()))
   sect_3.1_info_2 = reactive(w0_compute_values(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
                     input$RB_setup_n, input$RB_setup_nD, input$RB_setup_w0, 
                     sect_3.1_info_1()$relative_belief_ratio, sect_3.1_grid()))
   #sect_3.1_cred_region = reactive(compute_credible_region(input$RB_gamma, 
   #                       sect_3.1_info_1()$relative_belief_ratio, sect_3.1_grid(), 
-  #                       sect_3.1_info_1()$sup_gamma, sect_3.1_info_1()$pr_interval))
+  #                       sect_3.1_info_1()$sup_gamma, sect_3.1_info_1()$plausible_region))
   sect_3.1_cred_region = reactive(compute_credible_region(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
                                   input$RB_setup_n, input$RB_setup_nD, sect_3.1_grid(), input$RB_gamma, 
                                   input$RB_delta, sect_3.1_info_1()$relative_belief_ratio, 
-                                  sect_3.1_info_1()$posterior_content, sect_3.1_info_1()$pr_interval))
+                                  sect_3.1_info_1()$posterior_content, sect_3.1_info_1()$plausible_region))
   
   output$RB_setup_values1 = renderPrint({
-    list("pr_interval" = sect_3.1_info_1()$pr_interval,
+    list("plausible_region" = sect_3.1_info_1()$plausible_region,
          "max_w" = sect_3.1_info_1()$max_w,
          "prior_content" = sect_3.1_info_1()$prior_content,
          "posterior_content" = sect_3.1_info_1()$posterior_content,
@@ -161,25 +154,25 @@ server <- function(input, output, session) {
   output$RB_setup_postprior_graph = renderPlot({
     if(check.numeric(input$RB_gamma) == FALSE){
       generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
-                                sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+                                sect_3.1_info_1()$plausible_region, sect_3.1_grid())
     } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$posterior_content){
       # Couldn't do the or statement for if because of the case where you can't do
       # as.numeric() for input$gamma
       generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
-                                sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+                                sect_3.1_info_1()$plausible_region, sect_3.1_grid())
     } else {
       generate_prior_post_graph(sect_3.1_info_1()$prior, sect_3.1_info_1()$post, 
-                                sect_3.1_info_1()$pr_interval, sect_3.1_grid(),
+                                sect_3.1_info_1()$plausible_region, sect_3.1_grid(),
                                 sect_3.1_cred_region()$credible_region)
     }
   })
   output$RB_setup_RB_graph = renderPlot({
     if(check.numeric(input$RB_gamma) == FALSE){
-      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$plausible_region, sect_3.1_grid())
     } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$posterior_content){
-      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$pr_interval, sect_3.1_grid())
+      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$plausible_region, sect_3.1_grid())
     } else {
-      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$pr_interval, sect_3.1_grid(),
+      generate_rb_graph(sect_3.1_info_1()$relative_belief_ratio, sect_3.1_info_1()$plausible_region, sect_3.1_grid(),
                         sect_3.1_cred_region()$credible_region, sect_3.1_cred_region()$rb_line)
     }
   })
@@ -206,6 +199,128 @@ server <- function(input, output, session) {
   ################################################################
   # SECTION 3.2                                                  #
   ################################################################
+  sect3.2_AUC_prior = reactive(simulate_AUC_mc_prior(input$theAUC_nND, 
+                      input$theAUC_nD, input$theAUC_nMonteCarlo, 
+                      input$theAUC_alpha_ND, input$theAUC_alpha_D))
+  sect3.2_AUC_post = reactive(simulate_AUC_mc_post(input$theAUC_nND, 
+                     input$theAUC_nD, input$theAUC_nMonteCarlo, 
+                     input$theAUC_alpha_ND, input$theAUC_alpha_D, input$theAUC_fND, 
+                     input$theAUC_fD))
+  sect3.2_AUC_RBR = reactive(compute_AUC_RBR(input$theAUC_delta, sect3.2_AUC_prior()$AUC, 
+                   sect3.2_AUC_post()$AUC))
+  # posterior content
+  sect3.2_AUC_post_content = reactive(compute_AUC_post_content(input$theAUC_delta, 
+                             sect3.2_AUC_post()$AUC, sect3.2_AUC_RBR()$plausible_region))
+  #PLACEHOLDER - PLEASE CHANGE WHEN IMPLEMENTED
+  sect3.2_AUC_credible_region = reactive(
+    compute_AUC_credible_region(input$theAUC_gamma, input$theAUC_delta, 
+    sect3.2_AUC_RBR()$AUC_RBR, sect3.2_AUC_post()$AUC,
+    sect3.2_AUC_post_content(), sect3.2_AUC_RBR()$plausible_region))
+  
+  output$theAUC_output1 = renderPrint({
+    list("plausible_region" = sect3.2_AUC_RBR()$plausible_region,
+         "posterior_content" = sect3.2_AUC_post_content(),
+         "credible_region" = sect3.2_AUC_credible_region()$credible_region) # will need to specify when
+    # providing a vector
+    # TODO: specify credible region
+  })
+  
+  output$theAUC_postprior_graph = renderPlot({
+    if(check.numeric(input$theAUC_gamma) == FALSE){
+      density_hist_AUC_prior_post(input$theAUC_delta, sect3.2_AUC_prior()$AUC, 
+                                  sect3.2_AUC_post()$AUC, sect3.2_AUC_RBR()$plausible_region)
+      
+    } else if (as.numeric(input$theAUC_gamma) >= sect3.2_AUC_post_content()){
+      density_hist_AUC_prior_post(input$theAUC_delta, sect3.2_AUC_prior()$AUC, 
+                                  sect3.2_AUC_post()$AUC, sect3.2_AUC_RBR()$plausible_region)
+    } else {
+      density_hist_AUC_prior_post(input$theAUC_delta, sect3.2_AUC_prior()$AUC, 
+                                  sect3.2_AUC_post()$AUC, sect3.2_AUC_RBR()$plausible_region,
+                                  sect3.2_AUC_credible_region()$credible_region) # MUST MODIFY
+    }
+  })
+  output$theAUC_RB_graph = renderPlot({
+    if(check.numeric(input$theAUC_gamma) == FALSE){
+      density_hist_AUC_RBR(input$theAUC_delta, sect3.2_AUC_RBR()$AUC_RBR, 
+                           sect3.2_AUC_RBR()$plausible_region)
+    } else if (as.numeric(input$theAUC_gamma) >= sect3.2_AUC_post_content()){
+      density_hist_AUC_RBR(input$theAUC_delta, sect3.2_AUC_RBR()$AUC_RBR, 
+                           sect3.2_AUC_RBR()$plausible_region)
+    } else {
+      density_hist_AUC_RBR(input$theAUC_delta, sect3.2_AUC_RBR()$AUC_RBR, 
+                           sect3.2_AUC_RBR()$plausible_region,
+                           sect3.2_AUC_credible_region()$credible_region) # MUST MODIFY
+    }
+  })
+  
+  output$theAUC_hypoAUC_graph = renderPlot({
+    density_hist_AUC_RBR(input$theAUC_delta, sect3.2_AUC_RBR()$AUC_RBR, 
+                         sect3.2_AUC_RBR()$plausible_region, hypothesis = input$theAUC_hypoAUC)
+  })
+  output$theAUC_hypoAUC_value = renderPrint({
+    hypothesized_AUC_compute_values(input$theAUC_hypoAUC, input$theAUC_delta, sect3.2_AUC_RBR()$grid, 
+                                    sect3.2_AUC_RBR()$AUC_RBR)
+  })
+  
+  ################################## action buttons !!!!!!!!!!!!!!!
+  
+  cols <- reactiveValues()   
+  cols$showing <- 1:5  
+  
+  #show the next five columns 
+  observeEvent(input$theAUC_next_five, {
+    #stop when the last column is displayed
+    if(cols$showing[[length(cols$showing)]] < length(theAUC_download())) {
+      hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
+      cols$showing <- cols$showing + 5
+      showCols(proxy, cols$showing, reset = FALSE) #show the next five 
+    } 
+  })
+  
+  #similar mechanism but reversed to show the previous cols
+  observeEvent(input$theAUC_prev_five, {
+    #stop when the first column is displayed
+    if(cols$showing[[1]] > 1) {
+      hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
+      cols$showing <- cols$showing - 5
+      showCols(proxy, cols$showing, reset = FALSE) #show previous five
+    } 
+  })
+  
+  theAUC_download = reactive(
+    if(input$theAUC_choosefile == 1){ # prior
+      theAUC_generate_dataframe(1, sect3.2_AUC_prior()$pND_array, sect3.2_AUC_prior()$pD_array, 
+                                sect3.2_AUC_prior()$FNR, sect3.2_AUC_prior()$AUC)
+    } else if (input$theAUC_choosefile == 2){ # post
+      theAUC_generate_dataframe(2, sect3.2_AUC_post()$pND_array, sect3.2_AUC_post()$pD_array, 
+                                sect3.2_AUC_post()$FNR, sect3.2_AUC_post()$AUC)
+    } else if (input$theAUC_choosefile == 3){ # relative belief ratio
+      theAUC_generate_dataframe(3, AUC = sect3.2_AUC_RBR()$AUC_RBR, grid = sect3.2_AUC_RBR()$grid)
+    }
+  )
+  
+  output$theAUC_dataframe <- renderDT(
+    theAUC_download(),
+    options = list(
+      columnDefs = list(list(visible = FALSE, targets = 1:length(theAUC_download()))), #hide all columns
+      scrollX = TRUE)  #for when many columns are visible
+  )
+  
+  proxy <- dataTableProxy('theAUC_dataframe')
+  showCols(proxy, 1:5, reset = FALSE) #show the first five cols (because the colums are now all hidden)
+  
+  output$theAUC_downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$theAUC_filename, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(theAUC_download(), file, row.names = FALSE)
+    }
+  )
+  
+  
+  
+  ###########################################################################
   # OUTPUTS FROM conditionalAUCbig
   output$conditionalAUCbig_values = renderPrint({
     # NOTE: shows all crit values; might need to change issue since code is quite long

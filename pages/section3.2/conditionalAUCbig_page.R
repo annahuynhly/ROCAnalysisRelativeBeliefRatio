@@ -46,11 +46,11 @@ page_conditionalAUCbig = div(
 # MAIN FUNCTIONS                                               #
 ################################################################
 
-conditionalAUCbig = function(nmonte, fND, fD){
+conditionalAUCbig = function(nmonte, fND, fD){ # NOTE: CHANGED FUNCTION NAME FOR VALID VECTOR
   # NOTE: making the assumption that this isn't going to be a re-used helper function
   fND = convert_char_to_vector(fND)
   fD = convert_char_to_vector(fD)
-  if (!(valid_vector(fND) == TRUE & valid_vector(fD) == TRUE)) {
+  if (!(valid_vector(fND) == TRUE & valid_vector(fD) == TRUE)) { # NOTE: CHANGED FUNCTION NAME FOR VALID VECTOR
     return("Error: Either fND or fD provide invalid responses.")
   }
   if (length(fND) == length(fD)) {

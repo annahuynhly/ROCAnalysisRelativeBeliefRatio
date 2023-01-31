@@ -1,21 +1,38 @@
 # This represents all helper functions!
 
 library(stringr)
+library(varhandle)
 
 # Helper Functions for: realdataROC_1_page.R
 
 # NEED TO IMPROVE THE FOLLOWING FUNCTION
 convert_char_to_vector = function(x){
+  if (is.character(x) == FALSE){
+    return("Invalid input: the input is not a character.")
+  }
   # This function turns characters, such as "1, 2, 3", 
   # into a vector: c(1, 2, 3)
   x = str_replace_all(x, fixed(" "), "") # removes all spaces
-  x = as.numeric(strsplit(x, ",")[[1]]) # converts to vector
-  #x = as.integer(strsplit(x, ",")[[1]]) # converts to vector
-  x = x[!is.na(x)]
-  return(as.double(x))
+  x = (strsplit(x, ",")[[1]])
+  
+  check_numeric_count = 0
+  for(i in 1:length(x)){
+    if(check.numeric(x[i])){
+      check_numeric_count = check_numeric_count + 1
+    }
+  }
+  if (check_numeric_count == length(x)){
+    x = as.numeric(x) # converts to vector
+    #x = as.integer(strsplit(x, ",")[[1]]) # converts to vector
+    x = x[!is.na(x)]
+    return(as.double(x))
+  } else {
+    return("Invalid vector. Not all numbers are numeric.")
+  }
 }
 
-valid_vector = function(x){
+# NOTE: CHANGED FUNCTION NAME
+valid_numeric_vector = function(x){
   # This function double checks to insure that the vector
   # is valid to use for any weird edge-cases that the player
   # might try to initiate.
@@ -28,6 +45,19 @@ valid_vector = function(x){
     }
   }
 }
+
+create_necessary_vector = function(x){
+  # Given a string of values, such as "1, 1, 1, 1, 1", converts it to a vector if
+  # it isn't already numeric.
+  if(is.character(x) == TRUE){
+    return(convert_char_to_vector(x))
+  } else if (typeof(x) == "double" | valid_numeric_vector(x) == TRUE){
+    return(x)
+  } else {
+    return("Invalid vector.")
+  }
+}
+
 
 # Helper functions for realdataROC_placeholder_2 -> found in realdataROC
 

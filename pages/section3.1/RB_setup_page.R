@@ -28,7 +28,7 @@ RB_setup_description = div(
   
   h4("Outputs and their Meanings"),
   p(HTML("<ul>
-            <li><b>pr_interval:</b> plausible region. PR = { w : RB(w | ... ) > 1 }</li>
+            <li><b>plausible_region:</b> plausible region. PR = { w : RB(w | ... ) > 1 }</li>
             <li><b>max_w:</b> the chosen value for w (when RB(w | ... ) is maximized. 
             It is actually just n/nD.)</li>
             <li><b>relative_belief_ratio_at_w0:</b> directly calculated from RB(w0 | ... )</li>
@@ -130,7 +130,7 @@ page_RB_download = div(
 
 page_RB_setup = div( 
   # This is the page that that connects to app.R
-  titlePanel("Section 3.1: Relative Belief Ratio Setup"), 
+  titlePanel("Section 3.1: The Prevalence"), 
   tabsetPanel(type = "tabs",
               tabPanel("Description", RB_setup_description), 
               tabPanel("Plausible Region & Max w", RB_setup_plausible_region),
@@ -145,13 +145,13 @@ page_RB_setup = div(
 # MAIN FUNCTIONS                                               #
 ################################################################
 
-RB_distance_that_matters = function(delta){
+RB_distance_that_matters = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
   # Creates a grid of values from 0 to 1
   grid = seq(delta/2, (1-delta/2), length= 1/delta)
   return(grid)
 }
 
-RB_compute_values = function(alpha1w, alpha2w, n, nD, grid){
+RBR_compute_values = function(alpha1w, alpha2w, n, nD, grid){
   # This computes the prior, posterior, and the relative beief ratio.
   nND = n - nD # obtaining number not diseased
   
@@ -176,25 +176,26 @@ RB_compute_values = function(alpha1w, alpha2w, n, nD, grid){
   
   # This finds a plausible region.
   # WARNING: the following interval assumes there are no breaks, so it wouldn't work if there's a "peak".
-  pr_interval = c(plausible_region[1], plausible_region[length(plausible_region)])
+  plausible_region = c(plausible_region[1], plausible_region[length(plausible_region)])
   
   # finding the prior and posterior content
-  prior_content = pbeta(pr_interval[2], alpha1w, alpha2w) - pbeta(pr_interval[1], alpha1w, alpha2w)
-  posterior_content = pbeta(pr_interval[2], alpha1w + nD, alpha2w + nND) - pbeta(pr_interval[1], alpha1w + nD, alpha2w + nND)
+  prior_content = pbeta(plausible_region[2], alpha1w, alpha2w) - pbeta(plausible_region[1], alpha1w, alpha2w)
+  posterior_content = pbeta(plausible_region[2], alpha1w + nD, alpha2w + nND) - pbeta(plausible_region[1], alpha1w + nD, alpha2w + nND)
   
   # WARNING: might be incorrect!
   # finding the area for π(pl(x) | x)... Need to change variable name!
-  #sup_gamma = pr_interval[2] - pr_interval[1] # Note that length is 1, so...
+  #sup_gamma = plausible_region[2] - plausible_region[1] # Note that length is 1, so...
   
   newlist = list("nND" = nND, "prior" = prior, "post" = post, 
-                 "relative_belief_ratio" = relative_belief_ratio, "pr_interval" = pr_interval,
+                 "relative_belief_ratio" = relative_belief_ratio, "plausible_region" = plausible_region,
                  "prior_content" = prior_content, "posterior_content" = posterior_content,
                  "max_w" = max_w)
   return(newlist)
 }
 
-compute_credible_region = function(alpha1w, alpha2w, n, nD, grid, gamma, delta, relative_belief, 
-                                   posterior_content, pr_interval){
+# TODO: might've computed this wrong
+compute_credible_region = function(alpha1w, alpha2w, n, nD, grid, gamma, delta, relative_belief_ratio, 
+                                   posterior_content, plausible_region){
   # Computes the credible region. At first, there's no default input to avoid generating
   # a credible region automatically (it is not necessary.)
   if (check.numeric(gamma) == FALSE){
@@ -208,23 +209,23 @@ compute_credible_region = function(alpha1w, alpha2w, n, nD, grid, gamma, delta, 
       return(list("credible_region" = err_msg, "rb_line" = err_msg))
     } 
     else {
-      half_distance = floor((pr_interval[2]-pr_interval[1])*(1/delta)/2)
-      for(i in 1:half_distance){
-        left_pt = pr_interval[1] + delta*i
-        right_pt = pr_interval[2] - delta*i
-        nND = n - nD
-        test_area = pbeta(right_pt, alpha1w+nD, alpha2w+nND) - pbeta(left_pt, alpha1w+nD, alpha2w+nND)
-        if(test_area <= gamma){
-          credible_region = c(left_pt, right_pt)
-          
-          rb_vals = c() # will need to change variable name
-          for (i in 1:length(grid)){
-            if(grid[i] > credible_region[1] & grid[i] < credible_region[2]){
-              rb_vals = c(rb_vals, relative_belief[i])
-            }
+      #half_distance = floor((plausible_region[2]-plausible_region[1])*(1/delta)/2)
+      RBR_values = sort(relative_belief_ratio, decreasing = TRUE)
+      RBR_values = RBR_values[RBR_values > 1] # sorting for values larger than 1
+      for(i in 2:length(RBR_values)){ # doesnt start at the top as the length is 0
+        rb_line = RBR_values[i]
+        credible_region = c()
+        # find the region associated with it
+        for(j in 1:length(relative_belief_ratio)){
+          if(relative_belief_ratio[j] > rb_line){
+            credible_region = c(credible_region, grid[j])
           }
-          rb_line = min(rb_vals)
-          break # hopefully this successfully breaks the loop!
+        }
+        credible_region = c(min(credible_region), max(credible_region))
+        nND = n - nD
+        test_area = pbeta(credible_region[2], alpha1w+nD, alpha2w+nND) - pbeta(credible_region[1], alpha1w+nD, alpha2w+nND)
+        if(test_area >= gamma){
+          break # This means the credible region was actually found
         }
       }
       
@@ -235,7 +236,7 @@ compute_credible_region = function(alpha1w, alpha2w, n, nD, grid, gamma, delta, 
   }
 }
 
-generate_prior_post_graph = function(prior, post, pr_interval, grid, credible_region = FALSE){
+generate_prior_post_graph = function(prior, post, plausible_region, grid, credible_region = FALSE){
   # This generates the graph for the prior and the posterior.
   
   # Determining what x-axis to show for a better graph
@@ -251,10 +252,10 @@ generate_prior_post_graph = function(prior, post, pr_interval, grid, credible_re
   
   # Plots of the Prior and the Posterior
   plot(grid, prior, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
-       main = "Graph of the Prior and Posterior", ylab = "Values", xlab = "w", col = "blue")
+       main = "Graph of the Prior and Posterior", ylab = "Densities", xlab = "w", col = "blue")
   lines(grid, post,col="green", type = "l", lty = 2, lwd = 2)
-  abline(v=pr_interval[1], col="#b3bfff", lwd = 2, lty = 3)
-  abline(v=pr_interval[2], col="#b3bfff", lwd = 2, lty = 3)
+  abline(v=plausible_region[1], col="#b3bfff", lwd = 2, lty = 3)
+  abline(v=plausible_region[2], col="#b3bfff", lwd = 2, lty = 3)
   polygon(grid, post, col = rgb(146/255, 255/255, 133/255, alpha = 0.3), border = NA)
   polygon(grid, prior, col = rgb(133/255, 198/255, 255/255, alpha = 0.3), border = NA)
   
@@ -272,7 +273,7 @@ generate_prior_post_graph = function(prior, post, pr_interval, grid, credible_re
   }
 }
 
-generate_rb_graph = function(relative_belief_ratio, pr_interval, grid, credible_region = FALSE,
+generate_rb_graph = function(relative_belief_ratio, plausible_region, grid, credible_region = FALSE,
                              rb_line = FALSE){
   # This generates the graph for the relative belief ratio.
   
@@ -287,17 +288,17 @@ generate_rb_graph = function(relative_belief_ratio, pr_interval, grid, credible_
   x_interval = c(x_region[1], x_region[length(x_region)])
   y_interval = c(0, max(relative_belief_ratio))
   # For the Plausible Region
-  lower_bd = pr_interval[1]
-  upper_bd = pr_interval[length(pr_interval)]
+  lower_bd = plausible_region[1]
+  upper_bd = plausible_region[length(plausible_region)]
   
   plot(grid, relative_belief_ratio, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
-       main = "Graph of the Relative Belief Ratio", ylab = "Values", xlab = "w", col = "red")
+       main = "Graph of the Relative Belief Ratio", ylab = "RBR", xlab = "w", col = "red")
   abline(h=1, col="royalblue1", lwd = 2, lty = 2)
   abline(v=lower_bd, col="#b3bfff", lwd = 2, lty = 3)
   abline(v=upper_bd, col="#b3bfff", lwd = 2, lty = 3)
   # Colouring in the area between the plausible region and when the RBR > 1
-  l <- min(which(grid >= pr_interval[1]))
-  h <- max(which(grid < pr_interval[2]))
+  l <- min(which(grid >= plausible_region[1]))
+  h <- max(which(grid < plausible_region[2]))
   polygon(c(grid[c(l, l:h, h)]),
           c(1, relative_belief_ratio[l:h], 1),
           col = rgb(197/255, 132/255, 255/255, alpha = 0.3), border = NA)
@@ -377,7 +378,8 @@ generate_relative_belief_ratio_at_w0_graph = function(relative_belief_ratio, rel
   upper_bd = w0_interval[length(w0_interval)]
   
   plot(grid, relative_belief_ratio, type='l', lty = 2, lwd = 2, xlim = x_interval, 
-       ylim = y_interval, main = "Graph of the Relative Belief Ratio at w0", ylab = "Values", xlab = "w", col = "red")
+       ylim = y_interval, main = "Graph of the Relative Belief Ratio at w0", 
+       ylab = "RBR", xlab = "w", col = "red")
   abline(h=relative_belief_ratio_at_w0, lwd = 2, lty = 2, col="navy")
   abline(v=lower_bd, col="#7c83e8", lwd = 2, lty = 3)
   abline(v=upper_bd, col="#7c83e8", lwd = 2, lty = 3)
@@ -434,11 +436,53 @@ RB_generate_dataframe = function(grid, prior, post, relative_belief_ratio){
 #gamma = 0.5
 
 #grid = RB_distance_that_matters(0.001)
-#test_1 = RB_compute_values(alpha1w, alpha2w, n, nD, grid)
+#test_1 = RBR_compute_values(alpha1w, alpha2w, n, nD, grid)
 #test_2 = compute_credible_region(alpha1w, alpha2w, n, nD, grid, gamma, delta, test_1$relative_belief_ratio, 
-#                                 test_1$posterior_content, test_1$pr_interval)
-#generate_prior_post_graph(test_1$prior, test_1$post, test_1$pr_interval, grid, test_2$credible_region)
-#generate_rb_graph(test_1$relative_belief_ratio, test_1$pr_interval, grid, test_2$credible_region,
+#                                 test_1$posterior_content, test_1$plausible_region)
+#generate_prior_post_graph(test_1$prior, test_1$post, test_1$plausible_region, grid, test_2$credible_region)
+#generate_rb_graph(test_1$relative_belief_ratio, test_1$plausible_region, grid, test_2$credible_region,
 #                  test_2$rb_line)
 
 
+# TODO: might've computed this wrong
+compute_credible_region_IGNORE = function(alpha1w, alpha2w, n, nD, grid, gamma, delta, relative_belief_ratio, 
+                                   posterior_content, plausible_region){
+  # Computes the credible region. At first, there's no default input to avoid generating
+  # a credible region automatically (it is not necessary.)
+  if (check.numeric(gamma) == FALSE){
+    err_msg = "Need to put in a valid input for gamma (see graph 1.)"
+    return(list("credible_region" = err_msg, "rb_line" = err_msg))
+  }
+  else{ # This condition runs if the user provides an actual numeric input.
+    gamma = as.numeric(gamma)
+    if(gamma >= posterior_content){
+      err_msg = "Gamma must be less than the posterior content of the plausible region."
+      return(list("credible_region" = err_msg, "rb_line" = err_msg))
+    } 
+    else {
+      half_distance = floor((plausible_region[2]-plausible_region[1])*(1/delta)/2)
+      for(i in 1:half_distance){
+        left_pt = plausible_region[1] + delta*i
+        right_pt = plausible_region[2] - delta*i
+        nND = n - nD
+        test_area = pbeta(right_pt, alpha1w+nD, alpha2w+nND) - pbeta(left_pt, alpha1w+nD, alpha2w+nND)
+        if(test_area <= gamma){
+          credible_region = c(left_pt, right_pt)
+          
+          rb_vals = c() # will need to change variable name
+          for (i in 1:length(grid)){
+            if(grid[i] > credible_region[1] & grid[i] < credible_region[2]){
+              rb_vals = c(rb_vals, relative_belief_ratio[i])
+            }
+          }
+          rb_line = min(rb_vals)
+          break # hopefully this successfully breaks the loop!
+        }
+      }
+      
+      newlist = list("credible_region" = credible_region, "rb_line" = rb_line)
+      # Note: rb_line should be the upper dotted line - helps define a valid credible region
+      return(newlist)
+    }
+  }
+}
