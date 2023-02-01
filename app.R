@@ -263,28 +263,45 @@ server <- function(input, output, session) {
   })
   
   ################################## action buttons !!!!!!!!!!!!!!!
-  
   cols <- reactiveValues()   
-  cols$showing <- 1:5  
+  cols$showing <- 1:5    
   
   #show the next five columns 
   observeEvent(input$theAUC_next_five, {
     #stop when the last column is displayed
-    if(cols$showing[[length(cols$showing)]] < length(theAUC_download())) {
+    last_column = cols$showing[[length(cols$showing)]]
+    if((last_column < length(theAUC_download())) & ((length(theAUC_download()) - last_column) >= 5)) {
       hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
       cols$showing <- cols$showing + 5
       showCols(proxy, cols$showing, reset = FALSE) #show the next five 
-    } 
+    } else if ((last_column < length(theAUC_download())) & ((length(theAUC_download()) - last_column) < 5)){
+      hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
+      cols$showing <- (last_column+1):length(theAUC_download())
+      showCols(proxy, cols$showing, reset = FALSE) #show the last one
+    }
   })
   
   #similar mechanism but reversed to show the previous cols
   observeEvent(input$theAUC_prev_five, {
     #stop when the first column is displayed
-    if(cols$showing[[1]] > 1) {
+    first_col = cols$showing[[1]]
+    last_column = cols$showing[[length(cols$showing)]]
+    if (last_column == length(theAUC_download())){
+      hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
+      # trying to find the highest number divisible by 5
+      for(i in length(theAUC_download()):1){
+        if(i %% 5 == 0){
+          new_col = i
+          break
+        }
+      }
+      cols$showing <- (new_col - 5 + 1):new_col
+      showCols(proxy, cols$showing, reset = FALSE) #show previous five
+    } else if(cols$showing[[1]] > 1){
       hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
       cols$showing <- cols$showing - 5
       showCols(proxy, cols$showing, reset = FALSE) #show previous five
-    } 
+    }
   })
   
   theAUC_download = reactive(
@@ -294,8 +311,6 @@ server <- function(input, output, session) {
     } else if (input$theAUC_choosefile == 2){ # post
       theAUC_generate_dataframe(2, sect3.2_AUC_post()$pND_array, sect3.2_AUC_post()$pD_array, 
                                 sect3.2_AUC_post()$FNR, sect3.2_AUC_post()$AUC)
-    } else if (input$theAUC_choosefile == 3){ # relative belief ratio
-      theAUC_generate_dataframe(3, AUC = sect3.2_AUC_RBR()$AUC_RBR, grid = sect3.2_AUC_RBR()$grid)
     }
   )
   
@@ -318,6 +333,24 @@ server <- function(input, output, session) {
     }
   )
   
+  theAUC_download_2 = reactive(
+    theAUC_generate_dataframe(datatype = 3, pND_array = FALSE, pD_array = FALSE, FNR = FALSE, 
+                                         AUC = sect3.2_AUC_RBR()$AUC_RBR, 
+                                         grid = sect3.2_AUC_RBR()$grid)
+  )
+  
+  output$theAUC_dataframe_2 <- renderDT({
+    theAUC_download_2()
+  })
+  
+  output$theAUC_downloadData_2 <- downloadHandler(
+    filename = function() {
+      paste(input$theAUC_filename_2, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(theAUC_download_2(), file, row.names = FALSE)
+    }
+  )
   
   
   ###########################################################################

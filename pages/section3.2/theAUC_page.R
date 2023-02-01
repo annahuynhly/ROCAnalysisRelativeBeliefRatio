@@ -1,5 +1,3 @@
-#setwd("C:\\Users\\AnnaH\\OneDrive\\Desktop\\Stats RA\\ShinyWebpage\\pages\\section3.2")
-#source("helperfunctions3.2.R")
 ################################################################
 # DESCRIPTION                                                  #
 ################################################################
@@ -11,18 +9,54 @@ theAUC_description = div(
       #numericInput(inputId = "theAUC_m", # CHANGE THIS
       #             tags$p('m (TODO DESCRIPTION)', style = "font-size: 90%;"),
       #             value = 5, min = 1),
-      numericInput(inputId = "theAUC_nND", # CHANGE THIS
+      numericInput(inputId = "theAUC_nND",
                    tags$p('Total Non-Diseased', style = "font-size: 90%;"),
-                   value = 32, min = 1), # 
-      numericInput(inputId = "theAUC_nD", # CHANGE THIS
+                   value = 50, min = 1), #
+      numericInput(inputId = "theAUC_nD", 
                    tags$p('Total Diseased', style = "font-size: 90%;"),
-                   value = 68, min = 0),
-      numericInput(inputId = "theAUC_nMonteCarlo", # CHANGE THIS
+                   value = 100, min = 1),
+      numericInput(inputId = "theAUC_nMonteCarlo", 
                    tags$p('Monte Carlo (Simulation) Sample Size', 
-                          style = "font-size: 90%;"),value = 10000, min = 0),
+                          style = "font-size: 90%;"),value = 100000, min = 0),
     ),
     mainPanel(
-      p("Need to write description. Come back later!"),
+      p("The goal of this section is for the user to compute the prior, posterior, the relative belief 
+        ratio of the AUC. The user is free to download any results."),
+      p("Plot images can be saved by right clicking them."),
+      hr(style = "border-top: 1px solid #363e4f;"),
+      
+      h4("Inputs and their Meanings"),
+      p(HTML("<ul>
+            <li><b>Total Non-Diseased:</b> The amount of \"non-diseased\" individuals from
+                   the total sample size. </li>
+            <li><b>Total Diseased:</b> the total amount of \"diseased\" individuals from the
+                   total sample size. </li>
+            <li><b>Monte Carlo (Simulation) Sample Size:</b> the sample size to use the Monte Carlo method
+                   to simulate the prior and the posterior. When computations are taking too long,
+                   it is recommended to lower the sample size. </li>
+            <li><b>Delta:</b> The distance that matters. It is the distance between any
+                   two points on the grid. TODO: might change. </li>
+            <li><b>alphaND1, ..., alphaNDm:</b> The parameters of the Dirichlet distribution of the
+                   non-diseased sample. </li>
+            <li><b>alphaD1, ..., alphaDm:</b> The parameters of the Dirichlet distribution of the
+                   diseased sample. </li>
+            <li><b>fND:</b> TO WRITE </li>
+            <li><b>fD:</b> TO WRITE </li>
+            <li><b>Gamma:</b> A value that's supposed to be less than the posterior content
+                              of the plausible region.</li>
+            <li><b>Hypothesized AUC (greater than):</b> input what the user hypothesizes AUC to be
+                   greater than. </li>
+            <li><b>Input File Name:</b> The name of the file you want to download. The .csv file
+                   will include the grid points, the prior, the posterior,
+                   and the relative belief ratio. </li>
+         </ul>")),
+      
+     h4("Outputs and their Meanings"),
+    p(HTML("<ul>
+            <li><b>plausible_region:</b> plausible region. PR = { w : RB(w | ... ) > 1 }</li>
+            <li><b>credible_region:</b> see the definition in the literature. :) </li>
+            <li><b>OUTPUT_VARIABLE:</b> TODO </li>
+         </ul>"))
     )
   )
 )
@@ -97,16 +131,16 @@ theAUC_hypothesizedAUC = div(
 )
 
 ################################################################
-# DOWNLOAD PAGE                                                #
+# DOWNLOAD PAGE 1                                              #
 ################################################################
 
-theAUC_download = div( 
-  titlePanel("Download Output"), 
+theAUC_download_1 = div( 
+  titlePanel("Download Prior & Posterior"), 
   sidebarLayout(
     sidebarPanel(
       textInput(inputId = "theAUC_filename", "Input File Name", value = "AUC Values"),
-      radioButtons(inputId = "theAUC_choosefile", h3("Choose Which Data to Download"),
-                   choices = list("Prior" = 1, "Posterior" = 2, "Relative Belief Ratio" = 3),
+      radioButtons(inputId = "theAUC_choosefile", "Choose Which Data to Download",
+                   choices = list("Prior" = 1, "Posterior" = 2),
                    selected = 1),
       actionButton('theAUC_prev_five', 'Previous Cols'),
       actionButton('theAUC_next_five', 'Next Cols'),
@@ -114,6 +148,23 @@ theAUC_download = div(
     ),
     mainPanel(
       tabPanel("Download Output", dataTableOutput("theAUC_dataframe"))
+    )
+  )
+)
+
+################################################################
+# DOWNLOAD PAGE 2                                              #
+################################################################
+
+theAUC_download_2 = div( 
+  titlePanel("Download Relative Belief Ratio"), 
+  sidebarLayout(
+    sidebarPanel(
+      textInput(inputId = "theAUC_filename_2", "Input File Name", value = "Relative Belief Ratio of AUC"),
+      downloadButton("theAUC_downloadData_2", "Download"),
+    ),
+    mainPanel(
+      tabPanel("Download Output", dataTableOutput("theAUC_dataframe_2"))
     )
   )
 )
@@ -130,12 +181,10 @@ page_theAUC = div(
               tabPanel("Plausible Region & More", theAUC_plausible_region),
               tabPanel("Plots", theAUC_plots),
               tabPanel("Hypothesized AUC", theAUC_hypothesizedAUC),
-              tabPanel("Download Output", theAUC_download)
+              tabPanel("Download Prior & Posterior", theAUC_download_1),
+              tabPanel("Download RBR", theAUC_download_2)
   )
 )
-
-
-
 
 ################################################################
 # MAIN FUNCTIONS                                               #
@@ -263,7 +312,7 @@ compute_AUC_post_content = function(delta, AUC_post, plausible_region){
   if(plausible_region[1] == 0 & plausible_region[2] != 0){ # adding the first case between (0, delta/2)
     AUC_post_content = length(AUC_post[AUC_post < bins[1]]) / (1/delta) * bins[0]
   } else if (plausible_region[1] == plausible_region[2]){
-    print("Cannot compute posterior content: the plausible region has length 0.")
+    #print("Cannot compute posterior content: the plausible region has length 0.")
     return(0)
   }
   
@@ -291,12 +340,6 @@ compute_AUC_post_content = function(delta, AUC_post, plausible_region){
   }
   
   return(AUC_post_content)
-}
-
-compute_AUC_credible_region_PLACEHOLDER = function(gamma, delta, AUC_RBR, AUC_post,
-                                       posterior_content, plausible_region){
-  #placeholder function - will remove
-  return(c(0.6, 0.7))
 }
 
 # NEED TO THINK ABOUT THE CREDIBLE REGION MORE -- NOT COMPLETE, DUE TO BIN EDGE CASE
@@ -374,7 +417,6 @@ hypothesized_AUC_compute_values = function(hypo_AUC, delta = FALSE, grid, AUC_RB
   return(area)
 }
 
-
 ############################# GRAPH BUILDING
 
 density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_region,
@@ -411,24 +453,11 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
   
   AUC_RBR[is.na(AUC_RBR)] = 0
   
-  # finding appropriate values for x_lim
-  if(hypothesis == FALSE){
-    x_lim = c()
-    for (i in 1:length(AUC_RBR)){
-      if (AUC_RBR[i] > 0.05){
-        x_lim = c(x_lim, bins[i])
-      }
-    }
-    x_lim = c(min(x_lim), max(x_lim))
-  } else {
-    x_lim = c(0, 1)
-  }
-  
   myhist <-list(breaks=bins, counts=AUC_RBR, density=AUC_RBR/diff(bins))
   class(myhist) = "histogram"
   
   plot(myhist, xlab = "AUC", ylab = "RBR", main = "Histogram of the Relative Belief Ratio & AUC",
-       col = rgb(0/255, 255/255, 204/255, alpha = 0.5), xlim = x_lim, freq = TRUE,
+       col = rgb(0/255, 255/255, 204/255, alpha = 0.5), freq = TRUE,
        border = "#ffffff")
   abline(h=1, col="#2e10a7", lwd = 2, lty = 2)
   abline(v=plausible_region[1], col="#947aff", lwd = 2, lty = 3)
@@ -475,6 +504,9 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
 
 theAUC_generate_dataframe = function(datatype, pND_array = FALSE, pD_array = FALSE, FNR = FALSE, 
                                      AUC = FALSE, grid = FALSE){
+  if((datatype != 1) & (datatype != 2) & (datatype != 3)){
+    return("Invalid datatype; it must either be 1, 2, or 3, where 1 = prior, 2 = posterior, and 3 = relative belief ratio.")
+  }
   
   valid_prior_or_post = TRUE
   valid_rbr = TRUE
