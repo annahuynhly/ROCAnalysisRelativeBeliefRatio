@@ -130,9 +130,6 @@ server <- function(input, output, session) {
   sect_3.1_info_2 = reactive(w0_compute_values(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
                     input$RB_setup_n, input$RB_setup_nD, input$RB_setup_w0, 
                     sect_3.1_info_1()$relative_belief_ratio, sect_3.1_grid()))
-  #sect_3.1_cred_region = reactive(compute_credible_region(input$RB_gamma, 
-  #                       sect_3.1_info_1()$relative_belief_ratio, sect_3.1_grid(), 
-  #                       sect_3.1_info_1()$sup_gamma, sect_3.1_info_1()$plausible_region))
   sect_3.1_cred_region = reactive(compute_credible_region(input$RB_setup_alpha1w, input$RB_setup_alpha2w, 
                                   input$RB_setup_n, input$RB_setup_nD, sect_3.1_grid(), input$RB_gamma, 
                                   input$RB_delta, sect_3.1_info_1()$relative_belief_ratio, 
@@ -258,71 +255,19 @@ server <- function(input, output, session) {
                          sect3.2_AUC_RBR()$plausible_region, hypothesis = input$theAUC_hypoAUC)
   })
   output$theAUC_hypoAUC_value = renderPrint({
-    hypothesized_AUC_compute_values(input$theAUC_hypoAUC, input$theAUC_delta, sect3.2_AUC_RBR()$grid, 
-                                    sect3.2_AUC_RBR()$AUC_RBR)
+    hypothesized_AUC_compute_values(input$theAUC_hypoAUC, input$theAUC_delta,
+                                    sect3.2_AUC_prior()$AUC, sect3.2_AUC_post()$AUC)
   })
   
-  ################################## action buttons !!!!!!!!!!!!!!!
-  cols <- reactiveValues()   
-  cols$showing <- 1:5    
-  
-  #show the next five columns 
-  observeEvent(input$theAUC_next_five, {
-    #stop when the last column is displayed
-    last_column = cols$showing[[length(cols$showing)]]
-    if((last_column < length(theAUC_download())) & ((length(theAUC_download()) - last_column) >= 5)) {
-      hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
-      cols$showing <- cols$showing + 5
-      showCols(proxy, cols$showing, reset = FALSE) #show the next five 
-    } else if ((last_column < length(theAUC_download())) & ((length(theAUC_download()) - last_column) < 5)){
-      hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
-      cols$showing <- (last_column+1):length(theAUC_download())
-      showCols(proxy, cols$showing, reset = FALSE) #show the last one
-    }
-  })
-  
-  #similar mechanism but reversed to show the previous cols
-  observeEvent(input$theAUC_prev_five, {
-    #stop when the first column is displayed
-    first_col = cols$showing[[1]]
-    last_column = cols$showing[[length(cols$showing)]]
-    if (last_column == length(theAUC_download())){
-      hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
-      # trying to find the highest number divisible by 5
-      for(i in length(theAUC_download()):1){
-        if(i %% 5 == 0){
-          new_col = i
-          break
-        }
-      }
-      cols$showing <- (new_col - 5 + 1):new_col
-      showCols(proxy, cols$showing, reset = FALSE) #show previous five
-    } else if(cols$showing[[1]] > 1){
-      hideCols(proxy, cols$showing, reset = FALSE) #hide displayed cols
-      cols$showing <- cols$showing - 5
-      showCols(proxy, cols$showing, reset = FALSE) #show previous five
-    }
-  })
   
   theAUC_download = reactive(
-    if(input$theAUC_choosefile == 1){ # prior
-      theAUC_generate_dataframe(1, sect3.2_AUC_prior()$pND_array, sect3.2_AUC_prior()$pD_array, 
-                                sect3.2_AUC_prior()$FNR, sect3.2_AUC_prior()$AUC)
-    } else if (input$theAUC_choosefile == 2){ # post
-      theAUC_generate_dataframe(2, sect3.2_AUC_post()$pND_array, sect3.2_AUC_post()$pD_array, 
-                                sect3.2_AUC_post()$FNR, sect3.2_AUC_post()$AUC)
-    }
+    theAUC_generate_dataframe(input$theAUC_delta, sect3.2_AUC_prior()$AUC, 
+                              sect3.2_AUC_post()$AUC, sect3.2_AUC_RBR()$AUC_RBR)
   )
   
-  output$theAUC_dataframe <- renderDT(
-    theAUC_download(),
-    options = list(
-      columnDefs = list(list(visible = FALSE, targets = 1:length(theAUC_download()))), #hide all columns
-      scrollX = TRUE)  #for when many columns are visible
-  )
-  
-  proxy <- dataTableProxy('theAUC_dataframe')
-  showCols(proxy, 1:5, reset = FALSE) #show the first five cols (because the colums are now all hidden)
+  output$theAUC_dataframe <- renderDataTable({
+    theAUC_download()
+  })
   
   output$theAUC_downloadData <- downloadHandler(
     filename = function() {
@@ -330,25 +275,6 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       write.csv(theAUC_download(), file, row.names = FALSE)
-    }
-  )
-  
-  theAUC_download_2 = reactive(
-    theAUC_generate_dataframe(datatype = 3, pND_array = FALSE, pD_array = FALSE, FNR = FALSE, 
-                                         AUC = sect3.2_AUC_RBR()$AUC_RBR, 
-                                         grid = sect3.2_AUC_RBR()$grid)
-  )
-  
-  output$theAUC_dataframe_2 <- renderDT({
-    theAUC_download_2()
-  })
-  
-  output$theAUC_downloadData_2 <- downloadHandler(
-    filename = function() {
-      paste(input$theAUC_filename_2, ".csv", sep = "")
-    },
-    content = function(file) {
-      write.csv(theAUC_download_2(), file, row.names = FALSE)
     }
   )
   

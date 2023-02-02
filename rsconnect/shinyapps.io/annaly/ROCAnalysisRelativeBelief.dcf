@@ -5,9 +5,10 @@ account: annaly
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7928413
-bundleId: 6765574
+bundleId: 6802055
 url: https://annaly.shinyapps.io/ROCAnalysisRelativeBelief/
-when: 1674506678.66923
-lastSyncTime: 1674506678.66925
+when: 1675343491.40716
+lastSyncTime: 1675343491.40717
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: ignore/info.txt|ignore/send_email.R|ignore/test_moving_dataset.R|ignore/test_moving_dataset_2.R

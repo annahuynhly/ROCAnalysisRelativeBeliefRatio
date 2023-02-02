@@ -70,7 +70,7 @@ theAUC_plausible_region = div(
   sidebarLayout(
     sidebarPanel(
       numericInput(inputId = "theAUC_delta", 
-                   tags$p("Delta"), value = 0.01, min = 0, max = 1),
+                   tags$p("Delta"), value = 0.04, min = 0, max = 1),
       textInput(inputId = "theAUC_alpha_ND",
                 tags$p('alphaND1, ..., alphaNDm', style = "font-size: 90%;"),
                 value = "1, 1, 1, 1, 1"),
@@ -131,7 +131,7 @@ theAUC_hypothesizedAUC = div(
 )
 
 ################################################################
-# DOWNLOAD PAGE 1                                              #
+# DOWNLOAD PAGE                                                #
 ################################################################
 
 theAUC_download_1 = div( 
@@ -139,32 +139,15 @@ theAUC_download_1 = div(
   sidebarLayout(
     sidebarPanel(
       textInput(inputId = "theAUC_filename", "Input File Name", value = "AUC Values"),
-      radioButtons(inputId = "theAUC_choosefile", "Choose Which Data to Download",
-                   choices = list("Prior" = 1, "Posterior" = 2),
-                   selected = 1),
-      actionButton('theAUC_prev_five', 'Previous Cols'),
-      actionButton('theAUC_next_five', 'Next Cols'),
+      #radioButtons(inputId = "theAUC_choosefile", "Choose Which Data to Download",
+      #             choices = list("Prior" = 1, "Posterior" = 2),
+      #             selected = 1),
+      #actionButton('theAUC_prev_five', 'Previous Cols'),
+      #actionButton('theAUC_next_five', 'Next Cols'),
       downloadButton("theAUC_downloadData", "Download"),
     ),
     mainPanel(
       tabPanel("Download Output", dataTableOutput("theAUC_dataframe"))
-    )
-  )
-)
-
-################################################################
-# DOWNLOAD PAGE 2                                              #
-################################################################
-
-theAUC_download_2 = div( 
-  titlePanel("Download Relative Belief Ratio"), 
-  sidebarLayout(
-    sidebarPanel(
-      textInput(inputId = "theAUC_filename_2", "Input File Name", value = "Relative Belief Ratio of AUC"),
-      downloadButton("theAUC_downloadData_2", "Download"),
-    ),
-    mainPanel(
-      tabPanel("Download Output", dataTableOutput("theAUC_dataframe_2"))
     )
   )
 )
@@ -182,7 +165,6 @@ page_theAUC = div(
               tabPanel("Plots", theAUC_plots),
               tabPanel("Hypothesized AUC", theAUC_hypothesizedAUC),
               tabPanel("Download Prior & Posterior", theAUC_download_1),
-              tabPanel("Download RBR", theAUC_download_2)
   )
 )
 
@@ -190,9 +172,10 @@ page_theAUC = div(
 # MAIN FUNCTIONS                                               #
 ################################################################
 
-RB_distance_that_matters = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
+#RB_distance_that_matters
+theAUC_grid = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
   # Creates a grid of values from 0 to 1
-  grid = seq(delta/2, (1-delta/2), length= 1/delta)
+  grid = seq(0, 1, length= (1/delta)+1)
   return(grid)
 }
 
@@ -262,25 +245,27 @@ simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, alpha_ND, alpha_D, fND, fD
   return(newlist)
 }
 
+#probably should change function name
+grab_AUC_densities = function(delta, AUC){
+  bins = theAUC_grid(delta)
+  x = hist(AUC, breaks = bins, plot = FALSE)
+  return(x$density)
+}
+
+# MIGHT BE ABLE TO GET THE LITERAL POINTS USING HIST
+# TO MODIFY
 compute_AUC_RBR = function(delta, AUC_prior, AUC_post){
   # NEED TO COMPUTE THE FOLLOWING: RBR, plausible region, etc...
-  bins = RB_distance_that_matters(delta)
+  bins = theAUC_grid(delta)
   AUC_RBR = rep(0, length(bins))
-  bins = c(bins, 1) # adding 1 in there at the end
   #AUC_RBR = rep(0, length(bins))
-  # start with i = 1 as the edge case - this we look between 0 and bins[1],
-  # where bins[1] could be super small
-  if(length(AUC_prior[AUC_prior < bins[1]]) > 0){ # deal with divison by 0 case
-    AUC_RBR[1] = length(AUC_post[AUC_post < bins[1]]) / length(AUC_prior[AUC_prior < bins[1]])
-  } else {
-    AUC_RBR[1] = NA
-  }
-  for(i in 2:length(bins)){ # note that this starts at 2 instead
+  AUC_prior_pts = grab_AUC_densities(delta, AUC_prior)
+  AUC_post_pts = grab_AUC_densities(delta, AUC_post)
+  
+  for(i in 1:(length(bins)-1)){
     # if statement is to prevent division by 0
-    AUC_prior_pt = length(AUC_prior[AUC_prior > bins[i-1] & AUC_prior < bins[i]])
-    if(AUC_prior_pt > 0){
-      AUC_post_pt = length(AUC_post[AUC_post > bins[i-1] & AUC_post < bins[i]])
-      AUC_RBR[i] = AUC_post_pt / AUC_prior_pt
+    if((AUC_prior_pts[i] > 0) == TRUE){
+      AUC_RBR[i] = AUC_post_pts[i] / AUC_prior_pts[i]
     } else {
       AUC_RBR[i] = NA
     }
@@ -306,37 +291,16 @@ compute_AUC_RBR = function(delta, AUC_prior, AUC_post){
 # so the area computed here is different than what's on the paper!!!!!
 
 compute_AUC_post_content = function(delta, AUC_post, plausible_region){
-  bins = RB_distance_that_matters(delta)
+  bins = theAUC_grid(delta)
   #bins = c(bins, 1)
   AUC_post_content = 0
-  if(plausible_region[1] == 0 & plausible_region[2] != 0){ # adding the first case between (0, delta/2)
-    AUC_post_content = length(AUC_post[AUC_post < bins[1]]) / (1/delta) * bins[0]
-  } else if (plausible_region[1] == plausible_region[2]){
-    #print("Cannot compute posterior content: the plausible region has length 0.")
-    return(0)
-  }
+  AUC_post_pts = grab_AUC_densities(delta, AUC_post)
   
-  for(i in 1:length(bins)){
-    if(bins[i] > plausible_region[1]){
-      start_loop = i
-      break
-    }
-  }
-  for(i in length(bins):1){
-    if(bins[i] < plausible_region[2]){
-      end_loop = i
-      break
-    }
-  }
+  start = match(plausible_region[1], bins)
+  end = match(plausible_region[2], bins)
   
-  for(i in start_loop:end_loop){
-    AUC_post_pt = length(AUC_post[AUC_post > bins[i-1] & AUC_post < bins[i]]) / (1/delta)
-    AUC_post_content = AUC_post_content + (AUC_post_pt * delta)
-  }
-  
-  if(plausible_region[2] == 1){ # adding the last case between (..., 1)
-    AUC_post_pt = length(AUC_post[AUC_post > bins[length(bins)]]) / (1/delta)
-    AUC_post_content = AUC_post_content + AUC_post_pt * (1-bins[length(bins)])
+  for(i in start:end){
+    AUC_post_content = AUC_post_content + AUC_post_pts[i] * delta
   }
   
   return(AUC_post_content)
@@ -348,8 +312,7 @@ compute_AUC_credible_region = function(gamma, delta, AUC_RBR, AUC_post,
   # temporarily turn NA to 0
   AUC_RBR[is.na(AUC_RBR)] = 0
   
-  bins = RB_distance_that_matters(delta)
-  bins = c(bins, 1)
+  bins = theAUC_grid(delta)
   # Computes the credible region. At first, there's no default input to avoid generating
   # a credible region automatically (it is not necessary.)
   if (check.numeric(gamma) == FALSE){
@@ -392,40 +355,39 @@ compute_AUC_credible_region = function(gamma, delta, AUC_RBR, AUC_post,
 }
 
 ###### HYPOTHESIS TESTING
-hypothesized_AUC_compute_values = function(hypo_AUC, delta = FALSE, grid, AUC_RBR){
-  # note: for hypo_AUC, we assume it will be for (hypo_AUC, 1)
-  AUC_RBR[is.na(AUC_RBR)] = 0
+hypothesized_AUC_compute_values = function(hypo_AUC, delta, AUC_prior, AUC_post){
+  priors = c(0, grab_AUC_densities(delta, AUC_prior)*delta)
+  posts = c(0, grab_AUC_densities(delta, AUC_post)*delta)
   
-  if(delta == FALSE){
-    diff = grid[3] - grid[2] # this is sort of hard coded and may not work in each case
-  } else if (check.numeric(delta) == TRUE){
-    diff = as.numeric(delta)
-  } else {
-    return("Need a valid input for delta (difference that matters.)")
-  }
-  
+  grid = theAUC_grid(delta)
   for(i in 1:length(grid)){
     if(grid[i] >= hypo_AUC){
       start_loop = i
       break
     }
   }
-  area = 0
-  for(j in start_loop:(length(grid))){
-    area = area + (AUC_RBR[j] * diff)
+  
+  priorprob=0
+  postprob=0
+  for(i in start_loop:length(grid)){
+    priorprob=priorprob+priors[i]
+    postprob=postprob+posts[i]
   }
-  return(area)
+  RB=postprob/priorprob
+
+  return(RB)
 }
 
 ############################# GRAPH BUILDING
 
+
 density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_region,
                                        credible_region = FALSE){
-  bins = RB_distance_that_matters(delta)
+  bins = theAUC_grid(delta)
   
   hist(AUC_post, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
        #ylim = c(0, max(AUC_prior,AUC_post)),
-       main="Density Histogram of AUC", 
+       main="Density Histogram: The Prior & Posterior of the AUC", 
        col = rgb(102/255, 153/255, 255/255, alpha = 0.5), border = "#ffffff")
   hist(AUC_prior, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
        #     ylim = c(0, max(AUC_prior,AUC_post)),
@@ -448,15 +410,16 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
 
 density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_region = FALSE,
                                 hypothesis = FALSE){
-  bins = RB_distance_that_matters(delta)
-  bins = c(0, bins, 1)
+  bins = theAUC_grid(delta)
+  #bins = c(0, bins, 1)
   
   AUC_RBR[is.na(AUC_RBR)] = 0
   
-  myhist <-list(breaks=bins, counts=AUC_RBR, density=AUC_RBR/diff(bins))
+  myhist <-list(breaks=bins, counts=AUC_RBR, density=AUC_RBR/delta)
   class(myhist) = "histogram"
   
-  plot(myhist, xlab = "AUC", ylab = "RBR", main = "Histogram of the Relative Belief Ratio & AUC",
+  plot(myhist, xlab = "AUC", ylab = "Relative Belief Ratio", 
+       main = "Density Histogram: The Relative Belief Ratio of the AUC",
        col = rgb(0/255, 255/255, 204/255, alpha = 0.5), freq = TRUE,
        border = "#ffffff")
   abline(h=1, col="#2e10a7", lwd = 2, lty = 2)
@@ -502,95 +465,60 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
   }
 }
 
-theAUC_generate_dataframe = function(datatype, pND_array = FALSE, pD_array = FALSE, FNR = FALSE, 
-                                     AUC = FALSE, grid = FALSE){
-  if((datatype != 1) & (datatype != 2) & (datatype != 3)){
-    return("Invalid datatype; it must either be 1, 2, or 3, where 1 = prior, 2 = posterior, and 3 = relative belief ratio.")
-  }
+theAUC_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
   
-  valid_prior_or_post = TRUE
-  valid_rbr = TRUE
-  for(i in c(pND_array, pD_array, FNR, AUC)){
-    if(typeof(i) != "double"){
-      valid_prior_or_post = FALSE
-      break
-    }
-  }
-  for(i in c(AUC, grid)){
-    if(typeof(i) != "double"){
-      valid_rbr = FALSE
-      break
-    }
-  }
-  
-  if((datatype == 1 | datatype == 2)& valid_prior_or_post == TRUE){ # This is for the prior
-    pND_array = as.data.frame(pND_array)
-    pD_array = as.data.frame(pD_array)
-    FNR = as.data.frame(FNR)
-    
-    # Change col names
-    pND_array_newcols = c()
-    pD_array_newcols = c()
-    FNR_array_newcols = c()
-    for(i in 1:length(pND_array[1,])){
-      pND_array_newcols = c(pND_array_newcols, paste("Prior pND ", as.character(i), sep = ""))
-    }
-    for(i in 1:length(pD_array[1,])){
-      pD_array_newcols = c(pD_array_newcols, paste("Prior pD ", as.character(i), sep = ""))
-    }
-    for(i in 1:length(FNR[1,])){
-      FNR_array_newcols = c(FNR_array_newcols, paste("FNR ", as.character(i), sep = ""))
-    }
-    colnames(pND_array) = pND_array_newcols
-    colnames(pD_array) = pD_array_newcols
-    colnames(FNR) = FNR_array_newcols
-    
-    df = data.frame(c(AUC))
-    colnames(df) = c("AUC of Prior")
-    
-    #return(pND_array)
-    
-    return(cbind(pND_array, pD_array, FNR, df))
-    
-  } else if (datatype == 3 & valid_rbr == TRUE){
-    df = data.frame(grid, AUC)
-    colnames(df) = c("Grid point", "AUC of Relative Belief Ratio")
-    return(df)
-    
-  } else {
-    return("Not a valid data type. 1 = prior, 2 = posterior, 3 = relative belief ratio.")
-  }
-  
+  grid_pts = theAUC_grid(delta)
+  #TEMPORARILY CHANGE THE AUC_prior_pts
+  #AUC_prior_pts = c(0, grab_AUC_densities(delta, AUC_prior)*delta)
+  #AUC_post_pts = c(0, grab_AUC_densities(delta, AUC_post)*delta)
+  AUC_prior_pts = c(0, grab_AUC_densities(delta, AUC_prior))
+  AUC_post_pts = c(0, grab_AUC_densities(delta, AUC_post))
+  #print(c(length(grid_pts), length(AUC_prior_pts), length(AUC_post_pts), length(AUC_RBR)))
+  df = data.frame(grid_pts, AUC_prior_pts, AUC_post_pts, AUC_RBR)
+  colnames(df) = c("Grid point", "Prior of the AUC", "Posterior of the AUC", "Relative Belief Ratio of the AUC")
+  return(df)
 }
+
 
 
 
 # TESTING
 # nND, nD, nMonteCarlo, alpha_ND, alpha_D
-#nND = 32
-#nD = 68
+#nND = 50
+#nD = 100
 #nMonteCarlo = 10000
 #alpha_ND = c(1, 1, 1, 1, 1) 
 #alpha_D = c(1, 1, 1, 1, 1)
 ####m = 5
 #fND = "29, 7, 4, 5, 5"
 #fD = "14, 7, 25, 33, 21"
-#theAUC_delta = 0.01
+#delta = 0.01
 #gamma = 0.5
 
 #test1 = simulate_AUC_mc_prior(nND, nD, nMonteCarlo, alpha_ND, alpha_D)
-
 #test2 = simulate_AUC_mc_post(nND, nD, nMonteCarlo, alpha_ND, alpha_D, fND, fD)
+#grid = theAUC_grid(delta)
+#prior_pts = c(0, grab_AUC_densities(delta, test1$AUC))
 
-#test3 = compute_AUC_RBR(theAUC_delta, test1$AUC, test2$AUC)
+#smoothingSpline = smooth.spline(grid, prior_pts, spar=0.7)
+#plot(grid,prior_pts)
+#lines(smoothingSpline)
+
+
+
+#test3 = compute_AUC_RBR(delta, test1$AUC, test2$AUC)
+
+#hypothesized_AUC_compute_values(0.5, delta, test3$AUC_RBR)
+
+#grab_AUC_densities(delta, test2$AUC)*delta
+#sum(grab_AUC_densities(delta, test2$AUC)*delta)
 
 #test4 = compute_AUC_post_content(theAUC_delta, test2$AUC, test3$plausible_region)
 
 #test5 = compute_AUC_credible_region(gamma, theAUC_delta, test3$AUC_RBR, test2$AUC,
 #                            test4, test3$plausible_region)
 
-#theAUC_generate_dataframe(1, test1$pND_array, test1$pD_array, test1$FNR, 
-#                          test1$AUC, grid = FALSE)
+#theAUC_generate_dataframe(delta, test1$AUC, test2$AUC, test3$AUC_RBR)
 
 #par(mfrow=c(1,2))
 
@@ -599,7 +527,6 @@ theAUC_generate_dataframe = function(datatype, pND_array = FALSE, pD_array = FAL
 
 #density_hist_AUC_RBR(theAUC_delta, test3$AUC_RBR, test3$plausible_region, test5$credible_region)
 
-#hypothesized_AUC_compute_values(0.5, test3$grid, test3$AUC_RBR)
 
 
 # FOR THE SEPARATE CASE
@@ -621,11 +548,28 @@ density_hist_AUC_IGNORE = function(theAUC_delta, AUC, type){
     return("Invalid type. You need to either use prior or posterior.")
   }
   # TODO: might want to generalize the graph?
-  bins = RB_distance_that_matters(theAUC_delta)
+  bins = theAUC_grid(theAUC_delta)
   hist(AUC, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
        main=paste("Histogram of AUC ", "(from the ", hist_type, ")", sep = ""), 
        col = '#cbcbcb', border = "#ffffff")
 }
 
-
+hypothesized_AUC_compute_values_IGNORE = function(hypo_AUC, delta, AUC_RBR){
+  # note: for hypo_AUC, we assume it will be for (hypo_AUC, 1)
+  AUC_RBR[is.na(AUC_RBR)] = 0
+  
+  grid = theAUC_grid(delta)
+  
+  for(i in 1:length(grid)){
+    if(grid[i] >= hypo_AUC){
+      start_loop = i
+      break
+    }
+  }
+  area = 0
+  for(j in start_loop:(length(grid))){
+    area = area + (AUC_RBR[j] * delta)
+  }
+  return(area)
+}
 
