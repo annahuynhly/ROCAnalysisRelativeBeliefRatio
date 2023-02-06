@@ -2,34 +2,7 @@
 # TODO LIST                                                    #
 ################################################################
 
-# SECTION 3.2 #######################################################
-# conditionalROC.txt -> CHANGED 
-# conditiononAUCbig.txt -> Need review for plot titles & sanity checks
-# ex1prog.txt -> Need review for plot titles & sanity checks
-# readdata.txt -> CANNOT RUN; waiting for fixed bugs
-# realdataROC.txt -> need to sanity check math & waiting for fixed bugs
-# ROC.txt -> some error here?
-
-# SECTION 3.3 #######################################################
-# binormalAUCequalvariance -> CANNOT RUN; waiting for fixed bugs
-# binormalAUCunequalvariance -> NEED TO CODE FUNCTIONS
-# binormalcoptequalvariance -> Need to adjust the website more
-# binormalcoptunequalvariance -> NEED TO CODE FUNCTIONS
-# coptpriorprevalence -> CANNOT RUN; waiting for fixed bugs
-# plotROC -> need to sanity check, style the graphs, comment about hardcode
-
-# SECTION 3.4 #######################################################
-# betaprior ->  need review
-# BNPAUCFemales -> NEED TO CODE FUNCTIONS (seeding issue)
-# BNPcfixedMales -> CANNOT RUN; waiting for fixed bugs
-# BNPcoptFemales -> need to see the difference between male and female
-# BNPcoptMales -> 
-# BNPdata -> Need review for plot titles
-# empiricals -> hard to code since the input seems to be a series of values
-# itsforgammaprior -> Need review for plot titles
-# smoother -> CANNOT RUN; waiting for fixed bugs
-# storeBNPcoptFemales -> CANNOT RUN; waiting for fixed bugs
-
+# 3.2: need to add some sections from the text
 
 ################################################################
 # LIBRARIES                                                    #
@@ -197,14 +170,16 @@ server <- function(input, output, session) {
   # SECTION 3.2                                                  #
   ################################################################
   sect3.2_AUC_prior = reactive(simulate_AUC_mc_prior(input$theAUC_nND, 
-                      input$theAUC_nD, input$theAUC_nMonteCarlo, 
+                      input$theAUC_nD, input$theAUC_nMonteCarlo,
+                      input$theAUC_w, 
                       input$theAUC_alpha_ND, input$theAUC_alpha_D))
   sect3.2_AUC_post = reactive(simulate_AUC_mc_post(input$theAUC_nND, 
                      input$theAUC_nD, input$theAUC_nMonteCarlo, 
+                     input$theAUC_w,
                      input$theAUC_alpha_ND, input$theAUC_alpha_D, input$theAUC_fND, 
                      input$theAUC_fD))
   sect3.2_AUC_RBR = reactive(compute_AUC_RBR(input$theAUC_delta, sect3.2_AUC_prior()$AUC, 
-                   sect3.2_AUC_post()$AUC))
+                   sect3.2_AUC_post()$AUC, sect3.2_AUC_prior()$priorc_opt, sect3.2_AUC_post()$postc_opt))
   # posterior content
   sect3.2_AUC_post_content = reactive(compute_AUC_post_content(input$theAUC_delta, 
                              sect3.2_AUC_post()$AUC, sect3.2_AUC_RBR()$plausible_region))

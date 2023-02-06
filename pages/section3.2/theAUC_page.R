@@ -71,6 +71,8 @@ theAUC_plausible_region = div(
     sidebarPanel(
       numericInput(inputId = "theAUC_delta", 
                    tags$p("Delta"), value = 0.04, min = 0, max = 1),
+      numericInput(inputId = "theAUC_w", 
+                   tags$p("Relevant Prevalence w"), value = 0.65),
       textInput(inputId = "theAUC_alpha_ND",
                 tags$p('alphaND1, ..., alphaNDm', style = "font-size: 90%;"),
                 value = "1, 1, 1, 1, 1"),
@@ -179,7 +181,7 @@ theAUC_grid = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUN
   return(grid)
 }
 
-simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, alpha_ND, alpha_D){ # removed m
+simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D){ # removed m
   # Remark: this is because the input can be a string due to R shiny's inputs
   alpha_priorND = create_necessary_vector(alpha_ND)
   alpha_priorD = create_necessary_vector(alpha_D)
@@ -189,35 +191,49 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, alpha_ND, alpha_D){ # rem
   }
   m = length(alpha_priorND)
   
+  priorc_opt = rep(0,m) # NEW
+  
   pND_array = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   pD_array = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   FNR = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  FPR = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  ERROR_w = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  PPV = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  
   AUC = rep(0, nMonteCarlo)
   
   for(i in 1:nMonteCarlo){
     pND_array[i, ] = rdirichlet(1,alpha_priorND)
     pD_array[i, ] = rdirichlet(1,alpha_priorD)
-    FNR[i, ] = cumsum(pD_array[i, ])
+    FNR[i, ] = cumsum(pD_array[i, ]) #sum(pD_prior[1:i])
+    FPR[i, ] = 1 - cumsum(pND_array[i, ])
+    ERROR_w[i, ] = w*FNR[i, ] + (1-w)*FPR[i, ]
+    PPV[i, ] = (w*(1 - FNR[i, ]))/(w*(1 - FNR[i, ]) + (1-w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
+    
     AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
+    
+    # update the prior distribution of c_opt
+    c_opt = which.min(ERROR_w[i, ])
+    priorc_opt[c_opt] <- priorc_opt[c_opt]+1
   }
+  
+  priorc_opt = priorc_opt/nMonteCarlo
   
   # might also want to make a downloadable list
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
-                 "FNR" = FNR, "AUC" = AUC)
+                 "FNR" = FNR, "FPR" = FPR, "ERROR_w" = ERROR_w, "priorc_opt" = priorc_opt,
+                 "AUC" = AUC)
   return(newlist)
 }
 
 # post = short for posterior
-simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, alpha_ND, alpha_D, fND, fD){ # removed m
+simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D, fND, fD){ # removed m
   
   # Remark: this is because the input can be a string due to R shiny's inputs
   alpha_priorND = create_necessary_vector(alpha_ND)
   alpha_priorD = create_necessary_vector(alpha_D)
   fND = create_necessary_vector(fND)
   fD = create_necessary_vector(fD)
-  
-  #print(c(alpha_priorND, alpha_priorD, fND, fD))
-  #print(c(length(alpha_priorND), length(alpha_priorD), length(fND), length(fD)))
   
   test_valid_list = c(length(alpha_priorD), length(fND), length(fD))
   for(i in test_valid_list){
@@ -227,25 +243,42 @@ simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, alpha_ND, alpha_D, fND, fD
   }
   m = length(alpha_priorND)
   
+  postc_opt = rep(0,m) # NEW
+  
   pND_array = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   pD_array = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   FNR = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  FPR = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  ERROR_w = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  PPV = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  
   AUC = rep(0, nMonteCarlo)
   
   for(i in 1:nMonteCarlo){
     pND_array[i, ] = rdirichlet(1,alpha_priorND + fND)
     pD_array[i, ] = rdirichlet(1,alpha_priorD + fD)
     FNR[i, ] = cumsum(pD_array[i, ])
+    FPR[i, ] = 1 - cumsum(pND_array[i, ])
+    ERROR_w[i, ] = w*FNR[i, ] + (1-w)*FPR[i, ]
+    PPV[i, ] = (w*(1 - FNR[i, ]))/(w*(1 - FNR[i, ]) + (1-w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
+    
     AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
+    
+    # update the posterior distribution of c_opt
+    c_opt = which.min(ERROR_w[i, ])
+    postc_opt[c_opt] = postc_opt[c_opt]+1
   }
+  
+  postc_opt = postc_opt/nMonteCarlo
   
   # might also want to make a downloadable list
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
-                 "FNR" = FNR, "AUC" = AUC)
+                 "FNR" = FNR, "FPR" = FPR, "ERROR_w" = ERROR_w, "postc_opt" = postc_opt,
+                 "AUC" = AUC)
   return(newlist)
 }
 
-#probably should change function name
+#probably should change function name - grabbing the densities without plotting the graph
 grab_AUC_densities = function(delta, AUC){
   bins = theAUC_grid(delta)
   x = hist(AUC, breaks = bins, plot = FALSE)
@@ -254,8 +287,11 @@ grab_AUC_densities = function(delta, AUC){
 
 # MIGHT BE ABLE TO GET THE LITERAL POINTS USING HIST
 # TO MODIFY
-compute_AUC_RBR = function(delta, AUC_prior, AUC_post){
+compute_AUC_RBR = function(delta, AUC_prior, AUC_post, priorc_opt, postc_opt){
   # NEED TO COMPUTE THE FOLLOWING: RBR, plausible region, etc...
+  
+  RBc_opt = postc_opt/priorc_opt
+  
   bins = theAUC_grid(delta)
   AUC_RBR = rep(0, length(bins))
   #AUC_RBR = rep(0, length(bins))
@@ -282,10 +318,12 @@ compute_AUC_RBR = function(delta, AUC_prior, AUC_post){
   plausible_region = c(plausible_region[1], plausible_region[length(plausible_region)])
   
   # REMARK: AUC_RBR goes from (0 to bin[1]), ..., to (bin[1/delta], 1)
-  newlist = list("grid" = bins, "AUC_RBR" = AUC_RBR, "plausible_region" = plausible_region)
+  newlist = list("grid" = bins, "AUC_RBR" = AUC_RBR, "plausible_region" = plausible_region,
+                 "RBc_opt" = RBc_opt)
   
   return(newlist)
 }
+
 
 # PROBABLY SHOULD MENTION THIS FOR THE MEETING: delta doesn't exactly start at 0,
 # so the area computed here is different than what's on the paper!!!!!
@@ -479,7 +517,54 @@ theAUC_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
   return(df)
 }
 
+# ERROR HERE: trying to do something new... might just resort to spline
+convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_pts = 3){
+  # num_average_pts: the number of density bins closely added to each other to get
+  # a smoother density plot. (Reduce peaks.)
+  if(num_average_pts %% 2 == 0){
+    "Error: num_average_pts must be an odd number."
+  } 
+  
+  new_grid = rep(0, (length(hist_breaks) - 1))
+  for(i in 1:(length(hist_breaks)-1)){
+    new_grid[i] = (hist_breaks[i] + hist_breaks[i+1])/2
+  }
+  
+  if(num_average_pts == 1){
+    plot(new_grid, hist_density, lty = 2)
+  } else {
+    # when we have more items to average out
+    new_density = rep(0, length(hist_density))
+    
+    num_neighbours = floor(num_average_pts/2)
+    pts = 1
+    for(i in 1:length(hist_density)){
+      if(i < num_neighbours | (length(hist_density) - i) < num_neighbours){
+        if(i == 1 | i == length(hist_density)){
+          new_density[i] = hist_density[i]
+        } else {
+          new_density[i] = sum(hist_density[(i-pts):(i+pts)])/(2*pts + 1)
+          pts = pts + 1
+          #print(i)
+        }
+      } else {
+        pts = 1 #this is to reset it
+        #print(i)
+        lower_int = i - num_neighbours
+        upper_int = i + num_neighbours
+        #print("...")
+        #print(hist_density[lower_int:upper_int])
+        new_density[i] = sum(hist_density[lower_int:upper_int])/(2*num_neighbours + 1)
+        #print(i)
+      }
+    }
+    #print(new_grid)
+    print(new_density)
+    plot(new_grid, new_density, lty = 2)
+  }
+}
 
+#convert_hist_to_density_plot(testx$density, testx$breaks, num_average_pts = 1)
 
 
 # TESTING
@@ -489,14 +574,15 @@ theAUC_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
 #nMonteCarlo = 10000
 #alpha_ND = c(1, 1, 1, 1, 1) 
 #alpha_D = c(1, 1, 1, 1, 1)
-####m = 5
+###m = 5
 #fND = "29, 7, 4, 5, 5"
 #fD = "14, 7, 25, 33, 21"
 #delta = 0.01
 #gamma = 0.5
+#w = 0.65
 
-#test1 = simulate_AUC_mc_prior(nND, nD, nMonteCarlo, alpha_ND, alpha_D)
-#test2 = simulate_AUC_mc_post(nND, nD, nMonteCarlo, alpha_ND, alpha_D, fND, fD)
+#test1 = simulate_AUC_mc_prior(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D)
+#test2 = simulate_AUC_mc_post(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D, fND, fD)
 #grid = theAUC_grid(delta)
 #prior_pts = c(0, grab_AUC_densities(delta, test1$AUC))
 
@@ -504,9 +590,7 @@ theAUC_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
 #plot(grid,prior_pts)
 #lines(smoothingSpline)
 
-
-
-#test3 = compute_AUC_RBR(delta, test1$AUC, test2$AUC)
+#test3 = compute_AUC_RBR(delta, test1$AUC, test2$AUC, test1$priorc_opt, test2$post_copt)
 
 #hypothesized_AUC_compute_values(0.5, delta, test3$AUC_RBR)
 
