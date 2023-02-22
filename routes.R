@@ -15,11 +15,7 @@ source("./pages/section3.1/RB_setup_page.R")
 
 # Section 3.2
 source("./pages/section3.2/theAUC_page.R")
-source("./pages/section3.2/conditionalAUCbig_page.R")
-source("./pages/section3.2/ex1prog_page.R")
-#source("./pages/section3.2/readdata_page.R")
-#source("./pages/section3.2/realdataROC_page.R")
-#source("./pages/section3.2/ROC_page.R")
+source("./pages/section3.2/definitions.R")
 
 # Section 3.3
 source("./pages/section3.3/variables3.3_page.R")

@@ -29,7 +29,7 @@ RB_setup_description = div(
   h4("Outputs and their Meanings"),
   p(HTML("<ul>
             <li><b>plausible_region:</b> plausible region. PR = { w : RB(w | ... ) > 1 }</li>
-            <li><b>max_w:</b> the chosen value for w (when RB(w | ... ) is maximized. 
+            <li><b>RB_estimate_of_prevalence_w:</b> the chosen value for w (when RB(w | ... ) is maximized. 
             It is actually just n/nD.)</li>
             <li><b>relative_belief_ratio_at_w0:</b> directly calculated from RB(w0 | ... )</li>
             <li><b>w0_interval:</b> the region once RB(w | ... ) > RB(w0 | ... )</li>
@@ -43,9 +43,9 @@ RB_setup_description = div(
 ################################################################
 
 RB_setup_plausible_region = div( 
-  titlePanel("Plausible Region & Max w"),
+  titlePanel("Relative Belief Estimate of Prevalence w & Plausible Region"),
   sidebarLayout(
-    sidebarPanel(
+    sidebarPanel(width = 3, 
       numericInput(inputId = "RB_setup_alpha1w", # CHANGE THIS
                    tags$p('alpha1w', style = "font-size: 90%;"),value = 391.72),
       numericInput(inputId = "RB_setup_alpha2w", # CHANGE THIS
@@ -70,7 +70,7 @@ RB_setup_plausible_region = div(
 RB_setup_plots = div( 
   titlePanel("Plots"), 
   sidebarLayout(
-    sidebarPanel(
+    sidebarPanel(width = 3, 
       textInput(inputId = "RB_gamma", label = "Gamma (must be less than posterior content)", 
                 value = "NA")
       #numericInput(inputId = "RB_gamma", # Changed to text to deal with edge case where gamma is not chosen
@@ -90,9 +90,9 @@ RB_setup_plots = div(
 ################################################################
 
 RB_setup_relative_belief_plot_of_w0 = div( 
-  titlePanel("Plot of Relative Belief Ratio at w0"),
+  titlePanel("Test of w = w0"),
   sidebarLayout(
-    sidebarPanel(
+    sidebarPanel(width = 3, 
       numericInput(inputId = "RB_setup_w0",
                    tags$p('Hypothesis w = w0', style = "font-size: 90%;"),value = 0.6)
     ),
@@ -112,7 +112,7 @@ RB_setup_relative_belief_plot_of_w0 = div(
 page_RB_download = div( 
   titlePanel("Download Output"), 
   sidebarLayout(
-    sidebarPanel(
+    sidebarPanel(width = 3, 
       textInput(inputId = "RB_filename", "Input File Name", 
                 value = "PriorPostRelativeBeliefRatio"),
       downloadButton("RB_downloadData", "Download"),
@@ -130,13 +130,13 @@ page_RB_download = div(
 
 page_RB_setup = div( 
   # This is the page that that connects to app.R
-  titlePanel("Section 3.1: The Prevalence"), 
+  titlePanel("The Prevalence"), 
   tabsetPanel(type = "tabs",
               tabPanel("Description", RB_setup_description), 
-              tabPanel("Plausible Region & Max w", RB_setup_plausible_region),
+              tabPanel("Relative Estimate of w", RB_setup_plausible_region),
               tabPanel("Plots", RB_setup_plots),
               #tabPanel("Strength of w0", RB_setup_Strength_of_w0),
-              tabPanel("Relative Belief Plot of w0", RB_setup_relative_belief_plot_of_w0),
+              tabPanel("Test of w = w0", RB_setup_relative_belief_plot_of_w0),
               tabPanel("Download Output", page_RB_download)
   )
 )
@@ -172,7 +172,7 @@ RBR_compute_values = function(alpha1w, alpha2w, n, nD, grid){
   }
   
   # Finding maximum w based on the grid points
-  max_w = (match(max(relative_belief_ratio), relative_belief_ratio))/length(grid)
+  RB_estimate_of_prevalence_w = (match(max(relative_belief_ratio), relative_belief_ratio))/length(grid)
   
   # This finds a plausible region.
   # WARNING: the following interval assumes there are no breaks, so it wouldn't work if there's a "peak".
@@ -189,7 +189,7 @@ RBR_compute_values = function(alpha1w, alpha2w, n, nD, grid){
   newlist = list("nND" = nND, "prior" = prior, "post" = post, 
                  "relative_belief_ratio" = relative_belief_ratio, "plausible_region" = plausible_region,
                  "prior_content" = prior_content, "posterior_content" = posterior_content,
-                 "max_w" = max_w)
+                 "RB_estimate_of_prevalence_w" = RB_estimate_of_prevalence_w)
   return(newlist)
 }
 
@@ -252,7 +252,7 @@ generate_prior_post_graph = function(prior, post, plausible_region, grid, credib
   
   # Plots of the Prior and the Posterior
   plot(grid, prior, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
-       main = "Graph of the Prior and Posterior", ylab = "Densities", xlab = "w", col = "blue")
+       main = "Graph of the Prior and Posterior of w", ylab = "Densities", xlab = "w", col = "blue")
   lines(grid, post,col="green", type = "l", lty = 2, lwd = 2)
   abline(v=plausible_region[1], col="#b3bfff", lwd = 2, lty = 3)
   abline(v=plausible_region[2], col="#b3bfff", lwd = 2, lty = 3)
@@ -273,7 +273,7 @@ generate_prior_post_graph = function(prior, post, plausible_region, grid, credib
   }
 }
 
-generate_rb_graph = function(relative_belief_ratio, plausible_region, grid, credible_region = FALSE,
+generate_rbr_graph = function(relative_belief_ratio, plausible_region, grid, credible_region = FALSE,
                              rb_line = FALSE){
   # This generates the graph for the relative belief ratio.
   
@@ -292,7 +292,7 @@ generate_rb_graph = function(relative_belief_ratio, plausible_region, grid, cred
   upper_bd = plausible_region[length(plausible_region)]
   
   plot(grid, relative_belief_ratio, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
-       main = "Graph of the Relative Belief Ratio", ylab = "RBR", xlab = "w", col = "red")
+       main = "Graph of the Relative Belief Ratio of w", ylab = "RBR", xlab = "w", col = "red")
   abline(h=1, col="royalblue1", lwd = 2, lty = 2)
   abline(v=lower_bd, col="#b3bfff", lwd = 2, lty = 3)
   abline(v=upper_bd, col="#b3bfff", lwd = 2, lty = 3)
@@ -318,7 +318,6 @@ generate_rb_graph = function(relative_belief_ratio, plausible_region, grid, cred
            col = c('red', '#b3bfff'), lty = c(2, 3))
   }
 }
-
 
 w0_compute_values = function(alpha1w, alpha2w, n, nD, w0, relative_belief_ratio, grid){
   # This is for hypothesis testing and computing the strength.
@@ -440,7 +439,7 @@ RB_generate_dataframe = function(grid, prior, post, relative_belief_ratio){
 #test_2 = compute_credible_region(alpha1w, alpha2w, n, nD, grid, gamma, delta, test_1$relative_belief_ratio, 
 #                                 test_1$posterior_content, test_1$plausible_region)
 #generate_prior_post_graph(test_1$prior, test_1$post, test_1$plausible_region, grid, test_2$credible_region)
-#generate_rb_graph(test_1$relative_belief_ratio, test_1$plausible_region, grid, test_2$credible_region,
+#generate_rbr_graph(test_1$relative_belief_ratio, test_1$plausible_region, grid, test_2$credible_region,
 #                  test_2$rb_line)
 
 
