@@ -57,24 +57,6 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
 ################################################################
 
 server = function(input, output, session) {
-  # Making it so the tab changes when the user clicks to another tab
-  #observeEvent(session$clientData$url_hash, {
-  #  currentHash <- utils::URLdecode(sub("#", "", session$clientData$url_hash))
-  #  if(is.null(input$navbarID) || !is.null(currentHash) && currentHash != input$navbarID){
-  #    freezeReactiveValue(input, "navbarID")
-  #    updateNavbarPage(session, "navbarID", selected = currentHash)
-  #  }
-  #}, priority = 1)
-  
-  #observeEvent(input$navbarID, {
-  #  currentHash <- sub("#", "", session$clientData$url_hash)
-  #  pushQueryString <- paste0("#", input$navbarID)
-  #  if(is.null(currentHash) || currentHash != input$navbarID){
-  #    freezeReactiveValue(input, "navbarID")
-  #    updateQueryString(pushQueryString, mode = "push", session)
-  #  }
-  #}, priority = 0)
-  
 
   # SECTION 3.1 ##################################################   
 
