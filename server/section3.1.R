@@ -3,35 +3,35 @@
 ################################################################
 
 sect_3.1_grid = reactive({
-  RB_distance_that_matters(input$RB_setup_delta)
+  RB_distance_that_matters(input$prevalence_setup_delta)
 })
 
 sect_3.1_info_1 = reactive({
-  RBR_compute_values(alpha1w = input$RB_setup_alpha1w, 
-                     alpha2w = input$RB_setup_alpha2w, 
-                     n = input$RB_setup_n, 
-                     nD = input$RB_setup_nD, 
+  RBR_compute_values(alpha1w = input$prevalence_setup_alpha1w, 
+                     alpha2w = input$prevalence_setup_alpha2w, 
+                     n = input$prevalence_setup_n, 
+                     nD = input$prevalence_setup_nD, 
                      grid = sect_3.1_grid())
 })
 
 sect_3.1_info_2 = reactive({
-  w0_compute_values(alpha1w = input$RB_setup_alpha1w, 
-                    alpha2w = input$RB_setup_alpha2w, 
-                    n = input$RB_setup_n, 
-                    nD = input$RB_setup_nD, 
-                    w0 = input$RB_setup_w0, 
+  w0_compute_values(alpha1w = input$prevalence_setup_alpha1w, 
+                    alpha2w = input$prevalence_setup_alpha2w, 
+                    n = input$prevalence_setup_n, 
+                    nD = input$prevalence_setup_nD, 
+                    w0 = input$prevalence_setup_w0, 
                     relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                     grid = sect_3.1_grid())
 })
 
 sect_3.1_cred_region = reactive({
-  compute_credible_region(alpha1w = input$RB_setup_alpha1w, 
-                          alpha2w = input$RB_setup_alpha2w, 
-                          n = input$RB_setup_n, 
-                          nD = input$RB_setup_nD, 
+  compute_credible_region(alpha1w = input$prevalence_setup_alpha1w, 
+                          alpha2w = input$prevalence_setup_alpha2w, 
+                          n = input$prevalence_setup_n, 
+                          nD = input$prevalence_setup_nD, 
                           grid = sect_3.1_grid(), 
-                          gamma = input$RB_setup_gamma, 
-                          delta = input$RB_setup_delta, 
+                          gamma = input$prevalence_setup_gamma, 
+                          delta = input$prevalence_setup_delta, 
                           relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                           posterior_content = sect_3.1_info_1()$posterior_content, 
                           plausible_region = sect_3.1_info_1()$plausible_region)
@@ -39,8 +39,8 @@ sect_3.1_cred_region = reactive({
 
 # This is for the prior case only
 sect_3.1_prior = reactive({
-  prior_compute_values(alpha1w = input$RB_setup_alpha1w,
-                       alpha2w = input$RB_setup_alpha2w, 
+  prior_compute_values(alpha1w = input$prevalence_setup_alpha1w,
+                       alpha2w = input$prevalence_setup_alpha2w, 
                        grid = sect_3.1_grid())
 })
 
@@ -48,7 +48,7 @@ sect_3.1_prior = reactive({
 # NUMERIC/TEXT OUTPUTS                                         #
 ################################################################
 
-output$RB_setup_values1 = renderPrint({
+output$prevalence_setup_values1 = renderPrint({
   list("plausible_region" = sect_3.1_info_1()$plausible_region,
        "RB_estimate_of_prevalence_w" = sect_3.1_info_1()$RB_estimate_of_prevalence_w,
        "prior_content" = sect_3.1_info_1()$prior_content,
@@ -57,13 +57,13 @@ output$RB_setup_values1 = renderPrint({
        "rb_line" = sect_3.1_cred_region()$rb_line)
 })
 
-output$RB_setup_values2 = renderPrint({
+output$prevalence_setup_values2 = renderPrint({
   #sect_3.1_info_2()
   list("relative_belief_ratio_at_w0" = sect_3.1_info_2()$relative_belief_ratio_at_w0,
        "strength" = sect_3.1_info_2()$strength)
 })
 
-output$RB_setup_prior_values = renderPrint({
+output$prevalence_setup_prior_values = renderPrint({
   list(
     "RB_estimate_of_prevalence_w" = (match(max(sect_3.1_prior()), sect_3.1_prior())/length(sect_3.1_grid()))
   )
@@ -73,13 +73,13 @@ output$RB_setup_prior_values = renderPrint({
 # PLOTS                                                        #
 ################################################################
 
-output$RB_setup_postprior_graph = renderPlot({
-  if(check.numeric(input$RB_setup_gamma) == FALSE){
+output$prevalence_setup_postprior_graph = renderPlot({
+  if(check.numeric(input$prevalence_setup_gamma) == FALSE){
     generate_prior_post_graph(prior = sect_3.1_info_1()$prior, 
                               post = sect_3.1_info_1()$post, 
                               plausible_region = sect_3.1_info_1()$plausible_region, 
                               grid = sect_3.1_grid())
-  } else if (as.numeric(input$RB_setup_gamma) >= sect_3.1_info_1()$posterior_content){
+  } else if (as.numeric(input$prevalence_setup_gamma) >= sect_3.1_info_1()$posterior_content){
     # Couldn't do the or statement for if because of the case where you can't do
     # as.numeric() for input$gamma
     generate_prior_post_graph(prior = sect_3.1_info_1()$prior, 
@@ -95,12 +95,12 @@ output$RB_setup_postprior_graph = renderPlot({
   }
 })
 
-output$RB_setup_RB_graph = renderPlot({
-  if(check.numeric(input$RB_setup_gamma) == FALSE){
+output$prevalence_setup_RB_graph = renderPlot({
+  if(check.numeric(input$prevalence_setup_gamma) == FALSE){
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
                        grid = sect_3.1_grid())
-  } else if (as.numeric(input$RB_setup_gamma) >= sect_3.1_info_1()$posterior_content){
+  } else if (as.numeric(input$prevalence_setup_gamma) >= sect_3.1_info_1()$posterior_content){
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
                        grid = sect_3.1_grid())
@@ -113,7 +113,7 @@ output$RB_setup_RB_graph = renderPlot({
   }
 })
 
-output$RB_setup_w0_graph = renderPlot({
+output$prevalence_setup_w0_graph = renderPlot({
   generate_relative_belief_ratio_at_w0_graph(
     relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
     relative_belief_ratio_at_w0 = sect_3.1_info_2()$relative_belief_ratio_at_w0,
@@ -122,7 +122,7 @@ output$RB_setup_w0_graph = renderPlot({
 })
 
 # This is for the prior case only
-output$RB_setup_post_graph_alt = renderPlot({
+output$prevalence_setup_post_graph_alt = renderPlot({
   generate_prior_graph(prior = sect_3.1_prior(), 
                        grid = sect_3.1_grid())
 })
@@ -160,7 +160,7 @@ output$RB_dataframe_alt <- renderDataTable({
   RB_download_prior()
 })
 
-output$RB_downloadData <- downloadHandler(
+output$RB_downloadData_alt <- downloadHandler(
   filename = function() {
     paste(input$RB_filename_alt, ".csv", sep = "")
   },

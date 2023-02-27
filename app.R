@@ -27,7 +27,7 @@ source("routes.R")
 
 ui = navbarPage(title = " ROC Analysis & Relative Belief",
                  tabPanel("Home", home_page),
-                 tabPanel("The Prevalence", page_RB_setup),
+                 tabPanel("The Prevalence", page_prevalence_setup),
                  navbarMenu("Section 3.2",
                             tabPanel("Definitions", page_sect3.2_def),
                             tabPanel("Finite-valued Diagnostic", page_theAUC),
@@ -37,14 +37,12 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
                             tabPanel("BinormalAUCEqualVariance", page_binormalAUCequalvariance),
                             tabPanel("BinormalAUCUnequalVariance", page_binormalAUCunequalvariance),
                             #tabPanel("BinormalCoptEqualVariance", page_binormalcoptequalvariance),
-                            #tabPanel("BinormalCoptUnequalVariance", page_binormalcoptunequalvariance),
                  ),
                  navbarMenu("Section 3.4",
                             tabPanel("3.4 Variables", page_variables3.4),
                             tabPanel("BetaPrior", page_betaprior),
                             tabPanel("BNPAUC", page_BNPAUC),
                             #tabPanel("BNPcFixedMales", page_BNPcfixedMales),
-                            #tabPanel("BNPCoptFemales", page_BNPcoptFemales),
                  ),
                  tabPanel("Contact", contact_page),
                  id = "navbarID",
@@ -64,7 +62,9 @@ server = function(input, output, session) {
   
   # SECTION 3.2 ################################################## 
   
-  source(file.path("server", "section3.2.R"),  local = TRUE)$value
+  source(file.path("server", "section3.2.definitions.R"),  local = TRUE)$value
+  source(file.path("server", "section3.2.variables.R"),  local = TRUE)$value
+  source(file.path("server", "section3.2.outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   
