@@ -33,27 +33,9 @@ theAUC_description = div(
 ################################################################
 
 theAUC_plausible_region = div( 
-  titlePanel("Plausible Region & More"),
-  sidebarLayout(
-    sidebarPanel(width = 3, 
-      numericInput(inputId = "theAUC_w", 
-                   tags$p("Relevant Prevalence w"), value = 0.65),
-      textInput(inputId = "theAUC_alpha_ND",
-                tags$p('alphaND1, ..., alphaNDm', style = "font-size: 90%;"),
-                value = "1, 1, 1, 1, 1"),
-      textInput(inputId = "theAUC_alpha_D",
-                tags$p('alphaD1, ..., alphaDm', style = "font-size: 90%;"),
-                value = "1, 1, 1, 1, 1"),
-      textInput(inputId = "theAUC_fND",
-                tags$p('fNd', style = "font-size: 90%;"),
-                value = "29, 7, 4, 5, 5"),
-      textInput(inputId = "theAUC_fD",
-                tags$p('fD', style = "font-size: 90%;"),
-                value = "14, 7, 25, 33, 21"),
-    ),
-    mainPanel(
-      tabPanel("Plausible Region & More", verbatimTextOutput("theAUC_output1")),
-    )
+  titlePanel("Plausible Region of w & More"),
+  mainPanel(
+    tabPanel("Plausible Region of w & More", verbatimTextOutput("theAUC_output1")),
   )
 )
 
@@ -107,7 +89,19 @@ theAUC_hypothesizedAUC = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       numericInput(inputId = "theAUC_hypoAUC",
-                   tags$p('Hypothesized AUC (greater than)', style = "font-size: 90%;"),value = 0.5)
+                   tags$p('Hypothesized AUC (greater than)', style = "font-size: 90%;"),value = 0.5),
+      textInput(inputId = "theAUC_alpha_ND",
+                tags$p('alphaND1, ..., alphaNDm', style = "font-size: 90%;"),
+                value = "1, 1, 1, 1, 1"),
+      textInput(inputId = "theAUC_alpha_D",
+                tags$p('alphaD1, ..., alphaDm', style = "font-size: 90%;"),
+                value = "1, 1, 1, 1, 1"),
+      textInput(inputId = "theAUC_fND",
+                tags$p('fNd', style = "font-size: 90%;"),
+                value = "29, 7, 4, 5, 5"),
+      textInput(inputId = "theAUC_fD",
+                tags$p('fD', style = "font-size: 90%;"),
+                value = "14, 7, 25, 33, 21"),
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", verbatimTextOutput("theAUC_hypoAUC_value"))))
@@ -160,7 +154,7 @@ page_theAUC = div(
   tabsetPanel(type = "tabs",
               tabPanel("Description", theAUC_description),
               tabPanel("Test AUC >= 0.5", theAUC_hypothesizedAUC),
-              tabPanel("Plausible Region & More", theAUC_plausible_region),
+              tabPanel("Plausible Region of w & More", theAUC_plausible_region),
               tabPanel("Histograms", theAUC_plots),
               tabPanel("Copt Plots", theAUC_copt_plots),
               tabPanel("Download Prior & Posterior", theAUC_download_1),
@@ -177,7 +171,29 @@ theAUC_grid = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUN
   return(grid)
 }
 
-AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w, delta, pND_array, pD_array, 
+theAUC_generate_w = function(w = FALSE, alpha1w = NA, alpha2w = NA, nD = NA, nND = NA, version = NA){
+  #Generates w based on the inputs.
+  if(typeof(w) == "double"){
+    return(w)
+  } else if (w == FALSE & version == "prior"){ # This is a sanity check
+    if(typeof(alpha1w) == "double" & typeof(alpha2w) == "double"){
+      return(rbeta(1, alpha1w, alpha2w))
+    } else {
+      return("Invalid alpha1w, alpha2w.")
+    }
+  } else if (w == FALSE & (version == "post" | version == "posterior")){
+    if(typeof(alpha1w) == "double" & typeof(alpha2w) == "double"){
+      return(rbeta(1, alpha1w + nD, alpha2w + nND))
+    }
+  } else {
+    return("Invalid value for w.")
+  }
+}
+
+
+AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE, 
+                                     alpha1w = NA, alpha2w = NA,
+                                     delta, pND_array, pD_array, 
                                      FNR, FPR, ERROR_w, PPV, priorc_opt){
   # need to add support for PPV - unsure how
   
@@ -194,16 +210,19 @@ AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w, delta, pND_arra
   #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   for(i in 1:nMonteCarlo){
+    # This is for the prevalence w.
+    pre_w = theAUC_generate_w(w, alpha1w, alpha2w, version = "prior")
+    
     FPRc_opt = FPR[i, ][c_optfDfND]
     FNRc_opt = FNR[i, ][c_optfDfND]
     ERROR_wc_opt = ERROR_w[i, ][c_optfDfND]
     PPVc_opt = PPV[i, ][c_optfDfND]
     #print(c(FPRc_opt, FNRc_opt, ERROR_wc_opt))
     
-    if ((w*(1-FNRc_opt)+(1-w)*FPRc_opt) !=  0){
-      FDRc_opt = (1-w)*FPRc_opt/(w*(1-FNRc_opt)+(1-w)*FPRc_opt)}
-    if ((w*FNRc_opt+(1-w)*(1-FPRc_opt)) != 0){
-      FNDRc_opt = w*FNRc_opt/(w*FNRc_opt+(1-w)*(1-FPRc_opt))}
+    if ((pre_w*(1-FNRc_opt)+(1-pre_w)*FPRc_opt) !=  0){
+      FDRc_opt = (1-pre_w)*FPRc_opt/(pre_w*(1-FNRc_opt)+(1-pre_w)*FPRc_opt)}
+    if ((pre_w*FNRc_opt+(1-pre_w)*(1-FPRc_opt)) != 0){
+      FNDRc_opt = pre_w*FNRc_opt/(pre_w*FNRc_opt+(1-pre_w)*(1-FPRc_opt))}
     
     for (i in 1:length(A)) {
       if ((FPRc_opt > A[i]) & (FPRc_opt <= A[i+1])) {priorFPRc_opt[i]=priorFPRc_opt[i]+1}
@@ -226,7 +245,9 @@ AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w, delta, pND_arra
   return(newlist)
 }
 
-AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w, delta, pND_array, pD_array, 
+AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE, 
+                                    alpha1w = NA, alpha2w = NA, nD = NA, nND = NA, version = NA,
+                                    delta, pND_array, pD_array, 
                                     FNR, FPR, ERROR_w, PPV, postc_opt){
   # need to add support for PPV - unsure how
   
@@ -243,15 +264,18 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w, delta, pND_array
   #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   for(i in 1:nMonteCarlo){
+    # This is for the prevalence w.
+    pre_w = theAUC_generate_w(w, alpha1w, alpha2w, nD, nND, version)
+    
     FPRc_opt = FPR[i, ][c_optfDfND]
     FNRc_opt = FNR[i, ][c_optfDfND]
     ERROR_wc_opt = ERROR_w[i, ][c_optfDfND]
     PPVc_opt = PPV[i, ][c_optfDfND]
     
-    if ((w*(1-FNRc_opt)+(1-w)*FPRc_opt) !=  0){
-      FDRc_opt = (1-w)*FPRc_opt/(w*(1-FNRc_opt)+(1-w)*FPRc_opt)}
-    if ((w*FNRc_opt+(1-w)*(1-FPRc_opt)) != 0){
-      FNDRc_opt = w*FNRc_opt/(w*FNRc_opt+(1-w)*(1-FPRc_opt))}
+    if ((pre_w*(1-FNRc_opt)+(1-pre_w)*FPRc_opt) !=  0){
+      FDRc_opt = (1-pre_w)*FPRc_opt/(pre_w*(1-FNRc_opt)+(1-pre_w)*FPRc_opt)}
+    if ((pre_w*FNRc_opt+(1-pre_w)*(1-FPRc_opt)) != 0){
+      FNDRc_opt = pre_w*FNRc_opt/(pre_w*FNRc_opt+(1-pre_w)*(1-FPRc_opt))}
     
     for (i in 1:length(A)) {
       if ((FPRc_opt > A[i]) & (FPRc_opt <= A[i+1])) {postFPRc_opt[i] = postFPRc_opt[i]+1}
@@ -278,7 +302,9 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w, delta, pND_array
 # FUNCTIONS FOR COMPUTATIONS                                   #
 ################################################################
 
-simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D){ 
+simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE, 
+                                 alpha1w = NA, alpha2w = NA,
+                                 alpha_ND, alpha_D){ 
   # This is meant to simulate the prior of the AUC.
   # Remark: this is because the input can be a string due to R shiny's inputs
   alpha_priorND = create_necessary_vector(alpha_ND)
@@ -301,12 +327,15 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D){
   AUC = rep(0, nMonteCarlo)
   
   for(i in 1:nMonteCarlo){
+    # This is for the prevalence w.
+    pre_w = theAUC_generate_w(w, alpha1w, alpha2w, version = "prior")
+    
     pND_array[i, ] = rdirichlet(1,alpha_priorND)
     pD_array[i, ] = rdirichlet(1,alpha_priorD)
     FNR[i, ] = cumsum(pD_array[i, ]) #sum(pD_prior[1:i])
     FPR[i, ] = 1 - cumsum(pND_array[i, ])
-    ERROR_w[i, ] = w*FNR[i, ] + (1-w)*FPR[i, ]
-    PPV[i, ] = (w*(1 - FNR[i, ]))/(w*(1 - FNR[i, ]) + (1-w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
+    ERROR_w[i, ] = pre_w*FNR[i, ] + (1-pre_w)*FPR[i, ]
+    PPV[i, ] = (pre_w*(1 - FNR[i, ]))/(pre_w*(1 - FNR[i, ]) + (1-pre_w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
     
     AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
     
@@ -325,7 +354,9 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D){
   return(newlist)
 }
 
-simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D, fND, fD){ # removed m
+simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w = FALSE, 
+                                alpha1w = NA, alpha2w = NA, version = NA,
+                                alpha_ND, alpha_D, fND, fD){ # removed m
   
   # Remark: this is because the input can be a string due to R shiny's inputs
   alpha_priorND = create_necessary_vector(alpha_ND)
@@ -353,12 +384,15 @@ simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D, fND,
   AUC = rep(0, nMonteCarlo)
   
   for(i in 1:nMonteCarlo){
+    # This is for the prevalence w.
+    pre_w = theAUC_generate_w(w, alpha1w, alpha2w, nD, nND, version)
+    
     pND_array[i, ] = rdirichlet(1,alpha_priorND + fND)
     pD_array[i, ] = rdirichlet(1,alpha_priorD + fD)
     FNR[i, ] = cumsum(pD_array[i, ])
     FPR[i, ] = 1 - cumsum(pND_array[i, ])
-    ERROR_w[i, ] = w*FNR[i, ] + (1-w)*FPR[i, ]
-    PPV[i, ] = (w*(1 - FNR[i, ]))/(w*(1 - FNR[i, ]) + (1-w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
+    ERROR_w[i, ] = pre_w*FNR[i, ] + (1-pre_w)*FPR[i, ]
+    PPV[i, ] = (pre_w*(1 - FNR[i, ]))/(pre_w*(1 - FNR[i, ]) + (1-pre_w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
     
     AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
     
@@ -816,12 +850,11 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
 # CODE TO DELETE LATER - TESTING PURPOSES ONLY                 #
 ################################################################
 
-
 # TESTING
 # nND, nD, nMonteCarlo, alpha_ND, alpha_D
 #nND = 50
 #nD = 100
-#nMonteCarlo = 100000
+#nMonteCarlo = 10000
 #alpha_ND = c(1, 1, 1, 1, 1) 
 #alpha_D = c(1, 1, 1, 1, 1)
 ###m = 5
@@ -830,6 +863,45 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
 #delta = 0.01
 #gamma = 0.5
 #w = 0.65
+#alternative
+#alpha1w = 391.72
+#alpha2w = 211.39
+
+# For case 1: when w is given
+#test1 = simulate_AUC_mc_prior(nND = nND, nD = nD, nMonteCarlo = nMonteCarlo, 
+#                              w = w, alpha1w = NA, alpha2w = NA,
+#                              alpha_ND = alpha_ND, alpha_D = alpha_D)
+#test2 = simulate_AUC_mc_post(nND = nND, nD = nD, nMonteCarlo = nMonteCarlo, 
+#                             w = w, alpha1w = NA, alpha2w = NA, version = "prior",
+#                             alpha_ND = alpha_ND, alpha_D = alpha_D, 
+#                             fND = fND, fD = fD)
+
+#test3 = compute_AUC_RBR(delta = delta, AUC_prior = test1$AUC, AUC_post = test2$AUC, 
+#                        priorc_opt = test1$priorc_opt, postc_opt = test2$postc_opt)
+#testpr = compute_AUC_plausible_region(delta = delta, AUC_RBR = test3$AUC_RBR, num_average_pts = 3)
+
+#density_hist_AUC_prior_post(delta = delta, AUC_prior = test1$AUC, AUC_post = test2$AUC, 
+#                            plausible_region = testpr$plausible_region,
+#                            credible_region = FALSE, densityplot = TRUE, showbars = TRUE)
+
+# For case 2: when w isn't given
+#test1 = simulate_AUC_mc_prior(nND = nND, nD = nD, nMonteCarlo = nMonteCarlo, 
+#                              w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w,
+#                              alpha_ND = alpha_ND, alpha_D = alpha_D)
+#test2 = simulate_AUC_mc_post(nND = nND, nD = nD, nMonteCarlo = nMonteCarlo, 
+#                             w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w, version = "post",
+#                             alpha_ND = alpha_ND, alpha_D = alpha_D, 
+#                             fND = fND, fD = fD)
+
+#test3 = compute_AUC_RBR(delta = delta, AUC_prior = test1$AUC, AUC_post = test2$AUC, 
+#                        priorc_opt = test1$priorc_opt, postc_opt = test2$postc_opt)
+#testpr = compute_AUC_plausible_region(delta = delta, AUC_RBR = test3$AUC_RBR, num_average_pts = 3)
+
+#density_hist_AUC_prior_post(delta = delta, AUC_prior = test1$AUC, AUC_post = test2$AUC, 
+#                            plausible_region = testpr$plausible_region,
+#                            credible_region = FALSE, densityplot = TRUE, showbars = TRUE)
+
+
 
 
 

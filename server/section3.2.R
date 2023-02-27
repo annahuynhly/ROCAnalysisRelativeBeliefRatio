@@ -50,7 +50,6 @@ output_var_name <- c("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
                     "Plausible Region", 
                     "Posterior Content",
                     "Credible Region",
-                    "Relevant Prevalence w", 
                     "Area Under The Line Plot",
                     "Prior copt",
                     "Post copt",
@@ -67,7 +66,6 @@ output_var_name <- c("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
 output_var_description <- c("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
                             "This interval consists of all the values for which there is evidence in favor.", 
                             "This interval measures how strongly it is believed the true value lies in this set.",
-                            "This represents the proportion of this subpopulation who are diseased.",
                             "Provides the exact area under the line plot for the prior, posterior, instead of 
                             the histograms to show how accurate it is.", 
                             "TODO",
@@ -129,25 +127,66 @@ output$output_table_description <- render_tableHTML({
 # VARIABLES                                                    #
 ################################################################
 
+# TODO: decide how we want to include alpha1w and alpha2w (should carry on from the prevalence section?)
+
 sect3.2_AUC_prior = reactive({
-  simulate_AUC_mc_prior(nND = input$theAUC_nND, 
-                        nD = input$theAUC_nD, 
-                        nMonteCarlo = input$theAUC_nMonteCarlo,
-                        w = input$theAUC_w, 
-                        alpha_ND = input$theAUC_alpha_ND, 
-                        alpha_D = input$theAUC_alpha_D)
+  if(input$pick_case_1 == "case_1_opt"){
+    simulate_AUC_mc_prior(nND = input$theAUC_nND, 
+                          nD = input$theAUC_nD, 
+                          nMonteCarlo = input$theAUC_nMonteCarlo,
+                          w = input$global_prevalence_w, 
+                          alpha_ND = input$theAUC_alpha_ND, 
+                          alpha_D = input$theAUC_alpha_D)
+  } else if (input$pick_case_2 == "case_a_opt" | input$pick_case_2 == "case_b_opt"){ 
+    simulate_AUC_mc_prior(nND = input$theAUC_nND, 
+                          nD = input$theAUC_nD, 
+                          nMonteCarlo = input$theAUC_nMonteCarlo, 
+                          w = FALSE, 
+                          alpha1w = input$RB_setup_alpha1w, # from the prevalence
+                          alpha2w = input$RB_setup_alpha2w, # from the prevalence
+                          alpha_ND = input$theAUC_alpha_ND, 
+                          alpha_D = input$theAUC_alpha_D)
+  }
 })
 
 sect3.2_AUC_post = reactive({
-  simulate_AUC_mc_post(nND = input$theAUC_nND, 
-                       nD = input$theAUC_nD, 
-                       nMonteCarlo = input$theAUC_nMonteCarlo, 
-                       w = input$theAUC_w, 
-                       alpha_ND = input$theAUC_alpha_ND, 
-                       alpha_D = input$theAUC_alpha_D, 
-                       fND = input$theAUC_fND, 
-                       fD = input$theAUC_fD)
+  if(input$pick_case_1 == "case_1_opt"){
+    simulate_AUC_mc_post(nND = input$theAUC_nND, 
+                         nD = input$theAUC_nD, 
+                         nMonteCarlo = input$theAUC_nMonteCarlo, 
+                         w = input$global_prevalence_w, 
+                         alpha_ND = input$theAUC_alpha_ND, 
+                         alpha_D = input$theAUC_alpha_D, 
+                         fND = input$theAUC_fND, 
+                         fD = input$theAUC_fD)
+  } else if (input$pick_case_2 == "case_a_opt"){ # only know the prior
+    simulate_AUC_mc_post(nND = input$theAUC_nND, 
+                         nD = input$theAUC_nD, 
+                         nMonteCarlo = input$theAUC_nMonteCarlo, 
+                         w = FALSE, 
+                         alpha1w = input$RB_setup_alpha1w, # from the prevalence
+                         alpha2w = input$RB_setup_alpha2w, # from the prevalence
+                         version = "prior", 
+                         alpha_ND = input$theAUC_alpha_ND, 
+                         alpha_D = input$theAUC_alpha_D, 
+                         fND = input$theAUC_fND, 
+                         fD = input$theAUC_fD)
+  } else if (input$pick_case_2 == "case_b_opt"){ # know both prior and posterior
+    simulate_AUC_mc_post(nND = input$theAUC_nND, 
+                         nD = input$theAUC_nD, 
+                         nMonteCarlo = input$theAUC_nMonteCarlo, 
+                         w = FALSE, 
+                         alpha1w = input$RB_setup_alpha1w, # from the prevalence
+                         alpha2w = input$RB_setup_alpha2w, # from the prevalence
+                         version = "post",
+                         alpha_ND = input$theAUC_alpha_ND, 
+                         alpha_D = input$theAUC_alpha_D, 
+                         fND = input$theAUC_fND, 
+                         fD = input$theAUC_fD)
+  }
 })
+
+################
 
 sect3.2_AUC_RBR = reactive({
   compute_AUC_RBR(delta = input$theAUC_delta, 
@@ -177,33 +216,107 @@ sect3.2_cr = reactive({
                               plausible_region = sect3.2_pr()$plausible_region)
 }) # Short for credible region
 
+######################################
+
 sect3.2_copt_prior = reactive({
-  AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
-                            nMonteCarlo = input$theAUC_nMonteCarlo, 
-                            w = input$theAUC_w, 
-                            delta = input$theAUC_delta, 
-                            pND_array = sect3.2_AUC_prior()$pND_array, 
-                            pD_array = sect3.2_AUC_prior()$pD_array, 
-                            FNR = sect3.2_AUC_prior()$FNR, 
-                            FPR = sect3.2_AUC_prior()$FPR, 
-                            ERROR_w = sect3.2_AUC_prior()$ERROR_w, 
-                            PPV = sect3.2_AUC_prior()$PPV, 
-                            priorc_opt = sect3.2_AUC_prior()$priorc_opt)
+  if(input$pick_case_1 == "case_1_opt"){
+    AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+                              nMonteCarlo = input$theAUC_nMonteCarlo, 
+                              w = input$global_prevalence_w, 
+                              delta = input$theAUC_delta, 
+                              pND_array = sect3.2_AUC_prior()$pND_array, 
+                              pD_array = sect3.2_AUC_prior()$pD_array, 
+                              FNR = sect3.2_AUC_prior()$FNR, 
+                              FPR = sect3.2_AUC_prior()$FPR, 
+                              ERROR_w = sect3.2_AUC_prior()$ERROR_w, 
+                              PPV = sect3.2_AUC_prior()$PPV, 
+                              priorc_opt = sect3.2_AUC_prior()$priorc_opt)
+  } else if (input$pick_case_2 == "case_a_opt" | input$pick_case_2 == "case_b_opt"){
+    AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+                              nMonteCarlo = input$theAUC_nMonteCarlo, 
+                              w = FALSE, 
+                              alpha1w = input$RB_setup_alpha1w, # from the prevalence
+                              alpha2w = input$RB_setup_alpha2w, # from the prevalence 
+                              delta = input$theAUC_delta, 
+                              pND_array = sect3.2_AUC_prior()$pND_array, 
+                              pD_array = sect3.2_AUC_prior()$pD_array, 
+                              FNR = sect3.2_AUC_prior()$FNR, 
+                              FPR = sect3.2_AUC_prior()$FPR, 
+                              ERROR_w = sect3.2_AUC_prior()$ERROR_w, 
+                              PPV = sect3.2_AUC_prior()$PPV, 
+                              priorc_opt = sect3.2_AUC_prior()$priorc_opt)
+  }
 })
 
 sect3.2_copt_post = reactive({
-  AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
-                           nMonteCarlo = input$theAUC_nMonteCarlo, 
-                           w = input$theAUC_w, 
-                           delta = input$theAUC_delta, 
-                           pND_array = sect3.2_AUC_post()$pND_array, 
-                           pD_array = sect3.2_AUC_post()$pD_array, 
-                           FNR = sect3.2_AUC_post()$FNR, 
-                           FPR = sect3.2_AUC_post()$FPR, 
-                           ERROR_w = sect3.2_AUC_post()$ERROR_w, 
-                           PPV = sect3.2_AUC_post()$PPV, 
-                           postc_opt = sect3.2_AUC_post()$postc_opt)
+  if(input$pick_case_1 == "case_1_opt"){
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+                             nMonteCarlo = input$theAUC_nMonteCarlo, 
+                             w = input$global_prevalence_w, 
+                             delta = input$theAUC_delta, 
+                             pND_array = sect3.2_AUC_post()$pND_array, 
+                             pD_array = sect3.2_AUC_post()$pD_array, 
+                             FNR = sect3.2_AUC_post()$FNR, 
+                             FPR = sect3.2_AUC_post()$FPR, 
+                             ERROR_w = sect3.2_AUC_post()$ERROR_w, 
+                             PPV = sect3.2_AUC_post()$PPV, 
+                             postc_opt = sect3.2_AUC_post()$postc_opt)
+  } else if (input$pick_case_2 == "case_a_opt"){ # know the prior only
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+                             nMonteCarlo = input$theAUC_nMonteCarlo, 
+                             w = FALSE, 
+                             alpha1w = input$RB_setup_alpha1w, # from the prevalence
+                             alpha2w = input$RB_setup_alpha2w, # from the prevalence
+                             version = "prior", 
+                             delta = input$theAUC_delta, 
+                             pND_array = sect3.2_AUC_post()$pND_array, 
+                             pD_array = sect3.2_AUC_post()$pD_array, 
+                             FNR = sect3.2_AUC_post()$FNR,
+                             FPR = sect3.2_AUC_post()$FPR,
+                             ERROR_w = sect3.2_AUC_post()$ERROR_w, 
+                             PPV = sect3.2_AUC_post()$PPV, 
+                             postc_opt = sect3.2_AUC_post()$postc_opt)
+  } else if (input$pick_case_2 == "case_b_opt"){ # know both prior and posterior
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+                             nMonteCarlo = input$theAUC_nMonteCarlo, 
+                             w = FALSE, 
+                             alpha1w = input$RB_setup_alpha1w, # from the prevalence
+                             alpha2w = input$RB_setup_alpha2w, # from the prevalence
+                             nD = input$theAUC_nD, 
+                             nND = input$theAUC_nND, 
+                             version = "post", 
+                             delta = input$theAUC_delta, 
+                             pND_array = sect3.2_AUC_post()$pND_array, 
+                             pD_array = sect3.2_AUC_post()$pD_array, 
+                             FNR = sect3.2_AUC_post()$FNR, 
+                             FPR = sect3.2_AUC_post()$FPR, 
+                             ERROR_w = sect3.2_AUC_post()$ERROR_w, 
+                             PPV = sect3.2_AUC_post()$PPV, 
+                             postc_opt = sect3.2_AUC_post()$postc_opt)
+  }
 })
+
+########################################
+
+
+sect3.2_copt_est = reactive({
+  compute_AUC_error_char_copt(delta = input$theAUC_delta, 
+                              c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+                              priorFPRc_opt = sect3.2_copt_prior()$priorFPRc_opt, 
+                              priorFNRc_opt = sect3.2_copt_prior()$priorFNRc_opt, 
+                              priorERROR_wc_opt = sect3.2_copt_prior()$priorERROR_wc_opt, 
+                              priorFDRc_opt = sect3.2_copt_prior()$priorFDRc_opt, 
+                              priorFNDRc_opt = sect3.2_copt_prior()$priorFNDRc_opt,
+                              priorPPVc_opt = sect3.2_copt_prior()$priorPPVc_opt,
+                              postFPRc_opt = sect3.2_copt_post()$postFPRc_opt, 
+                              postFNRc_opt = sect3.2_copt_post()$postFNRc_opt, 
+                              postERROR_wc_opt = sect3.2_copt_post()$postERROR_wc_opt, 
+                              postFDRc_opt = sect3.2_copt_post()$postFDRc_opt, 
+                              postFNDRc_opt = sect3.2_copt_post()$postFNDRc_opt,
+                              postPPVc_opt = sect3.2_copt_post()$postPPVc_opt)
+})
+
+
 
 sect3.2_copt_est = reactive({
   compute_AUC_error_char_copt(delta = input$theAUC_delta, 
@@ -262,6 +375,10 @@ sect3.2_hypo_test = reactive({
 # NUMERIC/TEXT OUTPUTS                                         #
 ################################################################
 
+#output$theAUC_output1 = renderPrint({ # For testing
+#  list("test_val" = sect3.2_AUC_post()$AUC) # will need to specify when
+#})
+
 output$theAUC_output1 = renderPrint({
   list("plausible_region" = sect3.2_pr()$plausible_region,
        "posterior_content" = sect3.2_AUC_post_content(),
@@ -282,6 +399,17 @@ output$theAUC_hypoAUC_value = renderPrint({
 ################################################################
 # HISTOGRAMS                                                   #
 ################################################################
+
+
+#output$theAUC_postprior_graph = renderPlot({
+#  density_hist_AUC_prior_post(delta = input$theAUC_delta, 
+#                              AUC_prior = sect3.2_AUC_prior()$AUC, 
+#                              AUC_post = sect3.2_AUC_post()$AUC, 
+#                              plausible_region = sect3.2_pr()$plausible_region,
+#                              credible_region = FALSE, 
+#                              densityplot = TRUE, 
+#                              showbars = showbarplots())
+#})
 
 output$theAUC_postprior_graph = renderPlot({
   if(check.numeric(input$theAUC_gamma) == FALSE){

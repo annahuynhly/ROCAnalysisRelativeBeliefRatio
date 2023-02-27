@@ -3,7 +3,7 @@
 ################################################################
 
 sect_3.1_grid = reactive({
-  RB_distance_that_matters(input$RB_delta)
+  RB_distance_that_matters(input$RB_setup_delta)
 })
 
 sect_3.1_info_1 = reactive({
@@ -30,11 +30,18 @@ sect_3.1_cred_region = reactive({
                           n = input$RB_setup_n, 
                           nD = input$RB_setup_nD, 
                           grid = sect_3.1_grid(), 
-                          gamma = input$RB_gamma, 
-                          delta = input$RB_delta, 
+                          gamma = input$RB_setup_gamma, 
+                          delta = input$RB_setup_delta, 
                           relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                           posterior_content = sect_3.1_info_1()$posterior_content, 
                           plausible_region = sect_3.1_info_1()$plausible_region)
+})
+
+# This is for the prior case only
+sect_3.1_prior = reactive({
+  prior_compute_values(alpha1w = input$RB_setup_alpha1w,
+                       alpha2w = input$RB_setup_alpha2w, 
+                       grid = sect_3.1_grid())
 })
 
 ################################################################
@@ -56,17 +63,23 @@ output$RB_setup_values2 = renderPrint({
        "strength" = sect_3.1_info_2()$strength)
 })
 
+output$RB_setup_prior_values = renderPrint({
+  list(
+    "RB_estimate_of_prevalence_w" = (match(max(sect_3.1_prior()), sect_3.1_prior())/length(sect_3.1_grid()))
+  )
+})
+
 ################################################################
 # PLOTS                                                        #
 ################################################################
 
 output$RB_setup_postprior_graph = renderPlot({
-  if(check.numeric(input$RB_gamma) == FALSE){
+  if(check.numeric(input$RB_setup_gamma) == FALSE){
     generate_prior_post_graph(prior = sect_3.1_info_1()$prior, 
                               post = sect_3.1_info_1()$post, 
                               plausible_region = sect_3.1_info_1()$plausible_region, 
                               grid = sect_3.1_grid())
-  } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$posterior_content){
+  } else if (as.numeric(input$RB_setup_gamma) >= sect_3.1_info_1()$posterior_content){
     # Couldn't do the or statement for if because of the case where you can't do
     # as.numeric() for input$gamma
     generate_prior_post_graph(prior = sect_3.1_info_1()$prior, 
@@ -83,11 +96,11 @@ output$RB_setup_postprior_graph = renderPlot({
 })
 
 output$RB_setup_RB_graph = renderPlot({
-  if(check.numeric(input$RB_gamma) == FALSE){
+  if(check.numeric(input$RB_setup_gamma) == FALSE){
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
                        grid = sect_3.1_grid())
-  } else if (as.numeric(input$RB_gamma) >= sect_3.1_info_1()$posterior_content){
+  } else if (as.numeric(input$RB_setup_gamma) >= sect_3.1_info_1()$posterior_content){
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
                        grid = sect_3.1_grid())
@@ -108,6 +121,13 @@ output$RB_setup_w0_graph = renderPlot({
     grid = sect_3.1_grid())
 })
 
+# This is for the prior case only
+output$RB_setup_post_graph_alt = renderPlot({
+  generate_prior_graph(prior = sect_3.1_prior(), 
+                       grid = sect_3.1_grid())
+})
+
+
 ################################################################
 # DOWNLOAD DATAFRAME                                           #
 ################################################################
@@ -127,5 +147,24 @@ output$RB_downloadData <- downloadHandler(
   },
   content = function(file) {
     write.csv(RB_download(), file, row.names = FALSE)
+  }
+)
+
+# This is for the prior only case
+RB_download_prior = reactive({
+  RB_generate_priorframe(grid = sect_3.1_grid(),
+                         prior = sect_3.1_prior())
+})
+
+output$RB_dataframe_alt <- renderDataTable({
+  RB_download_prior()
+})
+
+output$RB_downloadData <- downloadHandler(
+  filename = function() {
+    paste(input$RB_filename_alt, ".csv", sep = "")
+  },
+  content = function(file) {
+    write.csv(RB_download_prior(), file, row.names = FALSE)
   }
 )

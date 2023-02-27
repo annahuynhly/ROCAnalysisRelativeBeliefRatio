@@ -4,8 +4,8 @@
 
 RB_setup_description = div( 
   titlePanel("Page Description"),
-  p("The goal of this section is for the user to compute the prior, posterior, the relative belief 
-    ratio. The user is free to download any results."),
+  p("The goal of this section is for the user to compute the prior of w, posterior of w, and the relative belief 
+    ratio of w to estimate the prevalence w. The user is free to download any results."),
   p("Plot images can be saved by right clicking them."),
   hr(style = "border-top: 1px solid #363e4f;"),
   
@@ -38,6 +38,20 @@ RB_setup_description = div(
          </ul>")),
 )
 
+RB_setup_description_alt = div(
+  titlePanel("Page Description"),
+  p("Here, since the posterior is not is not known, we can only show the graph of the prior."),
+  hr(style = "border-top: 1px solid #363e4f;"),
+  
+  h4("Inputs and their Meanings"),
+  p(HTML("<ul>
+            <li><b>alpha1w:</b> The first parameter for beta. </li>
+            <li><b>alpha2w:</b> The second parameter for beta. </li>
+          </ul>")
+    ),
+  
+)
+
 ################################################################
 # OUTPUT 1 PAGE                                                #
 ################################################################
@@ -54,7 +68,7 @@ RB_setup_plausible_region = div(
                    tags$p('Total Sample Size', style = "font-size: 90%;"),value = 100, min = 1),
       numericInput(inputId = "RB_setup_nD", # CHANGE THIS
                    tags$p('Total Diseased', style = "font-size: 90%;"),value = 68, min = 0),
-      numericInput(inputId = "RB_delta", 
+      numericInput(inputId = "RB_setup_delta", 
                    tags$p("Delta"), value = 0.001, min = 0, max = 1),
     ),
     mainPanel(
@@ -71,9 +85,9 @@ RB_setup_plots = div(
   titlePanel("Plots"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-      textInput(inputId = "RB_gamma", label = "Gamma (must be less than posterior content)", 
+      textInput(inputId = "RB_setup_gamma", label = "Gamma (must be less than posterior content)", 
                 value = "NA")
-      #numericInput(inputId = "RB_gamma", # Changed to text to deal with edge case where gamma is not chosen
+      #numericInput(inputId = "RB_setup_gamma", # Changed to text to deal with edge case where gamma is not chosen
       #             tags$p('Gamma', style = "font-size: 90%;"),value = 0.8), # need to change value
     ),
     mainPanel(
@@ -84,6 +98,26 @@ RB_setup_plots = div(
     )
   )
 )
+
+RB_setup_plot_alt = div(
+  titlePanel("Plot of the Prior of w"),
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+                 numericInput(inputId = "RB_setup_delta", label = "Delta", 
+                              value = 0.001, min = 0, max = 1),
+                 numericInput(inputId = "RB_setup_alpha1w", # CHANGE THIS
+                              tags$p('alpha1w', style = "font-size: 90%;"),value = 391.72),
+                 numericInput(inputId = "RB_setup_alpha2w", # CHANGE THIS
+                              tags$p('alpha2w', style = "font-size: 90%;"),value = 211.39),
+    ),
+    mainPanel(
+      fluidRow(splitLayout(cellWidths = c("70%", "30%"), 
+                           plotOutput("RB_setup_post_graph_alt"), 
+                           verbatimTextOutput("RB_setup_prior_values"))),
+    ),
+  )
+)
+
 
 ################################################################
 # OUTPUT + GRAPH 2 PAGE                                        #
@@ -123,6 +157,20 @@ page_RB_download = div(
   )
 )
 
+page_RB_download_alt = div( 
+  titlePanel("Download Output"), 
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+                 textInput(inputId = "RB_filename_alt", "Input File Name", 
+                           value = "PriorOfW"),
+                 downloadButton("RB_downloadData_alt", "Download"),
+    ),
+    mainPanel(
+      tabPanel("Download Output", dataTableOutput("RB_dataframe_alt"))
+    )
+  )
+)
+
 
 ################################################################
 # PAGE LOGIC                                                   #
@@ -131,13 +179,33 @@ page_RB_download = div(
 page_RB_setup = div( 
   # This is the page that that connects to app.R
   titlePanel("The Prevalence"), 
-  tabsetPanel(type = "tabs",
-              tabPanel("Description", RB_setup_description), 
-              tabPanel("Relative Estimate of w", RB_setup_plausible_region),
-              tabPanel("Plots", RB_setup_plots),
-              #tabPanel("Strength of w0", RB_setup_Strength_of_w0),
-              tabPanel("Test of w = w0", RB_setup_relative_belief_plot_of_w0),
-              tabPanel("Download Output", page_RB_download)
+  conditionalPanel(
+    condition = "input.pick_case_1 == 'case_1_opt'",
+    p("The prevalence is already known, so there is nothing to do here. Please proceed
+      to section 3.2.")
+  ),
+  conditionalPanel(
+    condition = "input.pick_case_1 == 'case_2_opt'",
+    
+    conditionalPanel(
+      condition = "input.pick_case_2 == 'case_b_opt'",
+      tabsetPanel(type = "tabs",
+                  tabPanel("Description", RB_setup_description), 
+                  tabPanel("Relative Estimate of w", RB_setup_plausible_region),
+                  tabPanel("Plots", RB_setup_plots),
+                  #tabPanel("Strength of w0", RB_setup_Strength_of_w0),
+                  tabPanel("Test of w = w0", RB_setup_relative_belief_plot_of_w0),
+                  tabPanel("Download Output", page_RB_download)
+      )
+    ),
+    conditionalPanel(
+      condition = "input.pick_case_2 == 'case_a_opt'",
+      tabsetPanel(type = "tabs",
+                  tabPanel("Description", RB_setup_description_alt),
+                  tabPanel("Plot", RB_setup_plot_alt),
+                  tabPanel("Download Output", page_RB_download_alt)
+      )
+    )
   )
 )
 
@@ -191,6 +259,12 @@ RBR_compute_values = function(alpha1w, alpha2w, n, nD, grid){
                  "prior_content" = prior_content, "posterior_content" = posterior_content,
                  "RB_estimate_of_prevalence_w" = RB_estimate_of_prevalence_w)
   return(newlist)
+}
+
+prior_compute_values = function(alpha1w, alpha2w, grid){
+  prior = dbeta(grid, alpha1w, alpha2w)
+  
+  return(prior)
 }
 
 # TODO: might've computed this wrong
@@ -271,6 +345,26 @@ generate_prior_post_graph = function(prior, post, plausible_region, grid, credib
            col = c('blue', 'green', '#b3bfff'), 
            lty = c(2, 2, 3))
   }
+}
+
+generate_prior_graph = function(prior, grid){
+  
+  # Obtaining an x region
+  x_region = c()
+  for (i in 1:length(grid)){
+    if ((prior[[i]] > 0.1)){
+      x_region = c(x_region, as.numeric(grid[i]))
+    }
+  }
+  # Constructs an interval for the x and y region
+  x_interval = c(x_region[1], x_region[length(x_region)])
+  y_interval = c(0, max(prior))
+  
+  # Plots of the Prior and the Posterior
+  plot(grid, prior, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
+       main = "Graph of the Prior of w", ylab = "Densities", xlab = "w", col = "blue")
+  polygon(grid, prior, col = rgb(133/255, 198/255, 255/255, alpha = 0.3), border = NA)
+  
 }
 
 generate_rbr_graph = function(relative_belief_ratio, plausible_region, grid, credible_region = FALSE,
@@ -408,6 +502,12 @@ RB_generate_dataframe = function(grid, prior, post, relative_belief_ratio){
   RB_df = data.frame(grid, prior, post, relative_belief_ratio)
   colnames(RB_df) = c("Grid Point", "Prior", "Posterior", "Relative Belief Ratio")
   return(RB_df)
+}
+
+RB_generate_priorframe = function(grid, prior){
+  df = data.frame(grid, prior)
+  colnames(df) = c("Grid Point", "Prior")
+  return(df)
 }
 
 

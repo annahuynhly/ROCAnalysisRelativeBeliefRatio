@@ -25,12 +25,10 @@ source("routes.R")
 # FRONTEND                                                     #
 ################################################################
 
-ui <- navbarPage(title = " ROC Analysis & Relative Belief",
+ui = navbarPage(title = " ROC Analysis & Relative Belief",
                  tabPanel("Home", home_page),
                  tabPanel("The Prevalence", page_RB_setup),
                  navbarMenu("Section 3.2",
-                            # To avoid the need to parse encoded URLs via utils::URLdecode use e.g.:
-                            # tabPanel(title = "Section 3.2.1", "3.2.1 content", value = "section_3.2.1"),
                             tabPanel("Definitions", page_sect3.2_def),
                             tabPanel("Finite-valued Diagnostic", page_theAUC),
                  ),
@@ -40,8 +38,6 @@ ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                             tabPanel("BinormalAUCUnequalVariance", page_binormalAUCunequalvariance),
                             #tabPanel("BinormalCoptEqualVariance", page_binormalcoptequalvariance),
                             #tabPanel("BinormalCoptUnequalVariance", page_binormalcoptunequalvariance),
-                            #tabPanel("CoptPriorPrevalence", page_coptpriorprevalence),
-                            #tabPanel("plotROC", page_plotROC)
                  ),
                  navbarMenu("Section 3.4",
                             tabPanel("3.4 Variables", page_variables3.4),
@@ -49,12 +45,6 @@ ui <- navbarPage(title = " ROC Analysis & Relative Belief",
                             tabPanel("BNPAUC", page_BNPAUC),
                             #tabPanel("BNPcFixedMales", page_BNPcfixedMales),
                             #tabPanel("BNPCoptFemales", page_BNPcoptFemales),
-                            #tabPanel("BNPCoptMales", page_BNPcoptMales),
-                            #tabPanel("BNPData", page_BNPdata),
-                            #tabPanel("Empiricals", page_empiricals),
-                            #tabPanel("ForGammaPrior", page_itsforgammaprior),
-                            #tabPanel("Smoother", page_smoother),
-                            #tabPanel("StoreBNPCoptFemales", page_storeBNPcoptFemales)
                  ),
                  tabPanel("Contact", contact_page),
                  id = "navbarID",
@@ -66,7 +56,7 @@ ui <- navbarPage(title = " ROC Analysis & Relative Belief",
 # BACKEND                                                      #
 ################################################################
 
-server <- function(input, output, session) {
+server = function(input, output, session) {
   # Making it so the tab changes when the user clicks to another tab
   observeEvent(session$clientData$url_hash, {
     currentHash <- utils::URLdecode(sub("#", "", session$clientData$url_hash))
