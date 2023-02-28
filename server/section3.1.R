@@ -73,25 +73,43 @@ output$prevalence_setup_prior_values = renderPrint({
 # PLOTS                                                        #
 ################################################################
 
+prevalence_colours = reactive({
+  if(input$prevalence_setup_colour == 'default'){
+    c("blue", "green", "red")
+  }
+  else if (input$prevalence_setup_colour == 'manual'){
+    #c("#FF007F", "#FF00FF", "#7F00FF")
+    c(paste("#", input$prevalence_setup_colour_prior, sep = ""),
+      paste("#", input$prevalence_setup_colour_post, sep = ""),
+      paste("#", input$prevalence_setup_colour_rb, sep = ""))
+  }
+})
+
 output$prevalence_setup_postprior_graph = renderPlot({
   if(check.numeric(input$prevalence_setup_gamma) == FALSE){
     generate_prior_post_graph(prior = sect_3.1_info_1()$prior, 
                               post = sect_3.1_info_1()$post, 
                               plausible_region = sect_3.1_info_1()$plausible_region, 
-                              grid = sect_3.1_grid())
+                              grid = sect_3.1_grid(),
+                              colour_choice = prevalence_colours(),
+                              transparency = input$prevalence_setup_col_transparency)
   } else if (as.numeric(input$prevalence_setup_gamma) >= sect_3.1_info_1()$posterior_content){
     # Couldn't do the or statement for if because of the case where you can't do
     # as.numeric() for input$gamma
     generate_prior_post_graph(prior = sect_3.1_info_1()$prior, 
                               post = sect_3.1_info_1()$post, 
                               plausible_region = sect_3.1_info_1()$plausible_region, 
-                              grid = sect_3.1_grid())
+                              grid = sect_3.1_grid(),
+                              colour_choice = prevalence_colours(),
+                              transparency = input$prevalence_setup_col_transparency)
   } else {
     generate_prior_post_graph(prior = sect_3.1_info_1()$prior, 
                               post = sect_3.1_info_1()$post, 
                               plausible_region = sect_3.1_info_1()$plausible_region, 
                               grid = sect_3.1_grid(),
-                              credible_region = sect_3.1_cred_region()$credible_region)
+                              credible_region = sect_3.1_cred_region()$credible_region,
+                              colour_choice = prevalence_colours(),
+                              transparency = input$prevalence_setup_col_transparency)
   }
 })
 
@@ -99,17 +117,23 @@ output$prevalence_setup_RB_graph = renderPlot({
   if(check.numeric(input$prevalence_setup_gamma) == FALSE){
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
-                       grid = sect_3.1_grid())
+                       grid = sect_3.1_grid(),
+                       colour_choice = prevalence_colours()[3],
+                       transparency = input$prevalence_setup_col_transparency)
   } else if (as.numeric(input$prevalence_setup_gamma) >= sect_3.1_info_1()$posterior_content){
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
-                       grid = sect_3.1_grid())
+                       grid = sect_3.1_grid(),
+                       colour_choice = prevalence_colours()[3],
+                       transparency = input$prevalence_setup_col_transparency)
   } else {
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
                        grid = sect_3.1_grid(),
                        credible_region = sect_3.1_cred_region()$credible_region, 
-                       rb_line = sect_3.1_cred_region()$rb_line)
+                       rb_line = sect_3.1_cred_region()$rb_line,
+                       colour_choice = prevalence_colours()[3],
+                       transparency = input$prevalence_setup_col_transparency)
   }
 })
 
@@ -123,8 +147,17 @@ output$prevalence_setup_w0_graph = renderPlot({
 
 # This is for the prior case only
 output$prevalence_setup_post_graph_alt = renderPlot({
-  generate_prior_graph(prior = sect_3.1_prior(), 
-                       grid = sect_3.1_grid())
+  if(input$prevalence_setup_colour_1 != 'manual'){
+    generate_prior_graph(prior = sect_3.1_prior(), 
+                         grid = sect_3.1_grid(),
+                         colour_choice = input$prevalence_setup_colour_1,
+                         transparency = input$prevalence_setup_col_transparency_1)
+  } else if (input$prevalence_setup_colour_1 == 'manual'){
+    generate_prior_graph(prior = sect_3.1_prior(), 
+                         grid = sect_3.1_grid(),
+                         colour_choice = paste("#", input$prevalence_setup_colour_2, sep = ""),
+                         transparency = input$prevalence_setup_col_transparency_1)
+  }
 })
 
 

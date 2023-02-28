@@ -40,16 +40,27 @@ prevalence_setup_description = div(
 
 prevalence_setup_description_alt = div(
   titlePanel("Page Description"),
-  p("Here, since the posterior is not is not known, we can only show the graph of the prior."),
-  hr(style = "border-top: 1px solid #363e4f;"),
   
-  h4("Inputs and their Meanings"),
-  p(HTML("<ul>
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+      numericInput(inputId = "prevalence_setup_alpha1w", 
+                   label = 'alpha1w',
+                   value = 391.72),
+      numericInput(inputId = "prevalence_setup_alpha2w", 
+                   label = 'alpha2w',
+                   value = 211.39),
+    ),
+    mainPanel(
+      p("Here, since the posterior is not is not known, we can only show the graph of the prior."),
+      hr(style = "border-top: 1px solid #363e4f;"),
+      
+      h4("Inputs and their Meanings"),
+      p(HTML("<ul>
             <li><b>alpha1w:</b> The first parameter for beta. </li>
             <li><b>alpha2w:</b> The second parameter for beta. </li>
-          </ul>")
-  ),
-  
+          </ul>"))
+    ),
+  )
 )
 
 ################################################################
@@ -60,16 +71,21 @@ prevalence_setup_plausible_region = div(
   titlePanel("Relative Belief Estimate of Prevalence w & Plausible Region"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 numericInput(inputId = "prevalence_setup_alpha1w", # CHANGE THIS
-                              tags$p('alpha1w', style = "font-size: 90%;"),value = 391.72),
-                 numericInput(inputId = "prevalence_setup_alpha2w", # CHANGE THIS
-                              tags$p('alpha2w', style = "font-size: 90%;"),value = 211.39),
-                 numericInput(inputId = "prevalence_setup_n", # CHANGE THIS
-                              tags$p('Total Sample Size', style = "font-size: 90%;"),value = 100, min = 1),
-                 numericInput(inputId = "prevalence_setup_nD", # CHANGE THIS
-                              tags$p('Total Diseased', style = "font-size: 90%;"),value = 68, min = 0),
+                 numericInput(inputId = "prevalence_setup_alpha1w", 
+                              label = 'alpha1w',
+                              value = 391.72),
+                 numericInput(inputId = "prevalence_setup_alpha2w", 
+                              label = 'alpha2w',
+                              value = 211.39),
+                 numericInput(inputId = "prevalence_setup_n", 
+                              label = 'Total Sample Size',
+                              value = 100, min = 1),
+                 numericInput(inputId = "prevalence_setup_nD", 
+                              label = 'Total Diseased',
+                              value = 68, min = 0),
                  numericInput(inputId = "prevalence_setup_delta", 
-                              tags$p("Delta"), value = 0.001, min = 0, max = 1),
+                              label = "Delta", 
+                              value = 0.001, min = 0, max = 1),
     ),
     mainPanel(
       tabPanel("Plausible Region & Max w", verbatimTextOutput("prevalence_setup_values1")),
@@ -85,10 +101,39 @@ prevalence_setup_plots = div(
   titlePanel("Plots"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 textInput(inputId = "prevalence_setup_gamma", label = "Gamma (must be less than posterior content)", 
-                           value = "NA")
-                 #numericInput(inputId = "prevalence_setup_gamma", # Changed to text to deal with edge case where gamma is not chosen
-                 #             tags$p('Gamma', style = "font-size: 90%;"),value = 0.8), # need to change value
+                 textInput(inputId = "prevalence_setup_gamma", 
+                           label = "Gamma (must be less than posterior content)", 
+                           value = "NA"),
+                 selectInput(inputId = "prevalence_setup_colour", 
+                             label = 'Select a colour', 
+                             choices = list("Default Theme" = 'default', 
+                                            "Manually Insert" = 'manual'), # TO ADD: let the user pick
+                             selected = 'default'),
+                 sliderInput(inputId = "prevalence_setup_col_transparency", 
+                             label = "Scale for colour transparency",
+                             min = 0, max = 1, value = 0.1),
+                 conditionalPanel(
+                   condition = "input.prevalence_setup_colour == 'manual'",
+                   textInput(inputId = "prevalence_setup_colour_prior",
+                             label = 'Input the colour of the prior.',
+                             value = "FF007F"), 
+                   
+                 ),
+                 conditionalPanel(
+                   condition = "input.prevalence_setup_colour == 'manual'",
+                   textInput(inputId = "prevalence_setup_colour_post",
+                             label = 'Input the colour of the posterior.',
+                             value = "FF00FF"), 
+                   
+                 ),
+                 conditionalPanel(
+                   condition = "input.prevalence_setup_colour == 'manual'",
+                   textInput(inputId = "prevalence_setup_colour_rb",
+                             label = 'Input the colour of the relative belief ratio.',
+                             value = "7F00FF"), 
+                   
+                 ),
+                 
     ),
     mainPanel(
       tabPanel("Plots",
@@ -103,12 +148,26 @@ prevalence_setup_plot_alt = div(
   titlePanel("Plot of the Prior of w"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 numericInput(inputId = "prevalence_setup_delta", label = "Delta", 
+                 numericInput(inputId = "prevalence_setup_delta", 
+                              label = "Delta", 
                               value = 0.001, min = 0, max = 1),
-                 numericInput(inputId = "prevalence_setup_alpha1w", # CHANGE THIS
-                              tags$p('alpha1w', style = "font-size: 90%;"),value = 391.72),
-                 numericInput(inputId = "prevalence_setup_alpha2w", # CHANGE THIS
-                              tags$p('alpha2w', style = "font-size: 90%;"),value = 211.39),
+                 selectInput(inputId = "prevalence_setup_colour_1", 
+                             label = 'Select a colour', 
+                             choices = list("Red" = 'red', 
+                                            "Blue" = 'blue', 
+                                            "Green" = 'green',
+                                            "Manually Insert" = 'manual'), # TO ADD: let the user pick their own 
+                             selected = 'red'),
+                 sliderInput(inputId = "prevalence_setup_col_transparency_1", 
+                             label = "Scale for colour transparency",
+                             min = 0, max = 1, value = 0.1),
+                 conditionalPanel(
+                   condition = "input.prevalence_setup_colour_1 == 'manual'",
+                   textInput(inputId = "prevalence_setup_colour_2",
+                             label = 'Input the hex colour code.',
+                             value = "AC2DE2"), 
+                   
+                 ),
     ),
     mainPanel(
       fluidRow(splitLayout(cellWidths = c("70%", "30%"), 
@@ -128,7 +187,8 @@ prevalence_setup_relative_belief_plot_of_w0 = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
                  numericInput(inputId = "prevalence_setup_w0",
-                              tags$p('Hypothesis w = w0', style = "font-size: 90%;"),value = 0.6)
+                              label = 'Hypothesis w = w0',
+                              value = 0.6)
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0",
@@ -147,7 +207,8 @@ page_prevalence_download = div(
   titlePanel("Download Output"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 textInput(inputId = "RB_filename", "Input File Name", 
+                 textInput(inputId = "RB_filename", 
+                           label = "Input File Name", 
                            value = "PriorPostRelativeBeliefRatio"),
                  downloadButton("RB_downloadData", "Download"),
     ),
@@ -161,7 +222,8 @@ page_prevalence_download_alt = div(
   titlePanel("Download Output"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 textInput(inputId = "RB_filename_alt", "Input File Name", 
+                 textInput(inputId = "RB_filename_alt", 
+                           label = "Input File Name", 
                            value = "PriorOfW"),
                  downloadButton("RB_downloadData_alt", "Download"),
     ),
@@ -209,6 +271,3 @@ page_prevalence_setup = div(
   )
 )
 
-################################################################
-# MAIN FUNCTIONS                                               #
-################################################################

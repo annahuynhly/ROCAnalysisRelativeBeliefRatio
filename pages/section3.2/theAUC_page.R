@@ -6,9 +6,6 @@ theAUC_description = div(
   titlePanel("Page Description & Initial Setup"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-      #numericInput(inputId = "theAUC_m", # CHANGE THIS
-      #             tags$p('m (TODO DESCRIPTION)', style = "font-size: 90%;"),
-      #             value = 5, min = 1),
       numericInput(inputId = "theAUC_nND",
                    tags$p('Total Non-Diseased', style = "font-size: 90%;"),
                    value = 50, min = 1), #
@@ -69,14 +66,36 @@ theAUC_plots = div(
 # GRAPH 2 PAGE                                                 #
 ################################################################
 
+default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
+                      "6" = 6, "7" = 7, "8" = 8, "9" = 9, "10" = 10,
+                      "11" = 11, "12" = 12, "13" = 13, "14" = 14, "15" = 15,
+                      "16" = 16, "17" = 17, "18" = 18, "19" = 19, "20" = 20,
+                      "21" = 21, "22" = 22, "23" = 23, "24" = 24, "25" = 25)
+
 theAUC_copt_plots = div( 
   titlePanel("Copt Plots"), 
-  mainPanel(
-    tabPanel("Plots",
-              fluidRow(splitLayout(cellWidths = c("55%", "55%"), 
-                                  plotOutput("theAUC_postprior_copt_graph"), 
-                                  plotOutput("theAUC_RB_copt_graph")))),
-
+  sidebarLayout(
+    sidebarPanel(width = 2,
+      selectInput(inputId = "theAUC_priorc_opt_label", 
+                   label = "Plot Symbol for Prior",
+                   default_copt_list,
+                   selected = 3),
+      selectInput(inputId = "theAUC_postc_opt_label", 
+                  label = "Plot Symbol for Posterior",
+                  default_copt_list,
+                  selected = 4),
+      selectInput(inputId = "theAUC_rbc_opt_label", 
+                  label = "Plot Symbol for RB Ratio",
+                  default_copt_list,
+                  selected = 8),
+    ),
+    mainPanel(
+      tabPanel("Plots",
+               fluidRow(splitLayout(cellWidths = c("55%", "55%"), 
+                                    plotOutput("theAUC_postprior_copt_graph"), 
+                                    plotOutput("theAUC_RB_copt_graph")))),
+      
+    )
   )
 )
 

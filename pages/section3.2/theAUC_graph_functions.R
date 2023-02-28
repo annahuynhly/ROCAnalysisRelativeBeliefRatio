@@ -192,23 +192,25 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
   }
 }
 
-plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE){
+plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE,
+                          prior_label = 3, post_label = 4, rb_label = 8){
   if((typeof(priorc_opt) == "double") & (typeof(postc_opt) == "double")){
     if(length(priorc_opt) != length(postc_opt)){
       return("Error: length of priorc_opt and postc_opt are not the same.")
     }
     m = length(priorc_opt)
-    plot(1:m,priorc_opt,xlab="X",ylab="probability",pch=3, lwd = 2, col = "red", 
+    plot(1:m,priorc_opt,xlab="X",ylab="probability", pch=prior_label, lwd = 2, col = "red", 
          main = "Plot of the Prior and the Posterior of Copt")
-    points(1:m,postc_opt,pch=4, lwd = 2, col = "blue")
+    points(1:m,postc_opt,pch=post_label, lwd = 2, col = "blue")
     
     legend("topright", legend = c("Prior", "Posterior"),
-           lwd = 2, cex = 1.2, col = c("red", "blue"), pch = c(3, 4), lty = c(NA, NA))
+           lwd = 2, cex = 1.2, col = c("red", "blue"), pch = c(prior_label, post_label), lty = c(NA, NA))
+    
   } else if(typeof(RBc_opt) == "double"){
     m = length(RBc_opt)
-    plot(1:m, RBc_opt, xlab="X", ylab="Relative Belief Ratio", pch=8, col = "#16957C",
+    plot(1:m, RBc_opt, xlab="X", ylab="Relative Belief Ratio", pch=rb_label, col = "#16957C",
          main = "Plot of the Relative Belief Ratio of Copt")
     legend("topright", legend = c("Relative Belief Ratio"),
-           lwd = 2, cex = 1.2, col = c("#16957C"), pch = c(8), lty = c(NA))
+           lwd = 2, cex = 1.2, col = c("#16957C"), pch = c(rb_label), lty = c(NA))
   }
 }

@@ -80,10 +80,13 @@ output$theAUC_RB_graph = renderPlot({
 ####### COPT PLOTS
 output$theAUC_postprior_copt_graph = renderPlot({
   plots_AUC_copt(priorc_opt = sect3.2_AUC_prior()$priorc_opt, 
-                 postc_opt = sect3.2_AUC_post()$postc_opt)
+                 postc_opt = sect3.2_AUC_post()$postc_opt,
+                 prior_label = as.numeric(input$theAUC_priorc_opt_label), 
+                 post_label = as.numeric(input$theAUC_postc_opt_label))
 })
 output$theAUC_RB_copt_graph = renderPlot({
-  plots_AUC_copt(RBc_opt = sect3.2_AUC_RBR()$RBc_opt)
+  plots_AUC_copt(RBc_opt = sect3.2_AUC_RBR()$RBc_opt,
+                 rb_label = as.numeric(input$theAUC_rbc_opt_label))
 })
 
 
