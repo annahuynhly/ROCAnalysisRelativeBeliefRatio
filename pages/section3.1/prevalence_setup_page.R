@@ -83,9 +83,6 @@ prevalence_setup_plausible_region = div(
                  numericInput(inputId = "prevalence_setup_nD", 
                               label = 'Total Diseased',
                               value = 68, min = 0),
-                 numericInput(inputId = "prevalence_setup_delta", 
-                              label = "Delta", 
-                              value = 0.001, min = 0, max = 1),
     ),
     mainPanel(
       tabPanel("Plausible Region & Max w", verbatimTextOutput("prevalence_setup_values1")),
@@ -101,6 +98,10 @@ prevalence_setup_plots = div(
   titlePanel("Plots"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
+                 numericInput(inputId = "prevalence_setup_delta", 
+                              label = tags$p('Delta = the meaningful difference for the prevalence', 
+                                             style = "font-size: 90%;"),
+                              value = 0.001, min = 0, max = 1),
                  textInput(inputId = "prevalence_setup_gamma", 
                            label = "Gamma (must be less than posterior content)", 
                            value = "NA"),
@@ -117,21 +118,18 @@ prevalence_setup_plots = div(
                    textInput(inputId = "prevalence_setup_colour_prior",
                              label = 'Input the colour of the prior.',
                              value = "FF007F"), 
-                   
                  ),
                  conditionalPanel(
                    condition = "input.prevalence_setup_colour == 'manual'",
                    textInput(inputId = "prevalence_setup_colour_post",
                              label = 'Input the colour of the posterior.',
                              value = "FF00FF"), 
-                   
                  ),
                  conditionalPanel(
                    condition = "input.prevalence_setup_colour == 'manual'",
                    textInput(inputId = "prevalence_setup_colour_rb",
                              label = 'Input the colour of the relative belief ratio.',
                              value = "7F00FF"), 
-                   
                  ),
                  
     ),
@@ -149,7 +147,9 @@ prevalence_setup_plot_alt = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
                  numericInput(inputId = "prevalence_setup_delta", 
-                              label = "Delta", 
+                              label = tags$p('Delta = the meaningful difference for the prevalence', 
+                                             style = "font-size: 90%;"),
+                              #label = "Delta = the meaningful difference for the prevalence", 
                               value = 0.001, min = 0, max = 1),
                  selectInput(inputId = "prevalence_setup_colour_1", 
                              label = 'Select a colour', 
@@ -170,9 +170,10 @@ prevalence_setup_plot_alt = div(
                  ),
     ),
     mainPanel(
-      fluidRow(splitLayout(cellWidths = c("70%", "30%"), 
-                           plotOutput("prevalence_setup_post_graph_alt"), 
-                           verbatimTextOutput("prevalence_setup_prior_values"))),
+      plotOutput("prevalence_setup_post_graph_alt")
+      #fluidRow(splitLayout(cellWidths = c("70%", "30%"), 
+      #                     plotOutput("prevalence_setup_post_graph_alt"), 
+      #                     verbatimTextOutput("prevalence_setup_prior_values"))),
     ),
   )
 )
@@ -244,7 +245,7 @@ page_prevalence_setup = div(
   conditionalPanel(
     condition = "input.pick_case_1 == 'case_1_opt'",
     p("The prevalence is already known, so there is nothing to do here. Please proceed
-      to section 3.2.")
+      to inferences of the AUC (currently labelled as Section 3.2).")
   ),
   conditionalPanel(
     condition = "input.pick_case_1 == 'case_2_opt'",
@@ -253,7 +254,7 @@ page_prevalence_setup = div(
       condition = "input.pick_case_2 == 'case_b_opt'",
       tabsetPanel(type = "tabs",
                   tabPanel("Description", prevalence_setup_description), 
-                  tabPanel("Relative Estimate of w", prevalence_setup_plausible_region),
+                  tabPanel("Relative Belief Estimate of w", prevalence_setup_plausible_region),
                   tabPanel("Plots", prevalence_setup_plots),
                   #tabPanel("Strength of w0", prevalence_setup_Strength_of_w0),
                   tabPanel("Test of w = w0", prevalence_setup_relative_belief_plot_of_w0),

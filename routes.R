@@ -10,15 +10,16 @@ source("./pages/section3.4/helperfunctions3.4.R")
 source("./pages/home_page.R")
 source("./pages/contact_page.R")
 
-# Section 3.1
+# Section 3.1 - The Prevalence
 source("./pages/section3.1/prevalence_setup_page.R")
 source("./pages/section3.1/prevalence_setup_functions.R")
 
 # Section 3.2
-source("./pages/section3.2/theAUC_page.R")
-source("./pages/section3.2/theAUC_compute_functions.R")
-source("./pages/section3.2/theAUC_graph_functions.R")
 source("./pages/section3.2/definitions.R")
+source("./pages/section3.2/finite_val_diag_page.R")
+source("./pages/section3.2/finite_val_diag_compute_functions.R")
+source("./pages/section3.2/finite_val_diag_graph_functions.R")
+source("./pages/section3.2/binom_val_diag_page.R")
 
 # Section 3.3
 source("./pages/section3.3/variables3.3_page.R")

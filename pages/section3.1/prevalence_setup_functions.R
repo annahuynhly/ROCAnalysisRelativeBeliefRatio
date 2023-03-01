@@ -187,6 +187,7 @@ generate_rbr_graph = function(relative_belief_ratio, plausible_region, grid, cre
   plot(grid, relative_belief_ratio, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
        main = "Graph of the Relative Belief Ratio of w", ylab = "RBR", xlab = "w", col = colour_choice)
   abline(h=1, col="royalblue1", lwd = 2, lty = 2)
+  
   abline(v=lower_bd, col="#b3bfff", lwd = 2, lty = 3)
   abline(v=upper_bd, col="#b3bfff", lwd = 2, lty = 3)
   # Colouring in the area between the plausible region and when the RBR > 1

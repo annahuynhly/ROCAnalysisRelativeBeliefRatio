@@ -30,9 +30,9 @@ theAUC_description = div(
 ################################################################
 
 theAUC_plausible_region = div( 
-  titlePanel("Plausible Region of w & More"),
+  titlePanel("Inferences for Optimal Cutoff"),
   mainPanel(
-    tabPanel("Plausible Region of w & More", verbatimTextOutput("theAUC_output1")),
+    tabPanel("Inferences for Optimal Cutoff", verbatimTextOutput("theAUC_output1")),
   )
 )
 
@@ -41,17 +41,43 @@ theAUC_plausible_region = div(
 ################################################################
 
 theAUC_plots = div( 
-  titlePanel("Histograms"), 
+  titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
       numericInput(inputId = "theAUC_delta", 
                    tags$p("Delta"), value = 0.04, min = 0, max = 1),
       textInput(inputId = "theAUC_gamma", label = "Gamma (must be less than posterior content)", 
                 value = "NA"),
-      radioButtons(inputId = "theAUC_hist_visual", label = "Choose Visual:",
+      selectInput(inputId = "theAUC_hist_visual", label = "Choose Visual:",
                    c("With Bars" = "theAUC_withbars",
                      "Without Bars" = "theAUC_withoutbars"),
-                   selected = "theAUC_withbars"),
+                   selected = "theAUC_withoutbars"),
+      selectInput(inputId = "theAUC_colour", 
+                  label = 'Select a colour', 
+                  choices = list("Default Theme" = 'default', 
+                                 "Manually Insert" = 'manual'), # TO ADD: let the user pick
+                  selected = 'default'),
+      
+      conditionalPanel(
+        condition = "input.theAUC_colour == 'manual'",
+        textInput(inputId = "theAUC_colour_prior",
+                  label = 'Input the colour of the prior.',
+                  value = "FF007F"), 
+      ),
+      conditionalPanel(
+        condition = "input.theAUC_colour == 'manual'",
+        textInput(inputId = "theAUC_colour_post",
+                  label = 'Input the colour of the posterior.',
+                  value = "FF00FF"), 
+      ),
+      conditionalPanel(
+        condition = "input.theAUC_colour == 'manual'",
+        textInput(inputId = "theAUC_colour_rb",
+                  label = 'Input the colour of the relative belief ratio.',
+                  value = "7F00FF"), 
+      ),
+      
+      
     ),
     mainPanel(
       tabPanel("Plots",
@@ -73,7 +99,7 @@ default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
                       "21" = 21, "22" = 22, "23" = 23, "24" = 24, "25" = 25)
 
 theAUC_copt_plots = div( 
-  titlePanel("Copt Plots"), 
+  titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
     sidebarPanel(width = 2,
       selectInput(inputId = "theAUC_priorc_opt_label", 
@@ -104,7 +130,7 @@ theAUC_copt_plots = div(
 ################################################################
 
 theAUC_hypothesizedAUC = div( 
-  titlePanel("Hypothesized AUC"),
+  titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3, 
       numericInput(inputId = "theAUC_hypoAUC",
@@ -172,10 +198,10 @@ page_theAUC = div(
   # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
               tabPanel("Description", theAUC_description),
-              tabPanel("Test AUC >= 0.5", theAUC_hypothesizedAUC),
-              tabPanel("Plausible Region of w & More", theAUC_plausible_region),
-              tabPanel("Histograms", theAUC_plots),
-              tabPanel("Copt Plots", theAUC_copt_plots),
+              tabPanel("Inferences for the AUC", theAUC_hypothesizedAUC),
+              tabPanel("Plots for the AUC", theAUC_plots),
+              tabPanel("Inferences for Optimal Cutoff", theAUC_plausible_region),
+              tabPanel("Plots for the Optimal Cutoff", theAUC_copt_plots),
               tabPanel("Download Prior & Posterior", theAUC_download_1),
   )
 )

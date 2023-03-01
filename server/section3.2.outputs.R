@@ -27,6 +27,17 @@ output$theAUC_hypoAUC_value = renderPrint({
 # HISTOGRAMS                                                   #
 ################################################################
 
+theAUC_colours = reactive({
+  if(input$theAUC_colour == 'default'){
+    "default"
+  }
+  else if (input$theAUC_colour == 'manual'){
+    c(paste("#", input$theAUC_colour_prior, sep = ""),
+      paste("#", input$theAUC_colour_post, sep = ""),
+      paste("#", input$theAUC_colour_rb, sep = ""))
+  }
+})
+
 output$theAUC_postprior_graph = renderPlot({
   if(check.numeric(input$theAUC_gamma) == FALSE){
     density_hist_AUC_prior_post(delta = input$theAUC_delta, 
@@ -34,7 +45,8 @@ output$theAUC_postprior_graph = renderPlot({
                                 AUC_post = sect3.2_AUC_post()$AUC, 
                                 plausible_region = sect3.2_pr()$plausible_region,
                                 densityplot = TRUE, 
-                                showbars = showbarplots())
+                                showbars = showbarplots(),
+                                colour_choice = theAUC_colours())
     
   } else if (as.numeric(input$theAUC_gamma) >= sect3.2_AUC_post_content()){
     density_hist_AUC_prior_post(delta = input$theAUC_delta, 
@@ -42,7 +54,8 @@ output$theAUC_postprior_graph = renderPlot({
                                 AUC_post = sect3.2_AUC_post()$AUC, 
                                 plausible_region = sect3.2_pr()$plausible_region,
                                 densityplot = TRUE, 
-                                showbars = showbarplots())
+                                showbars = showbarplots(),
+                                colour_choice = theAUC_colours())
   } else {
     density_hist_AUC_prior_post(delta = input$theAUC_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
@@ -50,7 +63,8 @@ output$theAUC_postprior_graph = renderPlot({
                                 plausible_region = sect3.2_pr()$plausible_region,
                                 credible_region = sect3.2_cr()$credible_region,
                                 densityplot = TRUE, 
-                                showbars = showbarplots()) # MUST MODIFY
+                                showbars = showbarplots(),
+                                colour_choice = theAUC_colours()) # MUST MODIFY
   }
 })
 

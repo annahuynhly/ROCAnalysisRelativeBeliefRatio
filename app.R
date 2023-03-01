@@ -26,11 +26,12 @@ source("routes.R")
 ################################################################
 
 ui = navbarPage(title = " ROC Analysis & Relative Belief",
-                 tabPanel("Home", home_page),
+                 tabPanel("Getting Started", home_page),
                  tabPanel("The Prevalence", page_prevalence_setup),
                  navbarMenu("Section 3.2",
                             tabPanel("Definitions", page_sect3.2_def),
                             tabPanel("Finite-valued Diagnostic", page_theAUC),
+                            tabPanel("Binomial-valued Diagnostic", page_binom_val_diag)
                  ),
                  navbarMenu("Section 3.3",
                             tabPanel("3.3 Variables", page_variables3.3),

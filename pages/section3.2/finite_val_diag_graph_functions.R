@@ -44,8 +44,7 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
         new_density[i] = sum(hist_density[lower_int:upper_int])/(2*num_neighbours + 1)
       }
     }
-    #print(new_grid)
-    #print(new_density)
+
     if(showplot == TRUE){
       lines(new_grid, new_density, lty = 2, type = "l", lwd = 3, col = colour)#, add = TRUE)
     }
@@ -55,7 +54,7 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
 
 density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_region,
                                        credible_region = FALSE, densityplot = FALSE, 
-                                       showbars = FALSE){
+                                       showbars = FALSE, colour_choice = 'default'){
   bins = theAUC_grid(delta)
   
   if(densityplot == FALSE & showbars == FALSE){ # this is to extract the density values only
@@ -70,36 +69,51 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
     return(list("PriorArea" = prior_linearea, "PostArea" = post_linearea))
   }
   
-  if(showbars == FALSE){
-    hist_colours = c("#ffffff", "#ffffff") # Forcing it to look white to disappear
+  # Line colours
+  if(colour_choice[1] == 'default'){ # Note: colour_choice[1] is hardcoded
+    prior_line_col = rgb(255/255, 102/255, 102/255)
+    post_line_col = rgb(102/255, 153/255, 255/255)
   } else {
-    hist_colours = c(rgb(102/255, 153/255, 255/255, alpha = 0.5),
-                     rgb(255/255, 102/255, 102/255, alpha = 0.5))
+    rgb_prior = col2rgb(colour_choice[1])
+    rgb_post = col2rgb(colour_choice[2])
+    prior_line_col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255)
+    post_line_col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255)
+  }
+  
+  # Histogram colours
+  if(showbars == FALSE){ # Forcing it to look white to disappear
+    prior_hist_col = "#ffffff"
+    post_hist_col = "#ffffff"
+  } else if(colour_choice[1] == 'default'){
+    prior_hist_col = rgb(255/255, 102/255, 102/255, alpha = 0.5)
+    post_hist_col = rgb(102/255, 153/255, 255/255, alpha = 0.5)
+  } else { # assuming the user manually put in a list of colours
+    prior_hist_col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, alpha = 0.5)
+    post_hist_col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255, alpha = 0.5)
   }
   
   hist_post = hist(AUC_post, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
                    #ylim = c(0, max(AUC_prior,AUC_post)),
                    main="Density Histogram: The Prior & Posterior of the AUC", 
-                   col = hist_colours[1], border = "#ffffff") 
+                   col = post_hist_col, border = "#ffffff") 
   
   hist_prior = hist(AUC_prior, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
-                    #     ylim = c(0, max(AUC_prior,AUC_post)),
-                    #main="Density Histogram of AUC", 
-                    col = hist_colours[2], border = "#ffffff", add = TRUE)
+                    #ylim = c(0, max(AUC_prior,AUC_post)),
+                    col = prior_hist_col, border = "#ffffff", add = TRUE)
   
   abline(v=plausible_region[1], col="#947aff", lwd = 2, lty = 3)
   abline(v=plausible_region[2], col="#947aff", lwd = 2, lty = 3)
   
   legend("topleft", inset=.02, c("Prior","Posterior"), 
-         fill=c(rgb(255/255, 102/255, 102/255, alpha = 0.5),
-                rgb(102/255, 153/255, 255/255, alpha = 0.5)), 
+         fill=c(prior_line_col,
+                post_line_col), 
          horiz=FALSE, cex=0.8)
   
   if(densityplot == TRUE){
-    convert_hist_to_density_plot(hist_post$density, hist_post$breaks, num_average_pts = 3, showplot = TRUE,
-                                 colour = rgb(102/255, 153/255, 255/255))
-    convert_hist_to_density_plot(hist_prior$density, hist_prior$breaks, num_average_pts = 3, showplot = TRUE,
-                                 colour = rgb(255/255, 102/255, 102/255))
+    convert_hist_to_density_plot(hist_post$density, hist_post$breaks, num_average_pts = 3, 
+                                 showplot = TRUE, colour = post_line_col)
+    convert_hist_to_density_plot(hist_prior$density, hist_prior$breaks, num_average_pts = 3, 
+                                 showplot = TRUE, colour = prior_line_col)
   }
   
   if(typeof(credible_region) == "double"){
