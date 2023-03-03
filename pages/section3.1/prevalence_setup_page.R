@@ -101,7 +101,9 @@ prevalence_setup_plots = div(
                            value = "NA"),
                  selectInput(inputId = "prevalence_setup_colour", 
                              label = 'Select colour theme', 
-                             choices = list("Default Theme" = 'default', 
+                             choices = list("Default Theme" = 'default',
+                                            "Dull Life" = 'dull',
+                                            "Lovely Mei" = 'lovelymei',
                                             "Manually Insert" = 'manual'), # TO ADD: let the user pick
                              selected = 'default'),
                  
@@ -140,13 +142,13 @@ prevalence_setup_plots = div(
                    condition = "input.prevalence_setup_modify_colour == 'pr'",
                    textInput(inputId = "prevalence_setup_colour_pr",
                              label = 'Input the hex colour of the plausible region',
-                             value = "650d84"), 
+                             value = "A717DB"), 
                  ),
                  conditionalPanel(
                    condition = "input.prevalence_setup_modify_colour == 'line_1'",
                    textInput(inputId = "prevalence_setup_colour_line_1",
                              label = 'Input the hex colour of the y = 1 line',
-                             value = "650d84"), 
+                             value = "5327E4"), 
                  ),
                  conditionalPanel(
                    condition = "input.prevalence_setup_modify_colour == 'cr'",

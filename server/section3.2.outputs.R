@@ -30,12 +30,29 @@ output$theAUC_hypoAUC_value = renderPrint({
 
 theAUC_colours = reactive({
   if(input$theAUC_colour == 'default'){
-    "default"
+    # Total order of ALL colours: prior, posterior, relative belief ratio, 
+    # plausible region, y = 1 line, credible region, 
+    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+  } else if (input$theAUC_colour == 'manual'){
+    c(convert_to_hex(input$theAUC_colour_prior),
+      convert_to_hex(input$theAUC_colour_post),
+      convert_to_hex(input$theAUC_colour_rbr),
+      convert_to_hex(input$theAUC_colour_pr),
+      convert_to_hex(input$theAUC_colour_line_1),
+      convert_to_hex(input$theAUC_colour_cr)
+    )
   }
-  else if (input$theAUC_colour == 'manual'){
-    c(paste("#", input$theAUC_colour_prior, sep = ""),
-      paste("#", input$theAUC_colour_post, sep = ""),
-      paste("#", input$theAUC_colour_rb, sep = ""))
+})
+
+theAUC_copt_colours = reactive({
+  if(input$theAUC_c_opt_carry_colour == 'default'){
+    c("#FF6666", "#6699FF", "#05DEB2")
+  } else if (input$theAUC_c_opt_carry_colour == 'custom'){
+    theAUC_colours()[c(1, 2, 3)]
+  } else if (input$theAUC_c_opt_carry_colour == 'manual'){
+    c(convert_to_hex(input$theAUC_priorc_opt_colour),
+      convert_to_hex(input$theAUC_postc_opt_colour),
+      convert_to_hex(input$theAUC_rbrc_opt_colour))
   }
 })
 
@@ -47,7 +64,8 @@ output$theAUC_postprior_graph = renderPlot({
                                 plausible_region = sect3.2_pr()$plausible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = theAUC_colours())
+                                colour_choice = theAUC_colours()[c(1, 2, 4, 6)],
+                                transparency = input$theAUC_col_transparency)
     
   } else if (as.numeric(input$theAUC_gamma) >= sect3.2_AUC_post_content()){
     density_hist_AUC_prior_post(delta = input$theAUC_delta, 
@@ -56,7 +74,8 @@ output$theAUC_postprior_graph = renderPlot({
                                 plausible_region = sect3.2_pr()$plausible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = theAUC_colours())
+                                colour_choice = theAUC_colours()[c(1, 2, 4, 6)],
+                                transparency = input$theAUC_col_transparency)
   } else {
     density_hist_AUC_prior_post(delta = input$theAUC_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
@@ -65,7 +84,8 @@ output$theAUC_postprior_graph = renderPlot({
                                 credible_region = sect3.2_cr()$credible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = theAUC_colours()) # MUST MODIFY
+                                colour_choice = theAUC_colours()[c(1, 2, 4, 6)],
+                                transparency = input$theAUC_col_transparency)
   }
 })
 
@@ -75,13 +95,17 @@ output$theAUC_RB_graph = renderPlot({
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
                          plausible_region = sect3.2_pr()$plausible_region, 
                          densityplot = TRUE,
-                         showbars = showbarplots())
+                         showbars = showbarplots(),
+                         colour_choice = theAUC_colours()[c(3, 4, 5, 6)],
+                         transparency = input$theAUC_col_transparency)
   } else if (as.numeric(input$theAUC_gamma) >= sect3.2_AUC_post_content()){
     density_hist_AUC_RBR(delta = input$theAUC_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
                          plausible_region = sect3.2_pr()$plausible_region, 
                          densityplot = TRUE,
-                         showbars = showbarplots())
+                         showbars = showbarplots(),
+                         colour_choice = theAUC_colours()[c(3, 4, 5, 6)],
+                         transparency = input$theAUC_col_transparency)
   } else {
     density_hist_AUC_RBR(delta = input$theAUC_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
@@ -89,7 +113,9 @@ output$theAUC_RB_graph = renderPlot({
                          credible_region = sect3.2_cr()$credible_region, 
                          rb_line = sect3.2_cr()$rb_line,
                          densityplot = TRUE,
-                         showbars = showbarplots()) # MUST MODIFY
+                         showbars = showbarplots(),
+                         colour_choice = theAUC_colours()[c(3, 4, 5, 6)],
+                         transparency = input$theAUC_col_transparency)
   }
 })
 ####### COPT PLOTS
@@ -97,11 +123,13 @@ output$theAUC_postprior_copt_graph = renderPlot({
   plots_AUC_copt(priorc_opt = sect3.2_AUC_prior()$priorc_opt, 
                  postc_opt = sect3.2_AUC_post()$postc_opt,
                  prior_label = as.numeric(input$theAUC_priorc_opt_label), 
-                 post_label = as.numeric(input$theAUC_postc_opt_label))
+                 post_label = as.numeric(input$theAUC_postc_opt_label),
+                 colour_choice = theAUC_copt_colours())
 })
 output$theAUC_RB_copt_graph = renderPlot({
   plots_AUC_copt(RBc_opt = sect3.2_AUC_RBR()$RBc_opt,
-                 rb_label = as.numeric(input$theAUC_rbc_opt_label))
+                 rb_label = as.numeric(input$theAUC_rbc_opt_label),
+                 colour_choice = theAUC_copt_colours())
 })
 
 

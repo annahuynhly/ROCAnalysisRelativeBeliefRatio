@@ -76,32 +76,69 @@ theAUC_plots = div(
                    c("With Bars" = "theAUC_withbars",
                      "Without Bars" = "theAUC_withoutbars"),
                    selected = "theAUC_withoutbars"),
+      
       selectInput(inputId = "theAUC_colour", 
                   label = 'Select a colour', 
                   choices = list("Default Theme" = 'default', 
-                                 "Manually Insert" = 'manual'), # TO ADD: let the user pick
+                                 "Manually Insert" = 'manual'), 
                   selected = 'default'),
       
       conditionalPanel(
         condition = "input.theAUC_colour == 'manual'",
+        selectInput(inputId = "theAUC_modify_colour",
+                    label = 'Select line to modify',
+                    choices = list("Prior" = 'prior',
+                                   "Posterior" = 'post',
+                                   "Relative Belief Ratio" = 'rbr',
+                                   "Plausible Region" = 'pr',
+                                   "Line of y = 1" = 'line_1',
+                                   "Credible Region" = 'cr'),
+                    selected = 'prior'), 
+      ),
+      
+      conditionalPanel(
+        condition = "input.theAUC_modify_colour == 'prior'",
         textInput(inputId = "theAUC_colour_prior",
-                  label = 'Input the colour of the prior.',
+                  label = 'Input the colour of the prior',
                   value = "FF007F"), 
       ),
       conditionalPanel(
-        condition = "input.theAUC_colour == 'manual'",
+        condition = "input.theAUC_modify_colour == 'post'",
         textInput(inputId = "theAUC_colour_post",
-                  label = 'Input the colour of the posterior.',
+                  label = 'Input the colour of the posterior',
                   value = "FF00FF"), 
       ),
       conditionalPanel(
-        condition = "input.theAUC_colour == 'manual'",
-        textInput(inputId = "theAUC_colour_rb",
-                  label = 'Input the colour of the relative belief ratio.',
+        condition = "input.theAUC_modify_colour == 'rbr'",
+        textInput(inputId = "theAUC_colour_rbr",
+                  label = 'Input the colour of the relative belief ratio',
                   value = "7F00FF"), 
       ),
+      conditionalPanel(
+        condition = "input.theAUC_modify_colour == 'pr'",
+        textInput(inputId = "theAUC_colour_pr",
+                  label = 'Input the colour of the plausible region',
+                  value = "A717DB"), 
+      ),
+      conditionalPanel(
+        condition = "input.theAUC_modify_colour == 'line_1'",
+        textInput(inputId = "theAUC_colour_line_1",
+                  label = 'Input the colour of the y = 1 line',
+                  value = "5327E4"), 
+      ),
+      conditionalPanel(
+        condition = "input.theAUC_modify_colour == 'cr'",
+        textInput(inputId = "theAUC_colour_cr",
+                  label = 'Input the colour of the credible region',
+                  value = "650d84"), 
+      ),
       
-      
+      conditionalPanel(
+        condition = "input.theAUC_hist_visual == 'theAUC_withbars'",
+        sliderInput(inputId = "theAUC_col_transparency", 
+                    label = "Scale for colour transparency",
+                    min = 0, max = 1, value = 0.2), 
+      )
     ),
     mainPanel(
       tabPanel("Plots",
@@ -125,23 +162,67 @@ default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
 theAUC_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
-    sidebarPanel(width = 2,
-      selectInput(inputId = "theAUC_priorc_opt_label", 
-                   label = "Plot Symbol for Prior",
-                   default_copt_list,
-                   selected = 3),
-      selectInput(inputId = "theAUC_postc_opt_label", 
-                  label = "Plot Symbol for Posterior",
-                  default_copt_list,
-                  selected = 4),
-      selectInput(inputId = "theAUC_rbc_opt_label", 
-                  label = "Plot Symbol for RB Ratio",
-                  default_copt_list,
-                  selected = 8),
+    sidebarPanel(width = 3,
+      selectInput(inputId = "theAUC_c_opt_carry_colour",
+                  label = "Select a colour theme",
+                  list("Default Theme" = 'default',
+                       "Custom Theme from Previous Section" = 'custom',
+                       "Manually Insert" = 'manual'),
+                       selected = 'default'),      
+      selectInput(inputId = "theAUC_c_opt_modify",
+                  label = "Select which object to modify",
+                  list("Prior" = 'prior',
+                       "Posterior" = 'post',
+                       "Relative Belief Ratio" = 'rbr'),
+                  selected = 'prior'
+                  ),
+                 
+      conditionalPanel(
+        condition = "input.theAUC_c_opt_modify == 'prior'",
+        selectInput(inputId = "theAUC_priorc_opt_label", 
+                    label = "Plot Symbol for Prior",
+                    default_copt_list,
+                    selected = 3),
+        
+        conditionalPanel(
+          condition = "input.theAUC_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "theAUC_priorc_opt_colour",
+                    label = 'Hex Colour for the Prior',
+                    value = "065143"), 
+        )
+      ),
+      conditionalPanel(
+        condition = "input.theAUC_c_opt_modify == 'post'",
+        selectInput(inputId = "theAUC_postc_opt_label", 
+                    label = "Plot Symbol for Posterior",
+                    default_copt_list,
+                    selected = 4),
+        conditionalPanel(
+          condition = "input.theAUC_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "theAUC_postc_opt_colour",
+                    label = 'Hex Colour for the Posterior',
+                    value = "70B77E"), 
+        )
+      ),
+      conditionalPanel(
+        condition = "input.theAUC_c_opt_modify == 'rbr'",
+        selectInput(inputId = "theAUC_rbc_opt_label", 
+                    label = "Plot Symbol for RB Ratio",
+                    default_copt_list,
+                    selected = 8),
+        
+        conditionalPanel(
+          condition = "input.theAUC_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "theAUC_rbrc_opt_colour",
+                    label = 'Hex Colour for the RB Ratio',
+                    value = "CE1483"),
+        )
+      ),
+  
     ),
     mainPanel(
       tabPanel("Plots",
-               fluidRow(splitLayout(cellWidths = c("55%", "55%"), 
+               fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
                                     plotOutput("theAUC_postprior_copt_graph"), 
                                     plotOutput("theAUC_RB_copt_graph")))),
       

@@ -52,9 +52,14 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
   return(list("grid" = new_grid, "density" = new_density))
 }
 
+###################################################################################
+
 density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_region,
                                        credible_region = FALSE, densityplot = FALSE, 
-                                       showbars = FALSE, colour_choice = 'default'){
+                                       showbars = FALSE, 
+                                       colour_choice = c("#FF6666", "#6699FF", 
+                                                         "#947aff", "#5b10a7"),
+                                       transparency = 0.2){
   bins = theAUC_grid(delta)
   
   if(densityplot == FALSE & showbars == FALSE){ # this is to extract the density values only
@@ -70,26 +75,22 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
   }
   
   # Line colours
-  if(colour_choice[1] == 'default'){ # Note: colour_choice[1] is hardcoded
-    prior_line_col = rgb(255/255, 102/255, 102/255)
-    post_line_col = rgb(102/255, 153/255, 255/255)
-  } else {
-    rgb_prior = col2rgb(colour_choice[1])
-    rgb_post = col2rgb(colour_choice[2])
-    prior_line_col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255)
-    post_line_col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255)
-  }
+  rgb_prior = col2rgb(colour_choice[1])
+  rgb_post = col2rgb(colour_choice[2])
+  prior_line_col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255)
+  post_line_col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255)
+  pr_line_col = colour_choice[3]
+  cr_line_col = colour_choice[4]
   
   # Histogram colours
   if(showbars == FALSE){ # Forcing it to look white to disappear
     prior_hist_col = "#ffffff"
     post_hist_col = "#ffffff"
-  } else if(colour_choice[1] == 'default'){
-    prior_hist_col = rgb(255/255, 102/255, 102/255, alpha = 0.5)
-    post_hist_col = rgb(102/255, 153/255, 255/255, alpha = 0.5)
   } else { # assuming the user manually put in a list of colours
-    prior_hist_col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, alpha = 0.5)
-    post_hist_col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255, alpha = 0.5)
+    prior_hist_col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, 
+                         rgb_prior[3]/255, alpha = transparency)
+    post_hist_col = rgb(rgb_post[1]/255, rgb_post[2]/255, 
+                        rgb_post[3]/255, alpha = transparency)
   }
   
   hist_post = hist(AUC_post, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
@@ -101,13 +102,21 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
                     #ylim = c(0, max(AUC_prior,AUC_post)),
                     col = prior_hist_col, border = "#ffffff", add = TRUE)
   
-  abline(v=plausible_region[1], col="#947aff", lwd = 2, lty = 3)
-  abline(v=plausible_region[2], col="#947aff", lwd = 2, lty = 3)
+  abline(v=plausible_region[1], col=pr_line_col, lwd = 2, lty = 3)
+  abline(v=plausible_region[2], col=pr_line_col, lwd = 2, lty = 3)
   
-  legend("topleft", inset=.02, c("Prior","Posterior"), 
-         fill=c(prior_line_col,
-                post_line_col), 
-         horiz=FALSE, cex=0.8)
+  # credible_region = FALSE
+  if(typeof(credible_region) != "double"){
+    legend("topleft", legend = c("Prior", "Posterior", "Plausible Region"), 
+           lwd = 2,
+           col = c(prior_line_col, post_line_col, pr_line_col),
+           lty = c(3, 3, 3), inset=0.02, cex=0.8)
+  } else {
+    legend("topleft", legend = c("Prior", "Posterior", "Plausible Region", "Credible Region"), 
+           lwd = 2,
+           col = c(prior_line_col, post_line_col, pr_line_col, cr_line_col),
+           lty = c(3, 3, 3, 3), inset=0.02, cex=0.8)
+  }
   
   if(densityplot == TRUE){
     convert_hist_to_density_plot(hist_post$density, hist_post$breaks, num_average_pts = 3, 
@@ -117,21 +126,28 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
   }
   
   if(typeof(credible_region) == "double"){
-    abline(v=credible_region[1], col="#5b10a7", lwd = 2, lty = 3) # might change lty?
-    abline(v=credible_region[2], col="#5b10a7", lwd = 2, lty = 3)
+    abline(v=credible_region[1], col=cr_line_col, lwd = 2, lty = 3) # might change lty?
+    abline(v=credible_region[2], col=cr_line_col, lwd = 2, lty = 3)
     
   }
 }
 
 density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_region = FALSE,
-                                rb_line = FALSE, hypothesis = FALSE, densityplot = FALSE,
-                                showbars = FALSE){
+                                rb_line = FALSE, densityplot = FALSE, showbars = FALSE, 
+                                colour_choice = c("#05DEB2", "#947aff", 
+                                                  "#3333FF", "#5b10a7"),
+                                transparency = 0.2){
+  # Order of colours: RBR, plausible region, y = 1 line, credible region
   bins = theAUC_grid(delta) #bins = c(0, bins, 1)
   
+  rgb_rbr = col2rgb(colour_choice[1])
   if(showbars == FALSE){
-    colours = "#ffffff"
+    colours = "#ffffff" # this is referring to the bins, not the rest.
   } else {
-    colours = rgb(0/255, 255/255, 204/255, alpha = 0.5)
+    colours = rgb(rgb_rbr[1]/255, 
+                  rgb_rbr[2]/255, 
+                  rgb_rbr[3]/255, alpha = transparency)
+    #colours = rgb(0/255, 255/255, 204/255, alpha = transparency)
   }
   
   AUC_RBR[is.na(AUC_RBR)] = 0
@@ -144,87 +160,80 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
        main = "Density Histogram: The Relative Belief Ratio of the AUC",
        col = colours, freq = TRUE,
        border = "#ffffff")
-  abline(h=1, col="#3333FF", lwd = 2, lty = 2)
-  abline(v=plausible_region[1], col="#947aff", lwd = 2, lty = 3)
-  abline(v=plausible_region[2], col="#947aff", lwd = 2, lty = 3)
+  abline(h=1, col=colour_choice[3], lwd = 2, lty = 2)
+  abline(v=plausible_region[1], col=colour_choice[2], lwd = 2, lty = 3)
+  abline(v=plausible_region[2], col=colour_choice[2], lwd = 2, lty = 3)
   #warning message doesn't seem to be much of an issue
   
   if(densityplot == TRUE){
     rbr_density_plot = convert_hist_to_density_plot(myhist$counts, myhist$breaks, 
                                                     num_average_pts = 3, showplot = TRUE,
-                                                    colour = rgb(5/255, 222/255, 178/255))
+                                                    colour = colour_choice[1])
     # Colouring in the area between the plausible region and when the RBR > 1
+    rgb_pr = col2rgb(colour_choice[2])
     l = min(which(rbr_density_plot$grid >= plausible_region[1]))
     h = max(which(rbr_density_plot$grid <= plausible_region[2]))
     polygon(c(rbr_density_plot$grid[c(l, l:h, h)]),
             c(1, rbr_density_plot$density[l:h], 1),
-            col = rgb(255/255, 75/255, 195/255, alpha = 0.2), border = NA)
+            col = rgb(rgb_pr[1]/255, 
+                      rgb_pr[2]/255, 
+                      rgb_pr[3]/255, alpha = 0.2), 
+            # original colours: 255, 75, 195
+            border = NA)
   }
   
-  if((typeof(credible_region) == "double") & (typeof(rb_line) == "double") & (hypothesis == FALSE)){
-    abline(h=rb_line, col="#3333FF", lwd = 2, lty = 2)
-    abline(v=credible_region[1], col="#5b10a7", lwd = 2, lty = 3) # might change lty?
-    abline(v=credible_region[2], col="#5b10a7", lwd = 2, lty = 3)
+  if((typeof(credible_region) == "double") & (typeof(rb_line) == "double")){
+    abline(h = rb_line, col = colour_choice[4], lwd = 2, lty = 2)
+    abline(v = credible_region[1], col = colour_choice[4], lwd = 2, lty = 3) 
+    abline(v = credible_region[2], col = colour_choice[4], lwd = 2, lty = 3)
     
+    rgb_cr = col2rgb(colour_choice[4])
     polygon(x = c(credible_region[1], credible_region[1], credible_region[2], credible_region[2]), 
-            y = c(0, rb_line, rb_line, 0), col = rgb(148/255, 180/255, 255/255, alpha = 0.2), 
-            border = NA)   
-    
-    legend("topleft", legend = c("Plausible Region", "Credible Region"), lwd = 2, 
-           col = c('#947aff', '#5b10a7'), lty = c(3, 3), inset=.02, cex=0.8)
-    
-  } else if ((typeof(credible_region) != "double") & (hypothesis == FALSE)) {
-    legend("topleft", legend = c("Plausible Region"), lwd = 2, 
-           col = c('#947aff'), lty = c(3), inset=.02, cex=0.8)
-    
-  } else if ((typeof(credible_region) != "double") & (check.numeric(hypothesis) == TRUE)){
-    abline(v=hypothesis, col="#f1239d", lwd = 2, lty = 3) # might change lty?
-    polygon(x = c(hypothesis, hypothesis, 1, 1),
-            y = c(0, max(AUC_RBR), max(AUC_RBR), 0),
-            col = rgb(241/255, 35/255, 157/255, alpha = 0.1),
+            y = c(0, rb_line, rb_line, 0), 
+            col = rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = 0.2), 
+            #col = rgb(148/255, 180/255, 255/255, alpha = 0.2), 
             border = NA)
-    legend("topleft", legend = c("Plausible Region", "Hypothesized AUC"), lwd = 2, 
-           col = c('#947aff', "#f1239d"), lty = c(3, 1), inset=.02, cex=0.8)
     
-  } else if ((typeof(credible_region) == "double") & (typeof(rb_line) == "double") & 
-             (check.numeric(hypothesis) == TRUE)){
-    abline(h=rb_line, col="#3333FF", lwd = 2, lty = 2)
+    legend("topleft", 
+           legend = c("Relative Belief Ratio", "Plausible Region", "Credible Region"), 
+           lwd = 2, 
+           col = c(colour_choice[1], colour_choice[2], colour_choice[4]), 
+           lty = c(3, 3, 3), inset = 0.02, cex = 0.8)
     
-    abline(v=credible_region[1], col="#5b10a7", lwd = 2, lty = 3) # might change lty?
-    abline(v=credible_region[2], col="#5b10a7", lwd = 2, lty = 3)
-    
-    polygon(x = c(credible_region[1], credible_region[1], credible_region[2], credible_region[2]), 
-            y = c(0, rb_line, rb_line, 0), col = rgb(148/255, 180/255, 255/255, alpha = 0.2), border = NA)
-    abline(v=hypothesis, col="#f1239d", lwd = 2, lty = 3) # might change lty?
-    polygon(x = c(hypothesis, hypothesis, 1, 1),
-            y = c(0, max(AUC_RBR), max(AUC_RBR), 0),
-            col = rgb(241/255, 35/255, 157/255, alpha = 0.1),
-            border = NA)
-    legend("topleft", legend = c("Plausible Region", "Credible Region", "Hypothesized AUC"), lwd = 2, 
-           col = c('#947aff', '#5b10a7', '#f1239d'), 
-           lty = c(3, 3, 2), inset=.02, cex=0.8)
+  } else if (typeof(credible_region) != "double") {
+    legend("topleft", 
+           legend = c("Relative Belief Ratio", "Plausible Region"), 
+           lwd = 2, 
+           col = c(colour_choice[1], colour_choice[2]), 
+           lty = c(3, 3), inset = 0.02, cex = 0.8)
   }
 }
 
+###################################################################################
+
+
 plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE,
-                          prior_label = 3, post_label = 4, rb_label = 8){
+                          prior_label = 3, post_label = 4, rb_label = 8,
+                          colour_choice = c("red", "blue", "#16957C")){
   if((typeof(priorc_opt) == "double") & (typeof(postc_opt) == "double")){
     if(length(priorc_opt) != length(postc_opt)){
       return("Error: length of priorc_opt and postc_opt are not the same.")
     }
     m = length(priorc_opt)
-    plot(1:m,priorc_opt,xlab="X",ylab="probability", pch=prior_label, lwd = 2, col = "red", 
+    plot(1:m,priorc_opt,xlab="X",ylab="probability", pch=prior_label, lwd = 2, col = colour_choice[1], 
          main = "Plot of the Prior and the Posterior of Copt")
-    points(1:m,postc_opt,pch=post_label, lwd = 2, col = "blue")
+    points(1:m,postc_opt, pch=post_label, lwd = 2, col = colour_choice[2])
     
     legend("topright", legend = c("Prior", "Posterior"),
-           lwd = 2, cex = 1.2, col = c("red", "blue"), pch = c(prior_label, post_label), lty = c(NA, NA))
+           lwd = 2, cex = 1.2, col = c(colour_choice[1], colour_choice[2]), 
+           pch = c(prior_label, post_label), lty = c(NA, NA))
     
   } else if(typeof(RBc_opt) == "double"){
     m = length(RBc_opt)
-    plot(1:m, RBc_opt, xlab="X", ylab="Relative Belief Ratio", pch=rb_label, col = "#16957C",
+    plot(1:m, RBc_opt, xlab="X", ylab="Relative Belief Ratio", pch=rb_label, col = colour_choice[3],
          main = "Plot of the Relative Belief Ratio of Copt")
     legend("topright", legend = c("Relative Belief Ratio"),
-           lwd = 2, cex = 1.2, col = c("#16957C"), pch = c(rb_label), lty = c(NA))
+           lwd = 2, cex = 1.2, col = c(colour_choice[3]), 
+           pch = c(rb_label), lty = c(NA))
   }
 }
