@@ -49,23 +49,23 @@ sect_3.1_prior = reactive({
 ################################################################
 
 output$prevalence_setup_values1 = renderPrint({
-  list("plausible_region" = sect_3.1_info_1()$plausible_region,
-       "RB_estimate_of_prevalence_w" = sect_3.1_info_1()$RB_estimate_of_prevalence_w,
-       "prior_content" = sect_3.1_info_1()$prior_content,
-       "posterior_content" = sect_3.1_info_1()$posterior_content,
-       "credible_region" = sect_3.1_cred_region()$credible_region,
-       "rb_line" = sect_3.1_cred_region()$rb_line)
+  list("Plausible Region of Prevalence w" = sect_3.1_info_1()$plausible_region,
+       "Relatibe Belief Estimate of Prevalence w" = sect_3.1_info_1()$RB_estimate_of_prevalence_w,
+       "Prior Content" = sect_3.1_info_1()$prior_content,
+       "Posterior Content" = sect_3.1_info_1()$posterior_content,
+       "Credible Region of Prevalence w" = sect_3.1_cred_region()$credible_region,
+       "Max RBR Value for the Credible Region" = sect_3.1_cred_region()$rb_line)
 })
 
 output$prevalence_setup_values2 = renderPrint({
   #sect_3.1_info_2()
-  list("relative_belief_ratio_at_w0" = sect_3.1_info_2()$relative_belief_ratio_at_w0,
-       "strength" = sect_3.1_info_2()$strength)
+  list("Relative Belief Ratio at w0" = sect_3.1_info_2()$relative_belief_ratio_at_w0,
+       "Strength" = sect_3.1_info_2()$strength)
 })
 
 output$prevalence_setup_prior_values = renderPrint({
   list(
-    "RB_estimate_of_prevalence_w" = (match(max(sect_3.1_prior()), sect_3.1_prior())/length(sect_3.1_grid()))
+    "Relative Belief Estimate of Prevalence w" = (match(max(sect_3.1_prior()), sect_3.1_prior())/length(sect_3.1_grid()))
   )
 })
 
@@ -75,15 +75,22 @@ output$prevalence_setup_prior_values = renderPrint({
 
 prevalence_colours = reactive({
   if(input$prevalence_setup_colour == 'default'){
-    c("blue", "green", "red")
+    # Total order of ALL colours: prior, posterior, relative belief ratio, 
+    # plausible region, y = 1 line, credible region, 
+    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
   }
   else if (input$prevalence_setup_colour == 'manual'){
     #c("#FF007F", "#FF00FF", "#7F00FF")
-    c(paste("#", input$prevalence_setup_colour_prior, sep = ""),
-      paste("#", input$prevalence_setup_colour_post, sep = ""),
-      paste("#", input$prevalence_setup_colour_rb, sep = ""))
+    c(convert_to_hex(input$prevalence_setup_colour_prior),
+      convert_to_hex(input$prevalence_setup_colour_post),
+      convert_to_hex(input$prevalence_setup_colour_rbr),
+      convert_to_hex(input$prevalence_setup_colour_pr),
+      convert_to_hex(input$prevalence_setup_colour_line_1),
+      convert_to_hex(input$prevalence_setup_colour_cr)
+    )
   }
 })
+
 
 output$prevalence_setup_postprior_graph = renderPlot({
   if(check.numeric(input$prevalence_setup_gamma) == FALSE){
@@ -91,7 +98,7 @@ output$prevalence_setup_postprior_graph = renderPlot({
                               post = sect_3.1_info_1()$post, 
                               plausible_region = sect_3.1_info_1()$plausible_region, 
                               grid = sect_3.1_grid(),
-                              colour_choice = prevalence_colours(),
+                              colour_choice = prevalence_colours()[c(1, 2, 4, 6)],
                               transparency = input$prevalence_setup_col_transparency)
   } else if (as.numeric(input$prevalence_setup_gamma) >= sect_3.1_info_1()$posterior_content){
     # Couldn't do the or statement for if because of the case where you can't do
@@ -100,7 +107,7 @@ output$prevalence_setup_postprior_graph = renderPlot({
                               post = sect_3.1_info_1()$post, 
                               plausible_region = sect_3.1_info_1()$plausible_region, 
                               grid = sect_3.1_grid(),
-                              colour_choice = prevalence_colours(),
+                              colour_choice = prevalence_colours()[c(1, 2, 4, 6)],
                               transparency = input$prevalence_setup_col_transparency)
   } else {
     generate_prior_post_graph(prior = sect_3.1_info_1()$prior, 
@@ -108,7 +115,7 @@ output$prevalence_setup_postprior_graph = renderPlot({
                               plausible_region = sect_3.1_info_1()$plausible_region, 
                               grid = sect_3.1_grid(),
                               credible_region = sect_3.1_cred_region()$credible_region,
-                              colour_choice = prevalence_colours(),
+                              colour_choice = prevalence_colours()[c(1, 2, 4, 6)],
                               transparency = input$prevalence_setup_col_transparency)
   }
 })
@@ -118,13 +125,13 @@ output$prevalence_setup_RB_graph = renderPlot({
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
                        grid = sect_3.1_grid(),
-                       colour_choice = prevalence_colours()[3],
+                       colour_choice = prevalence_colours()[c(3:6)],
                        transparency = input$prevalence_setup_col_transparency)
   } else if (as.numeric(input$prevalence_setup_gamma) >= sect_3.1_info_1()$posterior_content){
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
                        plausible_region = sect_3.1_info_1()$plausible_region, 
                        grid = sect_3.1_grid(),
-                       colour_choice = prevalence_colours()[3],
+                       colour_choice = prevalence_colours()[c(3:6)],
                        transparency = input$prevalence_setup_col_transparency)
   } else {
     generate_rbr_graph(relative_belief_ratio = sect_3.1_info_1()$relative_belief_ratio, 
@@ -132,7 +139,7 @@ output$prevalence_setup_RB_graph = renderPlot({
                        grid = sect_3.1_grid(),
                        credible_region = sect_3.1_cred_region()$credible_region, 
                        rb_line = sect_3.1_cred_region()$rb_line,
-                       colour_choice = prevalence_colours()[3],
+                       colour_choice = prevalence_colours()[c(3:6)],
                        transparency = input$prevalence_setup_col_transparency)
   }
 })

@@ -7,20 +7,21 @@
 #})
 
 output$theAUC_output1 = renderPrint({
-  list("plausible_region" = sect3.2_pr()$plausible_region,
-       "posterior_content" = sect3.2_AUC_post_content(),
-       "credible_region" = sect3.2_cr()$credible_region,
-       "area_under_the_line_plot" = sect3.2_lineplot_area(),
-       "prior_copt" = sect3.2_AUC_prior()$priorc_opt,
-       "post_copt" = sect3.2_AUC_post()$postc_opt,
-       "copt_est" = sect3.2_AUC_RBR()$c_optfDfND,
-       "error_characteristics" = as.data.frame(sect3.2_copt_est())) # will need to specify when
+  list("Prior Copt" = sect3.2_AUC_prior()$priorc_opt,
+       "Post Copt" = sect3.2_AUC_post()$postc_opt,
+       "Copt Estimate" = sect3.2_AUC_RBR()$c_optfDfND,
+       "Error Characteristics" = as.data.frame(sect3.2_copt_est())) # will need to specify when
   # providing a vector
   # TODO: specify credible region
 })
 
 output$theAUC_hypoAUC_value = renderPrint({
-  sect3.2_hypo_test()
+  list1 = list("Plausible Region of the AUC" = sect3.2_pr()$plausible_region,
+               "Posterior Content of the AUC" = sect3.2_AUC_post_content(),
+               "Credible Region of the AUC" = sect3.2_cr()$credible_region,
+               "Area Under the Line Plot (next section)" = sect3.2_lineplot_area())
+  list2 = append(sect3.2_hypo_test(), list1)
+  list2
 })
 
 ################################################################

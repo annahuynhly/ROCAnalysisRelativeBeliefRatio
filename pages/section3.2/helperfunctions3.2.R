@@ -3,7 +3,15 @@
 library(stringr)
 library(varhandle)
 
-# Helper Functions for: realdataROC_1_page.R
+convert_to_hex = function(hex_colour){
+  hex_colour = gsub(" ", "", hex_colour)
+  first_char = substr(hex_colour, 1, 1)
+  if(first_char != "#"){
+    return(paste("#", hex_colour, sep = ""))
+  } else {
+    return(hex_colour)
+  }
+}
 
 # NEED TO IMPROVE THE FOLLOWING FUNCTION
 convert_char_to_vector = function(x){

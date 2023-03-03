@@ -2,28 +2,56 @@
 # DESCRIPTION                                                  #
 ################################################################
 
-theAUC_description = div(
-  titlePanel("Page Description & Initial Setup"),
-  sidebarLayout(
-    sidebarPanel(width = 3, 
-      numericInput(inputId = "theAUC_nND",
-                   tags$p('Total Non-Diseased', style = "font-size: 90%;"),
-                   value = 50, min = 1), #
-      numericInput(inputId = "theAUC_nD", 
-                   tags$p('Total Diseased', style = "font-size: 90%;"),
-                   value = 100, min = 1),
-      numericInput(inputId = "theAUC_nMonteCarlo", 
-                   tags$p('Monte Carlo (Simulation) Sample Size', 
-                          style = "font-size: 90%;"),value = 100000, min = 0),
-    ),
-    mainPanel(
-      p("The goal of this section is for the user to compute the prior, posterior, the relative belief 
-        ratio of the AUC. The user is free to download any results."),
-      p("Plot images can be saved by right clicking them."),
-      hr(style = "border-top: 1px solid #363e4f;")
-    )
-  )
+theAUC_setup_variables = fluidPage(
+  titlePanel("Setup Variables"),
+  
+  fluidRow(
+    column(3,
+           numericInput(inputId = "theAUC_nND",
+                        tags$p('Total Non-Diseased', style = "font-size: 90%;"),
+                        value = 50, min = 1)),
+    column(3, 
+           numericInput(inputId = "theAUC_nD", 
+                        tags$p('Total Diseased', style = "font-size: 90%;"),
+                        value = 100, min = 1)),
+    column(3, 
+           numericInput(inputId = "theAUC_nMonteCarlo", 
+                        tags$p('Monte Carlo (Simulation) Sample Size', style = "font-size: 90%;"),
+                        value = 100000, min = 0)),
+  ),
+  
+  fluidRow(
+    column(3,
+           textInput(inputId = "theAUC_alpha_ND",
+                     tags$p('alphaND1, ..., alphaNDm', style = "font-size: 90%;"),
+                     value = "1, 1, 1, 1, 1")),
+    column(3, 
+           textInput(inputId = "theAUC_alpha_D",
+                     tags$p('alphaD1, ..., alphaDm', style = "font-size: 90%;"),
+                     value = "1, 1, 1, 1, 1")),
+    column(3, 
+           textInput(inputId = "theAUC_fND",
+                     tags$p('fNd', style = "font-size: 90%;"),
+                     value = "29, 7, 4, 5, 5")),
+  ),
+  
+  fluidRow(
+    column(3, 
+           textInput(inputId = "theAUC_fD",
+                     label = tags$p('fD', style = "font-size: 90%;"),
+                     value = "14, 7, 25, 33, 21")),
+    column(3,
+           numericInput(inputId = "theAUC_delta", 
+                        label = tags$p("Delta", style = "font-size: 90%"), 
+                        value = 0.04, min = 0, max = 1)),
+    column(3, 
+           textInput(inputId = "theAUC_gamma", 
+                     label = tags$p("Gamma (must be less than posterior content)", 
+                                    style = "font-size: 90%"), 
+                     value = "NA")),
+  ),
 )
+
 
 ################################################################
 # OUTPUT 1 PAGE                                                #
@@ -44,10 +72,6 @@ theAUC_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-      numericInput(inputId = "theAUC_delta", 
-                   tags$p("Delta"), value = 0.04, min = 0, max = 1),
-      textInput(inputId = "theAUC_gamma", label = "Gamma (must be less than posterior content)", 
-                value = "NA"),
       selectInput(inputId = "theAUC_hist_visual", label = "Choose Visual:",
                    c("With Bars" = "theAUC_withbars",
                      "Without Bars" = "theAUC_withoutbars"),
@@ -135,18 +159,6 @@ theAUC_hypothesizedAUC = div(
     sidebarPanel(width = 3, 
       numericInput(inputId = "theAUC_hypoAUC",
                    tags$p('Hypothesized AUC (greater than)', style = "font-size: 90%;"),value = 0.5),
-      textInput(inputId = "theAUC_alpha_ND",
-                tags$p('alphaND1, ..., alphaNDm', style = "font-size: 90%;"),
-                value = "1, 1, 1, 1, 1"),
-      textInput(inputId = "theAUC_alpha_D",
-                tags$p('alphaD1, ..., alphaDm', style = "font-size: 90%;"),
-                value = "1, 1, 1, 1, 1"),
-      textInput(inputId = "theAUC_fND",
-                tags$p('fNd', style = "font-size: 90%;"),
-                value = "29, 7, 4, 5, 5"),
-      textInput(inputId = "theAUC_fD",
-                tags$p('fD', style = "font-size: 90%;"),
-                value = "14, 7, 25, 33, 21"),
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", verbatimTextOutput("theAUC_hypoAUC_value"))))
@@ -197,7 +209,8 @@ page_theAUC = div(
   titlePanel("Finite-valued Diagnostic"),
   # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
-              tabPanel("Description", theAUC_description),
+              tabPanel("Setup Variables", theAUC_setup_variables),
+              #tabPanel("Description", theAUC_description),
               tabPanel("Inferences for the AUC", theAUC_hypothesizedAUC),
               tabPanel("Plots for the AUC", theAUC_plots),
               tabPanel("Inferences for Optimal Cutoff", theAUC_plausible_region),

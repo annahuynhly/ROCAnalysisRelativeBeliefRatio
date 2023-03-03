@@ -19,7 +19,15 @@ home_page = div(
         # Only show this panel if Custom is selected
       conditionalPanel(
         condition = "input.pick_case_1 == 'case_2_opt'",
+        p("Please select the beta prior parameters (alpha1w and alpha2w), and then the
+          sampling regime."),
         
+        numericInput(inputId = "prevalence_setup_alpha1w", 
+                     label = 'alpha1w',
+                     value = 391.72),
+        numericInput(inputId = "prevalence_setup_alpha2w", 
+                     label = 'alpha2w',
+                     value = 211.39),
         selectInput(inputId = "pick_case_2", "Please select the sampling regime.",
                     c("A sample of n_D from diseased and n_ND from non diseased." = "case_a_opt", 
                       "A sample of n from population, observe n_D diseased and n_ND nondiseased." = "case_b_opt"),

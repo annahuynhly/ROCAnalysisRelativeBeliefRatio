@@ -22,7 +22,6 @@ variables3.4_control_panel = fluidPage( # CHANGE THIS
     column(3, 
            numericInput(inputId = "section3.4_mu0", # CHANGE THIS
                         tags$p('mu0', style = "font-size: 90%;"),value = 45)),
-    
     column(3,
            numericInput(inputId = "section3.4_tau0", # CHANGE THIS
                         tags$p('tau0', style = "font-size: 90%;"),value = 0.5)),
@@ -38,7 +37,6 @@ variables3.4_control_panel = fluidPage( # CHANGE THIS
     column(3, 
            numericInput(inputId = "section3.4_a1", # CHANGE THIS
                         tags$p('a1', style = "font-size: 90%;"),value = 9.81)),
-    
     column(3,
            numericInput(inputId = "section3.4_a2", # CHANGE THIS
                         tags$p('a2', style = "font-size: 90%;"),value = 109.66)),

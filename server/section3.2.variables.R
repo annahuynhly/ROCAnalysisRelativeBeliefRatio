@@ -227,6 +227,8 @@ sect3.2_lineplot_area = reactive({
   as.data.frame(priorpost)
 })
 
+
+# Previous
 sect3.2_hypo_test = reactive({
   RBR_hypo = hypothesized_AUC_compute_values(hypo_AUC = input$theAUC_hypoAUC, 
                                              delta = input$theAUC_delta,
@@ -245,3 +247,5 @@ sect3.2_hypo_test = reactive({
   
   return(newlist)
 })
+
+
