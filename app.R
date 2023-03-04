@@ -31,12 +31,13 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
                  navbarMenu("Section 3.2",
                             tabPanel("Definitions", page_sect3.2_def),
                             tabPanel("Finite-valued Diagnostic", page_theAUC),
-                            tabPanel("Binomial-valued Diagnostic", page_binom_val_diag)
+                            #tabPanel("Binomial-valued Diagnostic", page_binom_val_diag)
                  ),
                  navbarMenu("Section 3.3",
-                            tabPanel("3.3 Variables", page_variables3.3),
-                            tabPanel("BinormalAUCEqualVariance", page_binormalAUCequalvariance),
-                            tabPanel("BinormalAUCUnequalVariance", page_binormalAUCunequalvariance),
+                            tabPanel("Definitions", page_sect3.3_def),
+                            #tabPanel("Binormal Diagnostic", page_binormaldiag)
+                            #tabPanel("BinormalAUCEqualVariance", page_binormalAUCequalvariance),
+                            #tabPanel("BinormalAUCUnequalVariance", page_binormalAUCunequalvariance),
                             #tabPanel("BinormalCoptEqualVariance", page_binormalcoptequalvariance),
                  ),
                  navbarMenu("Section 3.4",

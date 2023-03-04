@@ -2,9 +2,7 @@
 # Source to all different tabs
 
 # Helper functions
-source("./pages/section3.2/helperfunctions3.2.R")
-source("./pages/section3.3/helperfunctions3.3.R")
-source("./pages/section3.4/helperfunctions3.4.R")
+source("./pages/helper_functions.R")
 
 # Other Pages
 source("./pages/home_page.R")
