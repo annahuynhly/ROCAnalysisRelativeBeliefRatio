@@ -2,11 +2,11 @@
 # NUMERIC/TEXT OUTPUTS                                         #
 ################################################################
 
-#output$theAUC_output1 = renderPrint({ # For testing
+#output$finite_val_output1 = renderPrint({ # For testing
 #  list("test_val" = sect3.2_AUC_post()$AUC) # will need to specify when
 #})
 
-output$theAUC_output1 = renderPrint({
+output$finite_val_output1 = renderPrint({
   list("Prior Copt" = sect3.2_AUC_prior()$priorc_opt,
        "Post Copt" = sect3.2_AUC_post()$postc_opt,
        "Copt Estimate" = sect3.2_AUC_RBR()$c_optfDfND,
@@ -15,7 +15,7 @@ output$theAUC_output1 = renderPrint({
   # TODO: specify credible region
 })
 
-output$theAUC_hypoAUC_value = renderPrint({
+output$finite_val_hypoAUC_value = renderPrint({
   list1 = list("Plausible Region of the AUC" = sect3.2_pr()$plausible_region,
                "Posterior Content of the AUC" = sect3.2_AUC_post_content(),
                "Credible Region of the AUC" = sect3.2_cr()$credible_region,
@@ -28,108 +28,108 @@ output$theAUC_hypoAUC_value = renderPrint({
 # HISTOGRAMS                                                   #
 ################################################################
 
-theAUC_colours = reactive({
-  if(input$theAUC_colour == 'default'){
+finite_val_colours = reactive({
+  if(input$finite_val_colour == 'default'){
     # Total order of ALL colours: prior, posterior, relative belief ratio, 
     # plausible region, y = 1 line, credible region, 
     c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
-  } else if (input$theAUC_colour == 'manual'){
-    c(convert_to_hex(input$theAUC_colour_prior),
-      convert_to_hex(input$theAUC_colour_post),
-      convert_to_hex(input$theAUC_colour_rbr),
-      convert_to_hex(input$theAUC_colour_pr),
-      convert_to_hex(input$theAUC_colour_line_1),
-      convert_to_hex(input$theAUC_colour_cr)
+  } else if (input$finite_val_colour == 'manual'){
+    c(convert_to_hex(input$finite_val_colour_prior),
+      convert_to_hex(input$finite_val_colour_post),
+      convert_to_hex(input$finite_val_colour_rbr),
+      convert_to_hex(input$finite_val_colour_pr),
+      convert_to_hex(input$finite_val_colour_line_1),
+      convert_to_hex(input$finite_val_colour_cr)
     )
   }
 })
 
-theAUC_copt_colours = reactive({
-  if(input$theAUC_c_opt_carry_colour == 'default'){
+finite_val_copt_colours = reactive({
+  if(input$finite_val_c_opt_carry_colour == 'default'){
     c("#FF6666", "#6699FF", "#05DEB2")
-  } else if (input$theAUC_c_opt_carry_colour == 'custom'){
-    theAUC_colours()[c(1, 2, 3)]
-  } else if (input$theAUC_c_opt_carry_colour == 'manual'){
-    c(convert_to_hex(input$theAUC_priorc_opt_colour),
-      convert_to_hex(input$theAUC_postc_opt_colour),
-      convert_to_hex(input$theAUC_rbrc_opt_colour))
+  } else if (input$finite_val_c_opt_carry_colour == 'custom'){
+    finite_val_colours()[c(1, 2, 3)]
+  } else if (input$finite_val_c_opt_carry_colour == 'manual'){
+    c(convert_to_hex(input$finite_val_priorc_opt_colour),
+      convert_to_hex(input$finite_val_postc_opt_colour),
+      convert_to_hex(input$finite_val_rbrc_opt_colour))
   }
 })
 
-output$theAUC_postprior_graph = renderPlot({
-  if(check.numeric(input$theAUC_gamma) == FALSE){
-    density_hist_AUC_prior_post(delta = input$theAUC_delta, 
+output$finite_val_postprior_graph = renderPlot({
+  if(check.numeric(input$finite_val_gamma) == FALSE){
+    density_hist_AUC_prior_post(delta = input$finite_val_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
                                 AUC_post = sect3.2_AUC_post()$AUC, 
                                 plausible_region = sect3.2_pr()$plausible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = theAUC_colours()[c(1, 2, 4, 6)],
-                                transparency = input$theAUC_col_transparency)
+                                colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                transparency = input$finite_val_col_transparency)
     
-  } else if (as.numeric(input$theAUC_gamma) >= sect3.2_AUC_post_content()){
-    density_hist_AUC_prior_post(delta = input$theAUC_delta, 
+  } else if (as.numeric(input$finite_val_gamma) >= sect3.2_AUC_post_content()){
+    density_hist_AUC_prior_post(delta = input$finite_val_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
                                 AUC_post = sect3.2_AUC_post()$AUC, 
                                 plausible_region = sect3.2_pr()$plausible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = theAUC_colours()[c(1, 2, 4, 6)],
-                                transparency = input$theAUC_col_transparency)
+                                colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                transparency = input$finite_val_col_transparency)
   } else {
-    density_hist_AUC_prior_post(delta = input$theAUC_delta, 
+    density_hist_AUC_prior_post(delta = input$finite_val_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
                                 AUC_post = sect3.2_AUC_post()$AUC, 
                                 plausible_region = sect3.2_pr()$plausible_region,
                                 credible_region = sect3.2_cr()$credible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = theAUC_colours()[c(1, 2, 4, 6)],
-                                transparency = input$theAUC_col_transparency)
+                                colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                transparency = input$finite_val_col_transparency)
   }
 })
 
-output$theAUC_RB_graph = renderPlot({
-  if(check.numeric(input$theAUC_gamma) == FALSE){
-    density_hist_AUC_RBR(delta = input$theAUC_delta, 
+output$finite_val_RB_graph = renderPlot({
+  if(check.numeric(input$finite_val_gamma) == FALSE){
+    density_hist_AUC_RBR(delta = input$finite_val_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
                          plausible_region = sect3.2_pr()$plausible_region, 
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = theAUC_colours()[c(3, 4, 5, 6)],
-                         transparency = input$theAUC_col_transparency)
-  } else if (as.numeric(input$theAUC_gamma) >= sect3.2_AUC_post_content()){
-    density_hist_AUC_RBR(delta = input$theAUC_delta, 
+                         colour_choice = finite_val_colours()[c(3, 4, 5, 6)],
+                         transparency = input$finite_val_col_transparency)
+  } else if (as.numeric(input$finite_val_gamma) >= sect3.2_AUC_post_content()){
+    density_hist_AUC_RBR(delta = input$finite_val_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
                          plausible_region = sect3.2_pr()$plausible_region, 
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = theAUC_colours()[c(3, 4, 5, 6)],
-                         transparency = input$theAUC_col_transparency)
+                         colour_choice = finite_val_colours()[c(3, 4, 5, 6)],
+                         transparency = input$finite_val_col_transparency)
   } else {
-    density_hist_AUC_RBR(delta = input$theAUC_delta, 
+    density_hist_AUC_RBR(delta = input$finite_val_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
                          plausible_region = sect3.2_pr()$plausible_region,
                          credible_region = sect3.2_cr()$credible_region, 
                          rb_line = sect3.2_cr()$rb_line,
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = theAUC_colours()[c(3, 4, 5, 6)],
-                         transparency = input$theAUC_col_transparency)
+                         colour_choice = finite_val_colours()[c(3, 4, 5, 6)],
+                         transparency = input$finite_val_col_transparency)
   }
 })
 ####### COPT PLOTS
-output$theAUC_postprior_copt_graph = renderPlot({
+output$finite_val_postprior_copt_graph = renderPlot({
   plots_AUC_copt(priorc_opt = sect3.2_AUC_prior()$priorc_opt, 
                  postc_opt = sect3.2_AUC_post()$postc_opt,
-                 prior_label = as.numeric(input$theAUC_priorc_opt_label), 
-                 post_label = as.numeric(input$theAUC_postc_opt_label),
-                 colour_choice = theAUC_copt_colours())
+                 prior_label = as.numeric(input$finite_val_priorc_opt_label), 
+                 post_label = as.numeric(input$finite_val_postc_opt_label),
+                 colour_choice = finite_val_copt_colours())
 })
-output$theAUC_RB_copt_graph = renderPlot({
+output$finite_val_RB_copt_graph = renderPlot({
   plots_AUC_copt(RBc_opt = sect3.2_AUC_RBR()$RBc_opt,
-                 rb_label = as.numeric(input$theAUC_rbc_opt_label),
-                 colour_choice = theAUC_copt_colours())
+                 rb_label = as.numeric(input$finite_val_rbc_opt_label),
+                 colour_choice = finite_val_copt_colours())
 })
 
 
@@ -137,22 +137,22 @@ output$theAUC_RB_copt_graph = renderPlot({
 # DOWNLOAD DATAFRAME                                           #
 ################################################################
 
-theAUC_download = reactive({
-  theAUC_generate_dataframe(input$theAUC_delta, 
+finite_val_download = reactive({
+  finite_val_generate_dataframe(input$finite_val_delta, 
                             sect3.2_AUC_prior()$AUC, 
                             sect3.2_AUC_post()$AUC, 
                             sect3.2_AUC_RBR()$AUC_RBR)
 })
 
-output$theAUC_dataframe = renderDataTable({
-  theAUC_download()
+output$finite_val_dataframe = renderDataTable({
+  finite_val_download()
 })
 
-output$theAUC_downloadData = downloadHandler(
+output$finite_val_downloadData = downloadHandler(
   filename = function() {
-    paste(input$theAUC_filename, ".csv", sep = "")
+    paste(input$finite_val_filename, ".csv", sep = "")
   },
   content = function(file) {
-    write.csv(theAUC_download(), file, row.names = FALSE)
+    write.csv(finite_val_download(), file, row.names = FALSE)
   }
 )

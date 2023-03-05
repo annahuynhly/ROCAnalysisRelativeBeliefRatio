@@ -60,7 +60,7 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
                                        colour_choice = c("#FF6666", "#6699FF", 
                                                          "#947aff", "#5b10a7"),
                                        transparency = 0.2){
-  bins = theAUC_grid(delta)
+  bins = finite_val_grid(delta)
   
   if(densityplot == FALSE & showbars == FALSE){ # this is to extract the density values only
     hist_post = hist(AUC_post, breaks = bins, plot = FALSE) 
@@ -138,7 +138,7 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
                                                   "#3333FF", "#5b10a7"),
                                 transparency = 0.2){
   # Order of colours: RBR, plausible region, y = 1 line, credible region
-  bins = theAUC_grid(delta) #bins = c(0, bins, 1)
+  bins = finite_val_grid(delta) #bins = c(0, bins, 1)
   
   rgb_rbr = col2rgb(colour_choice[1])
   if(showbars == FALSE){

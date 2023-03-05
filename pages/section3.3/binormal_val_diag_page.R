@@ -1,0 +1,308 @@
+################################################################
+# DESCRIPTION                                                  #
+################################################################
+
+binormal_val_setup_variables = fluidPage(
+  titlePanel("Setup Variables"),
+  
+  fluidRow(
+    column(3, 
+           numericInput(inputId = "binormal_val_mu0", # CHANGE THIS
+                        tags$p('mu0', style = "font-size: 90%;"),value = 0)),
+    
+    column(3,
+           numericInput(inputId = "binormal_val_tau0", # CHANGE THIS
+                        tags$p('tau0', style = "font-size: 90%;"),value = 0.5)),
+    column(3, 
+           numericInput(inputId = "binormal_val_alpha0", # CHANGE THIS
+                        tags$p('alpha0', style = "font-size: 90%;"),value = 1.787)),
+  ),
+  
+  fluidRow(
+    column(3, 
+           numericInput(inputId = "binormal_val_beta0", # CHANGE THIS
+                        tags$p('beta0', style = "font-size: 90%;"),value = 1.056)),
+    
+    column(3,
+           numericInput(inputId = "binormal_val_a1", # CHANGE THIS
+                        tags$p('a1', style = "font-size: 90%;"),value = 15.3589)),
+    column(3, 
+           numericInput(inputId = "binormal_val_a2", # CHANGE THIS
+                        tags$p('a2', style = "font-size: 90%;"),value = 22.53835)),
+  ),
+  
+  fluidRow(
+    column(3, 
+           numericInput(inputId = "binormal_val_nND", # CHANGE THIS
+                        tags$p('nND', style = "font-size: 90%;"),value = 25)),
+    
+    column(3,
+           numericInput(inputId = "binormal_val_xND", # CHANGE THIS
+                        tags$p('xND', style = "font-size: 90%;"),value = -0.072)),
+    column(3, 
+           numericInput(inputId = "binormal_val_sND2", # CHANGE THIS
+                        tags$p('sND2', style = "font-size: 90%;"),value = 19.38)),
+  ),
+  
+  fluidRow(
+    column(3, 
+           numericInput(inputId = "binormal_val_nD", # CHANGE THIS
+                        tags$p('nD', style = "font-size: 90%;"),value = 20)),
+    
+    column(3,
+           numericInput(inputId = "binormal_val_xD", # CHANGE THIS
+                        tags$p('xD', style = "font-size: 90%;"),value = 0.976)),
+    column(3, 
+           numericInput(inputId = "binormal_val_sD2", # CHANGE THIS
+                        tags$p('sD2', style = "font-size: 90%;"),value = 16.778)),
+  ),
+)
+
+
+################################################################
+# OUTPUT 1 PAGE                                                #
+################################################################
+
+binormal_val_plausible_region = div( 
+  titlePanel("Inferences for Optimal Cutoff"),
+  mainPanel(
+    p("This is currently in progress. Come back later!")
+    #tabPanel("Inferences for Optimal Cutoff", verbatimTextOutput("binormal_val_output1")),
+  )
+)
+
+################################################################
+# GRAPH 1 PAGE (HISTOGRAM)                                     #
+################################################################
+
+binormal_val_plots = div( 
+  titlePanel("Plots for the AUC"), 
+  sidebarLayout(
+    sidebarPanel(width = 3,
+                 selectInput(inputId = "binormal_val_hist_visual", label = "Choose Visual:",
+                             c("With Bars" = "binormal_val_withbars",
+                               "Without Bars" = "binormal_val_withoutbars"),
+                             selected = "binormal_val_withoutbars"),
+                 
+                 selectInput(inputId = "binormal_val_colour", 
+                             label = 'Select a colour', 
+                             choices = list("Default Theme" = 'default', 
+                                            "Manually Insert" = 'manual'), 
+                             selected = 'default'),
+                 
+                 conditionalPanel(
+                   condition = "input.binormal_val_colour == 'manual'",
+                   selectInput(inputId = "binormal_val_modify_colour",
+                               label = 'Select line to modify',
+                               choices = list("Prior" = 'prior',
+                                              "Posterior" = 'post',
+                                              "Relative Belief Ratio" = 'rbr',
+                                              "Plausible Region" = 'pr',
+                                              "Line of y = 1" = 'line_1',
+                                              "Credible Region" = 'cr'),
+                               selected = 'prior'), 
+                 ),
+                 
+                 conditionalPanel(
+                   condition = "input.binormal_val_modify_colour == 'prior'",
+                   textInput(inputId = "binormal_val_colour_prior",
+                             label = 'Input the colour of the prior',
+                             value = "FF007F"), 
+                 ),
+                 conditionalPanel(
+                   condition = "input.binormal_val_modify_colour == 'post'",
+                   textInput(inputId = "binormal_val_colour_post",
+                             label = 'Input the colour of the posterior',
+                             value = "FF00FF"), 
+                 ),
+                 conditionalPanel(
+                   condition = "input.binormal_val_modify_colour == 'rbr'",
+                   textInput(inputId = "binormal_val_colour_rbr",
+                             label = 'Input the colour of the relative belief ratio',
+                             value = "7F00FF"), 
+                 ),
+                 conditionalPanel(
+                   condition = "input.binormal_val_modify_colour == 'pr'",
+                   textInput(inputId = "binormal_val_colour_pr",
+                             label = 'Input the colour of the plausible region',
+                             value = "A717DB"), 
+                 ),
+                 conditionalPanel(
+                   condition = "input.binormal_val_modify_colour == 'line_1'",
+                   textInput(inputId = "binormal_val_colour_line_1",
+                             label = 'Input the colour of the y = 1 line',
+                             value = "5327E4"), 
+                 ),
+                 conditionalPanel(
+                   condition = "input.binormal_val_modify_colour == 'cr'",
+                   textInput(inputId = "binormal_val_colour_cr",
+                             label = 'Input the colour of the credible region',
+                             value = "650d84"), 
+                 ),
+                 
+                 conditionalPanel(
+                   condition = "input.binormal_val_hist_visual == 'binormal_val_withbars'",
+                   sliderInput(inputId = "binormal_val_col_transparency", 
+                               label = "Scale for colour transparency",
+                               min = 0, max = 1, value = 0.2), 
+                 )
+    ),
+    mainPanel(
+      p("This is currently being worked on. Come back later!"),
+      #tabPanel("Plots",
+      #         fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
+      #                              plotOutput("binormal_val_postprior_graph"), 
+      #                              plotOutput("binormal_val_RB_graph")))),
+    )
+  )
+)
+
+################################################################
+# GRAPH 2 PAGE                                                 #
+################################################################
+
+default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
+                         "6" = 6, "7" = 7, "8" = 8, "9" = 9, "10" = 10,
+                         "11" = 11, "12" = 12, "13" = 13, "14" = 14, "15" = 15,
+                         "16" = 16, "17" = 17, "18" = 18, "19" = 19, "20" = 20,
+                         "21" = 21, "22" = 22, "23" = 23, "24" = 24, "25" = 25)
+
+binormal_val_copt_plots = div( 
+  titlePanel("Plots for the Optimal Cutoff"), 
+  sidebarLayout(
+    sidebarPanel(width = 3,
+                 selectInput(inputId = "binormal_val_c_opt_carry_colour",
+                             label = "Select a colour theme",
+                             list("Default Theme" = 'default',
+                                  "Custom Theme from AUC Plots" = 'custom',
+                                  "Manually Insert" = 'manual'),
+                             selected = 'default'),      
+                 selectInput(inputId = "binormal_val_c_opt_modify",
+                             label = "Select which object to modify",
+                             list("Prior" = 'prior',
+                                  "Posterior" = 'post',
+                                  "Relative Belief Ratio" = 'rbr'),
+                             selected = 'prior'
+                 ),
+                 
+                 conditionalPanel(
+                   condition = "input.binormal_val_c_opt_modify == 'prior'",
+                   selectInput(inputId = "binormal_val_priorc_opt_label", 
+                               label = "Plot Symbol for Prior",
+                               default_copt_list,
+                               selected = 3),
+                   
+                   conditionalPanel(
+                     condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
+                     textInput(inputId = "binormal_val_priorc_opt_colour",
+                               label = 'Hex Colour for the Prior',
+                               value = "065143"), 
+                   )
+                 ),
+                 conditionalPanel(
+                   condition = "input.binormal_val_c_opt_modify == 'post'",
+                   selectInput(inputId = "binormal_val_postc_opt_label", 
+                               label = "Plot Symbol for Posterior",
+                               default_copt_list,
+                               selected = 4),
+                   conditionalPanel(
+                     condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
+                     textInput(inputId = "binormal_val_postc_opt_colour",
+                               label = 'Hex Colour for the Posterior',
+                               value = "70B77E"), 
+                   )
+                 ),
+                 conditionalPanel(
+                   condition = "input.binormal_val_c_opt_modify == 'rbr'",
+                   selectInput(inputId = "binormal_val_rbc_opt_label", 
+                               label = "Plot Symbol for RB Ratio",
+                               default_copt_list,
+                               selected = 8),
+                   
+                   conditionalPanel(
+                     condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
+                     textInput(inputId = "binormal_val_rbrc_opt_colour",
+                               label = 'Hex Colour for the RB Ratio',
+                               value = "CE1483"),
+                   )
+                 ),
+                 
+    ),
+    mainPanel(
+      p("This is currently being worked on. Come back later!"),
+      #tabPanel("Plots",
+      #         fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
+      #                              plotOutput("binormal_val_postprior_copt_graph"), 
+      #                              plotOutput("binormal_val_RB_copt_graph")))),
+      
+    )
+  )
+)
+
+################################################################
+# HYPOTHESIS TESTING                                           #
+################################################################
+
+binormal_val_hypothesizedAUC = div( 
+  titlePanel("Inferences for the AUC"),
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+                 numericInput(inputId = "binormal_val_hypoAUC",
+                              tags$p('Hypothesized AUC (greater than)', style = "font-size: 90%;"),value = 0.5),
+    ),
+    p("This is currently being worked on. Come back later!"),
+    #mainPanel(
+    #  tabPanel("Relative Belief Plot of w0", verbatimTextOutput("binormal_val_hypoAUC_value")))
+  )
+)
+
+################################################################
+# DOWNLOAD PAGE                                                #
+################################################################
+
+binormal_val_download_1 = div( 
+  titlePanel("Download Prior & Posterior"), 
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+                 textInput(inputId = "binormal_val_filename", "Input File Name", value = "AUC Values"),
+                 downloadButton("binormal_val_downloadData", "Download"),
+    ),
+    mainPanel(
+      p("This is a work in progress. Please come back later!")
+      #tabPanel("Download Output", dataTableOutput("binormal_val_dataframe"))
+      
+    )
+  )
+)
+
+binormal_val_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
+  
+  grid_pts = binormal_val_grid(delta)
+  #TEMPORARILY CHANGE THE AUC_prior_pts
+  #AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)*delta)
+  #AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)*delta)
+  AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)$density)
+  AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)$density)
+  #print(c(length(grid_pts), length(AUC_prior_pts), length(AUC_post_pts), length(AUC_RBR)))
+  df = data.frame(grid_pts, AUC_prior_pts, AUC_post_pts, AUC_RBR)
+  colnames(df) = c("Grid point", "Prior of the AUC", "Posterior of the AUC", "Relative Belief Ratio of the AUC")
+  return(df)
+}
+
+################################################################
+# PAGE LOGIC                                                   #
+################################################################
+
+page_binormal_val = div(
+  titlePanel("Binormal-valued Diagnostic"),
+  # OUTPUTTING THE VALUES
+  tabsetPanel(type = "tabs",
+              tabPanel("Setup Variables", binormal_val_setup_variables),
+              #tabPanel("Description", binormal_val_description),
+              tabPanel("Inferences for the AUC", binormal_val_hypothesizedAUC),
+              tabPanel("Plots for the AUC", binormal_val_plots),
+              tabPanel("Inferences for Optimal Cutoff", binormal_val_plausible_region),
+              tabPanel("Plots for the Optimal Cutoff", binormal_val_copt_plots),
+              tabPanel("Download Prior & Posterior", binormal_val_download_1),
+  )
+)

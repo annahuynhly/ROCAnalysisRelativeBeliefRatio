@@ -2,50 +2,50 @@
 # DESCRIPTION                                                  #
 ################################################################
 
-theAUC_setup_variables = fluidPage(
+finite_val_setup_variables = fluidPage(
   titlePanel("Setup Variables"),
   
   fluidRow(
     column(3,
-           numericInput(inputId = "theAUC_nND",
+           numericInput(inputId = "finite_val_nND",
                         tags$p('Total Non-Diseased', style = "font-size: 90%;"),
                         value = 50, min = 1)),
     column(3, 
-           numericInput(inputId = "theAUC_nD", 
+           numericInput(inputId = "finite_val_nD", 
                         tags$p('Total Diseased', style = "font-size: 90%;"),
                         value = 100, min = 1)),
     column(3, 
-           numericInput(inputId = "theAUC_nMonteCarlo", 
+           numericInput(inputId = "finite_val_nMonteCarlo", 
                         tags$p('Monte Carlo (Simulation) Sample Size', style = "font-size: 90%;"),
                         value = 100000, min = 0)),
   ),
   
   fluidRow(
     column(3,
-           textInput(inputId = "theAUC_alpha_ND",
+           textInput(inputId = "finite_val_alpha_ND",
                      tags$p('alphaND1, ..., alphaNDm', style = "font-size: 90%;"),
                      value = "1, 1, 1, 1, 1")),
     column(3, 
-           textInput(inputId = "theAUC_alpha_D",
+           textInput(inputId = "finite_val_alpha_D",
                      tags$p('alphaD1, ..., alphaDm', style = "font-size: 90%;"),
                      value = "1, 1, 1, 1, 1")),
     column(3, 
-           textInput(inputId = "theAUC_fND",
+           textInput(inputId = "finite_val_fND",
                      tags$p('fNd', style = "font-size: 90%;"),
                      value = "29, 7, 4, 5, 5")),
   ),
   
   fluidRow(
     column(3, 
-           textInput(inputId = "theAUC_fD",
+           textInput(inputId = "finite_val_fD",
                      label = tags$p('fD', style = "font-size: 90%;"),
                      value = "14, 7, 25, 33, 21")),
     column(3,
-           numericInput(inputId = "theAUC_delta", 
+           numericInput(inputId = "finite_val_delta", 
                         label = tags$p("Delta", style = "font-size: 90%"), 
                         value = 0.04, min = 0, max = 1)),
     column(3, 
-           textInput(inputId = "theAUC_gamma", 
+           textInput(inputId = "finite_val_gamma", 
                      label = tags$p("Gamma (must be less than posterior content)", 
                                     style = "font-size: 90%"), 
                      value = "NA")),
@@ -57,10 +57,10 @@ theAUC_setup_variables = fluidPage(
 # OUTPUT 1 PAGE                                                #
 ################################################################
 
-theAUC_plausible_region = div( 
+finite_val_plausible_region = div( 
   titlePanel("Inferences for Optimal Cutoff"),
   mainPanel(
-    tabPanel("Inferences for Optimal Cutoff", verbatimTextOutput("theAUC_output1")),
+    tabPanel("Inferences for Optimal Cutoff", verbatimTextOutput("finite_val_output1")),
   )
 )
 
@@ -68,24 +68,24 @@ theAUC_plausible_region = div(
 # GRAPH 1 PAGE (HISTOGRAM)                                     #
 ################################################################
 
-theAUC_plots = div( 
+finite_val_plots = div( 
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-      selectInput(inputId = "theAUC_hist_visual", label = "Choose Visual:",
-                   c("With Bars" = "theAUC_withbars",
-                     "Without Bars" = "theAUC_withoutbars"),
-                   selected = "theAUC_withoutbars"),
+      selectInput(inputId = "finite_val_hist_visual", label = "Choose Visual:",
+                   c("With Bars" = "finite_val_withbars",
+                     "Without Bars" = "finite_val_withoutbars"),
+                   selected = "finite_val_withoutbars"),
       
-      selectInput(inputId = "theAUC_colour", 
+      selectInput(inputId = "finite_val_colour", 
                   label = 'Select a colour', 
                   choices = list("Default Theme" = 'default', 
                                  "Manually Insert" = 'manual'), 
                   selected = 'default'),
       
       conditionalPanel(
-        condition = "input.theAUC_colour == 'manual'",
-        selectInput(inputId = "theAUC_modify_colour",
+        condition = "input.finite_val_colour == 'manual'",
+        selectInput(inputId = "finite_val_modify_colour",
                     label = 'Select line to modify',
                     choices = list("Prior" = 'prior',
                                    "Posterior" = 'post',
@@ -97,45 +97,45 @@ theAUC_plots = div(
       ),
       
       conditionalPanel(
-        condition = "input.theAUC_modify_colour == 'prior'",
-        textInput(inputId = "theAUC_colour_prior",
+        condition = "input.finite_val_modify_colour == 'prior'",
+        textInput(inputId = "finite_val_colour_prior",
                   label = 'Input the colour of the prior',
                   value = "FF007F"), 
       ),
       conditionalPanel(
-        condition = "input.theAUC_modify_colour == 'post'",
-        textInput(inputId = "theAUC_colour_post",
+        condition = "input.finite_val_modify_colour == 'post'",
+        textInput(inputId = "finite_val_colour_post",
                   label = 'Input the colour of the posterior',
                   value = "FF00FF"), 
       ),
       conditionalPanel(
-        condition = "input.theAUC_modify_colour == 'rbr'",
-        textInput(inputId = "theAUC_colour_rbr",
+        condition = "input.finite_val_modify_colour == 'rbr'",
+        textInput(inputId = "finite_val_colour_rbr",
                   label = 'Input the colour of the relative belief ratio',
                   value = "7F00FF"), 
       ),
       conditionalPanel(
-        condition = "input.theAUC_modify_colour == 'pr'",
-        textInput(inputId = "theAUC_colour_pr",
+        condition = "input.finite_val_modify_colour == 'pr'",
+        textInput(inputId = "finite_val_colour_pr",
                   label = 'Input the colour of the plausible region',
                   value = "A717DB"), 
       ),
       conditionalPanel(
-        condition = "input.theAUC_modify_colour == 'line_1'",
-        textInput(inputId = "theAUC_colour_line_1",
+        condition = "input.finite_val_modify_colour == 'line_1'",
+        textInput(inputId = "finite_val_colour_line_1",
                   label = 'Input the colour of the y = 1 line',
                   value = "5327E4"), 
       ),
       conditionalPanel(
-        condition = "input.theAUC_modify_colour == 'cr'",
-        textInput(inputId = "theAUC_colour_cr",
+        condition = "input.finite_val_modify_colour == 'cr'",
+        textInput(inputId = "finite_val_colour_cr",
                   label = 'Input the colour of the credible region',
                   value = "650d84"), 
       ),
       
       conditionalPanel(
-        condition = "input.theAUC_hist_visual == 'theAUC_withbars'",
-        sliderInput(inputId = "theAUC_col_transparency", 
+        condition = "input.finite_val_hist_visual == 'finite_val_withbars'",
+        sliderInput(inputId = "finite_val_col_transparency", 
                     label = "Scale for colour transparency",
                     min = 0, max = 1, value = 0.2), 
       )
@@ -143,8 +143,8 @@ theAUC_plots = div(
     mainPanel(
       tabPanel("Plots",
                fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    plotOutput("theAUC_postprior_graph"), 
-                                    plotOutput("theAUC_RB_graph")))),
+                                    plotOutput("finite_val_postprior_graph"), 
+                                    plotOutput("finite_val_RB_graph")))),
     )
   )
 )
@@ -159,17 +159,17 @@ default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
                       "16" = 16, "17" = 17, "18" = 18, "19" = 19, "20" = 20,
                       "21" = 21, "22" = 22, "23" = 23, "24" = 24, "25" = 25)
 
-theAUC_copt_plots = div( 
+finite_val_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-      selectInput(inputId = "theAUC_c_opt_carry_colour",
+      selectInput(inputId = "finite_val_c_opt_carry_colour",
                   label = "Select a colour theme",
                   list("Default Theme" = 'default',
-                       "Custom Theme from Previous Section" = 'custom',
+                       "Custom Theme from AUC Plots" = 'custom',
                        "Manually Insert" = 'manual'),
                        selected = 'default'),      
-      selectInput(inputId = "theAUC_c_opt_modify",
+      selectInput(inputId = "finite_val_c_opt_modify",
                   label = "Select which object to modify",
                   list("Prior" = 'prior',
                        "Posterior" = 'post',
@@ -178,42 +178,42 @@ theAUC_copt_plots = div(
                   ),
                  
       conditionalPanel(
-        condition = "input.theAUC_c_opt_modify == 'prior'",
-        selectInput(inputId = "theAUC_priorc_opt_label", 
+        condition = "input.finite_val_c_opt_modify == 'prior'",
+        selectInput(inputId = "finite_val_priorc_opt_label", 
                     label = "Plot Symbol for Prior",
                     default_copt_list,
                     selected = 3),
         
         conditionalPanel(
-          condition = "input.theAUC_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "theAUC_priorc_opt_colour",
+          condition = "input.finite_val_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "finite_val_priorc_opt_colour",
                     label = 'Hex Colour for the Prior',
                     value = "065143"), 
         )
       ),
       conditionalPanel(
-        condition = "input.theAUC_c_opt_modify == 'post'",
-        selectInput(inputId = "theAUC_postc_opt_label", 
+        condition = "input.finite_val_c_opt_modify == 'post'",
+        selectInput(inputId = "finite_val_postc_opt_label", 
                     label = "Plot Symbol for Posterior",
                     default_copt_list,
                     selected = 4),
         conditionalPanel(
-          condition = "input.theAUC_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "theAUC_postc_opt_colour",
+          condition = "input.finite_val_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "finite_val_postc_opt_colour",
                     label = 'Hex Colour for the Posterior',
                     value = "70B77E"), 
         )
       ),
       conditionalPanel(
-        condition = "input.theAUC_c_opt_modify == 'rbr'",
-        selectInput(inputId = "theAUC_rbc_opt_label", 
+        condition = "input.finite_val_c_opt_modify == 'rbr'",
+        selectInput(inputId = "finite_val_rbc_opt_label", 
                     label = "Plot Symbol for RB Ratio",
                     default_copt_list,
                     selected = 8),
         
         conditionalPanel(
-          condition = "input.theAUC_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "theAUC_rbrc_opt_colour",
+          condition = "input.finite_val_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "finite_val_rbrc_opt_colour",
                     label = 'Hex Colour for the RB Ratio',
                     value = "CE1483"),
         )
@@ -223,8 +223,8 @@ theAUC_copt_plots = div(
     mainPanel(
       tabPanel("Plots",
                fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    plotOutput("theAUC_postprior_copt_graph"), 
-                                    plotOutput("theAUC_RB_copt_graph")))),
+                                    plotOutput("finite_val_postprior_copt_graph"), 
+                                    plotOutput("finite_val_RB_copt_graph")))),
       
     )
   )
@@ -234,15 +234,15 @@ theAUC_copt_plots = div(
 # HYPOTHESIS TESTING                                           #
 ################################################################
 
-theAUC_hypothesizedAUC = div( 
+finite_val_hypothesizedAUC = div( 
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-      numericInput(inputId = "theAUC_hypoAUC",
+      numericInput(inputId = "finite_val_hypoAUC",
                    tags$p('Hypothesized AUC (greater than)', style = "font-size: 90%;"),value = 0.5),
     ),
     mainPanel(
-      tabPanel("Relative Belief Plot of w0", verbatimTextOutput("theAUC_hypoAUC_value"))))
+      tabPanel("Relative Belief Plot of w0", verbatimTextOutput("finite_val_hypoAUC_value"))))
   
 )
 
@@ -250,27 +250,27 @@ theAUC_hypothesizedAUC = div(
 # DOWNLOAD PAGE                                                #
 ################################################################
 
-theAUC_download_1 = div( 
+finite_val_download_1 = div( 
   titlePanel("Download Prior & Posterior"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-      textInput(inputId = "theAUC_filename", "Input File Name", value = "AUC Values"),
-      #radioButtons(inputId = "theAUC_choosefile", "Choose Which Data to Download",
+      textInput(inputId = "finite_val_filename", "Input File Name", value = "AUC Values"),
+      #radioButtons(inputId = "finite_val_choosefile", "Choose Which Data to Download",
       #             choices = list("Prior" = 1, "Posterior" = 2),
       #             selected = 1),
-      #actionButton('theAUC_prev_five', 'Previous Cols'),
-      #actionButton('theAUC_next_five', 'Next Cols'),
-      downloadButton("theAUC_downloadData", "Download"),
+      #actionButton('finite_val_prev_five', 'Previous Cols'),
+      #actionButton('finite_val_next_five', 'Next Cols'),
+      downloadButton("finite_val_downloadData", "Download"),
     ),
     mainPanel(
-      tabPanel("Download Output", dataTableOutput("theAUC_dataframe"))
+      tabPanel("Download Output", dataTableOutput("finite_val_dataframe"))
     )
   )
 )
 
-theAUC_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
+finite_val_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
   
-  grid_pts = theAUC_grid(delta)
+  grid_pts = finite_val_grid(delta)
   #TEMPORARILY CHANGE THE AUC_prior_pts
   #AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)*delta)
   #AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)*delta)
@@ -286,17 +286,17 @@ theAUC_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
 # PAGE LOGIC                                                   #
 ################################################################
 
-page_theAUC = div(
+page_finite_val = div(
   titlePanel("Finite-valued Diagnostic"),
   # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
-              tabPanel("Setup Variables", theAUC_setup_variables),
-              #tabPanel("Description", theAUC_description),
-              tabPanel("Inferences for the AUC", theAUC_hypothesizedAUC),
-              tabPanel("Plots for the AUC", theAUC_plots),
-              tabPanel("Inferences for Optimal Cutoff", theAUC_plausible_region),
-              tabPanel("Plots for the Optimal Cutoff", theAUC_copt_plots),
-              tabPanel("Download Prior & Posterior", theAUC_download_1),
+              tabPanel("Setup Variables", finite_val_setup_variables),
+              #tabPanel("Description", finite_val_description),
+              tabPanel("Inferences for the AUC", finite_val_hypothesizedAUC),
+              tabPanel("Plots for the AUC", finite_val_plots),
+              tabPanel("Inferences for Optimal Cutoff", finite_val_plausible_region),
+              tabPanel("Plots for the Optimal Cutoff", finite_val_copt_plots),
+              tabPanel("Download Prior & Posterior", finite_val_download_1),
   )
 )
 
@@ -362,7 +362,7 @@ page_theAUC = div(
 
 #test1 = simulate_AUC_mc_prior(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D)
 #test2 = simulate_AUC_mc_post(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D, fND, fD)
-#grid = theAUC_grid(delta)
+#grid = finite_val_grid(delta)
 #prior_pts = c(0, grab_AUC_densities(delta, test1$AUC))
 
 #test3 = compute_AUC_RBR(delta, test1$AUC, test2$AUC, test1$priorc_opt, test2$postc_opt)
@@ -399,19 +399,19 @@ page_theAUC = div(
 #grab_AUC_densities(delta, test2$AUC)*delta
 #sum(grab_AUC_densities(delta, test2$AUC)*delta)
 
-#test4 = compute_AUC_post_content(theAUC_delta, test2$AUC, test3$plausible_region)
+#test4 = compute_AUC_post_content(finite_val_delta, test2$AUC, test3$plausible_region)
 
-#test5 = compute_AUC_credible_region(gamma, theAUC_delta, test3$AUC_RBR, test2$AUC,
+#test5 = compute_AUC_credible_region(gamma, finite_val_delta, test3$AUC_RBR, test2$AUC,
 #                            test4, test3$plausible_region)
 
-#theAUC_generate_dataframe(delta, test1$AUC, test2$AUC, test3$AUC_RBR)
+#finite_val_generate_dataframe(delta, test1$AUC, test2$AUC, test3$AUC_RBR)
 
 #par(mfrow=c(1,2))
 
-#density_hist_AUC_prior_post(theAUC_delta, test1$AUC, test2$AUC, test3$plausible_region,
+#density_hist_AUC_prior_post(finite_val_delta, test1$AUC, test2$AUC, test3$plausible_region,
 #                            test5$credible_region)
 
-#density_hist_AUC_RBR(theAUC_delta, test3$AUC_RBR, testpr$plausible_region)
+#density_hist_AUC_RBR(finite_val_delta, test3$AUC_RBR, testpr$plausible_region)
 
 
 #################### testing for the plausible region
