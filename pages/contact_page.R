@@ -1,6 +1,10 @@
 # contact page
 
-contact_page = div(
+contact_page = fluidPage(
+  tags$script(src = "https://kit.fontawesome.com/5e940c3ade.js"),
+  withAnim(),
+  
+  #div(id = "title_test", titlePanel("Contact & Credits")),
   titlePanel("Contact & Credits"),
   tags$div(
     "The computations are based on the works of ",
@@ -28,46 +32,56 @@ contact_page = div(
                       grid-gap: 10px;
                       }"),
   div(id = "project-grid",
-      div(img(src = "anna_ly.png", style = 'border-radius: 50%', width = '100px')),
+      div(id = "AnnaImg", img(src = "anna_ly.png", style = 'border-radius: 50%', width = '100px')),
       div(h4('Anna Ly'),
           h5('Research Assistant @ University of Toronto'),
           p('Main programmer & maintainer of this website. An undergraduate statistics & math student at the University 
             of Toronto and an experienced teaching assistant for the Department of Mathematical & 
             Computational Sciences at the Mississauga campus.'),
+          #tags$script(src = "https://kit.fontawesome.com/5e940c3ade.js"),
           tags$div(
+            tags$i(class = "fa-brands fa-github"),
             tags$a(href="https://github.com/annahuynhly", "Github"), " | ",
+            tags$i(class = "fa-brands fa-linkedin"),
             tags$a(href="https://www.linkedin.com/in/anna-ly-statistics-specialist/", "Linkedin"), " | ",
+            tags$i(class = "fa-solid fa-graduation-cap"),
             tags$a(href="https://scholar.google.ca/citations?user=9w41oS8AAAAJ&hl=en", "Google Scholar")
           ),
       ),
-      div(img(src = "mike_evans.PNG", style = 'border-radius: 50%', width = '100px')),
+      div(id = "MikeImg", img(src = "mike_evans.PNG", style = 'border-radius: 50%', width = '100px')),
       div(h4('Michael Evans'),
           h5('Department Chair of Statistical Sciences & Professor @ University of Toronto'),
           p('The main author of the paper and assisted with designing the user layout.'),
           tags$div(
+            tags$i(class = "fa-solid fa-user"),
             tags$a(href="https://utstat.toronto.edu/mikevans/", "Personal Website"), " | ",
+            tags$i(class = "fa-solid fa-graduation-cap"),
             tags$a(href="https://scholar.google.ca/citations?user=i4Z5iW4AAAAJ&hl=en", "Google Scholar"),
           ),
       ),
       
-      div(img(src = "luai_labadi.PNG", style = 'border-radius: 50%', width = '100px')),
+      div(id = "LuaiImg", img(src = "luai_labadi.PNG", style = 'border-radius: 50%', width = '100px')),
       div(h4('Luai Al Labadi'),
           h5('Associate Chair & Assistant Professor @ University of Toronto'),
           p('One of the authors of the paper.'),
           tags$div(
-            tags$a(href="https://www.utm.utoronto.ca/math-cs-stats/people/luai-al-labadi", "UofT Webpage"), " | ",
+            tags$i(class = "fa-solid fa-building-columns"),
+            tags$a(href="https://www.utm.utoronto.ca/math-cs-stats/people/luai-al-labadi", "UofT Webpage"),
+            tags$i(class = "fa-solid fa-graduation-cap"), " | ",
             tags$a(href="https://scholar.google.ca/citations?user=DIin_xEAAAAJ&hl=en", "Google Scholar"),
           ),
       ),
       
-      div(img(src = "generic_photo.png", style = 'border-radius: 50%', width = '100px')),
+      div(id = "QiaoyuImg", img(src = "generic_photo.png", style = 'border-radius: 50%', width = '100px')),
       div(h4('Qiaoyu Liang'),
           h5('PhD Student @ University of Toronto'),
           p('One of the authors of the paper. (There is no image of him online, so the placeholder image 
             was drawn by Anna Ly.)'),
           tags$div(
+            tags$i(class = "fa-solid fa-building-columns"),
             tags$a(href="https://www.statistics.utoronto.ca/people/directories/graduate-students/qiaoyu-liang", 
                           "UofT Webpage"), " | ",
+            tags$i(class = "fa-solid fa-graduation-cap"),
             tags$a(href="https://scholar.google.ca/citations?hl=en&user=7puofJYAAAAJ", "Google Scholar"),
           ),
       ),

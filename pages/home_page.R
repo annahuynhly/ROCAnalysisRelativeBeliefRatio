@@ -1,5 +1,6 @@
 
-home_page = div(
+home_page = fluidPage(
+  
   titlePanel("Getting Started"),
   sidebarLayout(
     sidebarPanel(width = 4, 
@@ -50,7 +51,7 @@ home_page = div(
       p("Hello and welcome! This is the home page. Please select one of the cases you are dealing with
         before proceeding with the calculator."),
       p("Note that the relevant prevalence w is the proportion of this subpopulation who are diseased."),
-      p("Note that some of the computations take a long time to run, hence, switching between 
+      p("Some of the computations take a long time to run, hence, switching between 
         pages may take awhile."),
       p("The calculator is based on the works of Al Labadi, L., Evans, M. and Liang, Q. (2022).
         Specifically, this website is currently based on Section 3.2."),

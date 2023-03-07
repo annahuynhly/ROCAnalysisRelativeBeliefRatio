@@ -272,8 +272,21 @@ page_prevalence_setup = div(
   titlePanel("The Prevalence"), 
   conditionalPanel(
     condition = "input.pick_case_1 == 'case_1_opt'",
-    p("The prevalence is already known, so there is nothing to do here. Please proceed
+    
+    fluidRow(
+      align = "center",
+      tags$script(src = "https://kit.fontawesome.com/5e940c3ade.js"),
+      tags$div(id = "test_image",
+        tags$i(class = "fa-solid fa-circle-right", style = "font-size: 16rem;"),
+        style = "padding:10rem;",
+        #tags$i(class = "fa-regular fa-face-sleeping", 
+        #       style = "font-size: 4.5rem;"),
+        #style = "padding:5rem;",
+      ),
+      h4("The prevalence is already known, so there is nothing to do here. Please proceed
       to inferences of the AUC (currently labelled as Section 3.2).")
+    ),
+    
   ),
   conditionalPanel(
     condition = "input.pick_case_1 == 'case_2_opt'",

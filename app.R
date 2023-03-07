@@ -7,6 +7,7 @@ library(shiny)
 library(DT) # for tables
 library(varhandle)
 library(tableHTML)
+library(shinyanimate) # testing for animations!
 
 # Other libraries used for the code
 library(rBeta2009)
@@ -64,6 +65,13 @@ server = function(input, output, session) {
   # SECTION 3.3 ################################################## 
   
   source(file.path("server", "section3.4.R"),  local = TRUE)$value
+  
+  # CONTACT ######################################################
+  observe(addHoverAnim(session, 'test_image', 'wobble'))
+  observe(addHoverAnim(session, 'AnnaImg', 'rubberBand'))
+  observe(addHoverAnim(session, 'MikeImg', 'tada'))
+  observe(addHoverAnim(session, 'LuaiImg', 'flip'))
+  observe(addHoverAnim(session, 'QiaoyuImg', 'fadeOutDown'))
 }
 
 shinyApp(ui, server)
