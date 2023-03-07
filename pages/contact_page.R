@@ -28,16 +28,16 @@ contact_page = fluidPage(
   
   tags$style("#project-grid {
                       display: grid;
-                      grid-template-columns: 100px 1fr;
+                      grid-template-columns: 120px 1fr;
                       grid-gap: 10px;
                       }"),
   div(id = "project-grid",
-      div(id = "AnnaImg", img(src = "anna_ly.png", style = 'border-radius: 50%', width = '100px')),
-      div(h4('Anna Ly'),
-          h5('Research Assistant @ University of Toronto'),
+      div(id = "AnnaImg", img(src = "anna_ly.png", style = 'border-radius: 50%', width = '120px')),
+      div(h3('Anna Ly'),
+          h4('Research Assistant @ University of Toronto'),
           p('Main programmer & maintainer of this website. An undergraduate statistics & math student at the University 
             of Toronto and an experienced teaching assistant for the Department of Mathematical & 
-            Computational Sciences at the Mississauga campus.'),
+            Computational Sciences at the Mississauga campus.', style = "color:#61646b"),
           #tags$script(src = "https://kit.fontawesome.com/5e940c3ade.js"),
           tags$div(
             tags$i(class = "fa-brands fa-github"),
@@ -48,10 +48,10 @@ contact_page = fluidPage(
             tags$a(href="https://scholar.google.ca/citations?user=9w41oS8AAAAJ&hl=en", "Google Scholar")
           ),
       ),
-      div(id = "MikeImg", img(src = "mike_evans.PNG", style = 'border-radius: 50%', width = '100px')),
-      div(h4('Michael Evans'),
-          h5('Department Chair of Statistical Sciences & Professor @ University of Toronto'),
-          p('The main author of the paper and assisted with designing the user layout.'),
+      div(id = "MikeImg", img(src = "mike_evans.PNG", style = 'border-radius: 50%', width = '120px')),
+      div(h3('Michael Evans'),
+          h4('Department Chair of Statistical Sciences & Professor @ University of Toronto'),
+          p('The main author of the paper and assisted with designing the user layout.', style = "color:#61646b"),
           tags$div(
             tags$i(class = "fa-solid fa-user"),
             tags$a(href="https://utstat.toronto.edu/mikevans/", "Personal Website"), " | ",
@@ -60,10 +60,10 @@ contact_page = fluidPage(
           ),
       ),
       
-      div(id = "LuaiImg", img(src = "luai_labadi.PNG", style = 'border-radius: 50%', width = '100px')),
-      div(h4('Luai Al Labadi'),
-          h5('Associate Chair & Assistant Professor @ University of Toronto'),
-          p('One of the authors of the paper.'),
+      div(id = "LuaiImg", img(src = "luai_labadi.PNG", style = 'border-radius: 50%', width = '120px')),
+      div(h3('Luai Al Labadi'),
+          h4('Associate Chair & Assistant Professor @ University of Toronto'),
+          p('One of the authors of the paper.', style = "color:#61646b"),
           tags$div(
             tags$i(class = "fa-solid fa-building-columns"),
             tags$a(href="https://www.utm.utoronto.ca/math-cs-stats/people/luai-al-labadi", "UofT Webpage"),
@@ -72,11 +72,11 @@ contact_page = fluidPage(
           ),
       ),
       
-      div(id = "QiaoyuImg", img(src = "generic_photo.png", style = 'border-radius: 50%', width = '100px')),
-      div(h4('Qiaoyu Liang'),
-          h5('PhD Student @ University of Toronto'),
+      div(id = "QiaoyuImg", img(src = "generic_photo.png", style = 'border-radius: 50%', width = '120px')),
+      div(h3('Qiaoyu Liang'),
+          h4('PhD Student @ University of Toronto'),
           p('One of the authors of the paper. (There is no image of him online, so the placeholder image 
-            was drawn by Anna Ly.)'),
+            was drawn by Anna Ly.)', style = "color:#61646b"),
           tags$div(
             tags$i(class = "fa-solid fa-building-columns"),
             tags$a(href="https://www.statistics.utoronto.ca/people/directories/graduate-students/qiaoyu-liang", 
