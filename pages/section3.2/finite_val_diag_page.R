@@ -8,46 +8,46 @@ finite_val_setup_variables = fluidPage(
   fluidRow(
     column(3,
            numericInput(inputId = "finite_val_nND",
-                        tags$p('Total Non-Diseased', style = "font-size: 90%;"),
+                        label = 'Total Non-Diseased',
                         value = 50, min = 1)),
     column(3, 
            numericInput(inputId = "finite_val_nD", 
-                        tags$p('Total Diseased', style = "font-size: 90%;"),
+                        label = 'Total Diseased',
                         value = 100, min = 1)),
     column(3, 
            numericInput(inputId = "finite_val_nMonteCarlo", 
-                        tags$p('Monte Carlo (Simulation) Sample Size', style = "font-size: 90%;"),
+                        label = 'Monte Carlo (Simulation) Sample Size',
                         value = 100000, min = 0)),
   ),
   
   fluidRow(
     column(3,
            textInput(inputId = "finite_val_alpha_ND",
-                     tags$p('alphaND1, ..., alphaNDm', style = "font-size: 90%;"),
+                     label = 'alphaND1, ..., alphaNDm',
                      value = "1, 1, 1, 1, 1")),
     column(3, 
            textInput(inputId = "finite_val_alpha_D",
-                     tags$p('alphaD1, ..., alphaDm', style = "font-size: 90%;"),
+                     label = 'alphaD1, ..., alphaDm',
                      value = "1, 1, 1, 1, 1")),
     column(3, 
            textInput(inputId = "finite_val_fND",
-                     tags$p('fNd', style = "font-size: 90%;"),
+                     label = 'fNd',
                      value = "29, 7, 4, 5, 5")),
   ),
   
   fluidRow(
     column(3, 
            textInput(inputId = "finite_val_fD",
-                     label = tags$p('fD', style = "font-size: 90%;"),
+                     label = 'fD',
                      value = "14, 7, 25, 33, 21")),
     column(3,
            numericInput(inputId = "finite_val_delta", 
-                        label = tags$p("Delta", style = "font-size: 90%"), 
+                        label = "Delta", 
                         value = 0.04, min = 0, max = 1)),
     column(3, 
            textInput(inputId = "finite_val_gamma", 
                      label = tags$p("Gamma (must be less than posterior content)", 
-                                    style = "font-size: 90%"), 
+                                    style = "font-size: 95%"), 
                      value = "NA")),
   ),
 )
@@ -153,6 +153,7 @@ finite_val_plots = div(
 # GRAPH 2 PAGE                                                 #
 ################################################################
 
+# Note: base R : pch values go from 1 to 25
 default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
                       "6" = 6, "7" = 7, "8" = 8, "9" = 9, "10" = 10,
                       "11" = 11, "12" = 12, "13" = 13, "14" = 14, "15" = 15,
@@ -239,7 +240,8 @@ finite_val_hypothesizedAUC = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       numericInput(inputId = "finite_val_hypoAUC",
-                   tags$p('Hypothesized AUC (greater than)', style = "font-size: 90%;"),value = 0.5),
+                   label = 'Hypothesized AUC (greater than)',
+                   value = 0.5),
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", verbatimTextOutput("finite_val_hypoAUC_value"))))
@@ -254,7 +256,9 @@ finite_val_download_1 = div(
   titlePanel("Download Prior & Posterior"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-      textInput(inputId = "finite_val_filename", "Input File Name", value = "AUC Values"),
+      textInput(inputId = "finite_val_filename", 
+                label = "Input File Name", 
+                value = "Finite Value Diag Values"),
       #radioButtons(inputId = "finite_val_choosefile", "Choose Which Data to Download",
       #             choices = list("Prior" = 1, "Posterior" = 2),
       #             selected = 1),

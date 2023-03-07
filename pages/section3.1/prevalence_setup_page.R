@@ -238,7 +238,7 @@ page_prevalence_download = div(
     sidebarPanel(width = 3, 
                  textInput(inputId = "RB_filename", 
                            label = "Input File Name", 
-                           value = "PriorPostRelativeBeliefRatio"),
+                           value = "Prior Post RBR of W"),
                  downloadButton("RB_downloadData", "Download"),
     ),
     mainPanel(
@@ -253,7 +253,7 @@ page_prevalence_download_alt = div(
     sidebarPanel(width = 3, 
                  textInput(inputId = "RB_filename_alt", 
                            label = "Input File Name", 
-                           value = "PriorOfW"),
+                           value = "Prior Of W"),
                  downloadButton("RB_downloadData_alt", "Download"),
     ),
     mainPanel(
