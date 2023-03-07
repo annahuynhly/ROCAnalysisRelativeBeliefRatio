@@ -1,10 +1,4 @@
 ################################################################
-# TODO LIST                                                    #
-################################################################
-
-# 3.2: need to add some sections from the text
-
-################################################################
 # LIBRARIES                                                    #
 ################################################################
 
@@ -36,18 +30,12 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
                  navbarMenu("Section 3.3",
                             tabPanel("Definitions", page_sect3.3_def),
                             tabPanel("Binormal Diagnostic", page_binormal_val)
-                            #tabPanel("BinormalAUCEqualVariance", page_binormalAUCequalvariance),
-                            #tabPanel("BinormalAUCUnequalVariance", page_binormalAUCunequalvariance),
-                            #tabPanel("BinormalCoptEqualVariance", page_binormalcoptequalvariance),
                  ),
                  navbarMenu("Section 3.4",
                             tabPanel("Definitions", page_sect3.4_def),
                             tabPanel("Nonparametric Bayes Model", page_nonpara_bayes)
-                            #tabPanel("BetaPrior", page_betaprior),
-                            #tabPanel("BNPAUC", page_BNPAUC),
-                            #tabPanel("BNPcFixedMales", page_BNPcfixedMales),
                  ),
-                 tabPanel("Contact", contact_page),
+                 tabPanel("Contact & Credits", contact_page),
                  id = "navbarID",
                  theme = shinythemes::shinytheme("flatly"),
                  #theme = "main.css"
