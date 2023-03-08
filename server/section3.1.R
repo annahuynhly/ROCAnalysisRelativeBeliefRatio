@@ -3,7 +3,11 @@
 ################################################################
 
 sect_3.1_grid = reactive({
-  RB_distance_that_matters(input$prevalence_setup_delta)
+  if(input$pick_case_2 == 'case_a_opt'){
+    RB_distance_that_matters(input$prevalence_setup_delta_alt)
+  } else {
+    RB_distance_that_matters(input$prevalence_setup_delta)
+  }
 })
 
 sect_3.1_info_1 = reactive({
@@ -50,7 +54,7 @@ sect_3.1_prior = reactive({
 
 output$prevalence_setup_values1 = renderPrint({
   list("Plausible Region of Prevalence w" = sect_3.1_info_1()$plausible_region,
-       "Relatibe Belief Estimate of Prevalence w" = sect_3.1_info_1()$RB_estimate_of_prevalence_w,
+       "Relative Belief Estimate of Prevalence w" = sect_3.1_info_1()$RB_estimate_of_prevalence_w,
        "Prior Content" = sect_3.1_info_1()$prior_content,
        "Posterior Content" = sect_3.1_info_1()$posterior_content,
        "Credible Region of Prevalence w" = sect_3.1_cred_region()$credible_region,

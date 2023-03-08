@@ -1,6 +1,5 @@
 
 home_page = fluidPage(
-  
   titlePanel("Getting Started"),
   sidebarLayout(
     sidebarPanel(width = 4, 
@@ -12,7 +11,7 @@ home_page = fluidPage(
       conditionalPanel(
         condition = "input.pick_case_1 == 'case_1_opt'",
         numericInput(inputId = "global_prevalence_w",
-                     tags$p('Please Input the Prevalence w.', style = "font-size: 90%;"),
+                     'Please Input the Prevalence w.',
                      value = 0.65), #
         p("The prevalence has been determined. Please proceed to section 3.2. The Prevalence section may be skipped,
           as it is used to calculate the prevalence.")
@@ -62,5 +61,6 @@ home_page = fluidPage(
         "It is fortunately open access! :)"
       )
     )
-  )
+  ),
+  br(style = "line-height:7;")
 )

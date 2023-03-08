@@ -1,6 +1,8 @@
 # contact page
 
 contact_page = fluidPage(
+  
+  
   tags$script(src = "https://kit.fontawesome.com/5e940c3ade.js"),
   withAnim(),
   
@@ -86,5 +88,7 @@ contact_page = fluidPage(
           ),
       ),
       
-  )
+  ),
+  
+  
 )

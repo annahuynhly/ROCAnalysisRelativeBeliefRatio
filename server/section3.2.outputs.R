@@ -16,9 +16,9 @@ output$finite_val_output1 = renderPrint({
 })
 
 output$finite_val_hypoAUC_value = renderPrint({
-  list1 = list("Plausible Region of the AUC" = sect3.2_pr()$plausible_region,
-               "Posterior Content of the AUC" = sect3.2_AUC_post_content(),
-               "Credible Region of the AUC" = sect3.2_cr()$credible_region,
+  list1 = list("Plausible Region for the AUC" = sect3.2_pr()$plausible_region,
+               "Posterior Content of the Plausible Region for the AUC" = sect3.2_AUC_post_content(),
+               "Credible region for the AUC" = sect3.2_cr()$credible_region,
                "Area Under the Line Plot (next section)" = sect3.2_lineplot_area())
   list2 = append(sect3.2_hypo_test(), list1)
   list2

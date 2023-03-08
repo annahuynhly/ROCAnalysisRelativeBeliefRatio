@@ -83,7 +83,9 @@ prevalence_setup_plausible_region = div(
                    value = 0.001, min = 0, max = 1),
     ),
     mainPanel(
-      tabPanel("Plausible Region & Max w", verbatimTextOutput("prevalence_setup_values1")),
+      tabPanel("Plausible Region & Max w", 
+               withSpinner((verbatimTextOutput("prevalence_setup_values1")))
+      ),
     )
   )
 )
@@ -164,8 +166,10 @@ prevalence_setup_plots = div(
     mainPanel(
       tabPanel("Plots",
                fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    plotOutput("prevalence_setup_postprior_graph"), 
-                                    plotOutput("prevalence_setup_RB_graph")))),
+                                    withSpinner(plotOutput("prevalence_setup_postprior_graph")), 
+                                    withSpinner(plotOutput("prevalence_setup_RB_graph")))
+                        ),
+               ),
     )
   )
 )
@@ -174,10 +178,9 @@ prevalence_setup_plot_alt = div(
   titlePanel("Plot of the Prior of w"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 numericInput(inputId = "prevalence_setup_delta", 
+                 numericInput(inputId = "prevalence_setup_delta_alt", 
                               label = tags$p('Delta (the meaningful difference for the prevalence)', 
                                              style = "font-size: 87%;"),
-                              #label = "Delta = the meaningful difference for the prevalence", 
                               value = 0.001, min = 0, max = 1),
                  selectInput(inputId = "prevalence_setup_colour_1", 
                              label = 'Select a colour', 
@@ -198,7 +201,7 @@ prevalence_setup_plot_alt = div(
                  ),
     ),
     mainPanel(
-      plotOutput("prevalence_setup_post_graph_alt")
+      plotOutput("prevalence_setup_post_graph_alt") %>% withSpinner()
       #fluidRow(splitLayout(cellWidths = c("70%", "30%"), 
       #                     plotOutput("prevalence_setup_post_graph_alt"), 
       #                     verbatimTextOutput("prevalence_setup_prior_values"))),
@@ -222,8 +225,11 @@ prevalence_setup_relative_belief_plot_of_w0 = div(
     mainPanel(
       tabPanel("Relative Belief Plot of w0",
                fluidRow(splitLayout(cellWidths = c("60%", "35%"), 
-                                    plotOutput(outputId = "prevalence_setup_w0_graph"), 
-                                    verbatimTextOutput("prevalence_setup_values2")))),
+                                    withSpinner(plotOutput(outputId = "prevalence_setup_w0_graph")), 
+                                    withSpinner(verbatimTextOutput("prevalence_setup_values2")),
+          )
+        )
+      )
     )
   )
 )
@@ -242,7 +248,9 @@ page_prevalence_download = div(
                  downloadButton("RB_downloadData", "Download"),
     ),
     mainPanel(
-      tabPanel("Download Output", dataTableOutput("RB_dataframe"))
+      tabPanel("Download Output", 
+               withSpinner(dataTableOutput("RB_dataframe"))
+      )
     )
   )
 )
@@ -257,7 +265,9 @@ page_prevalence_download_alt = div(
                  downloadButton("RB_downloadData_alt", "Download"),
     ),
     mainPanel(
-      tabPanel("Download Output", dataTableOutput("RB_dataframe_alt"))
+      tabPanel("Download Output", 
+               withSpinner(dataTableOutput("RB_dataframe_alt"))
+      )
     )
   )
 )
@@ -276,12 +286,9 @@ page_prevalence_setup = div(
     fluidRow(
       align = "center",
       tags$script(src = "https://kit.fontawesome.com/5e940c3ade.js"),
-      tags$div(id = "test_image",
+      tags$div(id = "prevalence_arrow",
         tags$i(class = "fa-solid fa-circle-right", style = "font-size: 16rem;"),
         style = "padding:10rem;",
-        #tags$i(class = "fa-regular fa-face-sleeping", 
-        #       style = "font-size: 4.5rem;"),
-        #style = "padding:5rem;",
       ),
       h4("The prevalence is already known, so there is nothing to do here. Please proceed
       to inferences of the AUC (currently labelled as Section 3.2).")
@@ -290,6 +297,15 @@ page_prevalence_setup = div(
   ),
   conditionalPanel(
     condition = "input.pick_case_1 == 'case_2_opt'",
+    
+    conditionalPanel(
+      condition = "input.pick_case_2 == 'case_a_opt'",
+      tabsetPanel(type = "tabs",
+                  #tabPanel("Description", prevalence_setup_description_alt),
+                  tabPanel("Plot", prevalence_setup_plot_alt),
+                  tabPanel("Download Output", page_prevalence_download_alt)
+      )
+    ),
     
     conditionalPanel(
       condition = "input.pick_case_2 == 'case_b_opt'",
@@ -302,14 +318,6 @@ page_prevalence_setup = div(
                   tabPanel("Download Output", page_prevalence_download)
       )
     ),
-    conditionalPanel(
-      condition = "input.pick_case_2 == 'case_a_opt'",
-      tabsetPanel(type = "tabs",
-                  #tabPanel("Description", prevalence_setup_description_alt),
-                  tabPanel("Plot", prevalence_setup_plot_alt),
-                  tabPanel("Download Output", page_prevalence_download_alt)
-      )
-    )
   )
 )
 

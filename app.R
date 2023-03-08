@@ -1,7 +1,9 @@
 ################################################################
 # POTENTIAL OTHER FEATURES                                     #
 ################################################################
-# FOOTER
+# Add proper link to the resources in the footer
+# Add a github link to the repository
+# Align the headers
 
 ################################################################
 # LIBRARIES                                                    #
@@ -12,7 +14,8 @@ library(shiny)
 library(DT) # for tables
 library(varhandle)
 library(tableHTML)
-library(shinyanimate) # testing for animations!
+library(shinyanimate) # image animations
+library(shinycssloaders) # for loading screens
 
 # Other libraries used for the code
 library(rBeta2009)
@@ -21,30 +24,38 @@ library(tidyverse)
 # Accessing other R-codes
 source("routes.R")
 
+# Globally setting the spinner colour and type
+options(spinner.type = 6, spinner.color = "#18bc9b")
+
 ################################################################
 # FRONTEND                                                     #
 ################################################################
 
 ui = navbarPage(title = " ROC Analysis & Relative Belief",
-                 tabPanel("Getting Started", home_page),
-                 tabPanel("The Prevalence", page_prevalence_setup),
-                 navbarMenu("Section 3.2",
+                tabPanel("Getting Started", home_page),
+                tabPanel("The Prevalence", page_prevalence_setup),
+                navbarMenu("Finite Valued Diagnostic",
                             tabPanel("Definitions", page_sect3.2_def),
-                            tabPanel("Finite-valued Diagnostic", page_finite_val),
+                            tabPanel("Computations", page_finite_val),
                             #tabPanel("Binomial-valued Diagnostic", page_binom_val_diag)
-                 ),
-                 navbarMenu("Section 3.3",
+                ),
+                navbarMenu("Binormal Diagnostic",
                             tabPanel("Definitions", page_sect3.3_def),
-                            tabPanel("Binormal Diagnostic", page_binormal_val)
-                 ),
-                 navbarMenu("Section 3.4",
+                            tabPanel("Computations", page_binormal_val)
+                ),
+                navbarMenu("Nonparametric Bayes Model",
                             tabPanel("Definitions", page_sect3.4_def),
-                            tabPanel("Nonparametric Bayes Model", page_nonpara_bayes)
-                 ),
-                 tabPanel("Contact & Credits", contact_page),
-                 id = "navbarID",
-                 theme = shinythemes::shinytheme("flatly"),
-                 #theme = "main.css"
+                            tabPanel("Computations", page_nonpara_bayes)
+                ),
+                tabPanel("Contact & Credits", contact_page),
+                id = "navbarID",
+                theme = shinythemes::shinytheme("flatly"),
+                #theme = "main.css"
+                footer = div(
+                  br(style = "line-height:10;"),
+                  hr(),
+                  class = "footer",
+                  includeHTML("footer.html"))
 )
 
 ################################################################
@@ -71,12 +82,14 @@ server = function(input, output, session) {
   
   source(file.path("server", "section3.4.R"),  local = TRUE)$value
   
-  # CONTACT ######################################################
-  observe(addHoverAnim(session, 'test_image', 'wobble'))
+  # ANIMATIONS ###################################################
+  # Note: may make a separate .R file based on the number of animations
+  observe(addHoverAnim(session, 'prevalence_arrow', 'wobble'))
   observe(addHoverAnim(session, 'AnnaImg', 'rubberBand'))
   observe(addHoverAnim(session, 'MikeImg', 'tada'))
   observe(addHoverAnim(session, 'LuaiImg', 'flip'))
   observe(addHoverAnim(session, 'QiaoyuImg', 'fadeOutDown'))
+  
 }
 
 shinyApp(ui, server)

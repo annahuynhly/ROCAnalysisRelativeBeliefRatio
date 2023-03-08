@@ -50,18 +50,43 @@ finite_val_setup_variables = fluidPage(
                                     style = "font-size: 95%"), 
                      value = "NA")),
   ),
+  br(style = "line-height:10;"),
 )
-
 
 ################################################################
 # OUTPUT 1 PAGE                                                #
 ################################################################
 
+finite_val_hypothesizedAUC = div( 
+  titlePanel("Inferences for the AUC"),
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+                 numericInput(inputId = "finite_val_hypoAUC",
+                              label = 'Hypothesized AUC (greater than)',
+                              value = 0.5),
+    ),
+    mainPanel(
+      tabPanel("Relative Belief Plot of w0", 
+               withSpinner(verbatimTextOutput("finite_val_hypoAUC_value"))
+      )
+    )
+  ),
+  br(style = "line-height:2;"),
+)
+
+
+################################################################
+# OUTPUT 2 PAGE                                                #
+################################################################
+
 finite_val_plausible_region = div( 
   titlePanel("Inferences for Optimal Cutoff"),
   mainPanel(
-    tabPanel("Inferences for Optimal Cutoff", verbatimTextOutput("finite_val_output1")),
-  )
+    tabPanel("Inferences for Optimal Cutoff", 
+             withSpinner(verbatimTextOutput("finite_val_output1"))
+    ),
+  ),
+  br(style = "line-height:28;")
 )
 
 ################################################################
@@ -143,10 +168,11 @@ finite_val_plots = div(
     mainPanel(
       tabPanel("Plots",
                fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    plotOutput("finite_val_postprior_graph"), 
-                                    plotOutput("finite_val_RB_graph")))),
+                                    withSpinner(plotOutput("finite_val_postprior_graph")), 
+                                    withSpinner(plotOutput("finite_val_RB_graph"))))),
     )
-  )
+  ),
+  br(style = "line-height:1;"),
 )
 
 ################################################################
@@ -224,29 +250,14 @@ finite_val_copt_plots = div(
     mainPanel(
       tabPanel("Plots",
                fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    plotOutput("finite_val_postprior_copt_graph"), 
-                                    plotOutput("finite_val_RB_copt_graph")))),
+                                    withSpinner(plotOutput("finite_val_postprior_copt_graph")), 
+                                    withSpinner(plotOutput("finite_val_RB_copt_graph"))))),
       
     )
-  )
+  ),
+  br(style = "line-height:2;"),
 )
 
-################################################################
-# HYPOTHESIS TESTING                                           #
-################################################################
-
-finite_val_hypothesizedAUC = div( 
-  titlePanel("Inferences for the AUC"),
-  sidebarLayout(
-    sidebarPanel(width = 3, 
-      numericInput(inputId = "finite_val_hypoAUC",
-                   label = 'Hypothesized AUC (greater than)',
-                   value = 0.5),
-    ),
-    mainPanel(
-      tabPanel("Relative Belief Plot of w0", verbatimTextOutput("finite_val_hypoAUC_value"))))
-  
-)
 
 ################################################################
 # DOWNLOAD PAGE                                                #
@@ -267,7 +278,9 @@ finite_val_download_1 = div(
       downloadButton("finite_val_downloadData", "Download"),
     ),
     mainPanel(
-      tabPanel("Download Output", dataTableOutput("finite_val_dataframe"))
+      tabPanel("Download Output", 
+               withSpinner(dataTableOutput("finite_val_dataframe"))
+      )
     )
   )
 )
