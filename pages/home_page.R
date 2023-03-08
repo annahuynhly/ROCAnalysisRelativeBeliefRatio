@@ -3,7 +3,11 @@ home_page = fluidPage(
   titlePanel("Getting Started"),
   sidebarLayout(
     sidebarPanel(width = 4, 
-      selectInput(inputId = "pick_case_1", "Please select whether the prevalence is known or unknown.",
+      numericInput(inputId = "chosen_seed",
+                   label = "Please select a seed for the computations. (DOESN'T WORK)",
+                   value = 1),
+      selectInput(inputId = "pick_case_1", 
+                  label = "Please select whether the prevalence is known or unknown.",
                   c("The prevalence w is known" = "case_1_opt", 
                     "The prevalence w is unknown" = "case_2_opt"),
                   selected = "case_1_opt"

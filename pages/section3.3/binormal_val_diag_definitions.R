@@ -8,7 +8,8 @@ sect3.3_def_description = div(
     p("This tab lists the meaning behind the inputs and the outputs listed
         in the AUC page under section 3.3."),
     p("Currently is in progress. Please check back later!")
-  )
+  ),
+  br(style = "line-height:22;")
 )
 
 ################################################################
@@ -22,7 +23,8 @@ sect3.3_def_inputs = div(
     p("Currently is in progress. Please check back later!")
     
     #tableHTML_output("input_table_description"),
-  )
+  ),
+  br(style = "line-height:22;")
 )
 
 ################################################################
@@ -37,7 +39,8 @@ sect3.3_def_outputs = div(
     p("Currently is in progress. Please check back later!")
     
     #tableHTML_output("output_table_description"),
-  )
+  ),
+  br(style = "line-height:22;")
 )
 
 ################################################################
@@ -53,6 +56,7 @@ sect3.3_def_tables = div(
     
     #imageOutput("formulas"),
   ),
+  br(style = "line-height:22;")
 )
 
 

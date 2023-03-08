@@ -4,6 +4,8 @@
 # Add proper link to the resources in the footer
 # Add a github link to the repository
 # Align the headers
+# Align the footer margins for the rest of the sections.
+# Make the code look nicer lmao
 
 ################################################################
 # LIBRARIES                                                    #
@@ -63,7 +65,13 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
 ################################################################
 
 server = function(input, output, session) {
-
+  # Setting the seed
+  global_seed = reactive(input$chosen_seed)
+  #set.seed(as.numeric(global_seed()))
+  #set.seed(1)
+  
+  # Testing to set the seed
+  
   # SECTION 3.1 ##################################################   
 
   source(file.path("server", "section3.1.R"),  local = TRUE)$value

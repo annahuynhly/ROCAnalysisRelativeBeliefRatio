@@ -12,10 +12,10 @@ sect_3.1_grid = reactive({
 
 sect_3.1_info_1 = reactive({
   RBR_compute_values(alpha1w = input$prevalence_setup_alpha1w, 
-                     alpha2w = input$prevalence_setup_alpha2w, 
-                     n = input$prevalence_setup_n, 
-                     nD = input$prevalence_setup_nD, 
-                     grid = sect_3.1_grid())
+                                alpha2w = input$prevalence_setup_alpha2w, 
+                                n = input$prevalence_setup_n, 
+                                nD = input$prevalence_setup_nD, 
+                                grid = sect_3.1_grid())
 })
 
 sect_3.1_info_2 = reactive({

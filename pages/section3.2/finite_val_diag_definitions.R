@@ -7,7 +7,8 @@ sect3.2_def_description = div(
   mainPanel(
       p("This tab lists the meaning behind the inputs and the outputs listed
         in the AUC page under section 3.2."),
-  )
+  ),
+  br(style = "line-height:22;")
 )
 
 ################################################################
@@ -51,7 +52,8 @@ sect3.2_def_inputs = div(
     #               will include the grid points, the prior, the posterior,
     #               and the relative belief ratio. </li>
     #     </ul>")),
-  )
+  ),
+  br(style = "line-height:22;")
 )
 
 ################################################################
@@ -87,7 +89,8 @@ sect3.2_def_outputs = div(
     #        <li><b>Posterior Probability of Event AUC > XX%:</b> Provides the posterior content given the hypothesized
     #               AUC. </li>
      #    </ul>"))
-  )
+  ),
+  br(style = "line-height:22;")
 )
 
 ################################################################
@@ -101,6 +104,7 @@ sect3.2_def_tables = div(
     
     imageOutput("formulas"),
   ),
+  br(style = "line-height:22;")
 )
 
 

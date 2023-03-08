@@ -1,61 +1,82 @@
 ################################################################
-# DESCRIPTION                                                  #
+# PICKING SAMPLING REGIME                                      #
 ################################################################
 
-binormal_val_setup_variables = fluidPage(
+
+
+################################################################
+# SETUP VARIABLES                                              #
+################################################################
+
+binormal_val_setup_variables_alt = div( 
   titlePanel("Setup Variables"),
-  
-  fluidRow(
-    column(3, 
-           numericInput(inputId = "binormal_val_mu0", # CHANGE THIS
-                        tags$p('mu0', style = "font-size: 90%;"),value = 0)),
-    
-    column(3,
-           numericInput(inputId = "binormal_val_tau0", # CHANGE THIS
-                        tags$p('tau0', style = "font-size: 90%;"),value = 0.5)),
-    column(3, 
-           numericInput(inputId = "binormal_val_alpha0", # CHANGE THIS
-                        tags$p('alpha0', style = "font-size: 90%;"),value = 1.787)),
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+                 selectInput(inputId = "binormal_case", 
+                             label = "Please select the scenario..",
+                             c("Assume variances are equal" = "equal_var", 
+                               "Assume variances are unequal" = "unequal_var"),
+                             selected = "equal_var"
+                 ),
+    ),
+    mainPanel(
+      fluidPage(
+        
+        fluidRow(
+          column(3, numericInput(inputId = "binormal_val_mu0", 
+                                 label = 'mu0',
+                                 value = 0)),
+          
+          column(3, numericInput(inputId = "binormal_val_tau0", 
+                                 label = 'tau0',
+                                 value = 0.5)),
+          column(3, numericInput(inputId = "binormal_val_alpha0", 
+                                 label = 'alpha0',
+                                 value = 1.787)),
+        ),
+        
+        fluidRow(
+          column(3, numericInput(inputId = "binormal_val_beta0",
+                                 label = 'beta0',
+                                 value = 1.056)),
+          
+          column(3, numericInput(inputId = "binormal_val_a1", 
+                                 label = 'a1',
+                                 value = 15.3589)),
+          column(3, numericInput(inputId = "binormal_val_a2", 
+                                 label = 'a2',
+                                 value = 22.53835)),
+        ),
+        
+        fluidRow(
+          column(3, numericInput(inputId = "binormal_val_nND", 
+                                 label = 'nND',
+                                 value = 25)),
+          
+          column(3, numericInput(inputId = "binormal_val_xND", 
+                                 label = 'xND',
+                                 value = -0.072)),
+          column(3, numericInput(inputId = "binormal_val_sND2", 
+                                 label = 'sND2',
+                                 value = 19.38)),
+        ),
+        
+        fluidRow(
+          column(3, numericInput(inputId = "binormal_val_nD", 
+                                 label = 'nD',
+                                 value = 20)),
+          
+          column(3, numericInput(inputId = "binormal_val_xD", 
+                                 label = 'xD',
+                                 value = 0.976)),
+          column(3, numericInput(inputId = "binormal_val_sD2", 
+                                 label = 'sD2',
+                                 value = 16.778)),
+        ),
+      )
+    )
   ),
-  
-  fluidRow(
-    column(3, 
-           numericInput(inputId = "binormal_val_beta0", # CHANGE THIS
-                        tags$p('beta0', style = "font-size: 90%;"),value = 1.056)),
-    
-    column(3,
-           numericInput(inputId = "binormal_val_a1", # CHANGE THIS
-                        tags$p('a1', style = "font-size: 90%;"),value = 15.3589)),
-    column(3, 
-           numericInput(inputId = "binormal_val_a2", # CHANGE THIS
-                        tags$p('a2', style = "font-size: 90%;"),value = 22.53835)),
-  ),
-  
-  fluidRow(
-    column(3, 
-           numericInput(inputId = "binormal_val_nND", # CHANGE THIS
-                        tags$p('nND', style = "font-size: 90%;"),value = 25)),
-    
-    column(3,
-           numericInput(inputId = "binormal_val_xND", # CHANGE THIS
-                        tags$p('xND', style = "font-size: 90%;"),value = -0.072)),
-    column(3, 
-           numericInput(inputId = "binormal_val_sND2", # CHANGE THIS
-                        tags$p('sND2', style = "font-size: 90%;"),value = 19.38)),
-  ),
-  
-  fluidRow(
-    column(3, 
-           numericInput(inputId = "binormal_val_nD", # CHANGE THIS
-                        tags$p('nD', style = "font-size: 90%;"),value = 20)),
-    
-    column(3,
-           numericInput(inputId = "binormal_val_xD", # CHANGE THIS
-                        tags$p('xD', style = "font-size: 90%;"),value = 0.976)),
-    column(3, 
-           numericInput(inputId = "binormal_val_sD2", # CHANGE THIS
-                        tags$p('sD2', style = "font-size: 90%;"),value = 16.778)),
-  ),
+  br(style = "line-height:2;"),
 )
 
 
@@ -297,7 +318,7 @@ page_binormal_val = div(
   titlePanel("Binormal-valued Diagnostic"),
   # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
-              tabPanel("Setup Variables", binormal_val_setup_variables),
+              tabPanel("Setup Variables", binormal_val_setup_variables_alt),
               #tabPanel("Description", binormal_val_description),
               tabPanel("Inferences for the AUC", binormal_val_hypothesizedAUC),
               tabPanel("Plots for the AUC", binormal_val_plots),
