@@ -57,6 +57,7 @@ binorm_val_diag_rbr_graph = function(delta, relative_belief_ratio,
   # This generates the graph for the rbr of the AUC from the binormal valued diagnostic.
   # colour choice goes in the following order: relative belief ratio, plausible region,
   # line of y = 1, credible region.
+  grid = binormal_val_grid_2(delta)
   
   # Temporarily set NaNs to 0 for graphing purposes
   relative_belief_ratio[is.na(relative_belief_ratio)] = 0
@@ -67,14 +68,18 @@ binorm_val_diag_rbr_graph = function(delta, relative_belief_ratio,
   lower_bd = plausible_region[1]
   upper_bd = plausible_region[length(plausible_region)]
   
+  # NOT WORKING BETWEEN HERE
+  
   plot(grid, relative_belief_ratio, type='l', lty = 2, lwd = 2, xlim = c(0, 1), 
        ylim = y_interval,
        main = "Graph of the Relative Belief Ratio of the AUC", 
        ylab = "RBR", xlab = "w", col = colour_choice[1])
+  
   abline(h=1, col=colour_choice[3], lwd = 2, lty = 2)
   
   abline(v=lower_bd, col=colour_choice[2], lwd = 2, lty = 3)
   abline(v=upper_bd, col=colour_choice[2], lwd = 2, lty = 3)
+  
   # Colouring in the area between the plausible region and when the RBR > 1
   l = min(which(grid >= plausible_region[1]))
   h = max(which(grid < plausible_region[2]))

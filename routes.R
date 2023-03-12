@@ -17,11 +17,12 @@ source("./pages/section3.2/finite_val_diag_definitions.R")
 source("./pages/section3.2/finite_val_diag_page.R")
 source("./pages/section3.2/finite_val_diag_compute_functions.R")
 source("./pages/section3.2/finite_val_diag_graph_functions.R")
-#source("./pages/section3.2/binom_val_diag_page.R")
 
 # Section 3.3
 source("./pages/section3.3/binormal_val_diag_definitions.R")
 source("./pages/section3.3/binormal_val_diag_page.R")
+source("./pages/section3.3/binormal_val_diag_compute_functions.R")
+source("./pages/section3.3/binormal_val_diag_graph_functions.R")
 
 # Section 3.4
 source("./pages/section3.4/nonpara_bayes_definitions.R")
