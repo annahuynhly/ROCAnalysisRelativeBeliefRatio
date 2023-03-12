@@ -2,9 +2,14 @@
 # NUMERIC/TEXT OUTPUTS                                         #
 ################################################################
 
-#output$finite_val_output1 = renderPrint({ # For testing
-#  list("test_val" = sect3.2_AUC_post()$AUC) # will need to specify when
-#})
+output$finite_val_hypoAUC_value = renderPrint({
+  list1 = list("Plausible Region for the AUC" = sect3.2_pr()$plausible_region,
+               "Posterior Content of the Plausible Region for the AUC" = sect3.2_AUC_post_content(),
+               "Credible region for the AUC" = sect3.2_cr()$credible_region,
+               "Area Under the Line Plot (next section)" = sect3.2_lineplot_area())
+  list2 = append(sect3.2_hypo_test(), list1)
+  list2
+})
 
 output$finite_val_output1 = renderPrint({
   list("Prior Copt" = sect3.2_AUC_prior()$priorc_opt,
@@ -13,15 +18,6 @@ output$finite_val_output1 = renderPrint({
        "Error Characteristics" = as.data.frame(sect3.2_copt_est())) # will need to specify when
   # providing a vector
   # TODO: specify credible region
-})
-
-output$finite_val_hypoAUC_value = renderPrint({
-  list1 = list("Plausible Region for the AUC" = sect3.2_pr()$plausible_region,
-               "Posterior Content of the Plausible Region for the AUC" = sect3.2_AUC_post_content(),
-               "Credible region for the AUC" = sect3.2_cr()$credible_region,
-               "Area Under the Line Plot (next section)" = sect3.2_lineplot_area())
-  list2 = append(sect3.2_hypo_test(), list1)
-  list2
 })
 
 ################################################################

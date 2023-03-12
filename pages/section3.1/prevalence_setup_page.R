@@ -201,7 +201,7 @@ prevalence_setup_plot_alt = div(
                  ),
     ),
     mainPanel(
-      plotOutput("prevalence_setup_post_graph_alt") %>% withSpinner()
+      withSpinner(plotOutput("prevalence_setup_post_graph_alt"))
       #fluidRow(splitLayout(cellWidths = c("70%", "30%"), 
       #                     plotOutput("prevalence_setup_post_graph_alt"), 
       #                     verbatimTextOutput("prevalence_setup_prior_values"))),

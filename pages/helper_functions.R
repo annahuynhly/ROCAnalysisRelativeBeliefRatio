@@ -2,6 +2,17 @@
 #library(stringr)
 #library(varhandle)
 
+obtain_x_interval = function(condition_list, grid, smallest_bound){
+  # helper function for constructing an x interval for graph building
+  x_region = c()
+  for (i in 1:length(grid)){
+    if(condition_list[[i]] > smallest_bound){
+      x_region = c(x_region, as.numeric(grid[i]))
+    }
+  }
+  return(c(x_region[1], x_region[length(x_region)]))
+}
+
 convert_to_hex = function(hex_colour){
   hex_colour = gsub(" ", "", hex_colour)
   first_char = substr(hex_colour, 1, 1)

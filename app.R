@@ -39,7 +39,6 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
                 navbarMenu("Finite Valued Diagnostic",
                             tabPanel("Definitions", page_sect3.2_def),
                             tabPanel("Computations", page_finite_val),
-                            #tabPanel("Binomial-valued Diagnostic", page_binom_val_diag)
                 ),
                 navbarMenu("Binormal Diagnostic",
                             tabPanel("Definitions", page_sect3.3_def),
@@ -84,7 +83,9 @@ server = function(input, output, session) {
   
   # SECTION 3.3 ################################################## 
   
-  source(file.path("server", "section3.3.R"),  local = TRUE)$value
+  source(file.path("server", "section3.3.definitions.R"),  local = TRUE)$value
+  source(file.path("server", "section3.3.variables.R"),  local = TRUE)$value
+  source(file.path("server", "section3.3.outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   

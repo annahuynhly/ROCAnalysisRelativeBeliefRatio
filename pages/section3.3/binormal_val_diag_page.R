@@ -8,8 +8,16 @@
 # SETUP VARIABLES                                              #
 ################################################################
 
+
+#Change order of input variables:
+#nD, meanD, sD_squared
+#nND, meanND, sND_squared,
+#mu_D, tauD_squared, 
+#lambda1, lambda2
+
+
 binormal_val_setup_variables_alt = div( 
-  titlePanel("Setup Variables"),
+  titlePanel("Setup Variables - NEED TO MODIFY"),
   sidebarLayout(
     sidebarPanel(width = 3, 
                  selectInput(inputId = "binormal_case", 
@@ -23,56 +31,53 @@ binormal_val_setup_variables_alt = div(
       fluidPage(
         
         fluidRow(
-          column(3, numericInput(inputId = "binormal_val_mu0", 
-                                 label = 'mu0',
-                                 value = 0)),
-          
-          column(3, numericInput(inputId = "binormal_val_tau0", 
-                                 label = 'tau0',
-                                 value = 0.5)),
-          column(3, numericInput(inputId = "binormal_val_alpha0", 
-                                 label = 'alpha0',
+          column(3, numericInput(inputId = "binormal_val_nMonteCarlo", 
+                                 label = 'Simulation Sample Size',
+                                 value = 100000, min = 0)),
+          column(3, numericInput(inputId = "binormal_val_delta", 
+                                 label = 'Delta',
+                                 value = 0.01)),
+          column(3, numericInput(inputId = "binormal_val_lambda1", 
+                                 label = 'lambda1',
                                  value = 1.787)),
         ),
         
         fluidRow(
-          column(3, numericInput(inputId = "binormal_val_beta0",
-                                 label = 'beta0',
+          column(3, numericInput(inputId = "binormal_val_mu0", 
+                                 label = 'mu0',
+                                 value = 0)),
+          column(3, numericInput(inputId = "binormal_val_tau0", 
+                                 label = 'tau0',
+                                 value = 0.5)),
+          column(3, numericInput(inputId = "binormal_val_lambda2", 
+                                 label = 'lambda2',
                                  value = 1.056)),
-          
-          column(3, numericInput(inputId = "binormal_val_a1", 
-                                 label = 'a1',
-                                 value = 15.3589)),
-          column(3, numericInput(inputId = "binormal_val_a2", 
-                                 label = 'a2',
-                                 value = 22.53835)),
         ),
         
         fluidRow(
-          column(3, numericInput(inputId = "binormal_val_nND", 
+          column(3, numericInput(inputId = "binormal_val_nND",
                                  label = 'nND',
                                  value = 25)),
-          
-          column(3, numericInput(inputId = "binormal_val_xND", 
-                                 label = 'xND',
+          column(3, numericInput(inputId = "binormal_val_meanND", 
+                                 label = 'meanND',
                                  value = -0.072)),
-          column(3, numericInput(inputId = "binormal_val_sND2", 
-                                 label = 'sND2',
-                                 value = 19.38)),
+          column(3, numericInput(inputId = "binormal_val_sND_squared", 
+                                 label = 'sND squared',
+                                 value = 19.638)),
         ),
         
         fluidRow(
           column(3, numericInput(inputId = "binormal_val_nD", 
                                  label = 'nD',
                                  value = 20)),
-          
-          column(3, numericInput(inputId = "binormal_val_xD", 
-                                 label = 'xD',
+          column(3, numericInput(inputId = "binormal_val_meanD", 
+                                 label = 'meanD',
                                  value = 0.976)),
-          column(3, numericInput(inputId = "binormal_val_sD2", 
-                                 label = 'sD2',
+          column(3, numericInput(inputId = "binormal_val_sD_squared", 
+                                 label = 'sD squared',
                                  value = 16.778)),
         ),
+        
       )
     )
   ),
@@ -169,11 +174,10 @@ binormal_val_plots = div(
                  )
     ),
     mainPanel(
-      p("This is currently being worked on. Come back later!"),
-      #tabPanel("Plots",
-      #         fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-      #                              plotOutput("binormal_val_postprior_graph"), 
-      #                              plotOutput("binormal_val_RB_graph")))),
+      tabPanel("Plots",
+               fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
+                                    withSpinner(plotOutput("binormal_val_postprior_graph")), 
+                                    withSpinner(plotOutput("binormal_val_RB_graph"))))),
     )
   )
 )

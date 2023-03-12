@@ -8,18 +8,6 @@ RB_distance_that_matters = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED
   return(grid)
 }
 
-obtain_x_interval = function(condition_list, grid, smallest_bound){
-  # helper function for constructing an x interval for graph building
-  x_region = c()
-  for (i in 1:length(grid)){
-    if(condition_list[[i]] > smallest_bound){
-      x_region = c(x_region, as.numeric(grid[i]))
-    }
-  }
-  return(c(x_region[1], x_region[length(x_region)]))
-}
-
-
 RBR_compute_values = function(alpha1w, alpha2w, n, nD, grid){
   # This computes the prior, posterior, and the relative belief ratio of w.
   nND = n - nD # obtaining number not diseased

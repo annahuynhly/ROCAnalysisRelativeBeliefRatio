@@ -4,7 +4,7 @@ home_page = fluidPage(
   sidebarLayout(
     sidebarPanel(width = 4, 
       numericInput(inputId = "chosen_seed",
-                   label = "Please select a seed for the computations. (DOESN'T WORK)",
+                   label = "Please select a seed for the computations.",
                    value = 1),
       selectInput(inputId = "pick_case_1", 
                   label = "Please select whether the prevalence is known or unknown.",
