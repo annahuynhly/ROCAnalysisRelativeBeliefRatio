@@ -52,8 +52,6 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
   return(list("grid" = new_grid, "density" = new_density))
 }
 
-###################################################################################
-
 density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_region,
                                        credible_region = FALSE, densityplot = FALSE, 
                                        showbars = FALSE, 
@@ -208,9 +206,6 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
            lty = c(3, 3), inset = 0.02, cex = 0.8)
   }
 }
-
-###################################################################################
-
 
 plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE,
                           prior_label = 3, post_label = 4, rb_label = 8,

@@ -1,6 +1,10 @@
-# This represents all helper functions!
-#library(stringr)
-#library(varhandle)
+
+# prevalence_setup_functions.R
+RB_distance_that_matters = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
+  # Creates a grid of values from 0 to 1
+  grid = seq(delta/2, (1-delta/2), length= 1/delta)
+  return(grid)
+}
 
 obtain_x_interval = function(condition_list, grid, smallest_bound){
   # helper function for constructing an x interval for graph building
@@ -23,7 +27,6 @@ convert_to_hex = function(hex_colour){
   }
 }
 
-# NEED TO IMPROVE THE FOLLOWING FUNCTION
 convert_char_to_vector = function(x){
   if (is.character(x) == FALSE){
     return("Invalid input: the input is not a character.")
@@ -74,21 +77,4 @@ create_necessary_vector = function(x){
   } else {
     return("Invalid vector.")
   }
-}
-
-##############################################
-# Helper functions for ROC_page_R
-
-generate_A_and_grid = function(L){
-  # L= number of subintervals of [0,1] for estimating densities of continuous quantities 
-  A = rep(0,L+1)
-  for (i in 1:(L+1)) {
-    A[i] = (i-1)/L
-  }
-  grid = rep(0,L)
-  for (i in 1:L) {
-    grid[i] = (i-1/2)/L
-  }
-  newlist = list("A" = A, "grid" = grid)
-  return(newlist)
 }

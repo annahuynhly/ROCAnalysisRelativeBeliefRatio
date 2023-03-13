@@ -1,20 +1,6 @@
 ################################################################
-# PICKING SAMPLING REGIME                                      #
+# SETUP VARIABLES & PICKING SAMPLING REGIME                    #
 ################################################################
-
-
-
-################################################################
-# SETUP VARIABLES                                              #
-################################################################
-
-
-#Change order of input variables:
-#nD, meanD, sD_squared
-#nND, meanND, sND_squared,
-#mu_D, tauD_squared, 
-#lambda1, lambda2
-
 
 binormal_val_setup_variables_alt = div( 
   titlePanel("Setup Variables - NEED TO MODIFY"),
@@ -275,9 +261,10 @@ binormal_val_hypothesizedAUC = div(
                  numericInput(inputId = "binormal_val_hypoAUC",
                               tags$p('Hypothesized AUC (greater than)', style = "font-size: 90%;"),value = 0.5),
     ),
-    p("This is currently being worked on. Come back later!"),
-    #mainPanel(
-    #  tabPanel("Relative Belief Plot of w0", verbatimTextOutput("binormal_val_hypoAUC_value")))
+    mainPanel(
+      tabPanel("Relative Belief Plot of w0", 
+               withSpinner(verbatimTextOutput("binormal_val_hypoAUC_value")))
+    )
   )
 )
 
@@ -293,26 +280,13 @@ binormal_val_download_1 = div(
                  downloadButton("binormal_val_downloadData", "Download"),
     ),
     mainPanel(
-      p("This is a work in progress. Please come back later!")
-      #tabPanel("Download Output", dataTableOutput("binormal_val_dataframe"))
-      
+      tabPanel("Download Output", 
+               withSpinner(dataTableOutput("binormal_val_dataframe"))
+      )
     )
   )
 )
 
-binormal_val_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
-  
-  grid_pts = binormal_val_grid(delta)
-  #TEMPORARILY CHANGE THE AUC_prior_pts
-  #AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)*delta)
-  #AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)*delta)
-  AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)$density)
-  AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)$density)
-  #print(c(length(grid_pts), length(AUC_prior_pts), length(AUC_post_pts), length(AUC_RBR)))
-  df = data.frame(grid_pts, AUC_prior_pts, AUC_post_pts, AUC_RBR)
-  colnames(df) = c("Grid point", "Prior of the AUC", "Posterior of the AUC", "Relative Belief Ratio of the AUC")
-  return(df)
-}
 
 ################################################################
 # PAGE LOGIC                                                   #

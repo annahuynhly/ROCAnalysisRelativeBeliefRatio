@@ -114,7 +114,7 @@ output$finite_val_RB_graph = renderPlot({
                          transparency = input$finite_val_col_transparency)
   }
 })
-####### COPT PLOTS
+
 output$finite_val_postprior_copt_graph = renderPlot({
   plots_AUC_copt(priorc_opt = sect3.2_AUC_prior()$priorc_opt, 
                  postc_opt = sect3.2_AUC_post()$postc_opt,

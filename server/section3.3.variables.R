@@ -15,7 +15,6 @@ sect3.3_hyperpara = reactive({
                                   sD_squared = input$binormal_val_sD_squared)
 })
 
-
 sect3.3_AUC_prior = reactive({
   binormal_val_diag_prior(nMonteprior = input$binormal_val_nMonteCarlo, 
                           delta = input$binormal_val_delta, 

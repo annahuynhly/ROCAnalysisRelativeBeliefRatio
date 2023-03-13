@@ -2,12 +2,6 @@
 # COMPUTATIONS                                                 #
 ################################################################
 
-RB_distance_that_matters = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
-  # Creates a grid of values from 0 to 1
-  grid = seq(delta/2, (1-delta/2), length= 1/delta)
-  return(grid)
-}
-
 RBR_compute_values = function(alpha1w, alpha2w, n, nD, grid){
   # This computes the prior, posterior, and the relative belief ratio of w.
   nND = n - nD # obtaining number not diseased
@@ -250,8 +244,8 @@ w0_compute_values = function(alpha1w, alpha2w, n, nD, w0, relative_belief_ratio,
     strength = (x$value + x$abs.error) - (y$value + y$abs.error)
   }
   
-  newlist = list("relative_belief_ratio_at_w0" = relative_belief_ratio_at_w0, "w0_interval" = interval, 
-                 "strength" = strength)
+  newlist = list("relative_belief_ratio_at_w0" = relative_belief_ratio_at_w0, 
+                 "w0_interval" = interval, "strength" = strength)
   return(newlist)
 }
 
@@ -303,25 +297,4 @@ RB_generate_priorframe = function(grid, prior){
   colnames(df) = c("Grid Point", "Prior")
   return(df)
 }
-
-
-
-
-# TESTING
-#alpha1w = 391.72
-#alpha2w = 211.39
-#n = 100 # total number
-#nD = 68 # total number diseased
-#nND = n - nD
-#w0 = 0.6
-#delta = 0.001
-#gamma = 0.5
-
-#grid = RB_distance_that_matters(0.001)
-#test_1 = RBR_compute_values(alpha1w, alpha2w, n, nD, grid)
-#test_2 = compute_credible_region(alpha1w, alpha2w, n, nD, grid, gamma, delta, test_1$relative_belief_ratio, 
-#                                 test_1$posterior_content, test_1$plausible_region)
-#generate_prior_post_graph(test_1$prior, test_1$post, test_1$plausible_region, grid, test_2$credible_region)
-#generate_rbr_graph(test_1$relative_belief_ratio, test_1$plausible_region, grid, test_2$credible_region,
-#                  test_2$rb_line)
 

@@ -2,8 +2,6 @@
 # HELPER FUNCTIONS                                             #
 ################################################################
 
-#source("C:\\Users\\AnnaH\\OneDrive\\Desktop\\Stats RA\\ShinyWebpage\\pages\\helper_functions.R")
-
 # the integrand in the computation of the AUC
 binormal_val_grid_1 = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
   # Creates a grid of values from 0 to 1
@@ -16,6 +14,8 @@ binormal_val_grid_2 = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN O
   grid = seq(delta/2, 1 - delta/2, length=(1/delta))
   return(grid)
 }
+
+#source("C:\\Users\\AnnaH\\OneDrive\\Desktop\\Stats RA\\ShinyWebpage\\pages\\helper_functions.R")
 
 # Note: this doesn't seem to be working that well.
 fcnAUC <- function(z){
@@ -195,7 +195,6 @@ binormal_val_diag_RBR = function(delta, probAUCprior, probAUCpost,
 #binorm_val_diag_rbr_graph(delta = delta, 
 #                          relative_belief_ratio = rbr_val$RB_AUC, 
 #                          plausible_region = rbr_val$plausible_region)
-
 
 #cat("P(AUC>1/2) = ", prior_val$probAUCprior, "\n")
 #cat("P(AUC>1/2 | data) = ", post_val$probAUCpost, "\n")

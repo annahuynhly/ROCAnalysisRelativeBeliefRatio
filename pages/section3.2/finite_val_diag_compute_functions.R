@@ -8,7 +8,8 @@ finite_val_grid = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER
   return(grid)
 }
 
-finite_val_generate_w = function(w = FALSE, alpha1w = NA, alpha2w = NA, nD = NA, nND = NA, version = NA){
+finite_val_generate_w = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
+                                 nD = NA, nND = NA, version = NA){
   #Generates w based on the inputs.
   if(typeof(w) == "double"){
     return(w)
@@ -26,7 +27,6 @@ finite_val_generate_w = function(w = FALSE, alpha1w = NA, alpha2w = NA, nD = NA,
     return("Invalid value for w.")
   }
 }
-
 
 AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE, 
                                      alpha1w = NA, alpha2w = NA,

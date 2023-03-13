@@ -165,11 +165,13 @@ prevalence_setup_plots = div(
     ),
     mainPanel(
       tabPanel("Plots",
-               fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    withSpinner(plotOutput("prevalence_setup_postprior_graph")), 
-                                    withSpinner(plotOutput("prevalence_setup_RB_graph")))
-                        ),
-               ),
+        fluidRow(
+          splitLayout(cellWidths = c("50%", "50%"), 
+                      withSpinner(plotOutput("prevalence_setup_postprior_graph")), 
+                      withSpinner(plotOutput("prevalence_setup_RB_graph"))
+          )
+        ),
+      ),
     )
   )
 )
@@ -202,9 +204,6 @@ prevalence_setup_plot_alt = div(
     ),
     mainPanel(
       withSpinner(plotOutput("prevalence_setup_post_graph_alt"))
-      #fluidRow(splitLayout(cellWidths = c("70%", "30%"), 
-      #                     plotOutput("prevalence_setup_post_graph_alt"), 
-      #                     verbatimTextOutput("prevalence_setup_prior_values"))),
     ),
   )
 )
@@ -224,9 +223,11 @@ prevalence_setup_relative_belief_plot_of_w0 = div(
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0",
-               fluidRow(splitLayout(cellWidths = c("60%", "35%"), 
-                                    withSpinner(plotOutput(outputId = "prevalence_setup_w0_graph")), 
-                                    withSpinner(verbatimTextOutput("prevalence_setup_values2")),
+        fluidRow(
+          splitLayout(
+            cellWidths = c("60%", "35%"), 
+            withSpinner(plotOutput(outputId = "prevalence_setup_w0_graph")), 
+            withSpinner(verbatimTextOutput("prevalence_setup_values2")),
           )
         )
       )
@@ -301,7 +302,6 @@ page_prevalence_setup = div(
     conditionalPanel(
       condition = "input.pick_case_2 == 'case_a_opt'",
       tabsetPanel(type = "tabs",
-                  #tabPanel("Description", prevalence_setup_description_alt),
                   tabPanel("Plot", prevalence_setup_plot_alt),
                   tabPanel("Download Output", page_prevalence_download_alt)
       )
@@ -317,7 +317,7 @@ page_prevalence_setup = div(
                   tabPanel("Test of w = w0", prevalence_setup_relative_belief_plot_of_w0),
                   tabPanel("Download Output", page_prevalence_download)
       )
-    ),
+    )
   )
 )
 
