@@ -91,74 +91,74 @@ binormal_val_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-                 selectInput(inputId = "binormal_val_hist_visual", label = "Choose Visual:",
-                             c("With Bars" = "binormal_val_withbars",
-                               "Without Bars" = "binormal_val_withoutbars"),
-                             selected = "binormal_val_withoutbars"),
+      selectInput(inputId = "binormal_val_hist_visual", 
+                  label = "Choose Visual:",
+                  choices = list("With Bars" = "binormal_val_withbars",
+                                 "Without Bars" = "binormal_val_withoutbars"),
+                  selected = "binormal_val_withoutbars"),
                  
-                 selectInput(inputId = "binormal_val_colour", 
-                             label = 'Select a colour', 
-                             choices = list("Default Theme 1" = 'default1',
-                                            "Default Theme 2" = 'default2',
-                                            "Manually Insert" = 'manual'), 
-                             selected = 'default'),
+      selectInput(inputId = "binormal_val_colour", 
+                  label = 'Select a colour', 
+                  choices = list("Default Theme 1" = 'default1',
+                                 "Default Theme 2" = 'default2',
+                                 "Manually Insert" = 'manual'), 
+                  selected = 'default'),
                  
-                 conditionalPanel(
-                   condition = "input.binormal_val_colour == 'manual'",
-                   selectInput(inputId = "binormal_val_modify_colour",
-                               label = 'Select line to modify',
-                               choices = list("Prior" = 'prior',
-                                              "Posterior" = 'post',
-                                              "Relative Belief Ratio" = 'rbr',
-                                              "Plausible Region" = 'pr',
-                                              "Line of y = 1" = 'line_1',
-                                              "Credible Region" = 'cr'),
-                               selected = 'prior'), 
-                 ),
+      conditionalPanel(
+        condition = "input.binormal_val_colour == 'manual'",
+        selectInput(inputId = "binormal_val_modify_colour",
+                    label = 'Select line to modify',
+                    choices = list("Prior" = 'prior',
+                                   "Posterior" = 'post',
+                                   "Relative Belief Ratio" = 'rbr',
+                                   "Plausible Region" = 'pr',
+                                   "Line of y = 1" = 'line_1',
+                                   "Credible Region" = 'cr'),
+                    selected = 'prior'), 
+      ),
                  
-                 conditionalPanel(
-                   condition = "input.binormal_val_modify_colour == 'prior'",
-                   textInput(inputId = "binormal_val_colour_prior",
-                             label = 'Input the colour of the prior',
-                             value = "FF007F"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.binormal_val_modify_colour == 'post'",
-                   textInput(inputId = "binormal_val_colour_post",
-                             label = 'Input the colour of the posterior',
-                             value = "FF00FF"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.binormal_val_modify_colour == 'rbr'",
-                   textInput(inputId = "binormal_val_colour_rbr",
-                             label = 'Input the colour of the relative belief ratio',
-                             value = "7F00FF"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.binormal_val_modify_colour == 'pr'",
-                   textInput(inputId = "binormal_val_colour_pr",
-                             label = 'Input the colour of the plausible region',
-                             value = "A717DB"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.binormal_val_modify_colour == 'line_1'",
-                   textInput(inputId = "binormal_val_colour_line_1",
-                             label = 'Input the colour of the y = 1 line',
-                             value = "5327E4"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.binormal_val_modify_colour == 'cr'",
-                   textInput(inputId = "binormal_val_colour_cr",
-                             label = 'Input the colour of the credible region',
-                             value = "650d84"), 
-                 ),
-                 
-                 conditionalPanel(
-                   condition = "input.binormal_val_hist_visual == 'binormal_val_withbars'",
-                   sliderInput(inputId = "binormal_val_col_transparency", 
-                               label = "Scale for colour transparency",
-                               min = 0, max = 1, value = 0.2), 
-                 )
+      conditionalPanel(
+        condition = "input.binormal_val_modify_colour == 'prior'",
+        textInput(inputId = "binormal_val_colour_prior",
+                  label = 'Input the colour of the prior',
+                  value = "FF007F"), 
+      ),
+      conditionalPanel(
+        condition = "input.binormal_val_modify_colour == 'post'",
+        textInput(inputId = "binormal_val_colour_post",
+                  label = 'Input the colour of the posterior',
+                  value = "FF00FF"), 
+      ),
+      conditionalPanel(
+        condition = "input.binormal_val_modify_colour == 'rbr'",
+        textInput(inputId = "binormal_val_colour_rbr",
+                  label = 'Input the colour of the relative belief ratio',
+                  value = "7F00FF"), 
+      ),
+      conditionalPanel(
+        condition = "input.binormal_val_modify_colour == 'pr'",
+        textInput(inputId = "binormal_val_colour_pr",
+                  label = 'Input the colour of the plausible region',
+                  value = "A717DB"), 
+      ),
+      conditionalPanel(
+        condition = "input.binormal_val_modify_colour == 'line_1'",
+        textInput(inputId = "binormal_val_colour_line_1",
+                  label = 'Input the colour of the y = 1 line',
+                  value = "5327E4"), 
+      ),
+      conditionalPanel(
+        condition = "input.binormal_val_modify_colour == 'cr'",
+        textInput(inputId = "binormal_val_colour_cr",
+                  label = 'Input the colour of the credible region',
+                  value = "650d84"), 
+      ),
+      conditionalPanel(
+        condition = "input.binormal_val_hist_visual == 'binormal_val_withbars'",
+        sliderInput(inputId = "binormal_val_col_transparency", 
+                    label = "Scale for colour transparency",
+                    min = 0, max = 1, value = 0.2), 
+      )
     ),
     mainPanel(
       tabPanel("Plots",
@@ -183,63 +183,60 @@ binormal_val_copt_plots = div(
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-                 selectInput(inputId = "binormal_val_c_opt_carry_colour",
-                             label = "Select a colour theme",
-                             list("Default Theme 1" = 'default1',
-                                  "Default Theme 2" = 'default2',
-                                  "Custom Theme from AUC Plots" = 'custom',
-                                  "Manually Insert" = 'manual'),
-                             selected = 'default'),      
-                 selectInput(inputId = "binormal_val_c_opt_modify",
-                             label = "Select which object to modify",
-                             list("Prior" = 'prior',
-                                  "Posterior" = 'post',
-                                  "Relative Belief Ratio" = 'rbr'),
-                             selected = 'prior'
-                 ),
+      selectInput(inputId = "binormal_val_c_opt_carry_colour",
+                  label = "Select a colour theme",
+                  choices = list("Default Theme 1" = 'default1',
+                                 "Default Theme 2" = 'default2',
+                                 "Custom Theme from AUC Plots" = 'custom',
+                                 "Manually Insert" = 'manual'),
+                  selected = 'default'),      
+      selectInput(inputId = "binormal_val_c_opt_modify",
+                  label = "Select which object to modify",
+                  choices = list("Prior" = 'prior',
+                                 "Posterior" = 'post',
+                                 "Relative Belief Ratio" = 'rbr'),
+                 selected = 'prior'),
                  
-                 conditionalPanel(
-                   condition = "input.binormal_val_c_opt_modify == 'prior'",
-                   selectInput(inputId = "binormal_val_priorc_opt_label", 
-                               label = "Plot Symbol for Prior",
-                               default_copt_list,
-                               selected = 3),
+      conditionalPanel(
+        condition = "input.binormal_val_c_opt_modify == 'prior'",
+        selectInput(inputId = "binormal_val_priorc_opt_label", 
+                    label = "Plot Symbol for Prior",
+                    choices = default_copt_list,
+                    selected = 3),
                    
-                   conditionalPanel(
-                     condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
-                     textInput(inputId = "binormal_val_priorc_opt_colour",
-                               label = 'Hex Colour for the Prior',
-                               value = "065143"), 
-                   )
-                 ),
-                 conditionalPanel(
-                   condition = "input.binormal_val_c_opt_modify == 'post'",
-                   selectInput(inputId = "binormal_val_postc_opt_label", 
-                               label = "Plot Symbol for Posterior",
-                               default_copt_list,
-                               selected = 4),
-                   conditionalPanel(
-                     condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
-                     textInput(inputId = "binormal_val_postc_opt_colour",
-                               label = 'Hex Colour for the Posterior',
-                               value = "70B77E"), 
-                   )
-                 ),
-                 conditionalPanel(
-                   condition = "input.binormal_val_c_opt_modify == 'rbr'",
-                   selectInput(inputId = "binormal_val_rbc_opt_label", 
-                               label = "Plot Symbol for RB Ratio",
-                               default_copt_list,
-                               selected = 8),
-                   
-                   conditionalPanel(
-                     condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
-                     textInput(inputId = "binormal_val_rbrc_opt_colour",
-                               label = 'Hex Colour for the RB Ratio',
-                               value = "CE1483"),
-                   )
-                 ),
-                 
+        conditionalPanel(
+          condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "binormal_val_priorc_opt_colour",
+                    label = 'Hex Colour for the Prior',
+                    value = "065143"),
+          )
+        ),
+        conditionalPanel(
+          condition = "input.binormal_val_c_opt_modify == 'post'",
+          selectInput(inputId = "binormal_val_postc_opt_label", 
+                      label = "Plot Symbol for Posterior",
+                      choices = default_copt_list,
+                      selected = 4),
+          conditionalPanel(
+            condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "binormal_val_postc_opt_colour",
+                      label = 'Hex Colour for the Posterior',
+                      value = "70B77E"), 
+          )
+        ),
+        conditionalPanel(
+          condition = "input.binormal_val_c_opt_modify == 'rbr'",
+          selectInput(inputId = "binormal_val_rbc_opt_label", 
+                      label = "Plot Symbol for RB Ratio",
+                      choices = default_copt_list,
+                      selected = 8),
+          conditionalPanel(
+            condition = "input.binormal_val_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "binormal_val_rbrc_opt_colour",
+                      label = 'Hex Colour for the RB Ratio',
+                      value = "CE1483"),
+          )
+        ),
     ),
     mainPanel(
       p("This is currently being worked on. Come back later!"),
@@ -260,8 +257,9 @@ binormal_val_hypothesizedAUC = div(
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 numericInput(inputId = "binormal_val_hypoAUC",
-                              tags$p('Hypothesized AUC (greater than)', style = "font-size: 90%;"),value = 0.5),
+      numericInput(inputId = "binormal_val_hypoAUC",
+                   label = 'Hypothesized AUC (greater than)',
+                   value = 0.5),
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
@@ -278,7 +276,9 @@ binormal_val_download_1 = div(
   titlePanel("Download Prior & Posterior"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 textInput(inputId = "binormal_val_filename", "Input File Name", value = "AUC Values"),
+                 textInput(inputId = "binormal_val_filename", 
+                           label = "Input File Name", 
+                           value = "AUC Values"),
                  downloadButton("binormal_val_downloadData", "Download"),
     ),
     mainPanel(

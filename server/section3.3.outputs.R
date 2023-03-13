@@ -20,7 +20,7 @@ binormal_val_colours = reactive({
   # plausible region, y = 1 line, credible region, 
   if(input$binormal_val_colour == 'default1'){
     c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
-  } else if(input$finite_val_colour == 'default2'){
+  } else if(input$binormal_val_colour == 'default2'){
     c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
   } else if (input$binormal_val_colour == 'manual'){
     c(convert_to_hex(input$binormal_val_colour_prior),

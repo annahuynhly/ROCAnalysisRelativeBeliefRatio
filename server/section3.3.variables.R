@@ -16,6 +16,7 @@ sect3.3_hyperpara = reactive({
 })
 
 sect3.3_AUC_prior = reactive({
+  set.seed(global_seed()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   binormal_val_diag_prior(nMonteprior = input$binormal_val_nMonteCarlo, 
                           delta = input$binormal_val_delta, 
                           lambda1 = input$binormal_val_lambda1, 

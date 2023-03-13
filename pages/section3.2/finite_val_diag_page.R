@@ -52,9 +52,9 @@ finite_val_hypothesizedAUC = div(
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 numericInput(inputId = "finite_val_hypoAUC",
-                              label = 'Hypothesized AUC (greater than)',
-                              value = 0.5),
+      numericInput(inputId = "finite_val_hypoAUC",
+                   label = 'Hypothesized AUC (greater than)',
+                   value = 0.5),
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
@@ -72,6 +72,7 @@ finite_val_hypothesizedAUC = div(
 
 finite_val_plausible_region = div( 
   titlePanel("Inferences for Optimal Cutoff"),
+  
   mainPanel(
     tabPanel("Inferences for Optimal Cutoff", 
              withSpinner(verbatimTextOutput("finite_val_output1"))

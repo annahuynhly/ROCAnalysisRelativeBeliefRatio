@@ -66,10 +66,6 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
 server = function(input, output, session) {
   # Setting the seed
   global_seed = reactive(input$chosen_seed)
-  #set.seed(as.numeric(global_seed()))
-  #set.seed(1)
-  
-  # Testing to set the seed
   
   # SECTION 3.1 ##################################################   
 
