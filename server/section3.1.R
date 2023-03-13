@@ -4,9 +4,9 @@
 
 sect_3.1_grid = reactive({
   if(input$pick_case_2 == 'case_a_opt'){
-    RB_distance_that_matters(input$prevalence_setup_delta_alt)
+    open_bracket_grid(input$prevalence_setup_delta_alt)
   } else {
-    RB_distance_that_matters(input$prevalence_setup_delta)
+    open_bracket_grid(input$prevalence_setup_delta)
   }
 })
 

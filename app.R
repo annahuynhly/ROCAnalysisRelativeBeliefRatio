@@ -23,11 +23,11 @@ library(shinycssloaders) # for loading screens
 library(rBeta2009)
 library(tidyverse)
 
-# Accessing other R-codes
-source("routes.R")
-
 # Globally setting the spinner colour and type
 options(spinner.type = 6, spinner.color = "#18bc9b")
+
+# Accessing other R-codes
+source("routes.R")
 
 ################################################################
 # FRONTEND                                                     #

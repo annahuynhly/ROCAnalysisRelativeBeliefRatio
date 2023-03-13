@@ -278,7 +278,7 @@ finite_val_download_1 = div(
 
 finite_val_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
   
-  grid_pts = finite_val_grid(delta)
+  grid_pts = closed_bracket_grid(delta)
   #TEMPORARILY CHANGE THE AUC_prior_pts
   #AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)*delta)
   #AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)*delta)
@@ -370,7 +370,7 @@ page_finite_val = div(
 
 #test1 = simulate_AUC_mc_prior(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D)
 #test2 = simulate_AUC_mc_post(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D, fND, fD)
-#grid = finite_val_grid(delta)
+#grid = closed_bracket_grid(delta)
 #prior_pts = c(0, grab_AUC_densities(delta, test1$AUC))
 
 #test3 = compute_AUC_RBR(delta, test1$AUC, test2$AUC, test1$priorc_opt, test2$postc_opt)

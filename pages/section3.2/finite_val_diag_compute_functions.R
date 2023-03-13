@@ -2,12 +2,6 @@
 # HELPER FUNCTIONS                                             #
 ################################################################
 
-finite_val_grid = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
-  # Creates a grid of values from 0 to 1
-  grid = seq(0, 1, length= (1/delta)+1)
-  return(grid)
-}
-
 finite_val_generate_w = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
                                  nD = NA, nND = NA, version = NA){
   #Generates w based on the inputs.
@@ -37,7 +31,7 @@ AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
   if(length(pND_array) != length(pD_array)){
     return("Error: the length of pND_array and pD_array are different.")
   }
-  A = finite_val_grid(delta)
+  A = closed_bracket_grid(delta)
   priorFPRc_opt = rep(0,(1/delta))
   priorFNRc_opt = rep(0,(1/delta))
   priorERROR_wc_opt = rep(0,(1/delta))
@@ -91,7 +85,7 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
   if(length(pND_array) != length(pD_array)){
     return("Error: the length of pND_array and pD_array are different.")
   }
-  A = finite_val_grid(delta)
+  A = closed_bracket_grid(delta)
   postFPRc_opt = rep(0,(1/delta))
   postFNRc_opt = rep(0,(1/delta))
   postERROR_wc_opt = rep(0,(1/delta))
@@ -251,14 +245,14 @@ simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w = FALSE,
 
 grab_AUC_densities_breaks = function(delta, AUC){
   # Essentially grabs the information of the histogram
-  bins = finite_val_grid(delta)
+  bins = closed_bracket_grid(delta)
   x = hist(AUC, breaks = bins, plot = FALSE)
   return(list("density" = x$density, "breaks" = x$breaks))
 }
 
 grab_AUC_RBR_densities_breaks = function(delta, AUC){
   # similar as grab_AUC_densities_breaks BUT for RBR data only.
-  bins = finite_val_grid(delta)
+  bins = closed_bracket_grid(delta)
   AUC[is.na(AUC)] = 0
   
   myhist <-list(breaks=bins, counts=AUC, density=AUC/delta)
@@ -274,7 +268,7 @@ compute_AUC_RBR = function(delta, AUC_prior, AUC_post, priorc_opt, postc_opt){
   
   RBc_opt = postc_opt/priorc_opt
   
-  bins = finite_val_grid(delta)
+  bins = closed_bracket_grid(delta)
   AUC_RBR = rep(0, length(bins))
   #AUC_RBR = rep(0, length(bins))
   AUC_prior_pts = grab_AUC_densities_breaks(delta, AUC_prior)$density
@@ -374,7 +368,7 @@ compute_AUC_error_char_copt = function(delta, c_optfDfND, priorFPRc_opt, priorFN
                                        priorPPVc_opt, postFPRc_opt, postFNRc_opt, 
                                        postERROR_wc_opt, postFDRc_opt, postFNDRc_opt,
                                        postPPVc_opt){
-  grid = finite_val_grid(delta)
+  grid = closed_bracket_grid(delta)
   
   RBFPRc_opt = postFPRc_opt/priorFPRc_opt
   FPRc_optfDfND = grid[which.max(RBFPRc_opt)]
@@ -403,7 +397,7 @@ compute_AUC_error_char_copt = function(delta, c_optfDfND, priorFPRc_opt, priorFN
 compute_AUC_post_content = function(delta, AUC_post, plausible_region){
   # Delta doesn't exactly start at 0,
   # so the area computed here is different than what's on the paper!!!!!
-  bins = finite_val_grid(delta)
+  bins = closed_bracket_grid(delta)
   #bins = c(bins, 1)
   AUC_post_content = 0
   AUC_post_pts = grab_AUC_densities_breaks(delta, AUC_post)$density
@@ -446,7 +440,7 @@ hypothesized_AUC_compute_values = function(hypo_AUC, delta, AUC_prior, AUC_post)
   priors = c(0, grab_AUC_densities_breaks(delta, AUC_prior)$density*delta)
   posts = c(0, grab_AUC_densities_breaks(delta, AUC_post)$density*delta)
   
-  grid = finite_val_grid(delta)
+  grid = closed_bracket_grid(delta)
   for(i in 1:length(grid)){
     if(grid[i] >= hypo_AUC){
       start_loop = i

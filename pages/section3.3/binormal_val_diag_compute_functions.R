@@ -2,19 +2,6 @@
 # HELPER FUNCTIONS                                             #
 ################################################################
 
-# the integrand in the computation of the AUC
-binormal_val_grid_1 = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
-  # Creates a grid of values from 0 to 1
-  grid = seq(0, 1, length= (1/delta)+1)
-  return(grid)
-}
-
-binormal_val_grid_2 = function(delta){ # MIGHT NEED TO MOVE THIS OUT - USED IN OTHER FUNCTS
-  # Creates a grid of values from delta/2 to 1 - delta/2
-  grid = seq(delta/2, 1 - delta/2, length=(1/delta))
-  return(grid)
-}
-
 #source("C:\\Users\\AnnaH\\OneDrive\\Desktop\\Stats RA\\ShinyWebpage\\pages\\helper_functions.R")
 
 # Note: this doesn't seem to be working that well.
@@ -42,7 +29,7 @@ binormal_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, nND, mea
 
 
 binormal_val_diag_prior = function(nMonteprior, delta, lambda1, lambda2, mu0, tau0){
-  A = binormal_val_grid_1(delta)# this is technically their grid
+  A = closed_bracket_grid(delta)# this is technically their grid
   L = (1/delta) # length
   priorAUC = rep(0, L)
   probAUCprior = 0
@@ -78,7 +65,7 @@ binormal_val_diag_prior = function(nMonteprior, delta, lambda1, lambda2, mu0, ta
 
 binormal_val_diag_post = function(nMontepost, delta, lambda1post, lambda2post, mu0Dpost, mu0NDpost,
                                   tau0D, tau0ND){
-  A = binormal_val_grid_1(delta) # this is technically their grid
+  A = closed_bracket_grid(delta) # this is technically their grid
   L = (1/delta) # length
   postAUC = rep(0,L)
   probAUCpost = 0
@@ -114,7 +101,7 @@ binormal_val_diag_post = function(nMontepost, delta, lambda1post, lambda2post, m
 
 binormal_val_diag_RBR = function(delta, probAUCprior, probAUCpost,
                                  priorAUC, postAUC){
-  grid = binormal_val_grid_2(delta)
+  grid = open_bracket_grid(delta)
   L = ((1/delta) - 1)
   # Note: rel. belief ratio of AUC>1/2 = RBprobAUC
   # Strength of evidence = probAUCpost

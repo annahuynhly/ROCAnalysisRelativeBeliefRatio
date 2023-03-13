@@ -65,7 +65,7 @@ output$binormal_val_RB_graph = renderPlot({
 ################################################################
 
 binormal_val_generate_dataframe = reactive({
-  df = data.frame(binormal_val_grid_2(input$binormal_val_delta),
+  df = data.frame(open_bracket_grid(input$binormal_val_delta),
                   sect3.3_AUC_prior()$priorAUCdensity, 
                   sect3.3_AUC_post()$postAUCdensity, 
                   sect3.3_AUC_RBR()$RB_AUC)

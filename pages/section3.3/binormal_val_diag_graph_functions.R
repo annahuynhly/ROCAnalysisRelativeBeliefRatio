@@ -10,7 +10,7 @@ binorm_val_diag_prior_post_graph = function(delta, prior, post,
   # This generates the graph for the prior and the posterior of the AUC (binom val diag case.)
   # colour choice goes in the following order: prior, posterior, plausible region, 
   # and credible region.
-  grid = binormal_val_grid_2(delta)
+  grid = open_bracket_grid(delta)
   
   # Constructs an interval for the y region
   y_interval = c(0, max(c(prior, post)))
@@ -57,7 +57,7 @@ binorm_val_diag_rbr_graph = function(delta, relative_belief_ratio,
   # This generates the graph for the rbr of the AUC from the binormal valued diagnostic.
   # colour choice goes in the following order: relative belief ratio, plausible region,
   # line of y = 1, credible region.
-  grid = binormal_val_grid_2(delta)
+  grid = open_bracket_grid(delta)
   
   # Temporarily set NaNs to 0 for graphing purposes
   relative_belief_ratio[is.na(relative_belief_ratio)] = 0
