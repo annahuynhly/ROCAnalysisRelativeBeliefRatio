@@ -98,7 +98,8 @@ binormal_val_plots = div(
                  
                  selectInput(inputId = "binormal_val_colour", 
                              label = 'Select a colour', 
-                             choices = list("Default Theme" = 'default', 
+                             choices = list("Default Theme 1" = 'default1',
+                                            "Default Theme 2" = 'default2',
                                             "Manually Insert" = 'manual'), 
                              selected = 'default'),
                  
@@ -184,7 +185,8 @@ binormal_val_copt_plots = div(
     sidebarPanel(width = 3,
                  selectInput(inputId = "binormal_val_c_opt_carry_colour",
                              label = "Select a colour theme",
-                             list("Default Theme" = 'default',
+                             list("Default Theme 1" = 'default1',
+                                  "Default Theme 2" = 'default2',
                                   "Custom Theme from AUC Plots" = 'custom',
                                   "Manually Insert" = 'manual'),
                              selected = 'default'),      

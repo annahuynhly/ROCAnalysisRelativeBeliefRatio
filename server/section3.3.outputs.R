@@ -16,10 +16,12 @@ output$binormal_val_hypoAUC_value = renderPrint({
 ################################################################
 
 binormal_val_colours = reactive({
-  if(input$binormal_val_colour == 'default'){
-    # Total order of ALL colours: prior, posterior, relative belief ratio, 
-    # plausible region, y = 1 line, credible region, 
+  # Total order of ALL colours: prior, posterior, relative belief ratio, 
+  # plausible region, y = 1 line, credible region, 
+  if(input$binormal_val_colour == 'default1'){
     c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+  } else if(input$finite_val_colour == 'default2'){
+    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
   } else if (input$binormal_val_colour == 'manual'){
     c(convert_to_hex(input$binormal_val_colour_prior),
       convert_to_hex(input$binormal_val_colour_post),
@@ -32,9 +34,7 @@ binormal_val_colours = reactive({
 })
 
 binormal_val_copt_colours = reactive({
-  if(input$binormal_val_c_opt_carry_colour == 'default'){
-    c("#FF6666", "#6699FF", "#05DEB2")
-  } else if (input$binormal_val_c_opt_carry_colour == 'custom'){
+  if(input$binormal_val_c_opt_carry_colour != 'manual'){
     binormal_val_colours()[c(1, 2, 3)]
   } else if (input$binormal_val_c_opt_carry_colour == 'manual'){
     c(convert_to_hex(input$binormal_val_priorc_opt_colour),
@@ -56,7 +56,7 @@ output$binormal_val_RB_graph = renderPlot({
   binorm_val_diag_rbr_graph(delta = input$binormal_val_delta,
                             relative_belief_ratio = sect3.3_AUC_RBR()$RB_AUC, 
                             plausible_region = sect3.3_AUC_RBR()$plausible_region,
-                            colour_choice = binormal_val_colours()[c(3, 4, 5, 6)],
+                            colour_choice = binormal_val_colours()[c(3:6)],
                             transparency = input$binormal_val_col_transparency)
 })
 

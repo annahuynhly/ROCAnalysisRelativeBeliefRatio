@@ -95,7 +95,8 @@ finite_val_plots = div(
       
       selectInput(inputId = "finite_val_colour", 
                   label = 'Select a colour', 
-                  choices = list("Default Theme" = 'default', 
+                  choices = list("Default Theme 1" = 'default1',
+                                 "Default Theme 2" = 'default2',
                                  "Manually Insert" = 'manual'), 
                   selected = 'default'),
       
@@ -183,7 +184,8 @@ finite_val_copt_plots = div(
     sidebarPanel(width = 3,
       selectInput(inputId = "finite_val_c_opt_carry_colour",
                   label = "Select a colour theme",
-                  list("Default Theme" = 'default',
+                  list("Default Theme 1" = 'default1',
+                       "Default Theme 2" = 'default2',
                        "Custom Theme from AUC Plots" = 'custom',
                        "Manually Insert" = 'manual'),
                        selected = 'default'),      
@@ -279,14 +281,11 @@ finite_val_download_1 = div(
 finite_val_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
   
   grid_pts = closed_bracket_grid(delta)
-  #TEMPORARILY CHANGE THE AUC_prior_pts
-  #AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)*delta)
-  #AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)*delta)
   AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)$density)
   AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)$density)
-  #print(c(length(grid_pts), length(AUC_prior_pts), length(AUC_post_pts), length(AUC_RBR)))
   df = data.frame(grid_pts, AUC_prior_pts, AUC_post_pts, AUC_RBR)
-  colnames(df) = c("Grid point", "Prior of the AUC", "Posterior of the AUC", "Relative Belief Ratio of the AUC")
+  colnames(df) = c("Grid point", "Prior of the AUC", "Posterior of the AUC", 
+                   "Relative Belief Ratio of the AUC")
   return(df)
 }
 
@@ -307,150 +306,3 @@ page_finite_val = div(
               tabPanel("Download Prior & Posterior", finite_val_download_1),
   )
 )
-
-
-################################################################
-# CODE TO DELETE LATER - TESTING PURPOSES ONLY                 #
-################################################################
-
-# TESTING
-# nND, nD, nMonteCarlo, alpha_ND, alpha_D
-#nND = 50
-#nD = 100
-#nMonteCarlo = 10000
-#alpha_ND = c(1, 1, 1, 1, 1) 
-#alpha_D = c(1, 1, 1, 1, 1)
-###m = 5
-#fND = "29, 7, 4, 5, 5"
-#fD = "14, 7, 25, 33, 21"
-#delta = 0.01
-#gamma = 0.5
-#w = 0.65
-#alternative
-#alpha1w = 391.72
-#alpha2w = 211.39
-
-# For case 1: when w is given
-#test1 = simulate_AUC_mc_prior(nND = nND, nD = nD, nMonteCarlo = nMonteCarlo, 
-#                              w = w, alpha1w = NA, alpha2w = NA,
-#                              alpha_ND = alpha_ND, alpha_D = alpha_D)
-#test2 = simulate_AUC_mc_post(nND = nND, nD = nD, nMonteCarlo = nMonteCarlo, 
-#                             w = w, alpha1w = NA, alpha2w = NA, version = "prior",
-#                             alpha_ND = alpha_ND, alpha_D = alpha_D, 
-#                             fND = fND, fD = fD)
-
-#test3 = compute_AUC_RBR(delta = delta, AUC_prior = test1$AUC, AUC_post = test2$AUC, 
-#                        priorc_opt = test1$priorc_opt, postc_opt = test2$postc_opt)
-#testpr = compute_AUC_plausible_region(delta = delta, AUC_RBR = test3$AUC_RBR, num_average_pts = 3)
-
-#density_hist_AUC_prior_post(delta = delta, AUC_prior = test1$AUC, AUC_post = test2$AUC, 
-#                            plausible_region = testpr$plausible_region,
-#                            credible_region = FALSE, densityplot = TRUE, showbars = TRUE)
-
-# For case 2: when w isn't given
-#test1 = simulate_AUC_mc_prior(nND = nND, nD = nD, nMonteCarlo = nMonteCarlo, 
-#                              w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w,
-#                              alpha_ND = alpha_ND, alpha_D = alpha_D)
-#test2 = simulate_AUC_mc_post(nND = nND, nD = nD, nMonteCarlo = nMonteCarlo, 
-#                             w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w, version = "post",
-#                             alpha_ND = alpha_ND, alpha_D = alpha_D, 
-#                             fND = fND, fD = fD)
-
-#test3 = compute_AUC_RBR(delta = delta, AUC_prior = test1$AUC, AUC_post = test2$AUC, 
-#                        priorc_opt = test1$priorc_opt, postc_opt = test2$postc_opt)
-#testpr = compute_AUC_plausible_region(delta = delta, AUC_RBR = test3$AUC_RBR, num_average_pts = 3)
-
-#density_hist_AUC_prior_post(delta = delta, AUC_prior = test1$AUC, AUC_post = test2$AUC, 
-#                            plausible_region = testpr$plausible_region,
-#                            credible_region = FALSE, densityplot = TRUE, showbars = TRUE)
-
-
-
-
-
-#test1 = simulate_AUC_mc_prior(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D)
-#test2 = simulate_AUC_mc_post(nND, nD, nMonteCarlo, w, alpha_ND, alpha_D, fND, fD)
-#grid = closed_bracket_grid(delta)
-#prior_pts = c(0, grab_AUC_densities(delta, test1$AUC))
-
-#test3 = compute_AUC_RBR(delta, test1$AUC, test2$AUC, test1$priorc_opt, test2$postc_opt)
-
-
-#testpr = compute_AUC_plausible_region(delta, test3$AUC_RBR, 3)
-
-#density_hist_AUC_RBR(delta, test3$AUC_RBR, testpr$plausible_region)
-
-#convert_hist_to_density_plot(test_density$density, test_density$breaks, num_average_pts = 3, showplot = TRUE)
-
-#testpc = compute_AUC_post_content(delta, test2$AUC, testpr$plausible_region)
-
-#testcr = compute_AUC_credible_region(gamma, testpr$grid, testpr$density, 
-#                                     test2$AUC, testpc, testpr$plausible_region)
-
-
-#testxx = AUC_prior_error_char_copt(test3$c_optfDfND, nMonteCarlo, w, delta, test1$pND_array, test1$pD_array, 
-#                                   test1$FNR, test1$FPR, test1$ERROR_w, test1$PPV, test1$priorc_opt)
-
-#testyy = AUC_post_error_char_copt(test3$c_optfDfND, nMonteCarlo, w, delta, test2$pND_array, test2$pD_array, 
-#                                  test2$FNR, test2$FPR, test2$ERROR_w, test2$PPV, test2$postc_opt)
-
-#test_result = compute_AUC_error_char_copt(delta, test3$c_optfDfND, 
-#                                          testxx$priorFPRc_opt, testxx$priorFNRc_opt, testxx$priorERROR_wc_opt, 
-#                                          testxx$priorFDRc_opt, testxx$priorFNDRc_opt,
-#                                          testyy$postFPRc_opt, testyy$postFNRc_opt, testyy$postERROR_wc_opt, 
-#                                          testyy$postFDRc_opt, testyy$postFNDRc_opt)
-
-
-
-#hypothesized_AUC_compute_values(0.5, delta, test3$AUC_RBR)
-
-#grab_AUC_densities(delta, test2$AUC)*delta
-#sum(grab_AUC_densities(delta, test2$AUC)*delta)
-
-#test4 = compute_AUC_post_content(finite_val_delta, test2$AUC, test3$plausible_region)
-
-#test5 = compute_AUC_credible_region(gamma, finite_val_delta, test3$AUC_RBR, test2$AUC,
-#                            test4, test3$plausible_region)
-
-#finite_val_generate_dataframe(delta, test1$AUC, test2$AUC, test3$AUC_RBR)
-
-#par(mfrow=c(1,2))
-
-#density_hist_AUC_prior_post(finite_val_delta, test1$AUC, test2$AUC, test3$plausible_region,
-#                            test5$credible_region)
-
-#density_hist_AUC_RBR(finite_val_delta, test3$AUC_RBR, testpr$plausible_region)
-
-
-#################### testing for the plausible region
-
-
-#initial_vals = grab_AUC_RBR_densities_breaks(delta, test3$AUC_RBR)
-#hist_breaks = initial_vals$breaks
-#hist_counts = initial_vals$counts
-#length(hist_breaks)
-#length(hist_counts)
-
-#new_hist = convert_hist_to_density_plot(hist_counts, hist_breaks, num_average_pts = 5, showplot = FALSE)
-#new_hist$grid
-#new_hist$density
-#new_hist$density = new_hist$density[-(length(new_hist$density))]
-#length(new_hist$grid)
-#length(new_hist$density)
-
-#lines(new_hist$grid, new_hist$density)
-
-
-#initial_vals = grab_AUC_RBR_densities_breaks(delta, test3$AUC_RBR)
-#hist_breaks = initial_vals$breaks
-#hist_counts = initial_vals$counts # NOTE: COUNTS, not DENSITY
-# Converts it to a line plot
-#line_plot = convert_hist_to_density_plot(hist_counts, hist_breaks, num_average_pts = 7)
-#line_plot
-#length(line_plot$counts)
-#length(line_plot$density)
-#length(line_plot$grid)
-
-#smoothingSpline = smooth.spline(grid, prior_pts, spar=0.7)
-#plot(grid,prior_pts)
-#lines(smoothingSpline)

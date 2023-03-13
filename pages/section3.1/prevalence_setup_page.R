@@ -103,11 +103,12 @@ prevalence_setup_plots = div(
                            value = "NA"),
                  selectInput(inputId = "prevalence_setup_colour", 
                              label = 'Select colour theme', 
-                             choices = list("Default Theme" = 'default',
+                             choices = list("Default Theme 1" = 'default1',
+                                            "Default Theme 2" = 'default2',
                                             "Dull Life" = 'dull',
                                             "Lovely Mei" = 'lovelymei',
                                             "Manually Insert" = 'manual'), # TO ADD: let the user pick
-                             selected = 'default'),
+                             selected = 'default1'),
                  
                  conditionalPanel(
                    condition = "input.prevalence_setup_colour == 'manual'",

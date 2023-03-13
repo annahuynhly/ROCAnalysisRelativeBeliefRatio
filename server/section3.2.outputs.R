@@ -25,10 +25,12 @@ output$finite_val_output1 = renderPrint({
 ################################################################
 
 finite_val_colours = reactive({
-  if(input$finite_val_colour == 'default'){
-    # Total order of ALL colours: prior, posterior, relative belief ratio, 
-    # plausible region, y = 1 line, credible region, 
+  # Total order of ALL colours: prior, posterior, relative belief ratio, 
+  # plausible region, y = 1 line, credible region, 
+  if(input$finite_val_colour == 'default1'){
     c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+  } else if(input$finite_val_colour == 'default2'){
+    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
   } else if (input$finite_val_colour == 'manual'){
     c(convert_to_hex(input$finite_val_colour_prior),
       convert_to_hex(input$finite_val_colour_post),
@@ -41,9 +43,7 @@ finite_val_colours = reactive({
 })
 
 finite_val_copt_colours = reactive({
-  if(input$finite_val_c_opt_carry_colour == 'default'){
-    c("#FF6666", "#6699FF", "#05DEB2")
-  } else if (input$finite_val_c_opt_carry_colour == 'custom'){
+  if(input$finite_val_c_opt_carry_colour != 'manual'){
     finite_val_colours()[c(1, 2, 3)]
   } else if (input$finite_val_c_opt_carry_colour == 'manual'){
     c(convert_to_hex(input$finite_val_priorc_opt_colour),
@@ -92,7 +92,7 @@ output$finite_val_RB_graph = renderPlot({
                          plausible_region = sect3.2_pr()$plausible_region, 
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = finite_val_colours()[c(3, 4, 5, 6)],
+                         colour_choice = finite_val_colours()[c(3:6)],
                          transparency = input$finite_val_col_transparency)
   } else if (as.numeric(input$finite_val_gamma) >= sect3.2_AUC_post_content()){
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
@@ -100,7 +100,7 @@ output$finite_val_RB_graph = renderPlot({
                          plausible_region = sect3.2_pr()$plausible_region, 
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = finite_val_colours()[c(3, 4, 5, 6)],
+                         colour_choice = finite_val_colours()[c(3:6)],
                          transparency = input$finite_val_col_transparency)
   } else {
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
@@ -110,7 +110,7 @@ output$finite_val_RB_graph = renderPlot({
                          rb_line = sect3.2_cr()$rb_line,
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = finite_val_colours()[c(3, 4, 5, 6)],
+                         colour_choice = finite_val_colours()[c(3:6)],
                          transparency = input$finite_val_col_transparency)
   }
 })

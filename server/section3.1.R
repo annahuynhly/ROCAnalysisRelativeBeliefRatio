@@ -80,7 +80,9 @@ output$prevalence_setup_prior_values = renderPrint({
 prevalence_colours = reactive({
   # Total order of ALL colours: prior, posterior, relative belief ratio, 
   # plausible region, y = 1 line, credible region, 
-  if(input$prevalence_setup_colour == 'default'){
+  if(input$prevalence_setup_colour == 'default1'){
+    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+  } else if (input$prevalence_setup_colour == 'default2'){
     c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
   } else if (input$prevalence_setup_colour == 'dull'){
     c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
