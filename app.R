@@ -37,16 +37,16 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
                 tabPanel("Getting Started", home_page),
                 tabPanel("The Prevalence", page_prevalence_setup),
                 navbarMenu("Finite Valued Diagnostic",
-                            tabPanel("Definitions", page_sect3.2_def),
-                            tabPanel("Computations", page_finite_val),
+                           tabPanel("Definitions", page_sect3.2_def),
+                           tabPanel("Computations", page_finite_val),
                 ),
                 navbarMenu("Binormal Diagnostic",
-                            tabPanel("Definitions", page_sect3.3_def),
-                            tabPanel("Computations", page_binormal_val)
+                           tabPanel("Definitions", page_sect3.3_def),
+                           tabPanel("Computations", page_binormal_diag)
                 ),
                 navbarMenu("Nonparametric Bayes Model",
-                            tabPanel("Definitions", page_sect3.4_def),
-                            tabPanel("Computations", page_nonpara_bayes)
+                           tabPanel("Definitions", page_sect3.4_def),
+                           tabPanel("Computations", page_nonpara_bayes)
                 ),
                 tabPanel("Contact & Credits", contact_page),
                 id = "navbarID",
@@ -74,18 +74,23 @@ server = function(input, output, session) {
   # SECTION 3.2 ################################################## 
   
   source(file.path("server", "section3.2.definitions.R"),  local = TRUE)$value
+  #source(file.path("server", "section3.2.prevalence.R"),  local = TRUE)$value
   source(file.path("server", "section3.2.variables.R"),  local = TRUE)$value
   source(file.path("server", "section3.2.outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   
   source(file.path("server", "section3.3.definitions.R"),  local = TRUE)$value
+  #source(file.path("server", "section3.3.prevalence.R"),  local = TRUE)$value
   source(file.path("server", "section3.3.variables.R"),  local = TRUE)$value
   source(file.path("server", "section3.3.outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   
   source(file.path("server", "section3.4.R"),  local = TRUE)$value
+  #source(file.path("server", "section3.4.prevalence.R"),  local = TRUE)$value
+  #source(file.path("server", "section3.4.variables.R"),  local = TRUE)$value
+  #source(file.path("server", "section3.4.outputs.R"),  local = TRUE)$value
   
   # ANIMATIONS ###################################################
   # Note: may make a separate .R file based on the number of animations

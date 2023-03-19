@@ -28,7 +28,7 @@ binormal_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, nND, mea
 }
 
 
-binormal_val_diag_prior = function(nMonteprior, delta, lambda1, lambda2, mu0, tau0){
+binormal_diag_prior = function(nMonteprior, delta, lambda1, lambda2, mu0, tau0){
   A = closed_bracket_grid(delta)# this is technically their grid
   L = (1/delta) # length
   priorAUC = rep(0, L)
@@ -63,7 +63,7 @@ binormal_val_diag_prior = function(nMonteprior, delta, lambda1, lambda2, mu0, ta
   return(newlist)
 }
 
-binormal_val_diag_post = function(nMontepost, delta, lambda1post, lambda2post, mu0Dpost, mu0NDpost,
+binormal_diag_post = function(nMontepost, delta, lambda1post, lambda2post, mu0Dpost, mu0NDpost,
                                   tau0D, tau0ND){
   A = closed_bracket_grid(delta) # this is technically their grid
   L = (1/delta) # length
@@ -99,7 +99,7 @@ binormal_val_diag_post = function(nMontepost, delta, lambda1post, lambda2post, m
   return(newlist)
 }
 
-binormal_val_diag_RBR = function(delta, probAUCprior, probAUCpost,
+binormal_diag_RBR = function(delta, probAUCprior, probAUCpost,
                                  priorAUC, postAUC){
   grid = open_bracket_grid(delta)
   L = ((1/delta) - 1)
@@ -163,23 +163,23 @@ binormal_val_diag_RBR = function(delta, probAUCprior, probAUCpost,
 
 #post_hyperpara
 
-#prior_val = binormal_val_diag_prior(nMonteprior, delta, lambda1, lambda2, mu0, tau0)
+#prior_val = binormal_diag_prior(nMonteprior, delta, lambda1, lambda2, mu0, tau0)
 
-#post_val = binormal_val_diag_post(nMontepost, delta, post_hyperpara$lambda1post, 
+#post_val = binormal_diag_post(nMontepost, delta, post_hyperpara$lambda1post, 
 #                                  post_hyperpara$lambda2post, post_hyperpara$mu0Dpost, 
 #                                  post_hyperpara$mu0NDpost, post_hyperpara$tau0D, 
 #                                  post_hyperpara$tau0ND)
 
-#rbr_val = binormal_val_diag_RBR(delta, prior_val$probAUCprior, post_val$probAUCpost,
+#rbr_val = binormal_diag_RBR(delta, prior_val$probAUCprior, post_val$probAUCpost,
 #                                prior_val$priorAUC, post_val$postAUC)
 #par(mfrow=c(1,2))
 
-#binorm_val_diag_prior_post_graph(delta = delta, 
+#binormal_diag_prior_post_graph(delta = delta, 
 #                                 prior = prior_val$priorAUCdensity, 
 #                                 post = post_val$postAUCdensity, 
 #                                 plausible_region = rbr_val$plausible_region)
 
-#binorm_val_diag_rbr_graph(delta = delta, 
+#binormal_diag_rbr_graph(delta = delta, 
 #                          relative_belief_ratio = rbr_val$RB_AUC, 
 #                          plausible_region = rbr_val$plausible_region)
 

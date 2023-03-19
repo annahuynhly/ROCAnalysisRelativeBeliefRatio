@@ -2,7 +2,7 @@
 # FUNCTIONS FOR GRAPHS                                         #
 ################################################################
 
-binorm_val_diag_prior_post_graph = function(delta, prior, post, 
+binormal_diag_prior_post_graph = function(delta, prior, post, 
                                             plausible_region,
                                             credible_region = FALSE,
                                             colour_choice = c("blue", "green", "#b3bfff", "#81ddff"),
@@ -48,7 +48,7 @@ binorm_val_diag_prior_post_graph = function(delta, prior, post,
   }
 }
 
-binorm_val_diag_rbr_graph = function(delta, relative_belief_ratio, 
+binormal_diag_rbr_graph = function(delta, relative_belief_ratio, 
                                      plausible_region,
                                      credible_region = FALSE,
                                      rb_line = FALSE, 

@@ -3,43 +3,43 @@
 ################################################################
 
 sect3.3_hyperpara = reactive({
-  binormal_compute_post_hyperpara(mu0 = input$binormal_val_mu0, 
-                                  tau0 = input$binormal_val_tau0, 
-                                  lambda1 = input$binormal_val_lambda1, 
-                                  lambda2 = input$binormal_val_lambda2, 
-                                  nND = input$binormal_val_nND, 
-                                  meanND = input$binormal_val_meanND, 
-                                  sND_squared = input$binormal_val_sND_squared, 
-                                  nD = input$binormal_val_nD, 
-                                  meanD = input$binormal_val_meanD, 
-                                  sD_squared = input$binormal_val_sD_squared)
+  binormal_compute_post_hyperpara(mu0 = input$binormal_diag_mu0, 
+                                  tau0 = input$binormal_diag_tau0, 
+                                  lambda1 = input$binormal_diag_lambda1, 
+                                  lambda2 = input$binormal_diag_lambda2, 
+                                  nND = input$binormal_diag_nND, 
+                                  meanND = input$binormal_diag_meanND, 
+                                  sND_squared = input$binormal_diag_sND_squared, 
+                                  nD = input$binormal_diag_nD, 
+                                  meanD = input$binormal_diag_meanD, 
+                                  sD_squared = input$binormal_diag_sD_squared)
 })
 
 sect3.3_AUC_prior = reactive({
-  set.seed(global_seed()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
-  binormal_val_diag_prior(nMonteprior = input$binormal_val_nMonteCarlo, 
-                          delta = input$binormal_val_delta, 
-                          lambda1 = input$binormal_val_lambda1, 
-                          lambda2 = input$binormal_val_lambda2, 
-                          mu0 = input$binormal_val_mu0, 
-                          tau0 = input$binormal_val_tau0)
+  #set.seed(global_seed()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  binormal_diag_prior(nMonteprior = input$binormal_diag_nMonteCarlo, 
+                      delta = input$binormal_diag_delta, 
+                      lambda1 = input$binormal_diag_lambda1, 
+                      lambda2 = input$binormal_diag_lambda2, 
+                      mu0 = input$binormal_diag_mu0, 
+                      tau0 = input$binormal_diag_tau0)
 })
 
 sect3.3_AUC_post = reactive({
-  binormal_val_diag_post(nMontepost = input$binormal_val_nMonteCarlo, 
-                         delta = input$binormal_val_delta, 
-                         lambda1post = sect3.3_hyperpara()$lambda1post, 
-                         lambda2post = sect3.3_hyperpara()$lambda2post, 
-                         mu0Dpost = sect3.3_hyperpara()$mu0Dpost, 
-                         mu0NDpost = sect3.3_hyperpara()$mu0NDpost, 
-                         tau0D = sect3.3_hyperpara()$tau0D, 
-                         tau0ND = sect3.3_hyperpara()$tau0ND)
+  binormal_diag_post(nMontepost = input$binormal_diag_nMonteCarlo, 
+                     delta = input$binormal_diag_delta, 
+                     lambda1post = sect3.3_hyperpara()$lambda1post, 
+                     lambda2post = sect3.3_hyperpara()$lambda2post, 
+                     mu0Dpost = sect3.3_hyperpara()$mu0Dpost, 
+                     mu0NDpost = sect3.3_hyperpara()$mu0NDpost, 
+                     tau0D = sect3.3_hyperpara()$tau0D, 
+                     tau0ND = sect3.3_hyperpara()$tau0ND)
 })
 
 sect3.3_AUC_RBR = reactive({
-  binormal_val_diag_RBR(delta = input$binormal_val_delta, 
-                        probAUCprior = sect3.3_AUC_prior()$probAUCprior, 
-                        probAUCpost = sect3.3_AUC_post()$probAUCpost,
-                        priorAUC = sect3.3_AUC_prior()$priorAUC, 
-                        postAUC = sect3.3_AUC_post()$postAUC)
+  binormal_diag_RBR(delta = input$binormal_diag_delta, 
+                    probAUCprior = sect3.3_AUC_prior()$probAUCprior, 
+                    probAUCpost = sect3.3_AUC_post()$probAUCpost,
+                    priorAUC = sect3.3_AUC_prior()$priorAUC, 
+                    postAUC = sect3.3_AUC_post()$postAUC)
 })
