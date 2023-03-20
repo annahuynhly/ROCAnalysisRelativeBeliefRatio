@@ -9,7 +9,7 @@ source("./pages/home_page.R")
 source("./pages/contact_page.R")
 
 # Section 3.1 - The Prevalence
-source("./pages/section3.1/prevalence_setup_page.R")
+#source("./pages/section3.1/prevalence_setup_page.R")
 source("./pages/section3.1/prevalence_setup_functions.R")
 
 # Section 3.2

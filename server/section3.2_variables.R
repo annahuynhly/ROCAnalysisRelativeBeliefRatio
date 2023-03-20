@@ -5,7 +5,7 @@
 # TODO: decide how we want to include alpha1w and alpha2w (should carry on from the prevalence section?)
 
 sect3.2_AUC_prior = reactive({
-  set.seed(global_seed()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  #set.seed(global_seed()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$pick_case_1 == "case_1_opt"){
     simulate_AUC_mc_prior(nND = input$finite_val_nND, 
                           nD = input$finite_val_nD, 

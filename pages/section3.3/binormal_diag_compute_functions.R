@@ -107,7 +107,15 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost,
   # Strength of evidence = probAUCpost
   RBprobAUC=probAUCpost/probAUCprior
   
-  RB_AUC = postAUC/priorAUC
+  RB_AUC = rep(0, length(priorAUC)) # Assuming priorAUC and postAUC are of same length
+  for (i in 1:length(RB_AUC)){
+    if (priorAUC[i] != 0){
+      RB_AUC[i] = postAUC[i]/priorAUC[i]
+    } else {
+      RB_AUC[i] = NA
+    }
+  }
+
   AUCest=grid[which.max(RB_AUC)]
   
   # this is for testing for the plausible region
@@ -133,7 +141,6 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost,
                  "AUCest" = AUCest, "postPl_AUC" = postPl_AUC,
                  "plausible_region" = plausible_region)
 }
-
 
 ###############################
 # TESTING VALUES
