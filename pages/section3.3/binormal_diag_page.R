@@ -17,48 +17,60 @@ binormal_diag_setup_variables_alt = div(
       fluidPage(
         
         fluidRow(
+          column(3, h4("Simulation Sizes:")),
           column(3, numericInput(inputId = "binormal_diag_nMonteCarlo", 
                                  label = 'Simulation Sample Size',
                                  value = 100000, min = 0)),
           column(3, numericInput(inputId = "binormal_diag_delta", 
                                  label = 'Delta',
                                  value = 0.01)),
-          column(3, numericInput(inputId = "binormal_diag_lambda1", 
-                                 label = 'lambda1',
-                                 value = 1.787)),
         ),
         
         fluidRow(
+          column(3, h4("Hyperparameters 1:")),
           column(3, numericInput(inputId = "binormal_diag_mu0", 
                                  label = 'mu0',
                                  value = 0)),
           column(3, numericInput(inputId = "binormal_diag_tau0", 
                                  label = 'tau0',
                                  value = 0.5)),
+        ),
+        
+        fluidRow(
+          column(3, h4("Hyperparameters 2:")),
           column(3, numericInput(inputId = "binormal_diag_lambda2", 
                                  label = 'lambda2',
                                  value = 1.056)),
+          column(3, numericInput(inputId = "binormal_diag_lambda1", 
+                                 label = 'lambda1',
+                                 value = 1.787)),
         ),
         
         fluidRow(
+          column(3, h4("Data Sample Size:")),
           column(3, numericInput(inputId = "binormal_diag_nND",
                                  label = 'nND',
                                  value = 25)),
-          column(3, numericInput(inputId = "binormal_diag_meanND", 
-                                 label = 'meanND',
-                                 value = -0.072)),
-          column(3, numericInput(inputId = "binormal_diag_sND_squared", 
-                                 label = 'sND squared',
-                                 value = 19.638)),
-        ),
-        
-        fluidRow(
           column(3, numericInput(inputId = "binormal_diag_nD", 
                                  label = 'nD',
                                  value = 20)),
+        ),
+        
+        fluidRow(
+          column(3, h4("Data Means:")),
+          column(3, numericInput(inputId = "binormal_diag_meanND", 
+                                 label = 'meanND',
+                                 value = -0.072)),
           column(3, numericInput(inputId = "binormal_diag_meanD", 
                                  label = 'meanD',
                                  value = 0.976)),
+        ),
+        
+        fluidRow(
+          column(3, h4("Data Sum of Squares:")),
+          column(3, numericInput(inputId = "binormal_diag_sND_squared", 
+                                 label = 'sND squared',
+                                 value = 19.638)),
           column(3, numericInput(inputId = "binormal_diag_sD_squared", 
                                  label = 'sD squared',
                                  value = 16.778)),
@@ -260,6 +272,10 @@ binormal_diag_hypothesizedAUC = div(
       numericInput(inputId = "binormal_diag_hypoAUC",
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5),
+      textInput(inputId = "binormal_diag_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                        style = "font-size: 95%"), 
+                value = "NA")
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 

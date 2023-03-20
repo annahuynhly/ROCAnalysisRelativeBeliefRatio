@@ -85,3 +85,12 @@ create_necessary_vector = function(x){
     return("Invalid vector.")
   }
 }
+
+RBR_estimate_of_AUC = function(grid, RBR_of_AUC){
+  # Assumption is that length(grid) == length(RBR_of_AUC)
+  max_occurs = which.max(RBR_of_AUC)
+  df = data.frame(grid[max_occurs], RBR_of_AUC[max_occurs])
+  colnames(df) = c("Estimate of AUC", "| Relative Belief Ratio of the Estimated AUC")
+  return(df)
+}
+

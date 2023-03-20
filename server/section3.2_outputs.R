@@ -3,11 +3,13 @@
 ################################################################
 
 output$finite_val_hypoAUC_value = renderPrint({
-  list1 = list("Plausible Region for the AUC" = sect3.2_pr()$plausible_region,
+  list1 = list("Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(closed_bracket_grid(input$finite_val_delta), sect3.2_AUC_RBR()$AUC_RBR))
+  list3 = list("Plausible Region for the AUC" = sect3.2_pr()$plausible_region,
                "Posterior Content of the Plausible Region for the AUC" = sect3.2_AUC_post_content(),
                "Credible region for the AUC" = sect3.2_cr()$credible_region,
                "Area Under the Line Plot (next section)" = sect3.2_lineplot_area())
-  list2 = append(sect3.2_hypo_test(), list1)
+  list2 = append(list1, sect3.2_hypo_test())
+  list2 = append(list2, list3)
   list2
 })
 

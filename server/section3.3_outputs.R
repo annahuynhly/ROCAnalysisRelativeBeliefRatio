@@ -3,7 +3,8 @@
 ################################################################
 
 output$binormal_diag_hypoAUC_value = renderPrint({
-  list("Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
+  list("Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
+       "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
        "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
        "Credible region for the AUC" = "NEED TO COMPUTE (?)",
        "P(AUC > 1/2)" = sect3.3_AUC_prior()$probAUCprior,
