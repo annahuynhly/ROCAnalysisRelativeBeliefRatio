@@ -3,7 +3,7 @@ page_finite_val_start = fluidPage(
   titlePanel("Getting Started"),
   sidebarLayout(
     sidebarPanel(width = 4, 
-                 numericInput(inputId = "chosen_seed",
+                 numericInput(inputId = "finite_val_diag_seed",
                               label = "Please select a seed for the computations.",
                               value = 1),
                  selectInput(inputId = "finite_val_diag_case1", 
@@ -14,25 +14,25 @@ page_finite_val_start = fluidPage(
                  ),
                  conditionalPanel(
                    condition = "input.finite_val_diag_case1 == 1",
-                   numericInput(inputId = "global_prevalence_w",
+                   numericInput(inputId = "finite_val_diag_prevalence_w",
                                 'Please Input the Prevalence w.',
                                 value = 0.65), #
-                   p("The prevalence has been determined. Please proceed to section 3.2. The Prevalence section may be skipped,
-          as it is used to calculate the prevalence.")
+                   p("The prevalence has been determined. Please proceed to the computations. The Prevalence section may be skipped,
+                     as it is used to calculate the prevalence.")
                  ),
                  # Only show this panel if Custom is selected
                  conditionalPanel(
                    condition = "input.finite_val_diag_case1 == 2",
-                   p("Please select the beta prior parameters (alpha1w and alpha2w), and then the
-          sampling regime."),
+                   p("Please select the beta prior parameters (alpha1w and alpha2w), and then the sampling regime."),
                    
-                   numericInput(inputId = "prevalence_setup_alpha1w", 
+                   numericInput(inputId = "finite_val_diag_prevalence_alpha1w", 
                                 label = 'alpha1w',
                                 value = 391.72),
-                   numericInput(inputId = "prevalence_setup_alpha2w", 
+                   numericInput(inputId = "finite_val_diag_prevalence_alpha2w", 
                                 label = 'alpha2w',
                                 value = 211.39),
-                   selectInput(inputId = "finite_val_diag_case2", "Please select the sampling regime.",
+                   selectInput(inputId = "finite_val_diag_case2", 
+                               label = "Please select the sampling regime.",
                                c("A sample of n_D from diseased and n_ND from non diseased." = "A", 
                                  "A sample of n from population, observe n_D diseased and n_ND nondiseased." = "B"),
                                selected = "case_a_opt"

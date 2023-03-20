@@ -34,7 +34,7 @@ source("routes.R")
 ################################################################
 
 ui = navbarPage(title = " ROC Analysis & Relative Belief",
-                tabPanel("Getting Started", home_page),
+                tabPanel("Home", home_page),
                 #tabPanel("The Prevalence", page_prevalence_setup),
                 navbarMenu("Finite Valued Diagnostic",
                            tabPanel("Definitions", page_sect3.2_def),
@@ -44,14 +44,14 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
                 ),
                 navbarMenu("Binormal Diagnostic",
                            tabPanel("Definitions", page_sect3.3_def),
-                           #tabPanel("Getting Started", page_binormal_diag_start),
-                           #tabPanel("The Prevalence", page_binormal_diag_prevalence),
+                           tabPanel("Getting Started", page_binormal_diag_start),
+                           tabPanel("The Prevalence", page_binormal_diag_prevalence),
                            tabPanel("Computations", page_binormal_diag)
                 ),
                 navbarMenu("Nonparametric Bayes Model",
                            tabPanel("Definitions", page_sect3.4_def),
-                           #tabPanel("Getting Started", page_nonpara_bayes_start),
-                           #tabPanel("The Prevalence", page_nonpara_bayes_prevalence),
+                           tabPanel("Getting Started", page_nonpara_bayes_start),
+                           tabPanel("The Prevalence", page_nonpara_bayes_prevalence),
                            tabPanel("Computations", page_nonpara_bayes)
                 ),
                 tabPanel("Contact & Credits", contact_page),
@@ -70,9 +70,7 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
 ################################################################
 
 server = function(input, output, session) {
-  # Setting the seed
-  #global_seed = reactive(input$chosen_seed)
-  
+
   # SECTION 3.2 ################################################## 
   
   source(file.path("server", "section3.2_definitions.R"),  local = TRUE)$value
@@ -83,20 +81,23 @@ server = function(input, output, session) {
   # SECTION 3.3 ################################################## 
   
   source(file.path("server", "section3.3_definitions.R"),  local = TRUE)$value
-  #source(file.path("server", "section3.3_prevalence.R"),  local = TRUE)$value
+  source(file.path("server", "section3.3_prevalence.R"),  local = TRUE)$value
   source(file.path("server", "section3.3_variables.R"),  local = TRUE)$value
   source(file.path("server", "section3.3_outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   
   source(file.path("server", "section3.4.R"),  local = TRUE)$value
-  #source(file.path("server", "section3.4_prevalence.R"),  local = TRUE)$value
+  source(file.path("server", "section3.4_prevalence.R"),  local = TRUE)$value
   #source(file.path("server", "section3.4_variables.R"),  local = TRUE)$value
   #source(file.path("server", "section3.4_outputs.R"),  local = TRUE)$value
   
   # ANIMATIONS ###################################################
   # Note: may make a separate .R file based on the number of animations
-  observe(addHoverAnim(session, 'prevalence_arrow', 'wobble'))
+  
+  observe(addHoverAnim(session, 'finite_val_diag_prevalence_arrow', 'wobble'))
+  observe(addHoverAnim(session, 'binormal_diag_prevalence_arrow', 'wobble'))
+  observe(addHoverAnim(session, 'nonpara_bayes_prevalence_arrow', 'wobble'))
   observe(addHoverAnim(session, 'AnnaImg', 'rubberBand'))
   observe(addHoverAnim(session, 'MikeImg', 'tada'))
   observe(addHoverAnim(session, 'LuaiImg', 'flip'))

@@ -2,6 +2,9 @@
 # VARIABLES                                                    #
 ################################################################
 
+# Setting the seed
+SECT3.3_SEED = reactive(input$binormal_diag_seed)
+
 sect3.3_hyperpara = reactive({
   binormal_compute_post_hyperpara(mu0 = input$binormal_diag_mu0, 
                                   tau0 = input$binormal_diag_tau0, 
@@ -16,7 +19,7 @@ sect3.3_hyperpara = reactive({
 })
 
 sect3.3_AUC_prior = reactive({
-  #set.seed(global_seed()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  set.seed(SECT3.3_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   binormal_diag_prior(nMonteprior = input$binormal_diag_nMonteCarlo, 
                       delta = input$binormal_diag_delta, 
                       lambda1 = input$binormal_diag_lambda1, 

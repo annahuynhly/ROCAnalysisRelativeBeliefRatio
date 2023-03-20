@@ -2,58 +2,59 @@
 # VARIABLES                                                    #
 ################################################################
 
-# TODO: decide how we want to include alpha1w and alpha2w (should carry on from the prevalence section?)
+# Setting the seed
+SECT3.2_SEED = reactive(input$finite_val_diag_seed)
 
 sect3.2_AUC_prior = reactive({
-  #set.seed(global_seed()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
-  if(input$pick_case_1 == "case_1_opt"){
+  set.seed(SECT3.2_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_prior(nND = input$finite_val_nND, 
                           nD = input$finite_val_nD, 
                           nMonteCarlo = input$finite_val_nMonteCarlo,
-                          w = input$global_prevalence_w, 
+                          w = input$finite_val_diag_prevalence_w, 
                           alpha_ND = input$finite_val_alpha_ND, 
                           alpha_D = input$finite_val_alpha_D)
-  } else if (input$pick_case_2 == "case_a_opt" | input$pick_case_2 == "case_b_opt"){ 
+  } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){ 
     simulate_AUC_mc_prior(nND = input$finite_val_nND, 
                           nD = input$finite_val_nD, 
                           nMonteCarlo = input$finite_val_nMonteCarlo, 
                           w = FALSE, 
-                          alpha1w = input$prevalence_setup_alpha1w, # from the prevalence
-                          alpha2w = input$prevalence_setup_alpha2w, # from the prevalence
+                          alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                          alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
                           alpha_ND = input$finite_val_alpha_ND, 
                           alpha_D = input$finite_val_alpha_D)
   }
 })
 
 sect3.2_AUC_post = reactive({
-  if(input$pick_case_1 == "case_1_opt"){
+  if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_post(nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 
-                         w = input$global_prevalence_w, 
+                         w = input$finite_val_diag_prevalence_w, 
                          alpha_ND = input$finite_val_alpha_ND, 
                          alpha_D = input$finite_val_alpha_D, 
                          fND = input$finite_val_fND, 
                          fD = input$finite_val_fD)
-  } else if (input$pick_case_2 == "case_a_opt"){ # only know the prior
+  } else if (input$finite_val_diag_case2 == "A"){ # only know the prior
     simulate_AUC_mc_post(nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 
                          w = FALSE, 
-                         alpha1w = input$prevalence_setup_alpha1w, # from the prevalence
-                         alpha2w = input$prevalence_setup_alpha2w, # from the prevalence
+                         alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                         alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
                          version = "prior", 
                          alpha_ND = input$finite_val_alpha_ND, 
                          alpha_D = input$finite_val_alpha_D, 
                          fND = input$finite_val_fND, 
                          fD = input$finite_val_fD)
-  } else if (input$pick_case_2 == "case_b_opt"){ # know both prior and posterior
+  } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
     simulate_AUC_mc_post(nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 
                          w = FALSE, 
-                         alpha1w = input$prevalence_setup_alpha1w, # from the prevalence
-                         alpha2w = input$prevalence_setup_alpha2w, # from the prevalence
+                         alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                         alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
                          version = "post",
                          alpha_ND = input$finite_val_alpha_ND, 
                          alpha_D = input$finite_val_alpha_D, 
@@ -95,10 +96,10 @@ sect3.2_cr = reactive({
 ######################################
 
 sect3.2_copt_prior = reactive({
-  if(input$pick_case_1 == "case_1_opt"){
+  if(input$finite_val_diag_case1 == 1){
     AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
                               nMonteCarlo = input$finite_val_nMonteCarlo, 
-                              w = input$global_prevalence_w, 
+                              w = input$finite_val_diag_prevalence_w, 
                               delta = input$finite_val_delta, 
                               pND_array = sect3.2_AUC_prior()$pND_array, 
                               pD_array = sect3.2_AUC_prior()$pD_array, 
@@ -107,12 +108,12 @@ sect3.2_copt_prior = reactive({
                               ERROR_w = sect3.2_AUC_prior()$ERROR_w, 
                               PPV = sect3.2_AUC_prior()$PPV, 
                               priorc_opt = sect3.2_AUC_prior()$priorc_opt)
-  } else if (input$pick_case_2 == "case_a_opt" | input$pick_case_2 == "case_b_opt"){
+  } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){
     AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
                               nMonteCarlo = input$finite_val_nMonteCarlo, 
                               w = FALSE, 
-                              alpha1w = input$prevalence_setup_alpha1w, # from the prevalence
-                              alpha2w = input$prevalence_setup_alpha2w, # from the prevalence 
+                              alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                              alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence 
                               delta = input$finite_val_delta, 
                               pND_array = sect3.2_AUC_prior()$pND_array, 
                               pD_array = sect3.2_AUC_prior()$pD_array, 
@@ -125,10 +126,10 @@ sect3.2_copt_prior = reactive({
 })
 
 sect3.2_copt_post = reactive({
-  if(input$pick_case_1 == "case_1_opt"){
+  if(input$finite_val_diag_case1 == 1){
     AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = input$finite_val_nMonteCarlo, 
-                             w = input$global_prevalence_w, 
+                             w = input$finite_val_diag_prevalence_w, 
                              delta = input$finite_val_delta, 
                              pND_array = sect3.2_AUC_post()$pND_array, 
                              pD_array = sect3.2_AUC_post()$pD_array, 
@@ -137,12 +138,12 @@ sect3.2_copt_post = reactive({
                              ERROR_w = sect3.2_AUC_post()$ERROR_w, 
                              PPV = sect3.2_AUC_post()$PPV, 
                              postc_opt = sect3.2_AUC_post()$postc_opt)
-  } else if (input$pick_case_2 == "case_a_opt"){ # know the prior only
+  } else if (input$finite_val_diag_case2 == "A"){ # know the prior only
     AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = input$finite_val_nMonteCarlo, 
                              w = FALSE, 
-                             alpha1w = input$prevalence_setup_alpha1w, # from the prevalence
-                             alpha2w = input$prevalence_setup_alpha2w, # from the prevalence
+                             alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                             alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
                              version = "prior", 
                              delta = input$finite_val_delta, 
                              pND_array = sect3.2_AUC_post()$pND_array, 
@@ -152,12 +153,12 @@ sect3.2_copt_post = reactive({
                              ERROR_w = sect3.2_AUC_post()$ERROR_w, 
                              PPV = sect3.2_AUC_post()$PPV, 
                              postc_opt = sect3.2_AUC_post()$postc_opt)
-  } else if (input$pick_case_2 == "case_b_opt"){ # know both prior and posterior
+  } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
     AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = input$finite_val_nMonteCarlo, 
                              w = FALSE, 
-                             alpha1w = input$prevalence_setup_alpha1w, # from the prevalence
-                             alpha2w = input$prevalence_setup_alpha2w, # from the prevalence
+                             alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                             alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
                              nD = input$finite_val_nD, 
                              nND = input$finite_val_nND, 
                              version = "post", 
