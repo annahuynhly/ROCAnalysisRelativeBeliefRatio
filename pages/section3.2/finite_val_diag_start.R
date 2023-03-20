@@ -6,14 +6,14 @@ page_finite_val_start = fluidPage(
                  numericInput(inputId = "chosen_seed",
                               label = "Please select a seed for the computations.",
                               value = 1),
-                 selectInput(inputId = "pick_case_1", 
+                 selectInput(inputId = "finite_val_diag_case1", 
                              label = "Please select whether the prevalence is known or unknown.",
-                             c("The prevalence w is known" = "case_1_opt", 
-                               "The prevalence w is unknown" = "case_2_opt"),
-                             selected = "case_1_opt"
+                             c("The prevalence w is known" = 1, 
+                               "The prevalence w is unknown" = 2),
+                             selected = 1
                  ),
                  conditionalPanel(
-                   condition = "input.pick_case_1 == 'case_1_opt'",
+                   condition = "input.finite_val_diag_case1 == 1",
                    numericInput(inputId = "global_prevalence_w",
                                 'Please Input the Prevalence w.',
                                 value = 0.65), #
@@ -22,7 +22,7 @@ page_finite_val_start = fluidPage(
                  ),
                  # Only show this panel if Custom is selected
                  conditionalPanel(
-                   condition = "input.pick_case_1 == 'case_2_opt'",
+                   condition = "input.finite_val_diag_case1 == 2",
                    p("Please select the beta prior parameters (alpha1w and alpha2w), and then the
           sampling regime."),
                    
@@ -32,19 +32,19 @@ page_finite_val_start = fluidPage(
                    numericInput(inputId = "prevalence_setup_alpha2w", 
                                 label = 'alpha2w',
                                 value = 211.39),
-                   selectInput(inputId = "pick_case_2", "Please select the sampling regime.",
-                               c("A sample of n_D from diseased and n_ND from non diseased." = "case_a_opt", 
-                                 "A sample of n from population, observe n_D diseased and n_ND nondiseased." = "case_b_opt"),
+                   selectInput(inputId = "finite_val_diag_case2", "Please select the sampling regime.",
+                               c("A sample of n_D from diseased and n_ND from non diseased." = "A", 
+                                 "A sample of n from population, observe n_D diseased and n_ND nondiseased." = "B"),
                                selected = "case_a_opt"
                    ),
                    
                    conditionalPanel(
-                     condition ="input.pick_case_2 == 'case_a_opt'",
+                     condition ="input.finite_val_diag_case2 == 'A'",
                      p("The sampling regime has been chosen. You may observe The Prevalence section to see the prior. 
                        Since we do not have data on the posterior, we cannot make more estimates for the prevalence w.")
                    ),
                    conditionalPanel(
-                     condition ="input.pick_case_2 == 'case_b_opt'",
+                     condition ="input.finite_val_diag_case2 == 'B'",
                      p("The sampling regime has been chosen. You may observe The Prevalence section to see the estimation 
                        for the prevalence.")
                    )

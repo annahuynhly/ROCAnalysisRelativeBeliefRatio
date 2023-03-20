@@ -283,7 +283,7 @@ page_finite_val_prevalence = div(
   # This is the page that that connects to app.R
   titlePanel("The Prevalence"), 
   conditionalPanel(
-    condition = "input.pick_case_1 == 'case_1_opt'",
+    condition = "input.finite_val_diag_case1 == 1",
     
     fluidRow(
       align = "center",
@@ -298,10 +298,10 @@ page_finite_val_prevalence = div(
     
   ),
   conditionalPanel(
-    condition = "input.pick_case_1 == 'case_2_opt'",
+    condition = "input.finite_val_diag_case1 == 2",
     
     conditionalPanel(
-      condition = "input.pick_case_2 == 'case_a_opt'",
+      condition = "input.finite_val_diag_case2 == 'A'",
       tabsetPanel(type = "tabs",
                   tabPanel("Plot", prevalence_setup_plot_alt),
                   tabPanel("Download Output", page_prevalence_download_alt)
@@ -309,7 +309,7 @@ page_finite_val_prevalence = div(
     ),
     
     conditionalPanel(
-      condition = "input.pick_case_2 == 'case_b_opt'",
+      condition = "input.finite_val_diag_case2 == 'B'",
       tabsetPanel(type = "tabs",
                   tabPanel("Description", prevalence_setup_description), 
                   tabPanel("Relative Belief Estimate of w", prevalence_setup_plausible_region),
