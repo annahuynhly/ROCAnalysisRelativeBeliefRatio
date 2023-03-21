@@ -110,7 +110,7 @@ binormal_diag_rbr_graph = function(delta, relative_belief_ratio,
 }
 
 binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, postcmoddensity = FALSE,
-                                        RBcmod = FALSE, prior_lty = 2, post_lty = 1, rb_lty = 6,
+                                        RBcmod = FALSE, prior_lty = 2, post_lty = 1, rbr_lty = 6,
                                         colour_choice = c("blue", "red", "green")){
   grid = open_bracket_grid(delta)
   if((typeof(priorcmoddensity) == "double") & (typeof(postcmoddensity) == "double")){
@@ -121,11 +121,38 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, postcmo
     # Graph of prior 
     lines(grid, priorcmoddensity, type = "l", lty = prior_lty, lwd = 2, col = colour_choice[1])
     # Legend
-    legend("topleft", legend = c("Prior", "Posterior"), col = c(colour_choice[1], colour_choice[2]), lwd = 2)
+    legend("topleft", legend = c("Prior", "Posterior"), col = c(colour_choice[1], colour_choice[2]), lwd = 2,
+           lty = c(prior_lty, post_lty))
   } else if(typeof(RBcmod) == "double"){
     # Graph of the relative belief ratio
     plot(grid, RBcmod, main = "Plot of the Relative Belief Ratio of Copt",
          xlab="cmod", ylab=expression("Relative Belief Ratio"), type="l", 
-         lty = rb_lty, lwd = 2, col = colour_choice[3])
+         lty = rbr_lty, lwd = 2, col = colour_choice[3])
   }
 }
+
+binormal_diag_err_char_plots = function(delta, prior_vals = FALSE, post_vals = FALSE, rbr_vals = FALSE,
+                                        err_type, prior_lty = 2, post_lty = 1, rbr_lty = 6,
+                                        colour_choice = c("blue", "red", "green")){
+  # err_type can either be FNR, FPR, Error, FDR, FNDR
+  grid = open_bracket_grid(delta)
+  if((typeof(prior_vals) == "double") & (typeof(post_vals) == "double")){
+    # Graph of the posterior
+    plot(grid, post_vals, main = paste("Plot of the Prior and the Posterior of ", err_type, sep = ""),
+         xlab = err_type, ylab = "Prior and Posterior", type = "l", lty = post_lty, lwd = 2,
+         col = colour_choice[2])
+    # Graph of the prior
+    lines(grid, prior_vals, xlab = err_type, type = "l", lty = prior_lty, lwd = 2,
+          col = colour_choice[1])
+    legend("topleft", legend = c("Prior", "Posterior"), col = c(colour_choice[1], colour_choice[2]), lwd = 2,
+           lty = c(prior_lty, post_lty))
+  } else if(typeof(rbr_vals) == "double"){
+    # Graph of the relative belief ratio
+    plot(grid, rbr_vals, main = paste("Plot of the Relative Belief Ratio of ", err_type, sep = ""),
+         xlab = err_type, ylab = "Relative Belief Ratio", type = "l", lty = rbr_lty, lwd = 2, 
+         col = colour_choice[3])
+  }
+}
+
+
+

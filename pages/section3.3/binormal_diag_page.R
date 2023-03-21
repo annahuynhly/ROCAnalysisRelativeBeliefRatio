@@ -106,15 +106,25 @@ binormal_diag_plausible_region = div(
                                    "Error" = 'Error',
                                    "FDR" = 'FDR',
                                    "FNDR" = 'FNDR'),
-                    selected = 'FNR')
+                    selected = "FNR")
       ),
     ),
     mainPanel(
-      p("This is currently in progress. Come back later!")
-      #tabPanel("Inferences for Optimal Cutoff", verbatimTextOutput("binormal_diag_output1")),
+      conditionalPanel(
+        condition = "input.binormal_diag_inferences == 'results'",
+        tabPanel("Inferences for Optimal Cutoff", 
+                 withSpinner(verbatimTextOutput("binormal_diag_inf_opt_cutoff"))),
+      ),
+      conditionalPanel(
+        condition = "input.binormal_diag_inferences == 'plots'",
+        tabPanel("Inferences for Optimal Cutoff",
+                 fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
+                                      withSpinner(plotOutput("binormal_diag_inf_opt_cutoff_plot1")), 
+                                      withSpinner(plotOutput("binormal_diag_inf_opt_cutoff_plot2"))))),
+      ),
+      
     )
   )
-  
 )
 
 ################################################################

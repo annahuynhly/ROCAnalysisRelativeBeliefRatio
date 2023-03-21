@@ -27,7 +27,6 @@ binormal_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, nND, mea
                  "lambda2post" = lambda2post, "mu0Dpost" = mu0Dpost, "mu0NDpost" = mu0NDpost)
 }
 
-
 binormal_diag_prior = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
                                nMonteprior, delta, lambda1, lambda2, mu0, tau0){
   A = closed_bracket_grid(delta)# this is technically their grid
@@ -145,7 +144,7 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
   L = ((1/delta) - 1)
   # Note: rel. belief ratio of AUC>1/2 = RBprobAUC
   # Strength of evidence = probAUCpost
-  RBprobAUC=probAUCpost/probAUCprior
+  RBprobAUC = probAUCpost/probAUCprior
   
   RBcmod = postcmod/priorcmod # ADDED FOR COPT
   
@@ -179,10 +178,187 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
     if (priorAUC[i] > 0 & RB_AUC[i] > 1 ) { postPl_AUC = postPl_AUC+postAUC[i]}
   }
   
+  imax=1
+  for (i in 1:L) {
+    if (priorcmod[i] > 0 & RBcmod[i] > RBcmod[imax] ){imax = i}
+  }
+  cmodest = grid[imax]
+  coptest = tan(pi*cmodest-pi/2)
+  
   newlist = list("RB_AUC" = RB_AUC, "RBprobAUC" = RBprobAUC,
                  "AUCest" = AUCest, "postPl_AUC" = postPl_AUC,
-                 "plausible_region" = plausible_region, "RBcmod" = RBcmod)
+                 "plausible_region" = plausible_region, "RBcmod" = RBcmod,
+                 "coptest" = coptest)
 }
+
+# The values inserted are for testing purposes only.
+binormal_diag_AUC_prior_error_char_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
+                                                   coptest, nMonteprior, delta, 
+                                                   lambda1, lambda2, mu0, tau0){
+  A = closed_bracket_grid(delta)# this is technically their grid
+  L = (1/delta) # length
+  # samples from (muD,sigmaD,muND,sigmaND) and prevalence w
+  sigmaD = sqrt(1/rgamma(nMonteprior, lambda1, lambda2))
+  sigmaND = sigmaD
+  muD = rnorm(nMonteprior, mu0, (tau0*sigmaD))
+  priorimpwt = pnorm((muD - mu0)/(tau0*sigmaND))
+  U = rbeta(nMonteprior,1,1)
+  muND = mu0 + tau0*sigmaND*qnorm(priorimpwt*U)
+  # prevalence
+  pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
+  
+  FNR = pnorm((coptest-muD)/sigmaD)
+  FPR = 1 - pnorm((coptest-muND)/sigmaND)
+  Error = pre_w*FNR + (1 - pre_w)*FPR
+  FDR = (1 - pre_w)*FPR/((1 - pre_w)*FPR + pre_w*(1 - FNR))
+  FNDR = pre_w*FNR/(pre_w*FNR + (1 - pre_w)*(1 - FPR))
+  
+  priorFNR = rep(0,L)
+  priorFPR = rep(0,L)
+  priorError = rep(0,L)
+  priorFDR = rep(0,L)
+  priorFNDR = rep(0,L)
+  
+  for (iMonteprior in 1:nMonteprior) {
+    for (igrid in 1:L){
+      if ( (A[igrid] < FNR[iMonteprior]) & (FNR[iMonteprior] <= A[igrid+1]) ) {
+        priorFNR[igrid] = priorFNR[igrid] + priorimpwt[iMonteprior]}
+      if ( (A[igrid] < FPR[iMonteprior]) & (FPR[iMonteprior] <= A[igrid+1]) ) {
+        priorFPR[igrid] = priorFPR[igrid] + priorimpwt[iMonteprior]}
+      if ( (A[igrid] < Error[iMonteprior]) & (Error[iMonteprior] <= A[igrid+1]) ) {
+        priorError[igrid] = priorError[igrid] + priorimpwt[iMonteprior]}
+      if ( (A[igrid] < FDR[iMonteprior]) & (FDR[iMonteprior] <= A[igrid+1]) ) {
+        priorFDR[igrid] = priorFDR[igrid] + priorimpwt[iMonteprior]}
+      if ( (A[igrid] < FNDR[iMonteprior]) & (FNDR[iMonteprior] <= A[igrid+1]) ) {
+        priorFNDR[igrid] = priorFNDR[igrid] + priorimpwt[iMonteprior]}
+    }
+  }
+  
+  priorFNR = priorFNR/sum(priorFNR)
+  priorFNRdensity = L*priorFNR
+  priorFPR = priorFPR/sum(priorFPR)
+  priorFPRdensity = L*priorFPR
+  priorError = priorError/sum(priorError)
+  priorErrordensity = L*priorError
+  priorFDR = priorFDR/sum(priorFDR)
+  priorFDRdensity = L*priorFDR
+  priorFNDR = priorFNDR/sum(priorFNDR)
+  priorFNDRdensity = L*priorFNDR
+  
+  newlist = list("priorFNR" = priorFNR, "priorFNRdensity" = priorFNRdensity,
+                 "priorFPR" = priorFPR, "priorFPRdensity" = priorFPRdensity,
+                 "priorError" = priorError, "priorErrordensity" = priorErrordensity,
+                 "priorFDR" = priorFDR, "priorFDRdensity" = priorFDRdensity,
+                 "priorFNDR" = priorFNDR, "priorFNDRdensity" = priorFNDRdensity)
+  return(newlist)
+}
+
+binormal_diag_AUC_post_error_char_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
+                                                  nND = NA, nD = NA, version,
+                                                  coptest, nMontepost, delta, 
+                                                  lambda1post, lambda2post, 
+                                                  mu0Dpost, mu0NDpost, 
+                                                  tau0D, tau0ND){
+  A = closed_bracket_grid(delta)# this is technically their grid
+  L = (1/delta) # length
+  sigmaDpost = sqrt(1/rgamma(nMontepost, lambda1post, lambda2post))
+  sigmaNDpost = sigmaDpost
+  muDpost = rnorm(nMontepost, mu0Dpost, (tau0D*sigmaDpost))
+  postimpwt = pnorm((muDpost - mu0NDpost)/(tau0ND*sigmaNDpost))
+  U = rbeta(nMontepost, 1, 1)
+  muNDpost = mu0NDpost + tau0ND*sigmaNDpost*qnorm(postimpwt*U)
+  # prevalence
+  pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
+  
+  FNRpost = pnorm((coptest - muDpost)/sigmaDpost)
+  FPRpost = 1 - pnorm((coptest - muNDpost)/sigmaNDpost)
+  Errorpost = wpost*FNRpost + (1 - wpost)*FPRpost
+  FDRpost = (1 - wpost)*FPRpost/((1 - wpost)*FPRpost + wpost*(1 - FNRpost))
+  FNDRpost = wpost*FNRpost/(wpost*FNRpost + (1 - wpost)*(1 - FPRpost))
+  
+  postFNR = rep(0, L)
+  postFPR = rep(0, L)
+  postError = rep(0, L)
+  postFDR = rep(0, L)
+  postFNDR = rep(0, L)
+  
+  for (iMontepost in 1:nMontepost) {
+    for (igrid in 1:L){
+      if ( (A[igrid] < FNRpost[iMontepost]) & (FNRpost[iMontepost] <= A[igrid+1]) ) {
+        postFNR[igrid] = postFNR[igrid]+postimpwt[iMontepost]}
+      if ( (A[igrid] < FPRpost[iMontepost]) & (FPRpost[iMontepost] <= A[igrid+1]) ) {
+        postFPR[igrid] = postFPR[igrid]+postimpwt[iMontepost]}
+      if ( (A[igrid] < Errorpost[iMontepost]) & (Errorpost[iMontepost] <= A[igrid+1]) ) {
+        postError[igrid] = postError[igrid]+postimpwt[iMontepost]}
+      if ( (A[igrid] < FDRpost[iMontepost]) & (FDRpost[iMontepost] <= A[igrid+1]) ) {
+        postFDR[igrid] = postFDR[igrid]+postimpwt[iMontepost]}
+      if ( (A[igrid] < FNDRpost[iMontepost]) & (FNDRpost[iMontepost] <= A[igrid+1]) ) {
+        postFNDR[igrid] = postFNDR[igrid]+postimpwt[iMontepost]}
+    }
+  }
+  
+  postFNR = postFNR/sum(postFNR)
+  postFNRdensity = L*postFNR
+  postFPR = postFPR/sum(postFPR)
+  postFPRdensity = L*postFPR
+  postError = postError/sum(postError)
+  postErrordensity = L*postError
+  postFDR = postFDR/sum(postFDR)
+  postFDRdensity = L*postFDR
+  postFNDR = postFNDR/sum(postFNDR)
+  postFNDRdensity = L*postFNDR
+  
+  newlist = list("postFNR" = postFNR, "postFNRdensity" = postFNRdensity,
+                 "postFPR" = postFPR, "postFPRdensity" = postFPRdensity,
+                 "postError" = postError, "postErrordensity" = postErrordensity,
+                 "postFDR" = postFDR, "postFDRdensity" = postFDRdensity,
+                 "postFNDR" = postFNDR, "postFNDRdensity" = postFNDRdensity)
+  return(newlist)
+}
+
+binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, priorError,
+                                                 priorFDR, priorFNDR, postFNR, postFPR,
+                                                 postError, postFDR, postFNDR){
+  A = closed_bracket_grid(delta)# this is technically their grid
+  L = (1/delta) # length
+  
+  RBFNR = postFNR/priorFNR
+  RBFPR = postFPR/priorFPR
+  RBError = postError/priorError
+  RBFDR = postFDR/priorFDR
+  RBFNDR = postFNDR/priorFNDR
+  
+  # to get a starting value for imax
+  for (i in 1:L) {
+    if (priorFNR[i] > 0){imaxFNR = i}
+    if (priorFPR[i] > 0){imaxFPR = i}
+    if (priorError[i] > 0){imaxError = i}
+    if (priorFDR[i] > 0){imaxFDR = i}
+    if (priorFNDR[i] > 0){imaxFNDR = i}
+  }
+
+  for (i in 1:L) {
+    if (priorFNR[i] > 0 & RBFNR[i] > RBFNR[imaxFNR] ){imaxFNR = i}
+    if (priorFPR[i] > 0 & RBFPR[i] > RBFPR[imaxFPR] ){imaxFPR = i}
+    if (priorError[i] > 0 & RBError[i] > RBError[imaxError] ){imaxError = i}
+    if (priorFDR[i] > 0 & RBFDR[i] > RBFDR[imaxFDR] ){imaxFDR = i}
+    if (priorFNDR[i] > 0 & RBFNDR[i] > RBFNDR[imaxFNDR] ){imaxFNDR = i}
+  }
+  
+  FNRest = grid[imaxFNR]
+  FPRest = grid[imaxFPR]
+  Errorest = grid[imaxError]
+  FDRest = grid[imaxFDR]
+  FNDRest = grid[imaxFNDR]
+  
+  #RBFNR, RBFPR, RBError, RBFDR, RBFNDR
+  newlist = list("RBFNR" = RBFNR, "RBFPR" = RBFPR, "RBError" = RBError,
+                 "RBFDR" = RBFDR, "RBFNDR" = RBFNDR,
+                 "FNRest" = FNRest, "FPRest" = FPRest, "Errorest" = Errorest,
+                 "FDRest" = FDRest, "FNDRest" = FNDRest)
+  return(newlist)
+}
+
 
 ###############################
 # TESTING VALUES

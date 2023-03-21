@@ -12,6 +12,17 @@ output$binormal_diag_hypoAUC_value = renderPrint({
        "Relative Belief Ratio of AUC > 1/2" = sect3.3_AUC_RBR()$RBprobAUC)
 })
 
+output$binormal_diag_inf_opt_cutoff = renderPrint({
+  # Note: this is a placeholder for now - needs to be improved. 
+  # This section was also temporarily used for debugging purposes as well.
+  #sect3.3_AUC_RBR_error_char_copt()
+  list("length of grid" = length(open_bracket_grid(delta = input$binormal_diag_delta)),
+       "length of prior FNR" = length(binormal_diag_err_char_plot_type()$prior),
+       "length of post FNR" =  length(binormal_diag_err_char_plot_type()$post),
+       "length of RBR FNR" = length(binormal_diag_err_char_plot_type()$RBR))
+  #binormal_diag_err_char_plot_type()
+})
+
 ################################################################
 # HISTOGRAMS                                                   #
 ################################################################
@@ -77,9 +88,31 @@ output$binormal_diag_postprior_copt_graph = renderPlot({
 output$binormal_diag_RB_copt_graph = renderPlot({
   binormal_diag_plots_AUC_copt(delta = input$binormal_diag_delta,
                                RBcmod = sect3.3_AUC_RBR()$RBcmod, 
-                               rb_lty = as.numeric(input$binormal_diag_rbc_opt_label),
+                               rbr_lty = as.numeric(input$binormal_diag_rbc_opt_label),
                                colour_choice = binormal_diag_copt_colours())
 })
+
+
+
+# Note: colour situation here is temporary.
+output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
+  binormal_diag_err_char_plots(delta = input$binormal_diag_delta, 
+                               prior_vals = binormal_diag_err_char_plot_type()$prior, 
+                               post_vals = binormal_diag_err_char_plot_type()$post, 
+                               err_type = input$binormal_diag_inferences_plot_type, 
+                               prior_lty = 2, # temporary - needs to be changed 
+                               post_lty = 1,  # temporary - needs to be changed
+                               colour_choice = binormal_diag_colours()[c(1, 2, 3)]) # temp
+})
+
+output$binormal_diag_inf_opt_cutoff_plot2 = renderPlot({
+  binormal_diag_err_char_plots(delta = input$binormal_diag_delta, 
+                               rbr_vals = binormal_diag_err_char_plot_type()$RBR, 
+                               err_type = input$binormal_diag_inferences_plot_type, 
+                               rbr_lty = 6,   # temporary - needs to be changed
+                               colour_choice = binormal_diag_colours()[c(1, 2, 3)]) # temp
+})
+
 
 
 ################################################################

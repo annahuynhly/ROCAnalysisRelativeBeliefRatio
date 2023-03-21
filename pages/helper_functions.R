@@ -115,3 +115,9 @@ RBR_estimate_of_AUC = function(grid, RBR_of_AUC){
   return(df)
 }
 
+NA_to_0 = function(vector){
+  vector[is.na(vector)] = 0
+  return(vector)
+}
+
+
