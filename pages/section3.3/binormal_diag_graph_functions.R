@@ -108,3 +108,24 @@ binormal_diag_rbr_graph = function(delta, relative_belief_ratio,
            col = c(colour_choice[1], colour_choice[2]), lty = c(2, 3))
   }
 }
+
+binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, postcmoddensity = FALSE,
+                                        RBcmod = FALSE, prior_lty = 2, post_lty = 1, rb_lty = 6,
+                                        colour_choice = c("blue", "red", "green")){
+  grid = open_bracket_grid(delta)
+  if((typeof(priorcmoddensity) == "double") & (typeof(postcmoddensity) == "double")){
+    #Graph of posterior
+    plot(grid, postcmoddensity, main = "Plot of the Prior and the Posterior of Copt", 
+         xlab = "cmod", ylab = "Prior and Posterior", type = "l", 
+         lty = post_lty, lwd = 2, col = colour_choice[2])
+    # Graph of prior 
+    lines(grid, priorcmoddensity, type = "l", lty = prior_lty, lwd = 2, col = colour_choice[1])
+    # Legend
+    legend("topleft", legend = c("Prior", "Posterior"), col = c(colour_choice[1], colour_choice[2]), lwd = 2)
+  } else if(typeof(RBcmod) == "double"){
+    # Graph of the relative belief ratio
+    plot(grid, RBcmod, main = "Plot of the Relative Belief Ratio of Copt",
+         xlab="cmod", ylab=expression("Relative Belief Ratio"), type="l", 
+         lty = rb_lty, lwd = 2, col = colour_choice[3])
+  }
+}

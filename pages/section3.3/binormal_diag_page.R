@@ -89,10 +89,32 @@ binormal_diag_setup_variables_alt = div(
 
 binormal_diag_plausible_region = div( 
   titlePanel("Inferences for Optimal Cutoff"),
-  mainPanel(
-    p("This is currently in progress. Come back later!")
-    #tabPanel("Inferences for Optimal Cutoff", verbatimTextOutput("binormal_diag_output1")),
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+      selectInput(inputId = "binormal_diag_inferences", 
+                  label = "Please select what you would like to view.",
+                  choices = c("View Results" = "results", 
+                               "View Plots" = "plots"),
+                  selected = "results"),
+      
+      conditionalPanel(
+        condition = "input.binormal_diag_inferences == 'plots'",
+        selectInput(inputId = "binormal_diag_inferences_plot_type",
+                    label = 'Select which plot to view.',
+                    choices = list("FNR" = 'FNR',
+                                   "FPR" = 'FPR',
+                                   "Error" = 'Error',
+                                   "FDR" = 'FDR',
+                                   "FNDR" = 'FNDR'),
+                    selected = 'FNR')
+      ),
+    ),
+    mainPanel(
+      p("This is currently in progress. Come back later!")
+      #tabPanel("Inferences for Optimal Cutoff", verbatimTextOutput("binormal_diag_output1")),
+    )
   )
+  
 )
 
 ################################################################
@@ -185,11 +207,7 @@ binormal_diag_plots = div(
 # GRAPH 2 PAGE                                                 #
 ################################################################
 
-default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
-                         "6" = 6, "7" = 7, "8" = 8, "9" = 9, "10" = 10,
-                         "11" = 11, "12" = 12, "13" = 13, "14" = 14, "15" = 15,
-                         "16" = 16, "17" = 17, "18" = 18, "19" = 19, "20" = 20,
-                         "21" = 21, "22" = 22, "23" = 23, "24" = 24, "25" = 25)
+default_lty_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6)
 
 binormal_diag_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
@@ -212,9 +230,9 @@ binormal_diag_copt_plots = div(
       conditionalPanel(
         condition = "input.binormal_diag_c_opt_modify == 'prior'",
         selectInput(inputId = "binormal_diag_priorc_opt_label", 
-                    label = "Plot Symbol for Prior",
-                    choices = default_copt_list,
-                    selected = 3),
+                    label = "Line Type for the Prior",
+                    choices = default_lty_list,
+                    selected = 1),
                    
         conditionalPanel(
           condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
@@ -226,9 +244,9 @@ binormal_diag_copt_plots = div(
         conditionalPanel(
           condition = "input.binormal_diag_c_opt_modify == 'post'",
           selectInput(inputId = "binormal_diag_postc_opt_label", 
-                      label = "Plot Symbol for Posterior",
-                      choices = default_copt_list,
-                      selected = 4),
+                      label = "Line Type for the Posterior",
+                      choices = default_lty_list,
+                      selected = 2),
           conditionalPanel(
             condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
             textInput(inputId = "binormal_diag_postc_opt_colour",
@@ -239,9 +257,9 @@ binormal_diag_copt_plots = div(
         conditionalPanel(
           condition = "input.binormal_diag_c_opt_modify == 'rbr'",
           selectInput(inputId = "binormal_diag_rbc_opt_label", 
-                      label = "Plot Symbol for RB Ratio",
-                      choices = default_copt_list,
-                      selected = 8),
+                      label = "Line Type for the RB Ratio",
+                      choices = default_lty_list,
+                      selected = 6),
           conditionalPanel(
             condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
             textInput(inputId = "binormal_diag_rbrc_opt_colour",
@@ -251,11 +269,10 @@ binormal_diag_copt_plots = div(
         ),
     ),
     mainPanel(
-      p("This is currently being worked on. Come back later!"),
-      #tabPanel("Plots",
-      #         fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-      #                              plotOutput("binormal_diag_postprior_copt_graph"), 
-      #                              plotOutput("binormal_diag_RB_copt_graph")))),
+      tabPanel("Plots",
+               fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
+                                    withSpinner(plotOutput("binormal_diag_postprior_copt_graph")), 
+                                    withSpinner(plotOutput("binormal_diag_RB_copt_graph"))))),
       
     )
   )

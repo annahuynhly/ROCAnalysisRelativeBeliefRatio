@@ -35,7 +35,11 @@ binormal_diag_colours = reactive({
 })
 
 binormal_diag_copt_colours = reactive({
-  if(input$binormal_diag_c_opt_carry_colour != 'manual'){
+  if(input$binormal_diag_c_opt_carry_colour == 'default1'){
+    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+  } else if (input$binormal_diag_c_opt_carry_colour == 'default2'){
+    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+  } else if (input$binormal_diag_c_opt_carry_colour == 'custom'){
     binormal_diag_colours()[c(1, 2, 3)]
   } else if (input$binormal_diag_c_opt_carry_colour == 'manual'){
     c(convert_to_hex(input$binormal_diag_priorc_opt_colour),
@@ -60,6 +64,23 @@ output$binormal_diag_RB_graph = renderPlot({
                             colour_choice = binormal_diag_colours()[c(3:6)],
                             transparency = input$binormal_diag_col_transparency)
 })
+
+output$binormal_diag_postprior_copt_graph = renderPlot({
+  binormal_diag_plots_AUC_copt(delta = input$binormal_diag_delta, 
+                               priorcmoddensity = sect3.3_AUC_prior()$priorcmoddensity, 
+                               postcmoddensity = sect3.3_AUC_post()$postcmoddensity,
+                               prior_lty = as.numeric(input$binormal_diag_priorc_opt_label),
+                               post_lty = as.numeric(input$binormal_diag_postc_opt_label),
+                               colour_choice = binormal_diag_copt_colours())
+})
+
+output$binormal_diag_RB_copt_graph = renderPlot({
+  binormal_diag_plots_AUC_copt(delta = input$binormal_diag_delta,
+                               RBcmod = sect3.3_AUC_RBR()$RBcmod, 
+                               rb_lty = as.numeric(input$binormal_diag_rbc_opt_label),
+                               colour_choice = binormal_diag_copt_colours())
+})
+
 
 ################################################################
 # DOWNLOAD DATAFRAME                                           #

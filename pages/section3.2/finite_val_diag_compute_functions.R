@@ -2,26 +2,6 @@
 # HELPER FUNCTIONS                                             #
 ################################################################
 
-finite_val_generate_w = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
-                                 nD = NA, nND = NA, version = NA){
-  #Generates w based on the inputs.
-  if(typeof(w) == "double"){
-    return(w)
-  } else if (w == FALSE & version == "prior"){ # This is a sanity check
-    if(typeof(alpha1w) == "double" & typeof(alpha2w) == "double"){
-      return(rbeta(1, alpha1w, alpha2w))
-    } else {
-      return("Invalid alpha1w, alpha2w.")
-    }
-  } else if (w == FALSE & (version == "post" | version == "posterior")){
-    if(typeof(alpha1w) == "double" & typeof(alpha2w) == "double"){
-      return(rbeta(1, alpha1w + nD, alpha2w + nND))
-    }
-  } else {
-    return("Invalid value for w.")
-  }
-}
-
 AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE, 
                                      alpha1w = NA, alpha2w = NA,
                                      delta, pND_array, pD_array, 
@@ -42,7 +22,7 @@ AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
   #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   for(i in 1:nMonteCarlo){
     # This is for the prevalence w.
-    pre_w = finite_val_generate_w(w, alpha1w, alpha2w, version = "prior")
+    pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
     
     FPRc_opt = FPR[i, ][c_optfDfND]
     FNRc_opt = FNR[i, ][c_optfDfND]
@@ -96,7 +76,7 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
   #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   for(i in 1:nMonteCarlo){
     # This is for the prevalence w.
-    pre_w = finite_val_generate_w(w, alpha1w, alpha2w, nD, nND, version)
+    pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version)
     
     FPRc_opt = FPR[i, ][c_optfDfND]
     FNRc_opt = FNR[i, ][c_optfDfND]
@@ -159,7 +139,7 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE,
   
   for(i in 1:nMonteCarlo){
     # This is for the prevalence w.
-    pre_w = finite_val_generate_w(w, alpha1w, alpha2w, version = "prior")
+    pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
     
     pND_array[i, ] = rdirichlet(1,alpha_priorND)
     pD_array[i, ] = rdirichlet(1,alpha_priorD)
@@ -216,7 +196,7 @@ simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w = FALSE,
   
   for(i in 1:nMonteCarlo){
     # This is for the prevalence w.
-    pre_w = finite_val_generate_w(w, alpha1w, alpha2w, nD, nND, version)
+    pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version)
     
     pND_array[i, ] = rdirichlet(1,alpha_priorND + fND)
     pD_array[i, ] = rdirichlet(1,alpha_priorD + fD)

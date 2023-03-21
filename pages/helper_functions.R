@@ -86,6 +86,27 @@ create_necessary_vector = function(x){
   }
 }
 
+# changed finite_val_generate_w -> generate_w
+generate_w = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
+                      nD = NA, nND = NA, version = NA){
+  #Generates w based on the inputs.
+  if(typeof(w) == "double"){
+    return(w)
+  } else if (w == FALSE & version == "prior"){ # This is a sanity check
+    if(typeof(alpha1w) == "double" & typeof(alpha2w) == "double"){
+      return(rbeta(1, alpha1w, alpha2w))
+    } else {
+      return("Invalid alpha1w, alpha2w.")
+    }
+  } else if (w == FALSE & (version == "post" | version == "posterior")){
+    if(typeof(alpha1w) == "double" & typeof(alpha2w) == "double"){
+      return(rbeta(1, alpha1w + nD, alpha2w + nND))
+    }
+  } else {
+    return("Invalid value for w.")
+  }
+}
+
 RBR_estimate_of_AUC = function(grid, RBR_of_AUC){
   # Assumption is that length(grid) == length(RBR_of_AUC)
   max_occurs = which.max(RBR_of_AUC)
