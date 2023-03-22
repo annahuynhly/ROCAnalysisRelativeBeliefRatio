@@ -13,14 +13,15 @@ output$binormal_diag_hypoAUC_value = renderPrint({
 })
 
 output$binormal_diag_inf_opt_cutoff = renderPrint({
-  # Note: this is a placeholder for now - needs to be improved. 
-  # This section was also temporarily used for debugging purposes as well.
-  #sect3.3_AUC_RBR_error_char_copt()
-  list("length of grid" = length(open_bracket_grid(delta = input$binormal_diag_delta)),
-       "length of prior FNR" = length(binormal_diag_err_char_plot_type()$prior),
-       "length of post FNR" =  length(binormal_diag_err_char_plot_type()$post),
-       "length of RBR FNR" = length(binormal_diag_err_char_plot_type()$RBR))
-  #binormal_diag_err_char_plot_type()
+  temp_df = data.frame(sect3.3_AUC_RBR_error_char_copt()$FNRest,
+                       sect3.3_AUC_RBR_error_char_copt()$FPRest,
+                       sect3.3_AUC_RBR_error_char_copt()$Errorest,
+                       sect3.3_AUC_RBR_error_char_copt()$FDRest,
+                       sect3.3_AUC_RBR_error_char_copt()$FNDRest)
+  colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
+  list("Copt Estimate" = sect3.3_AUC_RBR()$coptest,
+       "Cmod Estimate" = sect3.3_AUC_RBR()$cmodest,
+       "Error Characteristics" = temp_df)
 })
 
 ################################################################

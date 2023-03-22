@@ -157,7 +157,7 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
     }
   }
 
-  AUCest=grid[which.max(RB_AUC)]
+  AUCest = grid[which.max(RB_AUC)]
   
   # this is for testing for the plausible region
   RB_pl_test = RB_AUC
@@ -174,13 +174,15 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
                        plausible_region[length(plausible_region)])
   
   postPl_AUC=0
+  temp_RB_AUC =  NA_to_0(RB_AUC)
   for (i in 1:L) {
-    if (priorAUC[i] > 0 & RB_AUC[i] > 1 ) { postPl_AUC = postPl_AUC+postAUC[i]}
+    if (priorAUC[i] > 0 & temp_RB_AUC[i] > 1 ) { postPl_AUC = postPl_AUC + postAUC[i]}
   }
   
-  imax=1
+  imax = 1
+  temp_RBcmod = NA_to_0(RBcmod)
   for (i in 1:L) {
-    if (priorcmod[i] > 0 & RBcmod[i] > RBcmod[imax] ){imax = i}
+    if (priorcmod[i] > 0 & temp_RBcmod[i] > temp_RBcmod[imax] ){imax = i}
   }
   cmodest = grid[imax]
   coptest = tan(pi*cmodest-pi/2)
@@ -188,7 +190,7 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
   newlist = list("RB_AUC" = RB_AUC, "RBprobAUC" = RBprobAUC,
                  "AUCest" = AUCest, "postPl_AUC" = postPl_AUC,
                  "plausible_region" = plausible_region, "RBcmod" = RBcmod,
-                 "coptest" = coptest)
+                 "cmodest" = cmodest, "coptest" = coptest)
 }
 
 # The values inserted are for testing purposes only.

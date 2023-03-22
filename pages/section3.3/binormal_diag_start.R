@@ -27,10 +27,10 @@ page_binormal_diag_start = fluidPage(
                    
                    numericInput(inputId = "binormal_diag_prevalence_alpha1w", 
                                 label = 'alpha1w',
-                                value = 391.72),
+                                value = 15.3589),
                    numericInput(inputId = "binormal_diag_prevalence_alpha2w", 
                                 label = 'alpha2w',
-                                value = 211.39),
+                                value = 22.53835),
                    selectInput(inputId = "binormal_diag_case2", 
                                label = "Please select the sampling regime.",
                                c("A sample of n_D from diseased and n_ND from non diseased." = "A", 
