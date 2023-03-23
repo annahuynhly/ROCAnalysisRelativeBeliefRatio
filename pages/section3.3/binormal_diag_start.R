@@ -16,7 +16,7 @@ page_binormal_diag_start = fluidPage(
                    condition = "input.binormal_diag_case1 == 1",
                    numericInput(inputId = "binormal_diag_prevalence_w",
                                 'Please Input the Prevalence w.',
-                                value = 0.65), #
+                                value = 0.40), #
                    p("The prevalence has been determined. Please proceed to the computations. The Prevalence section may be skipped,
                      as it is used to calculate the prevalence.")
                  ),

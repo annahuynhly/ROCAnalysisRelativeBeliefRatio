@@ -20,10 +20,10 @@ binormal_diag_setup_variables_alt = div(
           column(3, h4("Simulation Sizes:")),
           column(3, numericInput(inputId = "binormal_diag_nMonteCarlo", 
                                  label = 'Simulation Sample Size',
-                                 value = 100000, min = 0)),
+                                 value = 300000, min = 1)),
           column(3, numericInput(inputId = "binormal_diag_delta", 
                                  label = 'Delta',
-                                 value = 0.01)),
+                                 value = 0.005)),
         ),
         
         fluidRow(

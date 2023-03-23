@@ -38,7 +38,10 @@ binormal_diag_prior = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   muD = rnorm(nMonteprior, mu0, (tau0*sigmaD))
   muND = rnorm(nMonteprior, mu0, (tau0*sigmaND))
   
-  pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
+  pre_w = rep(0, nMonteprior)
+  for(i in 1:length(pre_w)){
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, version = "prior")
+  }
     
   priorimpwt = pnorm((muD - mu0)/(tau0*sigmaND)) # ADDED FOR COPT
   U = rbeta(nMonteprior,1,1) # ADDED FOR COPT
@@ -93,13 +96,16 @@ binormal_diag_post = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, n
   muDpost = mu0Dpost+tau0D*sigmaDpost*rnorm(nMontepost,0,1)
   muNDpost = mu0NDpost+tau0ND*sigmaNDpost*rnorm(nMontepost,0,1)
   
-  pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
+  pre_w = rep(0, nMonteprior)
+  for(i in 1:length(pre_w)){
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
+  }
   
   postimpwt = pnorm((muDpost - mu0NDpost)/(tau0ND*sigmaNDpost)) # ADDED FOR COPT
   U = rbeta(nMontepost,1,1) # ADDED FOR COPT
   muNDpost_copt = mu0NDpost + tau0ND*sigmaNDpost*qnorm(postimpwt*U) # ADDED FOR COPT
   
-  c = 0.5*(muDpost+muNDpost_copt)+(sigmaDpost**2)*(log((1-pre_w)/pre_w))/(muDpost-muNDpost_copt) # ADDED FOR COPT
+  c = 0.5*(muDpost + muNDpost_copt)+(sigmaDpost**2)*(log((1-pre_w)/pre_w))/(muDpost-muNDpost_copt) # ADDED FOR COPT
   cmod = (pi/2+atan(c))/pi # ADDED FOR COPT
   cmodmax = max(cmod) # ADDED FOR COPT
   cmodmin = min(cmod) # ADDED FOR COPT
@@ -207,7 +213,10 @@ binormal_diag_AUC_prior_error_char_copt = function(w = FALSE, alpha1w = NA, alph
   U = rbeta(nMonteprior,1,1)
   muND = mu0 + tau0*sigmaND*qnorm(priorimpwt*U)
   # prevalence
-  pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
+  pre_w = rep(0, nMonteprior)
+  for(i in 1:length(pre_w)){
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, version = "prior")
+  }
   
   FNR = pnorm((coptest-muD)/sigmaD)
   FPR = 1 - pnorm((coptest-muND)/sigmaND)
@@ -270,7 +279,10 @@ binormal_diag_AUC_post_error_char_copt = function(w = FALSE, alpha1w = NA, alpha
   U = rbeta(nMontepost, 1, 1)
   muNDpost = mu0NDpost + tau0ND*sigmaNDpost*qnorm(postimpwt*U)
   # prevalence
-  pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
+  wpost = rep(0, nMonteprior)
+  for(i in 1:length(wpost)){
+    wpost[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) 
+  }
   
   FNRpost = pnorm((coptest - muDpost)/sigmaDpost)
   FPRpost = 1 - pnorm((coptest - muNDpost)/sigmaNDpost)
@@ -383,23 +395,48 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 
 #nMonteprior = 100000
 #nMontepost = 100000
-#delta = 0.01
+#delta = 0.005
+
+#w = 0.40
+#alpha1w = 15.3589 
+#alpha2w = 22.53835
 
 #post_hyperpara = binormal_compute_post_hyperpara(mu0, tau0, lambda1, lambda2, nND, meanND, 
 #                                                 sND_squared, nD, meanD, sD_squared)
 
-#post_hyperpara
+#prior_val = binormal_diag_prior(w, alpha1w, alpha2w, nMonteprior, delta, lambda1, lambda2, mu0, tau0)
+#prior_val = binormal_diag_prior(w = FALSE, alpha1w, alpha2w, nMonteprior, delta, lambda1, lambda2, mu0, tau0)
 
-#prior_val = binormal_diag_prior(nMonteprior, delta, lambda1, lambda2, mu0, tau0)
-
-#post_val = binormal_diag_post(nMontepost, delta, post_hyperpara$lambda1post, 
-#                                  post_hyperpara$lambda2post, post_hyperpara$mu0Dpost, 
-#                                  post_hyperpara$mu0NDpost, post_hyperpara$tau0D, 
-#                                  post_hyperpara$tau0ND)
+#post_val = binormal_diag_post(w, alpha1w, alpha2w, nND, nD, version =  "post",
+#                              nMontepost, delta, post_hyperpara$lambda1post, 
+#                              post_hyperpara$lambda2post, post_hyperpara$mu0Dpost, 
+#                              post_hyperpara$mu0NDpost, post_hyperpara$tau0D, 
+#                              post_hyperpara$tau0ND)
 
 #rbr_val = binormal_diag_RBR(delta, prior_val$probAUCprior, post_val$probAUCpost,
-#                                prior_val$priorAUC, post_val$postAUC)
+#                            prior_val$priorAUC, post_val$postAUC, prior_val$priorcmod,
+#                            post_val$postcmod)
 #par(mfrow=c(1,2))
+#grid = open_bracket_grid(0.005)
+
+#prior_err = binormal_diag_AUC_prior_error_char_copt(w, alpha1w, alpha2w, rbr_val$coptest, nMonteprior, delta, 
+#                                                    lambda1, lambda2, mu0, tau0)
+
+#prior_err = binormal_diag_AUC_prior_error_char_copt(w = FALSE, alpha1w, alpha2w, coptest = 0.715, nMonteprior, delta, 
+                                                    lambda1, lambda2, mu0, tau0)
+
+#par(mfrow=c(1,1))
+#plot(grid, prior_err$priorFNRdensity, xlab="FNR",ylab="prior",type="l",lty=1)
+
+#plot(grid, prior_err$priorFPRdensity, xlab="FPR",ylab="prior",type="l",lty=1)
+
+#plot(grid, prior_err$priorErrordensity, xlab="Error",ylab="prior",type="l",lty=1)
+
+#plot(grid, prior_err$priorFDRdensity, xlab="FDR",ylab="prior",type="l",lty=1)
+
+#plot(grid, prior_err$priorFNDRdensity, xlab="FNDR",ylab="prior",type="l",lty=1)
+
+
 
 #binormal_diag_prior_post_graph(delta = delta, 
 #                                 prior = prior_val$priorAUCdensity, 
@@ -409,6 +446,7 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 #binormal_diag_rbr_graph(delta = delta, 
 #                          relative_belief_ratio = rbr_val$RB_AUC, 
 #                          plausible_region = rbr_val$plausible_region)
+
 
 #cat("P(AUC>1/2) = ", prior_val$probAUCprior, "\n")
 #cat("P(AUC>1/2 | data) = ", post_val$probAUCpost, "\n")

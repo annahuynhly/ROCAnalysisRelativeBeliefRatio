@@ -7,6 +7,9 @@
 # Align the footer margins for the rest of the sections.
 # Make the code look nicer lmao
 
+# ISSUES:
+# sect 3.3 -> error, fdr, fndr graph seems a bit off
+
 ################################################################
 # LIBRARIES                                                    #
 ################################################################
