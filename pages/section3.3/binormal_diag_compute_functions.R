@@ -71,6 +71,7 @@ binormal_diag_prior = function(w = FALSE, alpha1w = NA, alpha2w = NA,
       }
     }
   }
+  priorAUC = average_vector_values(priorAUC) # APPLYING SMOOTHER
   priorAUC = priorAUC/nMonteprior
   probAUCprior = probAUCprior/nMonteprior
   priorAUCdensity = L*priorAUC
@@ -131,6 +132,7 @@ binormal_diag_post = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, n
       }
     }
   }
+  postAUC = average_vector_values(postAUC) # applying a smoother
   postAUC = postAUC/nMontepost
   postAUCdensity = L*postAUC
   probAUCpost = probAUCpost/nMontepost
@@ -148,7 +150,7 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
                              priorcmod, postcmod){
   grid = open_bracket_grid(delta)
   L = ((1/delta) - 1)
-  # Note: rel. belief ratio of AUC>1/2 = RBprobAUC
+  # Note: rel. belief ratio of AUC > 1/2 = RBprobAUC
   # Strength of evidence = probAUCpost
   RBprobAUC = probAUCpost/probAUCprior
   
@@ -179,10 +181,11 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
   plausible_region = c(plausible_region[1], 
                        plausible_region[length(plausible_region)])
   
-  postPl_AUC=0
+  postPl_AUC=0 # posterior content
   temp_RB_AUC =  NA_to_0(RB_AUC)
   for (i in 1:L) {
-    if (priorAUC[i] > 0 & temp_RB_AUC[i] > 1 ) { postPl_AUC = postPl_AUC + postAUC[i]}
+    # reason: need prior to be non negative
+    if (priorAUC[i] > 0 & temp_RB_AUC[i] > 1) {postPl_AUC = postPl_AUC + postAUC[i]}
   }
   
   imax = 1
@@ -197,6 +200,56 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
                  "AUCest" = AUCest, "postPl_AUC" = postPl_AUC,
                  "plausible_region" = plausible_region, "RBcmod" = RBcmod,
                  "cmodest" = cmodest, "coptest" = coptest)
+}
+
+
+binormal_diag_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prior, AUC_post, 
+                                                 posterior_content){
+  # Note: credible region is now based on the line plot.
+  grid = open_bracket_grid(delta)
+  AUC_RBR[is.na(AUC_RBR)] = 0
+  # Computes the credible region. At first, there's no default input to avoid generating
+  # a credible region automatically (it is not necessary.)
+  if (check.numeric(gamma) == FALSE){
+    err_msg = "Need to put in a valid input for gamma (see graph 1.)"
+    return(list("credible_region" = err_msg, "rb_line" = err_msg))
+  }
+  else { # This condition runs if the user provides an actual numeric input.
+    gamma = as.numeric(gamma)
+    if(gamma >= posterior_content){
+      err_msg = "Gamma must be less than the posterior content of the plausible region."
+      return(list("credible_region" = err_msg, "rb_line" = err_msg))
+    } 
+    else {
+      RBR_values = sort(AUC_RBR, decreasing = TRUE)
+      RBR_values = RBR_values[RBR_values > 1] # sorting for values larger than 1
+      for(i in 2:length(RBR_values)){ # doesn't start at the top as the AREA of a line is 0
+        rb_line = RBR_values[i]
+        credible_region = c()
+        j_vals = c()
+        # find the region associated with it
+        # WARNING: BOLD ASSUMPTION NO BREAKPOINTS/PEAKS
+        for(j in 1:length(AUC_RBR)){
+          if(AUC_RBR[j] > rb_line){
+            credible_region = c(credible_region, grid[j])
+            j_vals = c(j_vals, j)
+          }
+        }
+        credible_region = c(min(credible_region), max(credible_region))
+        
+        test_area = 0
+        for (i in min(j_vals):max(j_vals)) {
+          if (AUC_prior[i] > 0 & AUC_RBR[i] > 1) {test_area = test_area + AUC_post[i]}
+        }
+        if(test_area >= gamma){
+          break # This means the credible region was actually found
+        }
+      }
+      newlist = list("credible_region" = credible_region, "rb_line" = rb_line)
+
+      return(newlist)
+    }
+  }
 }
 
 # The values inserted are for testing purposes only.
@@ -244,6 +297,11 @@ binormal_diag_AUC_prior_error_char_copt = function(w = FALSE, alpha1w = NA, alph
         priorFNDR[igrid] = priorFNDR[igrid] + priorimpwt[iMonteprior]}
     }
   }
+  priorFNR = average_vector_values(priorFNR) # applying the smoother
+  priorFPR = average_vector_values(priorFPR) # applying the smoother
+  priorError = average_vector_values(priorError) # applying the smoother
+  priorFDR = average_vector_values(priorFDR) # applying the smoother
+  priorFNDR = average_vector_values(priorFNDR) # applying the smoother
   
   priorFNR = priorFNR/sum(priorFNR)
   priorFNRdensity = L*priorFNR
@@ -310,6 +368,11 @@ binormal_diag_AUC_post_error_char_copt = function(w = FALSE, alpha1w = NA, alpha
         postFNDR[igrid] = postFNDR[igrid]+postimpwt[iMontepost]}
     }
   }
+  postFNR = average_vector_values(postFNR) # applying the smoother
+  postFPR = average_vector_values(postFPR) # applying the smoother
+  postError = average_vector_values(postError) # applying the smoother
+  postFDR = average_vector_values(postFDR) # applying the smoother
+  postFNDR = average_vector_values(postFNDR) # applying the smoother
   
   postFNR = postFNR/sum(postFNR)
   postFNRdensity = L*postFNR
@@ -374,6 +437,11 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 }
 
 
+
+
+
+
+
 ###############################
 # TESTING VALUES
 ###############################
@@ -400,6 +468,7 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 #w = 0.40
 #alpha1w = 15.3589 
 #alpha2w = 22.53835
+#gamma = 0.70
 
 #post_hyperpara = binormal_compute_post_hyperpara(mu0, tau0, lambda1, lambda2, nND, meanND, 
 #                                                 sND_squared, nD, meanD, sD_squared)
@@ -419,11 +488,18 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 #par(mfrow=c(1,2))
 #grid = open_bracket_grid(0.005)
 
+#cr = binormal_diag_compute_credible_region(gamma = gamma, 
+#                                           delta = delta, 
+#                                           AUC_RBR = rbr_val$RB_AUC, 
+#                                           AUC_prior = prior_val$priorAUC, 
+#                                           AUC_post = post_val$postAUC, 
+#                                           posterior_content = rbr_val$postPl_AUC)
+
 #prior_err = binormal_diag_AUC_prior_error_char_copt(w, alpha1w, alpha2w, rbr_val$coptest, nMonteprior, delta, 
 #                                                    lambda1, lambda2, mu0, tau0)
 
 #prior_err = binormal_diag_AUC_prior_error_char_copt(w = FALSE, alpha1w, alpha2w, coptest = 0.715, nMonteprior, delta, 
-                                                    lambda1, lambda2, mu0, tau0)
+#                                                    lambda1, lambda2, mu0, tau0)
 
 #par(mfrow=c(1,1))
 #plot(grid, prior_err$priorFNRdensity, xlab="FNR",ylab="prior",type="l",lty=1)

@@ -111,7 +111,8 @@ binormal_diag_rbr_graph = function(delta, relative_belief_ratio,
 
 binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, postcmoddensity = FALSE,
                                         RBcmod = FALSE, prior_lty = 2, post_lty = 1, rbr_lty = 6,
-                                        colour_choice = c("blue", "red", "green")){
+                                        colour_choice = c("blue", "red", "green"),
+                                        transparency = 0.1){
   grid = open_bracket_grid(delta)
   if((typeof(priorcmoddensity) == "double") & (typeof(postcmoddensity) == "double")){
     #Graph of posterior
@@ -120,6 +121,14 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, postcmo
          lty = post_lty, lwd = 2, col = colour_choice[2])
     # Graph of prior 
     lines(grid, priorcmoddensity, type = "l", lty = prior_lty, lwd = 2, col = colour_choice[1])
+    # Fill & Transparency effect
+    rgb_prior = col2rgb(colour_choice[1])
+    rgb_post = col2rgb(colour_choice[2])
+    polygon(grid, postcmoddensity, col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255, 
+                                  alpha = transparency), border = NA)
+    polygon(grid, priorcmoddensity, col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, 
+                                   alpha = transparency), border = NA)
+    
     # Legend
     legend("topleft", legend = c("Prior", "Posterior"), col = c(colour_choice[1], colour_choice[2]), lwd = 2,
            lty = c(prior_lty, post_lty))
@@ -128,12 +137,17 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, postcmo
     plot(grid, RBcmod, main = "Plot of the Relative Belief Ratio of Copt",
          xlab="cmod", ylab=expression("Relative Belief Ratio"), type="l", 
          lty = rbr_lty, lwd = 2, col = colour_choice[3])
+    # Fill & Transparency effect
+    rgb_rbr = col2rgb(colour_choice[3])
+    polygon(grid, RBcmod, col = rgb(rgb_rbr[1]/255, rgb_rbr[2]/255, rgb_rbr[3]/255, 
+            alpha = transparency), border = NA)
   }
 }
 
 binormal_diag_err_char_plots = function(delta, prior_vals = FALSE, post_vals = FALSE, rbr_vals = FALSE,
                                         err_type, prior_lty = 2, post_lty = 1, rbr_lty = 6,
-                                        colour_choice = c("blue", "red", "green")){
+                                        colour_choice = c("blue", "red", "green"),
+                                        transparency = 0.1){
   # err_type can either be FNR, FPR, Error, FDR, FNDR
   grid = open_bracket_grid(delta)
   if((typeof(prior_vals) == "double") & (typeof(post_vals) == "double")){
@@ -144,6 +158,17 @@ binormal_diag_err_char_plots = function(delta, prior_vals = FALSE, post_vals = F
     # Graph of the prior
     lines(grid, prior_vals, xlab = err_type, type = "l", lty = prior_lty, lwd = 2,
           col = colour_choice[1])
+    # Fill & Transparent effect
+    rgb_prior = col2rgb(colour_choice[1])
+    rgb_post = col2rgb(colour_choice[2])
+    
+    polygon(grid, post_vals,
+            col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255, 
+            alpha = transparency), border = NA)
+    polygon(grid, prior_vals,
+            col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, 
+            alpha = transparency), border = NA)
+    
     legend("topleft", legend = c("Prior", "Posterior"), col = c(colour_choice[1], colour_choice[2]), lwd = 2,
            lty = c(prior_lty, post_lty))
   } else if(typeof(rbr_vals) == "double"){
@@ -151,6 +176,11 @@ binormal_diag_err_char_plots = function(delta, prior_vals = FALSE, post_vals = F
     plot(grid, rbr_vals, main = paste("Plot of the Relative Belief Ratio of ", err_type, sep = ""),
          xlab = err_type, ylab = "Relative Belief Ratio", type = "l", lty = rbr_lty, lwd = 2, 
          col = colour_choice[3])
+    # Fill & Transparent effect
+    rgb_rbr = col2rgb(colour_choice[3])
+    polygon(grid, rbr_vals,
+            col = rgb(rgb_rbr[1]/255, rgb_rbr[2]/255, rgb_rbr[3]/255, 
+            alpha = transparency), border = NA)
   }
 }
 

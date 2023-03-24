@@ -28,17 +28,19 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
     new_density = rep(0, length(hist_density))
     
     num_neighbours = floor(num_average_pts/2)
-    pts = 1
     for(i in 1:length(hist_density)){
-      if(i < num_neighbours | (length(hist_density) - i) < num_neighbours){
+      if(i <= num_neighbours | (length(hist_density) - i) < num_neighbours){
         if(i == 1 | i == length(hist_density)){
           new_density[i] = hist_density[i]
         } else {
+          if (i <= num_neighbours){
+            pts = i - 1
+          } else if ((length(vector) - i) < num_neighbours){
+            pts = length(vector) - i
+          }
           new_density[i] = sum(hist_density[(i-pts):(i+pts)])/(2*pts + 1)
-          pts = pts + 1
         }
       } else {
-        pts = 1
         lower_int = i - num_neighbours
         upper_int = i + num_neighbours
         new_density[i] = sum(hist_density[lower_int:upper_int])/(2*num_neighbours + 1)

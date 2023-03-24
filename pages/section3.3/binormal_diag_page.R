@@ -87,7 +87,7 @@ binormal_diag_setup_variables_alt = div(
 # OUTPUT 1 PAGE                                                #
 ################################################################
 
-binormal_diag_plausible_region = div( 
+binormal_diag_AUC_inferences = div( 
   titlePanel("Inferences for Optimal Cutoff"),
   sidebarLayout(
     sidebarPanel(width = 3, 
@@ -106,8 +106,51 @@ binormal_diag_plausible_region = div(
                                    "Error" = 'Error',
                                    "FDR" = 'FDR',
                                    "FNDR" = 'FNDR'),
-                    selected = "FNR")
-      ),
+                    selected = "FNR"),
+        
+        # START COPY
+        selectInput(inputId = "binormal_diag_inferences_colour", 
+                    label = 'Select a colour', 
+                    choices = list("Default Theme 1" = 'default1',
+                                   "Default Theme 2" = 'default2', # add an option to copy from the first page
+                                   "Custom Theme from AUC Plots" = 'custom',
+                                   "Manually Insert" = 'manual'), 
+                    selected = 'default'),
+        
+        conditionalPanel(
+          condition = "input.binormal_diag_inferences_colour == 'manual'",
+          selectInput(inputId = "binormal_diag_inferences_modify_colour",
+                      label = 'Select line to modify',
+                      choices = list("Prior" = 'prior',
+                                     "Posterior" = 'post',
+                                     "Relative Belief Ratio" = 'rbr'),
+                      selected = 'prior'), 
+          
+          conditionalPanel(
+            condition = "input.binormal_diag_inferences_modify_colour == 'prior'",
+            textInput(inputId = "binormal_diag_colour_inferences_prior",
+                      label = 'Input the colour of the prior',
+                      value = "FF007F"), 
+          ),
+          conditionalPanel(
+            condition = "input.binormal_diag_inferences_modify_colour == 'post'",
+            textInput(inputId = "binormal_diag_colour_inferences_post",
+                      label = 'Input the colour of the posterior',
+                      value = "FF00FF"), 
+          ),
+          conditionalPanel(
+            condition = "input.binormal_diag_inferences_modify_colour == 'rbr'",
+            textInput(inputId = "binormal_diag_colour_inferences_rbr",
+                      label = 'Input the colour of the relative belief ratio',
+                      value = "7F00FF"), 
+          ),
+        ),
+        
+        sliderInput(inputId = "binormal_diag_inferences_col_transparency", 
+                    label = "Scale for colour transparency (UNDER CONSTRUCTION)",
+                    min = 0, max = 1, value = 0.2), 
+        )
+        ## END COPY
     ),
     mainPanel(
       conditionalPanel(
@@ -121,8 +164,7 @@ binormal_diag_plausible_region = div(
                  fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
                                       withSpinner(plotOutput("binormal_diag_inf_opt_cutoff_plot1")), 
                                       withSpinner(plotOutput("binormal_diag_inf_opt_cutoff_plot2"))))),
-      ),
-      
+      )
     )
   )
 )
@@ -159,50 +201,47 @@ binormal_diag_plots = div(
                                    "Line of y = 1" = 'line_1',
                                    "Credible Region" = 'cr'),
                     selected = 'prior'), 
+        
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'prior'",
+          textInput(inputId = "binormal_diag_colour_prior",
+                    label = 'Input the colour of the prior',
+                    value = "FF007F"), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'post'",
+          textInput(inputId = "binormal_diag_colour_post",
+                    label = 'Input the colour of the posterior',
+                    value = "FF00FF"), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'rbr'",
+          textInput(inputId = "binormal_diag_colour_rbr",
+                    label = 'Input the colour of the relative belief ratio',
+                    value = "7F00FF"), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'pr'",
+          textInput(inputId = "binormal_diag_colour_pr",
+                    label = 'Input the colour of the plausible region',
+                    value = "A717DB"), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'line_1'",
+          textInput(inputId = "binormal_diag_colour_line_1",
+                    label = 'Input the colour of the y = 1 line',
+                    value = "5327E4"), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'cr'",
+          textInput(inputId = "binormal_diag_colour_cr",
+                    label = 'Input the colour of the credible region',
+                    value = "650d84"), 
+        ),
       ),
-                 
-      conditionalPanel(
-        condition = "input.binormal_diag_modify_colour == 'prior'",
-        textInput(inputId = "binormal_diag_colour_prior",
-                  label = 'Input the colour of the prior',
-                  value = "FF007F"), 
-      ),
-      conditionalPanel(
-        condition = "input.binormal_diag_modify_colour == 'post'",
-        textInput(inputId = "binormal_diag_colour_post",
-                  label = 'Input the colour of the posterior',
-                  value = "FF00FF"), 
-      ),
-      conditionalPanel(
-        condition = "input.binormal_diag_modify_colour == 'rbr'",
-        textInput(inputId = "binormal_diag_colour_rbr",
-                  label = 'Input the colour of the relative belief ratio',
-                  value = "7F00FF"), 
-      ),
-      conditionalPanel(
-        condition = "input.binormal_diag_modify_colour == 'pr'",
-        textInput(inputId = "binormal_diag_colour_pr",
-                  label = 'Input the colour of the plausible region',
-                  value = "A717DB"), 
-      ),
-      conditionalPanel(
-        condition = "input.binormal_diag_modify_colour == 'line_1'",
-        textInput(inputId = "binormal_diag_colour_line_1",
-                  label = 'Input the colour of the y = 1 line',
-                  value = "5327E4"), 
-      ),
-      conditionalPanel(
-        condition = "input.binormal_diag_modify_colour == 'cr'",
-        textInput(inputId = "binormal_diag_colour_cr",
-                  label = 'Input the colour of the credible region',
-                  value = "650d84"), 
-      ),
-      conditionalPanel(
-        condition = "input.binormal_diag_hist_visual == 'binormal_diag_withbars'",
-        sliderInput(inputId = "binormal_diag_col_transparency", 
+      sliderInput(inputId = "binormal_diag_col_transparency", 
                     label = "Scale for colour transparency",
                     min = 0, max = 1, value = 0.2), 
-      )
     ),
     mainPanel(
       tabPanel("Plots",
@@ -277,6 +316,9 @@ binormal_diag_copt_plots = div(
                       value = "CE1483"),
           )
         ),
+      sliderInput(inputId = "binormal_diag_c_opt_col_transparency", 
+                  label = "Scale for colour transparency (UNDER CONDTRUCTION)",
+                  min = 0, max = 1, value = 0.2), 
     ),
     mainPanel(
       tabPanel("Plots",
@@ -345,7 +387,7 @@ page_binormal_diag = div(
               #tabPanel("Description", binormal_diag_description),
               tabPanel("Inferences for the AUC", binormal_diag_hypothesizedAUC),
               tabPanel("Plots for the AUC", binormal_diag_plots),
-              tabPanel("Inferences for Optimal Cutoff", binormal_diag_plausible_region),
+              tabPanel("Inferences for Optimal Cutoff", binormal_diag_AUC_inferences),
               tabPanel("Plots for the Optimal Cutoff", binormal_diag_copt_plots),
               tabPanel("Download Prior & Posterior", binormal_diag_download_1),
   )

@@ -6,7 +6,7 @@ output$binormal_diag_hypoAUC_value = renderPrint({
   list("Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
        "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
        "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
-       "Credible region for the AUC" = "NEED TO COMPUTE (?)",
+       "Credible region for the AUC" = sect3.3_cr()$credible_region,
        "P(AUC > 1/2)" = sect3.3_AUC_prior()$probAUCprior,
        "P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post()$probAUCpost,
        "Relative Belief Ratio of AUC > 1/2" = sect3.3_AUC_RBR()$RBprobAUC)
@@ -48,15 +48,29 @@ binormal_diag_colours = reactive({
 
 binormal_diag_copt_colours = reactive({
   if(input$binormal_diag_c_opt_carry_colour == 'default1'){
-    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+    c("#FF6666", "#6699FF", "#05DEB2")
   } else if (input$binormal_diag_c_opt_carry_colour == 'default2'){
-    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+    c("blue", "green", "red", "#b3bfff")
   } else if (input$binormal_diag_c_opt_carry_colour == 'custom'){
     binormal_diag_colours()[c(1, 2, 3)]
   } else if (input$binormal_diag_c_opt_carry_colour == 'manual'){
     c(convert_to_hex(input$binormal_diag_priorc_opt_colour),
       convert_to_hex(input$binormal_diag_postc_opt_colour),
       convert_to_hex(input$binormal_diag_rbrc_opt_colour))
+  }
+})
+
+binormal_diag_inferences_colours = reactive({
+  if(input$binormal_diag_inferences_colour == 'default1'){
+    c("#FF6666", "#6699FF", "#05DEB2")
+  } else if (input$binormal_diag_inferences_colour == 'default2'){
+    c("blue", "green", "red", "#b3bfff")
+  } else if (input$binormal_diag_inferences_colour == 'custom'){
+    binormal_diag_colours()[c(1, 2, 3)]
+  } else if (input$binormal_diag_inferences_colour == 'manual'){
+    c(convert_to_hex(input$binormal_diag_colour_inferences_prior),
+      convert_to_hex(input$binormal_diag_colour_inferences_post),
+      convert_to_hex(input$binormal_diag_colour_inferences_rbr))
   }
 })
 
@@ -83,14 +97,16 @@ output$binormal_diag_postprior_copt_graph = renderPlot({
                                postcmoddensity = sect3.3_AUC_post()$postcmoddensity,
                                prior_lty = as.numeric(input$binormal_diag_priorc_opt_label),
                                post_lty = as.numeric(input$binormal_diag_postc_opt_label),
-                               colour_choice = binormal_diag_copt_colours())
+                               colour_choice = binormal_diag_copt_colours(),
+                               transparency = 0) #input$binormal_diag_c_opt_col_transparency)
 })
 
 output$binormal_diag_RB_copt_graph = renderPlot({
   binormal_diag_plots_AUC_copt(delta = input$binormal_diag_delta,
                                RBcmod = sect3.3_AUC_RBR()$RBcmod, 
                                rbr_lty = as.numeric(input$binormal_diag_rbc_opt_label),
-                               colour_choice = binormal_diag_copt_colours())
+                               colour_choice = binormal_diag_copt_colours(),
+                               transparency = 0) #input$binormal_diag_c_opt_col_transparency)
 })
 
 
@@ -101,17 +117,19 @@ output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
                                prior_vals = binormal_diag_err_char_plot_type()$prior, 
                                post_vals = binormal_diag_err_char_plot_type()$post, 
                                err_type = input$binormal_diag_inferences_plot_type, 
-                               prior_lty = 2, # temporary - needs to be changed 
-                               post_lty = 1,  # temporary - needs to be changed
-                               colour_choice = binormal_diag_colours()[c(1, 2, 3)]) # temp
+                               prior_lty = 2, # temporary - should be changed 
+                               post_lty = 1,  # temporary - should be changed
+                               colour_choice = binormal_diag_inferences_colours(), # temp
+                               transparency = 0) #input$binormal_diag_inferences_col_transparency)
 })
 
 output$binormal_diag_inf_opt_cutoff_plot2 = renderPlot({
   binormal_diag_err_char_plots(delta = input$binormal_diag_delta, 
                                rbr_vals = binormal_diag_err_char_plot_type()$RBR, 
                                err_type = input$binormal_diag_inferences_plot_type, 
-                               rbr_lty = 6,   # temporary - needs to be changed
-                               colour_choice = binormal_diag_colours()[c(1, 2, 3)]) # temp
+                               rbr_lty = 6,   # temporary - should be changed
+                               colour_choice = binormal_diag_inferences_colours(), # temp
+                               transparency = 0) #input$binormal_diag_inferences_col_transparency) 
 })
 
 

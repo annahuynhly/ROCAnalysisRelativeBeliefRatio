@@ -5,6 +5,8 @@
 # Add a github link to the repository
 # Align the headers
 # Align the footer margins for the rest of the sections.
+# Let people change the line type of the graphs -> LOW PRIORITY
+# Bug about colour transparency -> LOW PRIORITY
 # Make the code look nicer lmao
 
 # ISSUES:

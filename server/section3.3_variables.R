@@ -93,6 +93,15 @@ sect3.3_AUC_RBR = reactive({
                     postcmod = sect3.3_AUC_post()$postcmod)
 })
 
+sect3.3_cr = reactive({
+  binormal_diag_compute_credible_region(gamma = input$binormal_diag_gamma, 
+                                        delta = input$binormal_diag_delta, 
+                                        AUC_RBR = sect3.3_AUC_RBR()$RB_AUC, 
+                                        AUC_prior = sect3.3_AUC_prior()$priorAUC, 
+                                        AUC_post = sect3.3_AUC_post()$postAUC, 
+                                        posterior_content = sect3.3_AUC_RBR()$postPl_AUC)
+})
+
 sect3.3_AUC_prior_error_char_copt = reactive({
   if(input$binormal_diag_case1 == 1){
     binormal_diag_AUC_prior_error_char_copt(w = input$binormal_diag_prevalence_w,
