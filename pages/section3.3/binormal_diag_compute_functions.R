@@ -27,6 +27,25 @@ binormal_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, nND, mea
                  "lambda2post" = lambda2post, "mu0Dpost" = mu0Dpost, "mu0NDpost" = mu0NDpost)
 }
 
+# TODO: need to add copt for the unequal cases
+binormal_compute_post_hyperpara_unequal = function(mu0, tau0, lambda1, lambda2, nND, meanND, 
+                                                   sND_squared, nD, meanD, sD_squared){
+  # The unequal variances case.
+  lambda1Dpost = lambda1 + nD/2
+  lambda1NDpost = lambda1 + nND/2
+  tau0D = 1/sqrt(nD + 1/tau0^2)
+  tau0ND = 1/sqrt(nND + 1/tau0^2)
+  lambda2Dpost = lambda2 + sD_squared/2 + (tau0D**2)*(nD/tau0^2)*(meanD - mu0)^2/2
+  lambda2NDpost = lambda2 + sND_squared/2 + (tau0ND**2)*(nND/tau0^2)*(meanND - mu0)^2/2
+  mu0Dpost = (tau0D**2)*(nD*meanD + mu0/tau0**2)
+  mu0NDpost = (tau0ND**2)*(nND*meanND + mu0/tau0**2)
+
+  newlist = list("lambda1Dpost" = lambda1Dpost, "lambda1NDpost" = lambda1NDpost,
+                 "tau0D" = tau0D, "tau0ND" = tau0ND, "lambda2Dpost" = lambda2Dpost,
+                 "lambda2NDpost" = lambda2NDpost, "mu0Dpost" = mu0Dpost,
+                 "mu0NDpost" = mu0NDpost)
+}
+
 binormal_diag_prior = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
                                nMonteprior, delta, lambda1, lambda2, mu0, tau0){
   A = closed_bracket_grid(delta)# this is technically their grid
@@ -82,6 +101,55 @@ binormal_diag_prior = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   newlist = list("priorAUC" = priorAUC, "probAUCprior" = probAUCprior,
                  "priorAUCdensity" = priorAUCdensity,
                  "priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity)
+  return(newlist)
+}
+
+binormal_diag_prior_unequal = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
+                                       nMonteprior, delta, lambda1, lambda2, mu0, tau0){
+  # need to add error characteristics to this!
+  A = closed_bracket_grid(delta)# this is technically their grid
+  L = (1/delta) # length
+  
+  priorAUC = rep(0,L)
+  probAUCprior = 0
+  sigmaD = sqrt(1/rgamma(nMonteprior, lambda1, lambda1))
+  sigmaND = sqrt(1/rgamma(nMonteprior, lambda2, lambda2))
+  muD = rnorm(nMonteprior, mu0, (tau0*sigmaD))
+  muND = rnorm(nMonteprior, mu0, (tau0*sigmaND))
+  
+  pre_w = rep(0, nMonteprior)
+  for(i in 1:length(pre_w)){
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, version = "prior")
+  }
+  
+  priordeltaTmp = 2*(sigmaD**2 - sigmaND**2)*log(((1 - pre_w)/pre_w)*(sigmaD/sigmaND))
+  priordeltaTmp[priordeltaTmp < 0] = 0
+  priordeltaTmp = sqrt(priordeltaTmp)
+  
+  for (iMonteprior in 1:nMonteprior) {
+    muDi = muD[iMonteprior]
+    muNDi = muND[iMonteprior]
+    if (muDi - muNDi > priordeltaTmp[iMonteprior]){probAUCprior = probAUCprior + 1}
+    sigmaDi = sigmaD[iMonteprior]
+    sigmaNDi = sigmaND[iMonteprior]
+    
+    fcnAUC <- function(z){return (dnorm(z)*pnorm((muDi-muNDi)/sigmaDi+sigmaNDi/sigmaDi*z))}
+    AUC = integrate(fcnAUC,-Inf,Inf,abs.tol = 0.001) 
+    
+    for (igrid in 1:L){
+      if ( (A[igrid] < as.numeric(AUC[1])) & (as.numeric(AUC[1]) <= A[igrid + 1]) ) {
+        priorAUC[igrid] = priorAUC[igrid] + 1 
+      }
+    }
+  }
+  priorAUC = average_vector_values(priorAUC) # APPLYING SMOOTHER
+  priorAUC = priorAUC/nMonteprior
+  priorAUCdensity = L*priorAUC
+  probAUCprior = probAUCprior/nMonteprior
+  
+  newlist = list("priorAUC" = priorAUC, "probAUCprior" = probAUCprior,
+                 "priorAUCdensity" = priorAUCdensity) #,)
+                 #"priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity)
   return(newlist)
 }
 
@@ -146,6 +214,57 @@ binormal_diag_post = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, n
   return(newlist)
 }
 
+binormal_diag_post_unequal = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, nD = NA, version,
+                                      nMontepost, delta, lambda1Dpost, lambda1NDpost, lambda2Dpost, lambda2NDpost, 
+                                      mu0Dpost, mu0NDpost, tau0D, tau0ND){
+  A = closed_bracket_grid(delta) # this is technically their grid
+  L = (1/delta) # length
+  
+  postAUC = rep(0,L)
+  probAUCpost = 0
+  
+  sigmaDpost = sqrt(1/rgamma(nMontepost, lambda1Dpost, lambda2Dpost))
+  sigmaNDpost = sqrt(1/rgamma(nMontepost, lambda1NDpost, lambda2NDpost))
+  
+  pre_w = rep(0, nMonteprior)
+  for(i in 1:length(pre_w)){
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
+  }
+  
+  postdeltaTmp = 2*( sigmaDpost**2- sigmaNDpost**2)*log(((1-pre_w)/pre_w)*(sigmaDpost/sigmaNDpost))
+  postdeltaTmp[postdeltaTmp<0] = 0
+  postdeltaTmp = sqrt(postdeltaTmp)
+  muDpost = mu0Dpost + tau0D*sigmaDpost*rnorm(nMontepost, 0, 1)
+  muNDpost = mu0NDpost + tau0ND*sigmaNDpost*rnorm(nMontepost, 0, 1)
+  
+  # this is the loop for the Monte Carlo for the posterior
+  for (iMontepost in 1:nMontepost) {
+    muDi = muDpost[iMontepost]
+    muNDi = muNDpost[iMontepost]
+    if (muDi - muNDi > postdeltaTmp[iMontepost]){probAUCpost = probAUCpost + 1}
+    sigmaDi = sigmaDpost[iMontepost]
+    sigmaNDi = sigmaNDpost[iMontepost]
+
+    fcnAUC = function(z){return (dnorm(z)*pnorm((muDi-muNDi)/sigmaDi+sigmaNDi/sigmaDi*z))}
+    AUC = integrate(fcnAUC, -Inf, Inf, abs.tol = 0.001) 
+    for (igrid in 1:L){
+      if ( (A[igrid] < as.numeric(AUC[1])) & (as.numeric(AUC[1]) <= A[igrid + 1]) ) {
+        postAUC[igrid] = postAUC[igrid] + 1 
+      }
+    }
+  }
+  postAUC = average_vector_values(postAUC) # applying a smoother
+  postAUC = postAUC/nMontepost
+  postAUCdensity = L*postAUC
+  probAUCpost = probAUCpost/nMontepost
+  
+  newlist = list("postAUC" = postAUC, "postAUCdensity" = postAUCdensity,
+                 "probAUCpost" = probAUCpost) #,
+                 #"postcmod" = postcmod, "postcmoddensity" = postcmoddensity)
+  return(newlist)
+}
+
+# This should be same for the equal and unequal case
 binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC,
                              priorcmod, postcmod){
   grid = open_bracket_grid(delta)
@@ -201,7 +320,6 @@ binormal_diag_RBR = function(delta, probAUCprior, probAUCpost, priorAUC, postAUC
                  "plausible_region" = plausible_region, "RBcmod" = RBcmod,
                  "cmodest" = cmodest, "coptest" = coptest)
 }
-
 
 binormal_diag_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prior, AUC_post, 
                                                  posterior_content){
@@ -447,28 +565,50 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 ###############################
 
 # the hyperparamters for the prior on the mu's and sigma's
-#mu0=0
-#tau0=0.5
-#lambda1=1.787
-#lambda2=1.056
+mu0=0
+tau0=0.5
+lambda1=1.787
+lambda2=1.056
 
 # the data 
-#nND=25
-#meanND=-0.072
-#sND_squared=19.638
+nND=25
+meanND=-0.072
+sND_squared=19.638
 
-#nD=20
-#meanD=0.976
-#sD_squared=16.778
+nD=20
+meanD=0.976
+sD_squared=16.778
 
-#nMonteprior = 100000
-#nMontepost = 100000
-#delta = 0.005
+nMonteprior = 100000
+nMontepost = 100000
+delta = 0.005
 
-#w = 0.40
-#alpha1w = 15.3589 
-#alpha2w = 22.53835
-#gamma = 0.70
+w = 0.40
+alpha1w = 15.3589 
+alpha2w = 22.53835
+gamma = 0.70
+
+####################################################################### the unequal variance case
+
+post_hyperpara = binormal_compute_post_hyperpara_unequal(mu0, tau0, lambda1, lambda2, nND, meanND, sND_squared, 
+                                                         nD, meanD, sD_squared)
+
+prior_val = binormal_diag_prior_unequal(w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w, 
+                                        nMonteprior = nMonteprior, delta = delta, lambda1 = lambda1, 
+                                        lambda2 = lambda2, mu0 = mu0, tau0 = tau0)
+
+post_val = binormal_diag_post_unequal(w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w, nND = nND, nD = nD, version = "post",
+                                      nMontepost = nMontepost, delta = delta, 
+                                      lambda1Dpost = post_hyperpara$lambda1Dpost, 
+                                      lambda1NDpost = post_hyperpara$lambda1NDpost, 
+                                      lambda2Dpost = post_hyperpara$lambda2Dpost, 
+                                      lambda2NDpost = post_hyperpara$lambda2NDpost, 
+                                      mu0Dpost = post_hyperpara$mu0Dpost, 
+                                      mu0NDpost = post_hyperpara$mu0NDpost, 
+                                      tau0D = post_hyperpara$tau0D, 
+                                      tau0ND = post_hyperpara$tau0ND)
+
+
 
 #post_hyperpara = binormal_compute_post_hyperpara(mu0, tau0, lambda1, lambda2, nND, meanND, 
 #                                                 sND_squared, nD, meanD, sD_squared)

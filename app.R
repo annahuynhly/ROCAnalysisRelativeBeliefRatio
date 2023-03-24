@@ -3,14 +3,13 @@
 ################################################################
 # Add proper link to the resources in the footer
 # Add a github link to the repository
-# Align the headers
-# Align the footer margins for the rest of the sections.
+# Align the headers -> LOW PRIORITY
+# Align the footer margins for the rest of the sections. -> LOW PRIORITY
 # Let people change the line type of the graphs -> LOW PRIORITY
 # Bug about colour transparency -> LOW PRIORITY
 # Make the code look nicer lmao
 
 # ISSUES:
-# sect 3.3 -> error, fdr, fndr graph seems a bit off
 
 ################################################################
 # LIBRARIES                                                    #
