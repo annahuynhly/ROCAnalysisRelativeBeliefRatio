@@ -22,6 +22,7 @@ library(shinycssloaders) # for loading screens
 # Other libraries used for the code
 library(rBeta2009)
 library(tidyverse)
+#library(purrr) # Unsure where it is used in the code, but it is used!
 
 # Globally setting the spinner colour and type
 options(spinner.type = 6, spinner.color = "#18bc9b")
