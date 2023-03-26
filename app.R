@@ -3,9 +3,13 @@
 ################################################################
 # Add proper link to the resources in the footer
 # Add a github link to the repository
-# Align the headers
-# Align the footer margins for the rest of the sections.
+# Align the headers -> LOW PRIORITY
+# Align the footer margins for the rest of the sections. -> LOW PRIORITY
+# Let people change the line type of the graphs -> LOW PRIORITY
+# Bug about colour transparency -> LOW PRIORITY
 # Make the code look nicer lmao
+
+# ISSUES:
 
 ################################################################
 # LIBRARIES                                                    #
@@ -34,19 +38,25 @@ source("routes.R")
 ################################################################
 
 ui = navbarPage(title = " ROC Analysis & Relative Belief",
-                tabPanel("Getting Started", home_page),
-                tabPanel("The Prevalence", page_prevalence_setup),
+                tabPanel("Home", home_page),
+                #tabPanel("The Prevalence", page_prevalence_setup),
                 navbarMenu("Finite Valued Diagnostic",
-                            tabPanel("Definitions", page_sect3.2_def),
-                            tabPanel("Computations", page_finite_val),
+                           tabPanel("Definitions", page_sect3.2_def),
+                           tabPanel("Getting Started", page_finite_val_start),
+                           tabPanel("The Prevalence", page_finite_val_prevalence),
+                           tabPanel("Computations", page_finite_val),
                 ),
                 navbarMenu("Binormal Diagnostic",
-                            tabPanel("Definitions", page_sect3.3_def),
-                            tabPanel("Computations", page_binormal_val)
+                           tabPanel("Definitions", page_sect3.3_def),
+                           tabPanel("Getting Started", page_binormal_diag_start),
+                           tabPanel("The Prevalence", page_binormal_diag_prevalence),
+                           tabPanel("Computations", page_binormal_diag)
                 ),
                 navbarMenu("Nonparametric Bayes Model",
-                            tabPanel("Definitions", page_sect3.4_def),
-                            tabPanel("Computations", page_nonpara_bayes)
+                           tabPanel("Definitions", page_sect3.4_def),
+                           tabPanel("Getting Started", page_nonpara_bayes_start),
+                           tabPanel("The Prevalence", page_nonpara_bayes_prevalence),
+                           tabPanel("Computations", page_nonpara_bayes)
                 ),
                 tabPanel("Contact & Credits", contact_page),
                 id = "navbarID",
@@ -64,32 +74,34 @@ ui = navbarPage(title = " ROC Analysis & Relative Belief",
 ################################################################
 
 server = function(input, output, session) {
-  # Setting the seed
-  global_seed = reactive(input$chosen_seed)
-  
-  # SECTION 3.1 ##################################################   
 
-  source(file.path("server", "section3.1.R"),  local = TRUE)$value
-  
   # SECTION 3.2 ################################################## 
   
-  source(file.path("server", "section3.2.definitions.R"),  local = TRUE)$value
-  source(file.path("server", "section3.2.variables.R"),  local = TRUE)$value
-  source(file.path("server", "section3.2.outputs.R"),  local = TRUE)$value
+  source(file.path("server", "section3.2_definitions.R"),  local = TRUE)$value
+  source(file.path("server", "section3.2_prevalence.R"),  local = TRUE)$value
+  source(file.path("server", "section3.2_variables.R"),  local = TRUE)$value
+  source(file.path("server", "section3.2_outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   
-  source(file.path("server", "section3.3.definitions.R"),  local = TRUE)$value
-  source(file.path("server", "section3.3.variables.R"),  local = TRUE)$value
-  source(file.path("server", "section3.3.outputs.R"),  local = TRUE)$value
+  source(file.path("server", "section3.3_definitions.R"),  local = TRUE)$value
+  source(file.path("server", "section3.3_prevalence.R"),  local = TRUE)$value
+  source(file.path("server", "section3.3_variables.R"),  local = TRUE)$value
+  source(file.path("server", "section3.3_outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   
   source(file.path("server", "section3.4.R"),  local = TRUE)$value
+  source(file.path("server", "section3.4_prevalence.R"),  local = TRUE)$value
+  #source(file.path("server", "section3.4_variables.R"),  local = TRUE)$value
+  #source(file.path("server", "section3.4_outputs.R"),  local = TRUE)$value
   
   # ANIMATIONS ###################################################
   # Note: may make a separate .R file based on the number of animations
-  observe(addHoverAnim(session, 'prevalence_arrow', 'wobble'))
+  
+  observe(addHoverAnim(session, 'finite_val_diag_prevalence_arrow', 'wobble'))
+  observe(addHoverAnim(session, 'binormal_diag_prevalence_arrow', 'wobble'))
+  observe(addHoverAnim(session, 'nonpara_bayes_prevalence_arrow', 'wobble'))
   observe(addHoverAnim(session, 'AnnaImg', 'rubberBand'))
   observe(addHoverAnim(session, 'MikeImg', 'tada'))
   observe(addHoverAnim(session, 'LuaiImg', 'flip'))

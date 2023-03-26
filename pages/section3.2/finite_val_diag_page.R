@@ -4,43 +4,48 @@
 
 finite_val_setup_variables = fluidPage(
   titlePanel("Setup Variables"),
+  br(),
   
   fluidRow(
-    column(3, numericInput(inputId = "finite_val_nND",
-                           label = 'Total Non-Diseased',
-                           value = 50, min = 1)),
-    column(3, numericInput(inputId = "finite_val_nD", 
-                           label = 'Total Diseased',
-                           value = 100, min = 1)),
+    column(3, h3("Simulation Sizes:")),
     column(3, numericInput(inputId = "finite_val_nMonteCarlo", 
                            label = 'Monte Carlo (Simulation) Sample Size',
                            value = 100000, min = 0)),
+    column(3, numericInput(inputId = "finite_val_delta", 
+                           label = "Delta", 
+                           value = 0.04, min = 0, max = 1)),
   ),
   
   fluidRow(
+    column(3, h3("Hyperparameters:")),
     column(3, textInput(inputId = "finite_val_alpha_ND",
                         label = 'alphaND1, ..., alphaNDm',
                         value = "1, 1, 1, 1, 1")),
     column(3, textInput(inputId = "finite_val_alpha_D",
                         label = 'alphaD1, ..., alphaDm',
                         value = "1, 1, 1, 1, 1")),
-    column(3, textInput(inputId = "finite_val_fND",
-                        label = 'fNd',
-                        value = "29, 7, 4, 5, 5")),
   ),
   
   fluidRow(
+    column(3, h3("Data (Sample Count):")),
+    column(3, numericInput(inputId = "finite_val_nND",
+                           label = 'Total Non-Diseased',
+                           value = 50, min = 1)),
+    column(3, numericInput(inputId = "finite_val_nD", 
+                           label = 'Total Diseased',
+                           value = 100, min = 1)),
+  ),
+  
+  fluidRow(
+    column(3, h3("Data (Distribution)")),
+    column(3, textInput(inputId = "finite_val_fND",
+                        label = 'fNd',
+                        value = "29, 7, 4, 5, 5")),
     column(3, textInput(inputId = "finite_val_fD",
                         label = 'fD',
                         value = "14, 7, 25, 33, 21")),
-    column(3, numericInput(inputId = "finite_val_delta", 
-                           label = "Delta", 
-                           value = 0.04, min = 0, max = 1)),
-    column(3, textInput(inputId = "finite_val_gamma", 
-                        label = tags$p("Gamma (must be less than posterior content)", 
-                                style = "font-size: 95%"), 
-                        value = "NA")),
   ),
+  
   br(style = "line-height:10;"),
 )
 
@@ -55,6 +60,10 @@ finite_val_hypothesizedAUC = div(
       numericInput(inputId = "finite_val_hypoAUC",
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5),
+      textInput(inputId = "finite_val_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA")
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
