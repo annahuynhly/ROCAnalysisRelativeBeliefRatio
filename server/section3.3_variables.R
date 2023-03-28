@@ -22,7 +22,9 @@ sect3.3_AUC_prior = reactive({
   set.seed(SECT3.3_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$binormal_diag_case1 == 1){
     binormal_diag_prior(w = input$binormal_diag_prevalence_w,
-                        nMonteprior = input$binormal_diag_nMonteCarlo, 
+                        alpha1w = NA, 
+                        alpha2w = NA, 
+                        nMonteprior = 10000, #input$binormal_diag_nMonteCarlo, 
                         delta = input$binormal_diag_delta, 
                         lambda1 = input$binormal_diag_lambda1, 
                         lambda2 = input$binormal_diag_lambda2, 
@@ -32,7 +34,7 @@ sect3.3_AUC_prior = reactive({
     binormal_diag_prior(w = FALSE,
                         alpha1w = input$binormal_diag_prevalence_alpha1w, 
                         alpha2w = input$binormal_diag_prevalence_alpha2w, 
-                        nMonteprior = input$binormal_diag_nMonteCarlo, 
+                        nMonteprior = 10000, #input$binormal_diag_nMonteCarlo, 
                         delta = input$binormal_diag_delta, 
                         lambda1 = input$binormal_diag_lambda1, 
                         lambda2 = input$binormal_diag_lambda2, 
@@ -44,7 +46,12 @@ sect3.3_AUC_prior = reactive({
 sect3.3_AUC_post = reactive({
   if(input$binormal_diag_case1 == 1){
     binormal_diag_post(w = input$binormal_diag_prevalence_w,
-                       nMontepost = input$binormal_diag_nMonteCarlo, 
+                       alpha1w = NA, 
+                       alpha2w = NA, 
+                       nND = NA, 
+                       nD = NA,
+                       version = NA,
+                       nMontepost = 10000, #input$binormal_diag_nMonteCarlo, 
                        delta = input$binormal_diag_delta, 
                        lambda1post = sect3.3_hyperpara()$lambda1post, 
                        lambda2post = sect3.3_hyperpara()$lambda2post, 
@@ -55,9 +62,11 @@ sect3.3_AUC_post = reactive({
   } else if (input$binormal_diag_case2 == "A"){ 
     binormal_diag_post(w = FALSE,
                        alpha1w = input$binormal_diag_prevalence_alpha1w, 
-                       alpha2w = input$binormal_diag_prevalence_alpha2w, 
+                       alpha2w = input$binormal_diag_prevalence_alpha2w,
+                       nND = NA, 
+                       nD = NA,
                        version = "prior",
-                       nMontepost = input$binormal_diag_nMonteCarlo, 
+                       nMontepost = 10000, #input$binormal_diag_nMonteCarlo, 
                        delta = input$binormal_diag_delta, 
                        lambda1post = sect3.3_hyperpara()$lambda1post, 
                        lambda2post = sect3.3_hyperpara()$lambda2post, 
@@ -72,7 +81,7 @@ sect3.3_AUC_post = reactive({
                        nND = input$binormal_diag_nND, 
                        nD = input$binormal_diag_nD, 
                        version = "post",
-                       nMontepost = input$binormal_diag_nMonteCarlo, 
+                       nMontepost = 10000, #input$binormal_diag_nMonteCarlo, 
                        delta = input$binormal_diag_delta, 
                        lambda1post = sect3.3_hyperpara()$lambda1post, 
                        lambda2post = sect3.3_hyperpara()$lambda2post, 
@@ -172,7 +181,7 @@ sect3.3_AUC_post_error_char_copt = reactive({
 })
 
 sect3.3_AUC_RBR_error_char_copt = reactive({
-  binormal_diag_AUC_RBR_error_char_copt(delta = input$binormal_diag_delta, 
+  binormal_diag_AUC_RBR_error_char_copt(delta = input$binormal_diag_delta,
                                         priorFNR =  sect3.3_AUC_prior_error_char_copt()$priorFNR, 
                                         priorFPR = sect3.3_AUC_prior_error_char_copt()$priorFPR, 
                                         priorError = sect3.3_AUC_prior_error_char_copt()$priorError,

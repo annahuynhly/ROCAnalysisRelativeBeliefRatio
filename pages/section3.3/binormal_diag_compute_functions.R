@@ -165,7 +165,7 @@ binormal_diag_post = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, n
   muDpost = mu0Dpost+tau0D*sigmaDpost*rnorm(nMontepost,0,1)
   muNDpost = mu0NDpost+tau0ND*sigmaNDpost*rnorm(nMontepost,0,1)
   
-  pre_w = rep(0, nMonteprior)
+  pre_w = rep(0, nMontepost)
   for(i in 1:length(pre_w)){
     pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
   }
@@ -226,7 +226,7 @@ binormal_diag_post_unequal = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND
   sigmaDpost = sqrt(1/rgamma(nMontepost, lambda1Dpost, lambda2Dpost))
   sigmaNDpost = sqrt(1/rgamma(nMontepost, lambda1NDpost, lambda2NDpost))
   
-  pre_w = rep(0, nMonteprior)
+  pre_w = rep(0, nMontepost)
   for(i in 1:length(pre_w)){
     pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
   }
@@ -455,7 +455,7 @@ binormal_diag_AUC_post_error_char_copt = function(w = FALSE, alpha1w = NA, alpha
   U = rbeta(nMontepost, 1, 1)
   muNDpost = mu0NDpost + tau0ND*sigmaNDpost*qnorm(postimpwt*U)
   # prevalence
-  wpost = rep(0, nMonteprior)
+  wpost = rep(0, nMontepost)
   for(i in 1:length(wpost)){
     wpost[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) 
   }
@@ -514,6 +514,7 @@ binormal_diag_AUC_post_error_char_copt = function(w = FALSE, alpha1w = NA, alpha
 binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, priorError,
                                                  priorFDR, priorFNDR, postFNR, postFPR,
                                                  postError, postFDR, postFNDR){
+  grid = open_bracket_grid(delta)
   A = closed_bracket_grid(delta)# this is technically their grid
   L = (1/delta) # length
   
@@ -539,7 +540,7 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
     if (priorFDR[i] > 0 & RBFDR[i] > RBFDR[imaxFDR] ){imaxFDR = i}
     if (priorFNDR[i] > 0 & RBFNDR[i] > RBFNDR[imaxFNDR] ){imaxFNDR = i}
   }
-  
+
   FNRest = grid[imaxFNR]
   FPRest = grid[imaxFPR]
   Errorest = grid[imaxError]
@@ -565,48 +566,50 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 ###############################
 
 # the hyperparamters for the prior on the mu's and sigma's
-mu0=0
-tau0=0.5
-lambda1=1.787
-lambda2=1.056
+#mu0=0
+#tau0=0.5
+#lambda1=1.787
+#lambda2=1.056
 
 # the data 
-nND=25
-meanND=-0.072
-sND_squared=19.638
+#nND=25
+#meanND=-0.072
+#sND_squared=19.638
 
-nD=20
-meanD=0.976
-sD_squared=16.778
+#nD=20
+#meanD=0.976
+#sD_squared=16.778
 
-nMonteprior = 100000
-nMontepost = 100000
-delta = 0.005
+#nMonteprior = 100000
+#nMontepost = 100000
+#delta = 0.005
 
-w = 0.40
-alpha1w = 15.3589 
-alpha2w = 22.53835
-gamma = 0.70
+#w = 0.40
+#alpha1w = 15.3589 
+#alpha2w = 22.53835
+#gamma = 0.70
 
 ####################################################################### the unequal variance case
 
-post_hyperpara = binormal_compute_post_hyperpara_unequal(mu0, tau0, lambda1, lambda2, nND, meanND, sND_squared, 
-                                                         nD, meanD, sD_squared)
+#post_hyperpara = binormal_compute_post_hyperpara_unequal(mu0, tau0, lambda1, lambda2, nND, meanND, sND_squared, 
+#                                                         nD, meanD, sD_squared)
 
-prior_val = binormal_diag_prior_unequal(w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w, 
-                                        nMonteprior = nMonteprior, delta = delta, lambda1 = lambda1, 
-                                        lambda2 = lambda2, mu0 = mu0, tau0 = tau0)
+#prior_val = binormal_diag_prior_unequal(w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w, 
+#                                        nMonteprior = 10000, #nMonteprior, 
+#                                        delta = delta, lambda1 = lambda1, 
+#                                        lambda2 = lambda2, mu0 = mu0, tau0 = tau0)
 
-post_val = binormal_diag_post_unequal(w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w, nND = nND, nD = nD, version = "post",
-                                      nMontepost = nMontepost, delta = delta, 
-                                      lambda1Dpost = post_hyperpara$lambda1Dpost, 
-                                      lambda1NDpost = post_hyperpara$lambda1NDpost, 
-                                      lambda2Dpost = post_hyperpara$lambda2Dpost, 
-                                      lambda2NDpost = post_hyperpara$lambda2NDpost, 
-                                      mu0Dpost = post_hyperpara$mu0Dpost, 
-                                      mu0NDpost = post_hyperpara$mu0NDpost, 
-                                      tau0D = post_hyperpara$tau0D, 
-                                      tau0ND = post_hyperpara$tau0ND)
+#post_val = binormal_diag_post_unequal(w = FALSE, alpha1w = alpha1w, alpha2w = alpha2w, nND = nND, nD = nD, version = "post",
+#                                      nMontepost = nMontepost = 10000, #nMonteprior, 
+#                                      delta = delta, 
+#                                      lambda1Dpost = post_hyperpara$lambda1Dpost, 
+#                                      lambda1NDpost = post_hyperpara$lambda1NDpost, 
+#                                      lambda2Dpost = post_hyperpara$lambda2Dpost, 
+#                                      lambda2NDpost = post_hyperpara$lambda2NDpost, 
+#                                      mu0Dpost = post_hyperpara$mu0Dpost, 
+#                                      mu0NDpost = post_hyperpara$mu0NDpost, 
+#                                      tau0D = post_hyperpara$tau0D, 
+#                                      tau0ND = post_hyperpara$tau0ND)
 
 
 
@@ -625,6 +628,7 @@ post_val = binormal_diag_post_unequal(w = FALSE, alpha1w = alpha1w, alpha2w = al
 #rbr_val = binormal_diag_RBR(delta, prior_val$probAUCprior, post_val$probAUCpost,
 #                            prior_val$priorAUC, post_val$postAUC, prior_val$priorcmod,
 #                            post_val$postcmod)
+
 #par(mfrow=c(1,2))
 #grid = open_bracket_grid(0.005)
 
@@ -637,9 +641,32 @@ post_val = binormal_diag_post_unequal(w = FALSE, alpha1w = alpha1w, alpha2w = al
 
 #prior_err = binormal_diag_AUC_prior_error_char_copt(w, alpha1w, alpha2w, rbr_val$coptest, nMonteprior, delta, 
 #                                                    lambda1, lambda2, mu0, tau0)
-
 #prior_err = binormal_diag_AUC_prior_error_char_copt(w = FALSE, alpha1w, alpha2w, coptest = 0.715, nMonteprior, delta, 
 #                                                    lambda1, lambda2, mu0, tau0)
+
+#post_err = binormal_diag_AUC_post_error_char_copt(w, alpha1w, alpha2w,
+#                                                  nND, nD, "post",
+#                                                  rbr_val$coptest, 
+#                                                  nMontepost, 
+#                                                  delta, 
+#                                                  post_hyperpara$lambda1post, 
+#                                                  post_hyperpara$lambda2post, 
+#                                                  post_hyperpara$mu0Dpost, 
+#                                                  post_hyperpara$mu0NDpost, 
+#                                                  post_hyperpara$tau0D, 
+#                                                  post_hyperpara$tau0ND)
+
+#binormal_diag_AUC_RBR_error_char_copt(delta = delta,
+#                                      priorFNR =  prior_err$priorFNR, 
+#                                      priorFPR = prior_err$priorFPR, 
+#                                      priorError = prior_err$priorError,
+#                                      priorFDR = prior_err$priorFDR, 
+#                                      priorFNDR = prior_err$priorFNDR, 
+#                                      postFNR = post_err$postFNR, 
+#                                      postFPR = post_err$postFPR,
+#                                      postError = post_err$postError, 
+#                                      postFDR = post_err$postFDR, 
+ #                                     postFNDR = post_err$postFNDR)
 
 #par(mfrow=c(1,1))
 #plot(grid, prior_err$priorFNRdensity, xlab="FNR",ylab="prior",type="l",lty=1)
