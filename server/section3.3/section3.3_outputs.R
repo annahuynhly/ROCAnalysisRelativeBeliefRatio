@@ -3,13 +3,13 @@
 ################################################################
 
 output$binormal_diag_hypoAUC_value = renderPrint({
-  list("Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
+  list("P(AUC > 1/2)" = sect3.3_AUC_prior()$probAUCprior,
+       "P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post()$probAUCpost,
+       "Relative Belief Ratio of AUC > 1/2" = sect3.3_AUC_RBR()$RBprobAUC,
+       "Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
        "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
        "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
-       "Credible region for the AUC" = sect3.3_cr()$credible_region,
-       "P(AUC > 1/2)" = sect3.3_AUC_prior()$probAUCprior,
-       "P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post()$probAUCpost,
-       "Relative Belief Ratio of AUC > 1/2" = sect3.3_AUC_RBR()$RBprobAUC)
+       "Credible region for the AUC" = sect3.3_cr()$credible_region)
 })
 
 output$binormal_diag_inf_opt_cutoff = renderPrint({
@@ -19,8 +19,8 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                        sect3.3_AUC_RBR_error_char_copt()$FDRest,
                        sect3.3_AUC_RBR_error_char_copt()$FNDRest)
   colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-  list("Copt Estimate" = sect3.3_AUC_RBR()$coptest,
-       "Cmod Estimate" = sect3.3_AUC_RBR()$cmodest,
+  list("Copt Estimate" = sect3.3_AUC_RBR_copt()$coptest,
+       "Cmod Estimate" = sect3.3_AUC_RBR_copt()$cmodest,
        "Error Characteristics" = temp_df)
 })
 
@@ -76,11 +76,11 @@ binormal_diag_inferences_colours = reactive({
 
 output$binormal_diag_postprior_graph = renderPlot({
   binormal_diag_prior_post_graph(delta = input$binormal_diag_delta, 
-                                   prior = sect3.3_AUC_prior()$priorAUCdensity, 
-                                   post = sect3.3_AUC_post()$postAUCdensity, 
-                                   plausible_region = sect3.3_AUC_RBR()$plausible_region,
-                                   colour_choice = binormal_diag_colours()[c(1, 2, 4, 6)],
-                                   transparency = input$binormal_diag_col_transparency)
+                                  prior = sect3.3_AUC_prior()$priorAUCdensity, 
+                                  post = sect3.3_AUC_post()$postAUCdensity, 
+                                  plausible_region = sect3.3_AUC_RBR()$plausible_region,
+                                  colour_choice = binormal_diag_colours()[c(1, 2, 4, 6)],
+                                  transparency = input$binormal_diag_col_transparency)
 })
 
 output$binormal_diag_RB_graph = renderPlot({
@@ -92,9 +92,9 @@ output$binormal_diag_RB_graph = renderPlot({
 })
 
 output$binormal_diag_postprior_copt_graph = renderPlot({
-  binormal_diag_plots_AUC_copt(delta = input$binormal_diag_delta, 
-                               priorcmoddensity = sect3.3_AUC_prior()$priorcmoddensity, 
-                               postcmoddensity = sect3.3_AUC_post()$postcmoddensity,
+  binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                               priorcmoddensity = sect3.3_AUC_prior_copt()$priorcmoddensity, 
+                               postcmoddensity = sect3.3_AUC_post_copt()$postcmoddensity,
                                prior_lty = as.numeric(input$binormal_diag_priorc_opt_label),
                                post_lty = as.numeric(input$binormal_diag_postc_opt_label),
                                colour_choice = binormal_diag_copt_colours(),
@@ -102,18 +102,17 @@ output$binormal_diag_postprior_copt_graph = renderPlot({
 })
 
 output$binormal_diag_RB_copt_graph = renderPlot({
-  binormal_diag_plots_AUC_copt(delta = input$binormal_diag_delta,
-                               RBcmod = sect3.3_AUC_RBR()$RBcmod, 
+  binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                               RBcmod = sect3.3_AUC_RBR_copt()$RBcmod, 
                                rbr_lty = as.numeric(input$binormal_diag_rbc_opt_label),
                                colour_choice = binormal_diag_copt_colours(),
                                transparency = 0) #input$binormal_diag_c_opt_col_transparency)
 })
 
 
-
 # Note: colour situation here is temporary.
 output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
-  binormal_diag_err_char_plots(delta = input$binormal_diag_delta, 
+  binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),
                                prior_vals = binormal_diag_err_char_plot_type()$prior, 
                                post_vals = binormal_diag_err_char_plot_type()$post, 
                                err_type = input$binormal_diag_inferences_plot_type, 
@@ -124,7 +123,7 @@ output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
 })
 
 output$binormal_diag_inf_opt_cutoff_plot2 = renderPlot({
-  binormal_diag_err_char_plots(delta = input$binormal_diag_delta, 
+  binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),
                                rbr_vals = binormal_diag_err_char_plot_type()$RBR, 
                                err_type = input$binormal_diag_inferences_plot_type, 
                                rbr_lty = 6,   # temporary - should be changed

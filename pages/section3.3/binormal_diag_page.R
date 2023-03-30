@@ -2,12 +2,12 @@
 # SETUP VARIABLES & PICKING SAMPLING REGIME                    #
 ################################################################
 
-binormal_diag_setup_variables_alt = div( 
-  titlePanel("Setup Variables - NEED TO MODIFY"),
+binormal_diag_setup_variables_1 = div( 
+  titlePanel("Setup Variables"),
   sidebarLayout(
     sidebarPanel(width = 3, 
                  selectInput(inputId = "binormal_case", 
-                             label = "Please select the scenario..",
+                             label = "Please select the scenario.",
                              c("Assume variances are equal" = "equal_var", 
                                "Assume variances are unequal" = "unequal_var"),
                              selected = "equal_var"
@@ -38,12 +38,12 @@ binormal_diag_setup_variables_alt = div(
         
         fluidRow(
           column(3, h4("Hyperparameters 2:")),
-          column(3, numericInput(inputId = "binormal_diag_lambda2", 
-                                 label = 'lambda2',
-                                 value = 1.056)),
           column(3, numericInput(inputId = "binormal_diag_lambda1", 
                                  label = 'lambda1',
                                  value = 1.787)),
+          column(3, numericInput(inputId = "binormal_diag_lambda2", 
+                                 label = 'lambda2',
+                                 value = 1.056)),
         ),
         
         fluidRow(
@@ -81,6 +81,109 @@ binormal_diag_setup_variables_alt = div(
   ),
   br(style = "line-height:2;"),
 )
+
+
+
+binormal_diag_setup_variables_2 = div( 
+  titlePanel("Setup Variables"),
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+      selectInput(inputId = "binormal_optimal_cutoff_denote_variables", 
+                  label = "Would you like to use the same variables from the previous section?",
+                  choices = c("Yes" = "yes", 
+                              "No" = "no"),
+                  selected = "yes"
+      ),
+      selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
+                  label = "Would you like to hardcode the copt estimate?",
+                  choice = c("Yes" = "yes",
+                             "No" = "no"),
+                  selected = "no"
+      ),
+      conditionalPanel(
+        condition = "input.binormal_optimal_cutoff_denote_copt == 'yes'",
+        numericInput(inputId = "binormal_diag_optimal_cutoff_copt",
+                     label = 'Input the copt estimate.',
+                     value = 0.715), 
+      ),
+      
+                 
+    ),
+    mainPanel(
+      conditionalPanel(
+        condition = "input.binormal_optimal_cutoff_denote_variables == 'no'",
+        fluidPage(
+          fluidRow(
+            column(3, h4("Simulation Sizes:")),
+            column(3, numericInput(inputId = "binormal_diag_nMonteCarlo_alt", 
+                                   label = 'Simulation Sample Size',
+                                   value = 300000, min = 1)),
+            column(3, numericInput(inputId = "binormal_diag_delta_alt", 
+                                   label = 'Delta',
+                                   value = 0.005)),
+          ),
+          
+          fluidRow(
+            column(3, h4("Hyperparameters 1:")),
+            column(3, numericInput(inputId = "binormal_diag_mu0_alt", 
+                                   label = 'mu0',
+                                   value = 0)),
+            column(3, numericInput(inputId = "binormal_diag_tau0_alt", 
+                                   label = 'tau0',
+                                   value = 0.5)),
+          ),
+          
+          fluidRow(
+            column(3, h4("Hyperparameters 2:")),
+            column(3, numericInput(inputId = "binormal_diag_lambda1_alt", 
+                                   label = 'lambda1',
+                                   value = 1.787)),
+            column(3, numericInput(inputId = "binormal_diag_lambda2_alt", 
+                                   label = 'lambda2',
+                                   value = 1.056)),
+          ),
+          
+          fluidRow(
+            column(3, h4("Data Sample Size:")),
+            column(3, numericInput(inputId = "binormal_diag_nND_alt",
+                                   label = 'nND',
+                                   value = 25)),
+            column(3, numericInput(inputId = "binormal_diag_nD_alt", 
+                                   label = 'nD',
+                                   value = 20)),
+          ),
+          
+          fluidRow(
+            column(3, h4("Data Means:")),
+            column(3, numericInput(inputId = "binormal_diag_meanND_alt", 
+                                   label = 'meanND',
+                                   value = -0.072)),
+            column(3, numericInput(inputId = "binormal_diag_meanD_alt", 
+                                   label = 'meanD',
+                                   value = 0.976)),
+          ),
+          
+          fluidRow(
+            column(3, h4("Data Sum of Squares:")),
+            column(3, numericInput(inputId = "binormal_diag_sND_squared_alt", 
+                                   label = 'sND squared',
+                                   value = 19.638)),
+            column(3, numericInput(inputId = "binormal_diag_sD_squared_alt", 
+                                   label = 'sD squared',
+                                   value = 16.778)),
+          ),
+        )
+      ),
+      
+      conditionalPanel(
+        condition = "input.binormal_optimal_cutoff_denote_variables == 'yes'",
+        p("Currently the variables will be used from the previous section instead.")
+      ),
+    )
+  ),
+  br(style = "line-height:2;"),
+)
+
 
 
 ################################################################
@@ -379,16 +482,21 @@ binormal_diag_download_1 = div(
 # PAGE LOGIC                                                   #
 ################################################################
 
-page_binormal_diag = div(
+page_binormal_diag_inference1 = div(
   titlePanel("Binormal Diagnostic"),
-  # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
-              tabPanel("Setup Variables", binormal_diag_setup_variables_alt),
-              #tabPanel("Description", binormal_diag_description),
+              tabPanel("Setup Variables", binormal_diag_setup_variables_1),
               tabPanel("Inferences for the AUC", binormal_diag_hypothesizedAUC),
               tabPanel("Plots for the AUC", binormal_diag_plots),
+              tabPanel("Download Prior & Posterior", binormal_diag_download_1),
+  )
+)
+
+page_binormal_diag_inference2 = div(
+  titlePanel("Binormal Diagnostic"),
+  tabsetPanel(type = "tabs",
+              tabPanel("Setup Variables", binormal_diag_setup_variables_2),
               tabPanel("Inferences for Optimal Cutoff", binormal_diag_AUC_inferences),
               tabPanel("Plots for the Optimal Cutoff", binormal_diag_copt_plots),
-              tabPanel("Download Prior & Posterior", binormal_diag_download_1),
   )
 )
