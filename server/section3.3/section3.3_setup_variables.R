@@ -4,6 +4,14 @@
 
 # minor variables (this is based on whether they want to carry on or use a previous selection)
 
+sect3.3_condition = reactive({
+  if(input$binormal_diag_condition == "uncond"){
+    "unconditional"
+  } else if (input$binormal_diag_condition == "cond"){
+    "conditional"
+  }
+})
+
 sect3.3_copt_nMonteCarlo = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     input$binormal_diag_nMonteCarlo_alt

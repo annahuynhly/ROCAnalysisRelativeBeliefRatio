@@ -3,13 +3,20 @@
 ################################################################
 
 output$binormal_diag_hypoAUC_value = renderPrint({
-  list("P(AUC > 1/2)" = sect3.3_AUC_prior()$probAUCprior,
-       "P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post()$probAUCpost,
-       "Relative Belief Ratio of AUC > 1/2" = sect3.3_AUC_RBR()$RBprobAUC,
-       "Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
-       "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
-       "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
-       "Credible region for the AUC" = sect3.3_cr()$credible_region)
+  if (sect3.3_condition() == "unconditional"){
+    list("P(AUC > 1/2)" = sect3.3_AUC_prior()$probAUCprior,
+         "P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post()$probAUCpost,
+         "Relative Belief Ratio of AUC > 1/2" = sect3.3_AUC_RBR()$RBprobAUC,
+         "Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
+         "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
+         "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
+         "Credible region for the AUC" = sect3.3_cr()$credible_region)
+  } else if (sect3.3_condition() == "conditional"){
+    list("Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
+         "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
+         "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
+         "Credible region for the AUC" = sect3.3_cr()$credible_region)
+  }
 })
 
 output$binormal_diag_inf_opt_cutoff = renderPrint({
@@ -75,20 +82,22 @@ binormal_diag_inferences_colours = reactive({
 })
 
 output$binormal_diag_postprior_graph = renderPlot({
-  binormal_diag_prior_post_graph(delta = input$binormal_diag_delta, 
-                                  prior = sect3.3_AUC_prior()$priorAUCdensity, 
-                                  post = sect3.3_AUC_post()$postAUCdensity, 
-                                  plausible_region = sect3.3_AUC_RBR()$plausible_region,
-                                  colour_choice = binormal_diag_colours()[c(1, 2, 4, 6)],
-                                  transparency = input$binormal_diag_col_transparency)
+  binormal_diag_prior_post_graph(condition = sect3.3_condition(),
+                                 delta = input$binormal_diag_delta, 
+                                 prior = sect3.3_AUC_prior()$priorAUCdensity, 
+                                 post = sect3.3_AUC_post()$postAUCdensity, 
+                                 plausible_region = sect3.3_AUC_RBR()$plausible_region,
+                                 colour_choice = binormal_diag_colours()[c(1, 2, 4, 6)],
+                                 transparency = input$binormal_diag_col_transparency)
 })
 
 output$binormal_diag_RB_graph = renderPlot({
-  binormal_diag_rbr_graph(delta = input$binormal_diag_delta,
-                            relative_belief_ratio = sect3.3_AUC_RBR()$RB_AUC, 
-                            plausible_region = sect3.3_AUC_RBR()$plausible_region,
-                            colour_choice = binormal_diag_colours()[c(3:6)],
-                            transparency = input$binormal_diag_col_transparency)
+  binormal_diag_rbr_graph(condition = sect3.3_condition(),
+                          delta = input$binormal_diag_delta,
+                          relative_belief_ratio = sect3.3_AUC_RBR()$RB_AUC, 
+                          plausible_region = sect3.3_AUC_RBR()$plausible_region,
+                          colour_choice = binormal_diag_colours()[c(3:6)],
+                          transparency = input$binormal_diag_col_transparency)
 })
 
 output$binormal_diag_postprior_copt_graph = renderPlot({

@@ -23,12 +23,13 @@ source("./pages/section3.2/finite_val_diag_graph_functions.R")
 
 # Section 3.3
 source("./pages/section3.3/binormal_diag_definitions.R")
-
 source("./pages/section3.3/binormal_diag_start.R")
 source("./pages/section3.3/binormal_diag_prevalence.R")
-
 source("./pages/section3.3/binormal_diag_page.R")
+# the computational functions
 source("./pages/section3.3/binormal_diag_compute_functions.R")
+source("./pages/section3.3/binormal_diag_compute_functions_unequal.R")
+
 source("./pages/section3.3/binormal_diag_graph_functions.R")
 
 # Section 3.4

@@ -440,10 +440,15 @@ binormal_diag_copt_plots = div(
 binormal_diag_hypothesizedAUC = div( 
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
-    sidebarPanel(width = 3, 
+    sidebarPanel(width = 3,
       numericInput(inputId = "binormal_diag_hypoAUC",
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5),
+      selectInput(inputId = "binormal_diag_condition",
+                  label = "Select whether to use the conditional or non conditional prior.",
+                  choices = list("Conditional" = 'cond',
+                                 "Unconditional" = 'uncond'),
+                  selected = 'uncond'),
       textInput(inputId = "binormal_diag_gamma", 
                 label = tags$p("Gamma (must be less than posterior content)", 
                         style = "font-size: 95%"), 

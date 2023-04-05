@@ -2,21 +2,32 @@
 # FUNCTIONS FOR GRAPHS                                         #
 ################################################################
 
-binormal_diag_prior_post_graph = function(delta, prior, post, 
-                                            plausible_region,
-                                            credible_region = FALSE,
-                                            colour_choice = c("blue", "green", "#b3bfff", "#81ddff"),
-                                            transparency = 0.1){
+binormal_diag_prior_post_graph = function(condition,
+                                          delta, prior, post, 
+                                          plausible_region,
+                                          credible_region = FALSE,
+                                          colour_choice = c("blue", "green", "#b3bfff", "#81ddff"),
+                                          transparency = 0.1){
   # This generates the graph for the prior and the posterior of the AUC (binom val diag case.)
   # colour choice goes in the following order: prior, posterior, plausible region, 
   # and credible region.
-  grid = open_bracket_grid(delta)
+  if(condition != "conditional" && condition != "unconditional"){
+    return("condition must either be 'conditional' or 'unconditional'.")
+  } 
+  if (condition == "unconditional"){
+    grid = open_bracket_grid(delta)
+    x_interval = c(0, 1)
+  } else if (condition == "conditional"){
+    L = 1/delta/2
+    grid = open_bracket_grid(delta)[(L+1):(2*L)]
+    x_interval = c(0.5, 1)
+  }
   
   # Constructs an interval for the y region
   y_interval = c(0, max(c(prior, post)))
   
   # Plots of the Prior and the Posterior
-  plot(grid, prior, type='l', lty = 2, lwd = 2, xlim = c(0, 1), ylim = y_interval,
+  plot(grid, prior, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
        main = "Graph of the Prior and Posterior of the AUC", ylab = "Densities", xlab = "w", 
        col = colour_choice[1])
   lines(grid, post, col=colour_choice[2], type = "l", lty = 2, lwd = 2)
@@ -48,16 +59,27 @@ binormal_diag_prior_post_graph = function(delta, prior, post,
   }
 }
 
-binormal_diag_rbr_graph = function(delta, relative_belief_ratio, 
-                                     plausible_region,
-                                     credible_region = FALSE,
-                                     rb_line = FALSE, 
-                                     colour_choice = c("red", "#b3bfff", "royalblue1", "#81ddff"), 
-                                     transparency = 0.1){
+binormal_diag_rbr_graph = function(condition, 
+                                   delta, relative_belief_ratio, 
+                                   plausible_region,
+                                   credible_region = FALSE,
+                                   rb_line = FALSE, 
+                                   colour_choice = c("red", "#b3bfff", "royalblue1", "#81ddff"), 
+                                   transparency = 0.1){
   # This generates the graph for the rbr of the AUC from the binormal valued diagnostic.
   # colour choice goes in the following order: relative belief ratio, plausible region,
   # line of y = 1, credible region.
-  grid = open_bracket_grid(delta)
+  if(condition != "conditional" && condition != "unconditional"){
+    return("condition must either be 'conditional' or 'unconditional'.")
+  } 
+  if (condition == "unconditional"){
+    grid = open_bracket_grid(delta)
+    x_interval = c(0, 1)
+  } else if (condition == "conditional"){
+    L = 1/delta/2
+    grid = open_bracket_grid(delta)[(L+1):(2*L)]
+    x_interval = c(0.5, 1)
+  }
   
   # Temporarily set NaNs to 0 for graphing purposes
   relative_belief_ratio[is.na(relative_belief_ratio)] = 0
@@ -70,7 +92,7 @@ binormal_diag_rbr_graph = function(delta, relative_belief_ratio,
   
   # NOT WORKING BETWEEN HERE
   
-  plot(grid, relative_belief_ratio, type='l', lty = 2, lwd = 2, xlim = c(0, 1), 
+  plot(grid, relative_belief_ratio, type='l', lty = 2, lwd = 2, xlim = x_interval, 
        ylim = y_interval,
        main = "Graph of the Relative Belief Ratio of the AUC", 
        ylab = "RBR", xlab = "w", col = colour_choice[1])

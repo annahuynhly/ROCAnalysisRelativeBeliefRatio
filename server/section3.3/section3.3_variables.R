@@ -33,7 +33,8 @@ sect3.3_hyperpara_copt = reactive({
 
 sect3.3_AUC_prior = reactive({
   set.seed(SECT3.3_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
-  binormal_diag_prior(nMonteprior = input$binormal_diag_nMonteCarlo, 
+  binormal_diag_prior(condition = sect3.3_condition(),
+                      nMonteprior = input$binormal_diag_nMonteCarlo, 
                       delta = input$binormal_diag_delta, 
                       lambda1 = input$binormal_diag_lambda1, 
                       lambda2 = input$binormal_diag_lambda2, 
@@ -42,7 +43,8 @@ sect3.3_AUC_prior = reactive({
 })
 
 sect3.3_AUC_post = reactive({
-  binormal_diag_post(nMontepost = input$binormal_diag_nMonteCarlo, 
+  binormal_diag_post(condition = sect3.3_condition(),
+                     nMontepost = input$binormal_diag_nMonteCarlo, 
                      delta = input$binormal_diag_delta, 
                      lambda1post = sect3.3_hyperpara()$lambda1post, 
                      lambda2post = sect3.3_hyperpara()$lambda2post, 
@@ -53,11 +55,19 @@ sect3.3_AUC_post = reactive({
 })
 
 sect3.3_AUC_RBR = reactive({
-  binormal_diag_RBR(delta = input$binormal_diag_delta, 
-                    probAUCprior = sect3.3_AUC_prior()$probAUCprior, 
-                    probAUCpost = sect3.3_AUC_post()$probAUCpost,
-                    priorAUC = sect3.3_AUC_prior()$priorAUC, 
-                    postAUC = sect3.3_AUC_post()$postAUC)
+  if (sect3.3_condition() == "conditional"){
+    binormal_diag_RBR(condition = sect3.3_condition(),
+                      delta = input$binormal_diag_delta,
+                      priorAUC = sect3.3_AUC_prior()$priorAUC,
+                      postAUC = sect3.3_AUC_post()$postAUC)
+  } else if (sect3.3_condition() == "unconditional"){
+    binormal_diag_RBR(condition = sect3.3_condition(),
+                      delta = input$binormal_diag_delta, 
+                      probAUCprior = sect3.3_AUC_prior()$probAUCprior, 
+                      probAUCpost = sect3.3_AUC_post()$probAUCpost,
+                      priorAUC = sect3.3_AUC_prior()$priorAUC, 
+                      postAUC = sect3.3_AUC_post()$postAUC)
+  }
 })
 
 sect3.3_cr = reactive({
