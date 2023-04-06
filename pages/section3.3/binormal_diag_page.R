@@ -6,12 +6,19 @@ binormal_diag_setup_variables_1 = div(
   titlePanel("Setup Variables"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 selectInput(inputId = "binormal_case", 
-                             label = "Please select the scenario.",
-                             c("Assume variances are equal" = "equal_var", 
-                               "Assume variances are unequal" = "unequal_var"),
-                             selected = "equal_var"
-                 ),
+      selectInput(inputId = "binormal_case", 
+                  label = "Please select the scenario.",
+                  choices = c("Assume variances are equal" = "equal_var", 
+                            "Assume variances are unequal" = "unequal_var"),
+                  selected = "equal_var"
+      ),
+      
+      #conditionalPanel(
+      #  condition = "input.binormal_case == 'unequal_var'",
+      #  numericInput(inputId = "binormal_diag_lambda", 
+      #               label = 'df for transforming c values to {0,1] using Student(lambda) cdf',
+      #               value = 1),
+      #),
     ),
     mainPanel(
       fluidPage(
@@ -94,6 +101,19 @@ binormal_diag_setup_variables_2 = div(
                               "No" = "no"),
                   selected = "yes"
       ),
+      
+      conditionalPanel(
+        condition = "input.binormal_optimal_cutoff_denote_variables == 'no'",
+        selectInput(inputId = "binormal_case_alt", 
+                    label = "Please select the scenario.",
+                    choices = c("Assume variances are equal" = "equal_var", 
+                                "Assume variances are unequal" = "unequal_var"),
+                    selected = "equal_var"),
+        numericInput(inputId = "binormal_diag_lambda_alt", 
+                     label = 'df for transforming c values to {0,1] using Student(lambda) cdf',
+                     value = 1),
+      ),
+      
       selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
                   label = "Would you like to hardcode the copt estimate?",
                   choice = c("Yes" = "yes",
@@ -251,7 +271,7 @@ binormal_diag_AUC_inferences = div(
         
         sliderInput(inputId = "binormal_diag_inferences_col_transparency", 
                     label = "Scale for colour transparency (UNDER CONSTRUCTION)",
-                    min = 0, max = 1, value = 0.2), 
+                    min = 0, max = 1, value = 0), 
         )
         ## END COPY
     ),
@@ -343,8 +363,8 @@ binormal_diag_plots = div(
         ),
       ),
       sliderInput(inputId = "binormal_diag_col_transparency", 
-                    label = "Scale for colour transparency",
-                    min = 0, max = 1, value = 0.2), 
+                    label = "Scale for colour transparency (UNDER CONSTRUCTION)",
+                    min = 0, max = 1, value = 0), 
     ),
     mainPanel(
       tabPanel("Plots",
@@ -421,7 +441,7 @@ binormal_diag_copt_plots = div(
         ),
       sliderInput(inputId = "binormal_diag_c_opt_col_transparency", 
                   label = "Scale for colour transparency (UNDER CONDTRUCTION)",
-                  min = 0, max = 1, value = 0.2), 
+                  min = 0, max = 1, value = 0), 
     ),
     mainPanel(
       tabPanel("Plots",

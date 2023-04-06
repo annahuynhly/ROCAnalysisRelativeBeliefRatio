@@ -12,6 +12,24 @@ sect3.3_condition = reactive({
   }
 })
 
+sect3.3_copt_case = reactive({
+  # this is for variances equal or unequal 
+  if(input$binormal_optimal_cutoff_denote_variables == 'no'){
+    input$binormal_case_alt
+  } else {
+    input$binormal_case
+  }
+})
+
+sect3.3_copt_lambda = reactive({
+  if(input$binormal_optimal_cutoff_denote_variables == 'no'){
+    # note: this case likely shouldn't work since lambda seems to be for copt only.
+    input$binormal_diag_lambda_alt
+  } else {
+    input$binormal_diag_lambda
+  }
+})
+
 sect3.3_copt_nMonteCarlo = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     input$binormal_diag_nMonteCarlo_alt
