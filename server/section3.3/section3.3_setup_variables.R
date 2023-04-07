@@ -24,7 +24,7 @@ sect3.3_copt_case = reactive({
 sect3.3_copt_lambda = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     # note: this case likely shouldn't work since lambda seems to be for copt only.
-    input$binormal_diag_lambda_alt
+    input$binormal_diag_lambda
   } else {
     input$binormal_diag_lambda
   }

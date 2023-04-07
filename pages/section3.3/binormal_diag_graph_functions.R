@@ -138,7 +138,7 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, postcmo
   grid = open_bracket_grid(delta)
   if((typeof(priorcmoddensity) == "double") & (typeof(postcmoddensity) == "double")){
     #Graph of posterior
-    plot(grid, postcmoddensity, main = "Plot of the Prior and the Posterior of Copt", 
+    plot(grid, postcmoddensity, main = "Plot of the Prior and the Posterior of Cmod", 
          xlab = "cmod", ylab = "Prior and Posterior", type = "l", 
          lty = post_lty, lwd = 2, col = colour_choice[2])
     # Graph of prior 
@@ -156,7 +156,7 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, postcmo
            lty = c(prior_lty, post_lty))
   } else if(typeof(RBcmod) == "double"){
     # Graph of the relative belief ratio
-    plot(grid, RBcmod, main = "Plot of the Relative Belief Ratio of Copt",
+    plot(grid, RBcmod, main = "Plot of the Relative Belief Ratio of Cmod",
          xlab="cmod", ylab=expression("Relative Belief Ratio"), type="l", 
          lty = rbr_lty, lwd = 2, col = colour_choice[3])
     # Fill & Transparency effect

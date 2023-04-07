@@ -44,6 +44,7 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
          "Cmod Estimate" = sect3.3_AUC_RBR_copt()$cmodest,
          "Error Characteristics" = temp_df)
   } else if (sect3.3_copt_case() == "unequal_var"){
+    # BELOW REPRESENTS ACTUAL CODE
     temp_df = data.frame(sect3.3_AUC_RBR_error_char_copt_unequal()$FNRest,
                          sect3.3_AUC_RBR_error_char_copt_unequal()$FPRest,
                          sect3.3_AUC_RBR_error_char_copt_unequal()$Errorest,
@@ -148,6 +149,7 @@ output$binormal_diag_RB_graph = renderPlot({
   }
 })
 
+# Plots for cmod
 output$binormal_diag_postprior_copt_graph = renderPlot({
   if (sect3.3_copt_case() == "equal_var"){
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
@@ -186,6 +188,7 @@ output$binormal_diag_RB_copt_graph = renderPlot({
 })
 
 # Note: colour situation here is temporary.
+# These are error characteristic plots.
 output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
   if (sect3.3_copt_case() == "equal_var"){
     binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),

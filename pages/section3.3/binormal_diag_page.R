@@ -102,6 +102,10 @@ binormal_diag_setup_variables_2 = div(
                   selected = "yes"
       ),
       
+      numericInput(inputId = "binormal_diag_lambda", 
+                   label = 'df for transforming c values to {0,1] using Student(lambda) cdf',
+                   value = 1),
+      
       conditionalPanel(
         condition = "input.binormal_optimal_cutoff_denote_variables == 'no'",
         selectInput(inputId = "binormal_case_alt", 
@@ -109,9 +113,6 @@ binormal_diag_setup_variables_2 = div(
                     choices = c("Assume variances are equal" = "equal_var", 
                                 "Assume variances are unequal" = "unequal_var"),
                     selected = "equal_var"),
-        numericInput(inputId = "binormal_diag_lambda_alt", 
-                     label = 'df for transforming c values to {0,1] using Student(lambda) cdf',
-                     value = 1),
       ),
       
       selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
@@ -300,12 +301,11 @@ binormal_diag_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-      selectInput(inputId = "binormal_diag_hist_visual", 
-                  label = "Choose Visual:",
-                  choices = list("With Bars" = "binormal_diag_withbars",
-                                 "Without Bars" = "binormal_diag_withoutbars"),
-                  selected = "binormal_diag_withoutbars"),
-                 
+      #selectInput(inputId = "binormal_diag_hist_visual", 
+      #            label = "Choose Visual:",
+      #            choices = list("With Bars" = "binormal_diag_withbars",
+      #                           "Without Bars" = "binormal_diag_withoutbars"),
+      #            selected = "binormal_diag_withoutbars"),
       selectInput(inputId = "binormal_diag_colour", 
                   label = 'Select a colour', 
                   choices = list("Default Theme 1" = 'default1',

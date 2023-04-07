@@ -113,7 +113,7 @@ binormal_diag_prior_copt_unequal = function(w = FALSE, alpha1w = NA, alpha2w = N
   # prevalence
   pre_w = rep(0, nMonteprior)
   for(i in 1:length(pre_w)){
-    pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, version = "prior") # ADDED FOR COPT
   }
   muD = rnorm(nMonteprior, mu0, (tau0*sigmaD))
   priordeltaTmp = 2*(sigmaD2-sigmaND2)*log(((1-pre_w)/pre_w)*(sigmaD/sigmaND))
@@ -514,6 +514,7 @@ binormal_diag_AUC_post_error_char_copt_unequal = function(
 
 ################# COPT
 
+#w = FALSE
 #prior_copt = binormal_diag_prior_copt_unequal(w, alpha1w, alpha2w, nMonteprior, 
 #                                              delta, lambda1, lambda2, mu0, tau0, lambda)
 
