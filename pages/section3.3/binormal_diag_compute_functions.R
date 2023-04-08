@@ -324,8 +324,9 @@ binormal_diag_RBR_copt = function(delta, priorcmod, postcmod){
                  "cmodest" = cmodest, "coptest" = coptest)
 }
 
+# ISSUE WITH THIS ONE
 binormal_diag_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prior, AUC_post, 
-                                                 posterior_content){
+                                                 plausible_region, posterior_content){
   # Note: credible region is now based on the line plot.
   grid = open_bracket_grid(delta)
   AUC_RBR[is.na(AUC_RBR)] = 0
@@ -351,11 +352,18 @@ binormal_diag_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prio
         # find the region associated with it
         # WARNING: BOLD ASSUMPTION NO BREAKPOINTS/PEAKS
         for(j in 1:length(AUC_RBR)){
-          if(AUC_RBR[j] > rb_line){
-            credible_region = c(credible_region, grid[j])
-            j_vals = c(j_vals, j)
+          if ((grid[j] >= plausible_region[1]) & (grid[j] <= plausible_region[2])) {
+            if((AUC_RBR[j] > rb_line)){
+              credible_region = c(credible_region, grid[j])
+              j_vals = c(j_vals, j)
+            }
           }
         }
+        if (is.null(j_vals) == TRUE){ # when the credible region doesn't generate
+          err_msg = "The credible region doesn't exist for the specified gamma."
+          return(list("credible_region" = err_msg, "rb_line" = err_msg))
+        } 
+        
         credible_region = c(min(credible_region), max(credible_region))
         
         test_area = 0
@@ -606,9 +614,16 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 #prior_val = binormal_diag_prior("unconditional", nMonteprior, delta, lambda1, lambda2, mu0, tau0)
 #prior_val = binormal_diag_prior("conditional", nMonteprior, delta, lambda1, lambda2, mu0, tau0)
 
-
 #rbr_val = binormal_diag_RBR("conditional", delta, prior_val$probAUCprior, post_val$probAUCpost,
 #                            prior_val$priorAUC, post_val$postAUC)
+
+#cr = binormal_diag_compute_credible_region(gamma = gamma, 
+#                                           delta = delta, 
+#                                           AUC_RBR = rbr_val$RB_AUC, 
+#                                           AUC_prior = prior_val$priorAUC, 
+#                                           AUC_post = post_val$postAUC, 
+#                                           plausible_region = rbr_val$plausible_region,
+#                                           posterior_content = rbr_val$postPl_AUC)
 
 
 #grid=open_bracket_grid(delta)

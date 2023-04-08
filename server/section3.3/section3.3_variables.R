@@ -77,6 +77,7 @@ sect3.3_cr = reactive({
                                         AUC_RBR = sect3.3_AUC_RBR()$RB_AUC, 
                                         AUC_prior = sect3.3_AUC_prior()$priorAUC, 
                                         AUC_post = sect3.3_AUC_post()$postAUC, 
+                                        plausible_region = sect3.3_AUC_RBR()$plausible_region,
                                         posterior_content = sect3.3_AUC_RBR()$postPl_AUC)
 })
 
@@ -165,6 +166,7 @@ sect3.3_cr_copt = reactive({
                                         AUC_RBR = sect3.3_AUC_RBR_copt()$RBcmod, 
                                         AUC_prior = sect3.3_AUC_prior_copt()$priorcmod, 
                                         AUC_post = sect3.3_AUC_post_copt()$postcmod, 
+                                        plausible_region = sect3.3_AUC_RBR_copt()$plausible_region,
                                         posterior_content = sect3.3_AUC_RBR_copt()$postPlcmod)
 })
 
@@ -418,6 +420,7 @@ sect3.3_cr_unequal = reactive({
                                         AUC_RBR = sect3.3_AUC_RBR_unequal()$RB_AUC, 
                                         AUC_prior = sect3.3_AUC_prior_unequal()$priorAUC, 
                                         AUC_post = sect3.3_AUC_post_unequal()$postAUC, 
+                                        plausible_region = sect3.3_AUC_RBR_unequal()$plausible_region,
                                         posterior_content = sect3.3_AUC_RBR_unequal()$postPl_AUC)
 })
 
@@ -517,6 +520,7 @@ sect3.3_cr_copt_unequal = reactive({
                                         AUC_RBR = sect3.3_AUC_RBR_copt_unequal()$RBcmod, 
                                         AUC_prior = sect3.3_AUC_prior_copt_unequal()$priorcmod, 
                                         AUC_post = sect3.3_AUC_post_copt_unequal()$postcmod, 
+                                        plausible_region = sect3.3_AUC_RBR_copt_unequal()$plausible_region,
                                         posterior_content = sect3.3_AUC_RBR_copt_unequal()$postPlcmod)
 })
 

@@ -12,7 +12,6 @@ binormal_diag_setup_variables_1 = div(
                             "Assume variances are unequal" = "unequal_var"),
                   selected = "equal_var"
       ),
-      
       #conditionalPanel(
       #  condition = "input.binormal_case == 'unequal_var'",
       #  numericInput(inputId = "binormal_diag_lambda", 
@@ -22,7 +21,6 @@ binormal_diag_setup_variables_1 = div(
     ),
     mainPanel(
       fluidPage(
-        
         fluidRow(
           column(3, h4("Simulation Sizes:")),
           column(3, numericInput(inputId = "binormal_diag_nMonteCarlo", 
@@ -32,7 +30,6 @@ binormal_diag_setup_variables_1 = div(
                                  label = 'Delta',
                                  value = 0.005)),
         ),
-        
         fluidRow(
           column(3, h4("Hyperparameters 1:")),
           column(3, numericInput(inputId = "binormal_diag_mu0", 
@@ -42,7 +39,6 @@ binormal_diag_setup_variables_1 = div(
                                  label = 'tau0',
                                  value = 0.5)),
         ),
-        
         fluidRow(
           column(3, h4("Hyperparameters 2:")),
           column(3, numericInput(inputId = "binormal_diag_lambda1", 
@@ -52,7 +48,6 @@ binormal_diag_setup_variables_1 = div(
                                  label = 'lambda2',
                                  value = 1.056)),
         ),
-        
         fluidRow(
           column(3, h4("Data Sample Size:")),
           column(3, numericInput(inputId = "binormal_diag_nND",
@@ -62,7 +57,6 @@ binormal_diag_setup_variables_1 = div(
                                  label = 'nD',
                                  value = 20)),
         ),
-        
         fluidRow(
           column(3, h4("Data Means:")),
           column(3, numericInput(inputId = "binormal_diag_meanND", 
@@ -72,7 +66,6 @@ binormal_diag_setup_variables_1 = div(
                                  label = 'meanD',
                                  value = 0.976)),
         ),
-        
         fluidRow(
           column(3, h4("Data Sum of Squares:")),
           column(3, numericInput(inputId = "binormal_diag_sND_squared", 
@@ -82,14 +75,11 @@ binormal_diag_setup_variables_1 = div(
                                  label = 'sD squared',
                                  value = 16.778)),
         ),
-        
       )
     )
   ),
   br(style = "line-height:2;"),
 )
-
-
 
 binormal_diag_setup_variables_2 = div( 
   titlePanel("Setup Variables"),
@@ -143,7 +133,6 @@ binormal_diag_setup_variables_2 = div(
                                    label = 'Delta',
                                    value = 0.005)),
           ),
-          
           fluidRow(
             column(3, h4("Hyperparameters 1:")),
             column(3, numericInput(inputId = "binormal_diag_mu0_alt", 
@@ -153,7 +142,6 @@ binormal_diag_setup_variables_2 = div(
                                    label = 'tau0',
                                    value = 0.5)),
           ),
-          
           fluidRow(
             column(3, h4("Hyperparameters 2:")),
             column(3, numericInput(inputId = "binormal_diag_lambda1_alt", 
@@ -163,7 +151,6 @@ binormal_diag_setup_variables_2 = div(
                                    label = 'lambda2',
                                    value = 1.056)),
           ),
-          
           fluidRow(
             column(3, h4("Data Sample Size:")),
             column(3, numericInput(inputId = "binormal_diag_nND_alt",
@@ -173,7 +160,6 @@ binormal_diag_setup_variables_2 = div(
                                    label = 'nD',
                                    value = 20)),
           ),
-          
           fluidRow(
             column(3, h4("Data Means:")),
             column(3, numericInput(inputId = "binormal_diag_meanND_alt", 
@@ -183,7 +169,6 @@ binormal_diag_setup_variables_2 = div(
                                    label = 'meanD',
                                    value = 0.976)),
           ),
-          
           fluidRow(
             column(3, h4("Data Sum of Squares:")),
             column(3, numericInput(inputId = "binormal_diag_sND_squared_alt", 
@@ -195,7 +180,6 @@ binormal_diag_setup_variables_2 = div(
           ),
         )
       ),
-      
       conditionalPanel(
         condition = "input.binormal_optimal_cutoff_denote_variables == 'yes'",
         p("Currently the variables will be used from the previous section instead.")
@@ -205,10 +189,8 @@ binormal_diag_setup_variables_2 = div(
   br(style = "line-height:2;"),
 )
 
-
-
 ################################################################
-# OUTPUT 1 PAGE                                                #
+# PAGE FOR INFERENCES OF THE OPTIMAL CUTOFF                    #
 ################################################################
 
 binormal_diag_AUC_inferences = div( 
@@ -454,8 +436,8 @@ binormal_diag_copt_plots = div(
     mainPanel(
       tabPanel("Plots",
                fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    withSpinner(plotOutput("binormal_diag_postprior_copt_graph")), 
-                                    withSpinner(plotOutput("binormal_diag_RB_copt_graph"))))),
+                                    withSpinner(plotOutput("binormal_diag_postprior_cmod_graph")), 
+                                    withSpinner(plotOutput("binormal_diag_RB_cmod_graph"))))),
       
     )
   )

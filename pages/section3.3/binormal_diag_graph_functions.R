@@ -195,10 +195,8 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
     abline(v = plausible_region[2], col = colour_choice[4], lwd = 2, lty = 3)
     # Fill & Transparency effect
     rgb_rbr = col2rgb(colour_choice[3])
-    polygon(grid, force_bounds_0(RBcmod), col = rgb(rgb_rbr[1]/255, rgb_rbr[2]/255, rgb_rbr[3]/255, 
-            alpha = transparency), border = NA)
     # Colouring in the area between the plausible region and when the RBR > 1
-    abline(h = 1, col = colour_choice[3], lwd = 2, lty = 2)
+    abline(h = 1, col = colour_choice[4], lwd = 2, lty = 2)
     l = min(which(grid >= plausible_region[1]))
     h = max(which(grid < plausible_region[2]))
     rgb_rb = col2rgb(colour_choice[3])
