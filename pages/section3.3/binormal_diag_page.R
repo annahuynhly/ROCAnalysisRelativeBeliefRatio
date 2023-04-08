@@ -222,6 +222,14 @@ binormal_diag_AUC_inferences = div(
                   selected = "results"),
       
       conditionalPanel(
+        condition = "input.binormal_diag_inferences == 'results'",
+        textInput(inputId = "binormal_diag_gamma_copt", 
+                  label = tags$p("Gamma (must be less than posterior content)", 
+                                 style = "font-size: 95%"), 
+                  value = "NA"),
+      ),
+      
+      conditionalPanel(
         condition = "input.binormal_diag_inferences == 'plots'",
         selectInput(inputId = "binormal_diag_inferences_plot_type",
                     label = 'Select which plot to view.',
@@ -271,7 +279,7 @@ binormal_diag_AUC_inferences = div(
         ),
         
         sliderInput(inputId = "binormal_diag_inferences_col_transparency", 
-                    label = "Scale for colour transparency (UNDER CONSTRUCTION)",
+                    label = "Scale for colour transparency",
                     min = 0, max = 1, value = 0), 
         )
         ## END COPY
@@ -363,7 +371,7 @@ binormal_diag_plots = div(
         ),
       ),
       sliderInput(inputId = "binormal_diag_col_transparency", 
-                    label = "Scale for colour transparency (UNDER CONSTRUCTION)",
+                    label = "Scale for colour transparency",
                     min = 0, max = 1, value = 0), 
     ),
     mainPanel(
@@ -440,7 +448,7 @@ binormal_diag_copt_plots = div(
           )
         ),
       sliderInput(inputId = "binormal_diag_c_opt_col_transparency", 
-                  label = "Scale for colour transparency (UNDER CONDTRUCTION)",
+                  label = "Scale for colour transparency",
                   min = 0, max = 1, value = 0), 
     ),
     mainPanel(

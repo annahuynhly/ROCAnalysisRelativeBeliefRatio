@@ -6,7 +6,6 @@
 # Align the headers -> LOW PRIORITY
 # Align the footer margins for the rest of the sections. -> LOW PRIORITY
 # Let people change the line type of the graphs -> LOW PRIORITY
-# Bug about colour transparency -> LOW PRIORITY
 # Make the code look nicer lmao
 
 # ISSUES:

@@ -159,6 +159,15 @@ sect3.3_AUC_RBR_copt = reactive({
                          sect3.3_AUC_post_copt()$postcmod)
 })
 
+sect3.3_cr_copt = reactive({
+  binormal_diag_compute_credible_region(gamma = input$binormal_diag_gamma_copt, 
+                                        delta = input$binormal_diag_delta, 
+                                        AUC_RBR = sect3.3_AUC_RBR_copt()$RBcmod, 
+                                        AUC_prior = sect3.3_AUC_prior_copt()$priorcmod, 
+                                        AUC_post = sect3.3_AUC_post_copt()$postcmod, 
+                                        posterior_content = sect3.3_AUC_RBR_copt()$postPlcmod)
+})
+
 sect3.3_copt = reactive({
   if (input$binormal_optimal_cutoff_denote_copt == 'no'){
     sect3.3_AUC_RBR_copt()$coptest
@@ -500,6 +509,15 @@ sect3.3_AUC_RBR_copt_unequal = reactive({
   binormal_diag_RBR_copt(sect3.3_copt_delta(), 
                          sect3.3_AUC_prior_copt_unequal()$priorcmod, 
                          sect3.3_AUC_post_copt_unequal()$postcmod)
+})
+
+sect3.3_cr_copt_unequal = reactive({
+  binormal_diag_compute_credible_region(gamma = input$binormal_diag_gamma_copt, 
+                                        delta = sect3.3_copt_delta(), 
+                                        AUC_RBR = sect3.3_AUC_RBR_copt_unequal()$RBcmod, 
+                                        AUC_prior = sect3.3_AUC_prior_copt_unequal()$priorcmod, 
+                                        AUC_post = sect3.3_AUC_post_copt_unequal()$postcmod, 
+                                        posterior_content = sect3.3_AUC_RBR_copt_unequal()$postPlcmod)
 })
 
 sect3.3_copt_unequal = reactive({
