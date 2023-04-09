@@ -51,7 +51,21 @@ page_finite_val_start = fluidPage(
                  ),
     ),
     mainPanel(
-      p("Insert a description here.")
+      p("To use our online calculator, you need to select the seed and determine whether the 
+      prevalence w is known. The seed is a number that determines the randomization of the 
+      data. The prevalence w is the proportion of the population that has the characteristic 
+      of interest. In this case, we refer to the proportion of the subpopulation who are 
+      diseased."),
+      br(),
+      p("If the prevalence is unknown, then you need to select the sampling regime for your 
+      experiment. The sampling regime is the method of obtaining information about w from the 
+      data. Each sampling regime has its own assumptions and calculations, depending on the 
+      type and amount of information available."),
+      br(),
+      p("Note that the seed is sensitive by the order in which you open certain pages."),
+      br(),
+      p("Once you have filled out the important information, you can click on the \"Next\" button
+      to proceed to the next step of the calculator."),
     )
   ),
   br(style = "line-height:7;")

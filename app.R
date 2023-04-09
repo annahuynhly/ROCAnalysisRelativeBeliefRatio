@@ -108,7 +108,7 @@ server = function(input, output, session) {
   observe(addHoverAnim(session, 'MikeImg', 'tada'))
   observe(addHoverAnim(session, 'LuaiImg', 'flip'))
   observe(addHoverAnim(session, 'QiaoyuImg', 'fadeOutDown'))
-  
+  observe(addHoverAnim(session, 'calculator', 'pulse'))
 }
 
 shinyApp(ui, server)

@@ -67,6 +67,17 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
 # HISTOGRAMS                                                   #
 ################################################################
 
+# Denoting line type (note: support for 1 function, for now)
+
+binormal_diag_lty_types = reactive({
+  c(as.numeric(input$binormal_diag_priorc_opt_label),
+    as.numeric(input$binormal_diag_postc_opt_label),
+    as.numeric(input$binormal_diag_rbrc_opt_label),
+    as.numeric(input$binormal_diag_prc_opt_label),
+    as.numeric(input$binormal_diag_line_1c_opt_label),
+    as.numeric(input$binormal_diag_crc_opt_label))
+})
+
 # Denoting colours
 
 binormal_diag_colours = reactive({
@@ -97,7 +108,10 @@ binormal_diag_copt_colours = reactive({
   } else if (input$binormal_diag_c_opt_carry_colour == 'manual'){
     c(convert_to_hex(input$binormal_diag_priorc_opt_colour),
       convert_to_hex(input$binormal_diag_postc_opt_colour),
-      convert_to_hex(input$binormal_diag_rbrc_opt_colour))
+      convert_to_hex(input$binormal_diag_rbrc_opt_colour),
+      convert_to_hex(input$binormal_diag_prc_opt_colour),
+      convert_to_hex(input$binormal_diag_line_1c_opt_colour),
+      convert_to_hex(input$binormal_diag_crc_opt_colour))
   }
 })
 
@@ -208,8 +222,7 @@ output$binormal_diag_postprior_cmod_graph = renderPlot({
                                  postcmoddensity = sect3.3_AUC_post_copt()$postcmoddensity,
                                  plausible_region = sect3.3_AUC_RBR_copt()$plausible_region,
                                  credible_region = binormal_diag_cr_AUC_cmod(),
-                                 prior_lty = as.numeric(input$binormal_diag_priorc_opt_label),
-                                 post_lty = as.numeric(input$binormal_diag_postc_opt_label),
+                                 lty_type = binormal_diag_lty_types(),
                                  colour_choice = binormal_diag_copt_colours(),
                                  transparency = input$binormal_diag_c_opt_col_transparency)
   } else if (sect3.3_copt_case() == "unequal_var"){
@@ -218,8 +231,7 @@ output$binormal_diag_postprior_cmod_graph = renderPlot({
                                  postcmoddensity = sect3.3_AUC_post_copt_unequal()$postcmoddensity,
                                  plausible_region = sect3.3_AUC_RBR_copt()$plausible_region,
                                  credible_region = binormal_diag_cr_AUC_cmod(),
-                                 prior_lty = as.numeric(input$binormal_diag_priorc_opt_label),
-                                 post_lty = as.numeric(input$binormal_diag_postc_opt_label),
+                                 lty_type = binormal_diag_lty_types(),
                                  colour_choice = binormal_diag_copt_colours(),
                                  transparency = input$binormal_diag_c_opt_col_transparency)
   }
@@ -233,7 +245,7 @@ output$binormal_diag_RB_cmod_graph = renderPlot({
                                  plausible_region = sect3.3_AUC_RBR_copt()$plausible_region,
                                  credible_region = binormal_diag_cr_AUC_cmod(),
                                  rb_line = binormal_diag_rb_line_AUC_cmod(),
-                                 rbr_lty = as.numeric(input$binormal_diag_rbc_opt_label),
+                                 lty_type = binormal_diag_lty_types(),
                                  colour_choice = binormal_diag_copt_colours(),
                                  transparency = input$binormal_diag_c_opt_col_transparency)
   } else if (sect3.3_copt_case() == "unequal_var"){
@@ -242,7 +254,7 @@ output$binormal_diag_RB_cmod_graph = renderPlot({
                                  plausible_region = sect3.3_AUC_RBR_copt()$plausible_region,
                                  credible_region = binormal_diag_cr_AUC_cmod(),
                                  rb_line = binormal_diag_rb_line_AUC_cmod(),
-                                 rbr_lty = as.numeric(input$binormal_diag_rbc_opt_label),
+                                 lty_type = binormal_diag_lty_types(),
                                  colour_choice = binormal_diag_copt_colours(),
                                  transparency = input$binormal_diag_c_opt_col_transparency)
   }

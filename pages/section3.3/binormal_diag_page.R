@@ -91,11 +91,10 @@ binormal_diag_setup_variables_2 = div(
                               "No" = "no"),
                   selected = "yes"
       ),
-      
       numericInput(inputId = "binormal_diag_lambda", 
                    label = 'df for transforming c values to {0,1] using Student(lambda) cdf',
-                   value = 1),
-      
+                   value = 1
+      ),
       conditionalPanel(
         condition = "input.binormal_optimal_cutoff_denote_variables == 'no'",
         selectInput(inputId = "binormal_case_alt", 
@@ -104,7 +103,6 @@ binormal_diag_setup_variables_2 = div(
                                 "Assume variances are unequal" = "unequal_var"),
                     selected = "equal_var"),
       ),
-      
       selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
                   label = "Would you like to hardcode the copt estimate?",
                   choice = c("Yes" = "yes",
@@ -117,9 +115,8 @@ binormal_diag_setup_variables_2 = div(
                      label = 'Input the copt estimate.',
                      value = 0.715), 
       ),
-      
-                 
     ),
+    
     mainPanel(
       conditionalPanel(
         condition = "input.binormal_optimal_cutoff_denote_variables == 'no'",
@@ -197,18 +194,21 @@ binormal_diag_hypothesizedAUC = div(
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3,
-                 numericInput(inputId = "binormal_diag_hypoAUC",
-                              label = 'Hypothesized AUC (greater than)',
-                              value = 0.5),
-                 selectInput(inputId = "binormal_diag_condition",
-                             label = "Select whether to use the conditional or non conditional prior.",
-                             choices = list("Conditional" = 'cond',
-                                            "Unconditional" = 'uncond'),
-                             selected = 'uncond'),
-                 textInput(inputId = "binormal_diag_gamma", 
-                           label = tags$p("Gamma (must be less than posterior content)", 
-                                          style = "font-size: 95%"), 
-                           value = "NA")
+      numericInput(inputId = "binormal_diag_hypoAUC",
+                   label = 'Hypothesized AUC (greater than)',
+                   value = 0.5
+      ),
+      selectInput(inputId = "binormal_diag_condition",
+                  label = "Select whether to use the conditional or non conditional prior.",
+                  choices = list("Conditional" = 'cond',
+                                 "Unconditional" = 'uncond'),
+                  selected = 'uncond'
+      ),
+      textInput(inputId = "binormal_diag_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                        style = "font-size: 95%"), 
+                value = "NA"
+      )
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
@@ -226,80 +226,86 @@ binormal_diag_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-                 #selectInput(inputId = "binormal_diag_hist_visual", 
-                 #            label = "Choose Visual:",
-                 #            choices = list("With Bars" = "binormal_diag_withbars",
-                 #                           "Without Bars" = "binormal_diag_withoutbars"),
-                 #            selected = "binormal_diag_withoutbars"),
-                 selectInput(inputId = "binormal_diag_colour", 
-                             label = 'Select a colour', 
-                             choices = list("Default Theme 1" = 'default1',
-                                            "Default Theme 2" = 'default2',
-                                            "Manually Insert" = 'manual'), 
-                             selected = 'default'),
-                 
-                 conditionalPanel(
-                   condition = "input.binormal_diag_colour == 'manual'",
-                   selectInput(inputId = "binormal_diag_modify_colour",
-                               label = 'Select line to modify',
-                               choices = list("Prior" = 'prior',
-                                              "Posterior" = 'post',
-                                              "Relative Belief Ratio" = 'rbr',
-                                              "Plausible Region" = 'pr',
-                                              "Line of y = 1" = 'line_1',
-                                              "Credible Region" = 'cr'),
-                               selected = 'prior'), 
-                   
-                   conditionalPanel(
-                     condition = "input.binormal_diag_modify_colour == 'prior'",
-                     textInput(inputId = "binormal_diag_colour_prior",
-                               label = 'Input the colour of the prior',
-                               value = "FF007F"), 
-                   ),
-                   conditionalPanel(
-                     condition = "input.binormal_diag_modify_colour == 'post'",
-                     textInput(inputId = "binormal_diag_colour_post",
-                               label = 'Input the colour of the posterior',
-                               value = "FF00FF"), 
-                   ),
-                   conditionalPanel(
-                     condition = "input.binormal_diag_modify_colour == 'rbr'",
-                     textInput(inputId = "binormal_diag_colour_rbr",
-                               label = 'Input the colour of the relative belief ratio',
-                               value = "7F00FF"), 
-                   ),
-                   conditionalPanel(
-                     condition = "input.binormal_diag_modify_colour == 'pr'",
-                     textInput(inputId = "binormal_diag_colour_pr",
-                               label = 'Input the colour of the plausible region',
-                               value = "A717DB"), 
-                   ),
-                   conditionalPanel(
-                     condition = "input.binormal_diag_modify_colour == 'line_1'",
-                     textInput(inputId = "binormal_diag_colour_line_1",
-                               label = 'Input the colour of the y = 1 line',
-                               value = "5327E4"), 
-                   ),
-                   conditionalPanel(
-                     condition = "input.binormal_diag_modify_colour == 'cr'",
-                     textInput(inputId = "binormal_diag_colour_cr",
-                               label = 'Input the colour of the credible region',
-                               value = "650d84"), 
-                   ),
-                 ),
-                 sliderInput(inputId = "binormal_diag_col_transparency", 
-                             label = "Scale for colour transparency",
-                             min = 0, max = 1, value = 0), 
+      #selectInput(inputId = "binormal_diag_hist_visual", 
+      #            label = "Choose Visual:",
+      #            choices = list("With Bars" = "binormal_diag_withbars",
+      #                           "Without Bars" = "binormal_diag_withoutbars"),
+      #            selected = "binormal_diag_withoutbars"),
+      selectInput(inputId = "binormal_diag_colour", 
+                  label = 'Select a colour', 
+                  choices = list("Default Theme 1" = 'default1',
+                                 "Default Theme 2" = 'default2',
+                                 "Manually Insert" = 'manual'), 
+                  selected = 'default'
+      ),
+      conditionalPanel(
+        condition = "input.binormal_diag_colour == 'manual'",
+        selectInput(inputId = "binormal_diag_modify_colour",
+                    label = 'Select line to modify',
+                    choices = list("Prior" = 'prior',
+                                   "Posterior" = 'post',
+                                   "Relative Belief Ratio" = 'rbr',
+                                   "Plausible Region" = 'pr',
+                                   "Line of y = 1" = 'line_1',
+                                   "Credible Region" = 'cr'),
+                    selected = 'prior'
+        ), 
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'prior'",
+          textInput(inputId = "binormal_diag_colour_prior",
+                    label = 'Input the colour of the prior',
+                    value = "FF007F"
+          ), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'post'",
+          textInput(inputId = "binormal_diag_colour_post",
+                    label = 'Input the colour of the posterior',
+                    value = "FF00FF"
+          ), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'rbr'",
+          textInput(inputId = "binormal_diag_colour_rbr",
+                    label = 'Input the colour of the relative belief ratio',
+                    value = "7F00FF"
+          ), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'pr'",
+          textInput(inputId = "binormal_diag_colour_pr",
+                    label = 'Input the colour of the plausible region',
+                    value = "A717DB"
+          ), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'line_1'",
+          textInput(inputId = "binormal_diag_colour_line_1",
+                    label = 'Input the colour of the y = 1 line',
+                    value = "5327E4"
+          ), 
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_modify_colour == 'cr'",
+          textInput(inputId = "binormal_diag_colour_cr",
+                    label = 'Input the colour of the credible region',
+                    value = "650d84"), 
+        ),
+      ),
+      sliderInput(inputId = "binormal_diag_col_transparency", 
+                  label = "Scale for colour transparency",
+                  min = 0, max = 1, value = 0.1
+      ), 
     ),
     mainPanel(
       tabPanel("Plots",
-               fluidRow(
-                 splitLayout(
-                   cellWidths = c("50%", "50%"), 
-                   withSpinner(plotOutput("binormal_diag_postprior_graph")), 
-                   withSpinner(plotOutput("binormal_diag_RB_graph"))
-                 )
-               )
+        fluidRow(
+          splitLayout(
+            cellWidths = c("50%", "50%"), 
+            withSpinner(plotOutput("binormal_diag_postprior_graph")), 
+            withSpinner(plotOutput("binormal_diag_RB_graph"))
+          )
+        )
       ),
     )
   )
@@ -313,10 +319,11 @@ binormal_diag_download_1 = div(
   titlePanel("Download"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 textInput(inputId = "binormal_diag_filename", 
-                           label = "Input File Name", 
-                           value = "AUC Values"),
-                 downloadButton("binormal_diag_downloadData", "Download"),
+      textInput(inputId = "binormal_diag_filename", 
+                label = "Input File Name", 
+                value = "AUC Values"
+      ),
+      downloadButton("binormal_diag_downloadData", "Download"),
     ),
     mainPanel(
       tabPanel("Download Output", 
@@ -357,17 +364,16 @@ binormal_diag_AUC_inferences = div(
                                    "Error" = 'Error',
                                    "FDR" = 'FDR',
                                    "FNDR" = 'FNDR'),
-                    selected = "FNR"),
-        
-        # START COPY
+                    selected = "FNR"
+        ),
         selectInput(inputId = "binormal_diag_inferences_colour", 
                     label = 'Select a colour', 
                     choices = list("Default Theme 1" = 'default1',
-                                   "Default Theme 2" = 'default2', # add an option to copy from the first page
+                                   "Default Theme 2" = 'default2',
                                    "Custom Theme from AUC Plots" = 'custom',
                                    "Manually Insert" = 'manual'), 
-                    selected = 'default'),
-        
+                    selected = 'default'
+        ),
         conditionalPanel(
           condition = "input.binormal_diag_inferences_colour == 'manual'",
           selectInput(inputId = "binormal_diag_inferences_modify_colour",
@@ -396,10 +402,10 @@ binormal_diag_AUC_inferences = div(
                       value = "7F00FF"), 
           ),
         ),
-        
         sliderInput(inputId = "binormal_diag_inferences_col_transparency", 
                     label = "Scale for colour transparency",
-                    min = 0, max = 1, value = 0), 
+                    min = 0, max = 1, value = 0.1
+          ), 
         )
         ## END COPY
     ),
@@ -413,13 +419,13 @@ binormal_diag_AUC_inferences = div(
       conditionalPanel(
         condition = "input.binormal_diag_inferences == 'plots'",
         tabPanel("Inferences for Optimal Cutoff",
-                 fluidRow(
-                   splitLayout(
-                     cellWidths = c("50%", "50%"), 
-                     withSpinner(plotOutput("binormal_diag_inf_opt_cutoff_plot1")), 
-                     withSpinner(plotOutput("binormal_diag_inf_opt_cutoff_plot2"))
-                   )
-                 )
+          fluidRow(
+            splitLayout(
+              cellWidths = c("50%", "50%"), 
+              withSpinner(plotOutput("binormal_diag_inf_opt_cutoff_plot1")), 
+              withSpinner(plotOutput("binormal_diag_inf_opt_cutoff_plot2"))
+            )
+          )
         ),
       )
     )
@@ -442,21 +448,25 @@ binormal_diag_copt_plots = div(
                                  "Default Theme 2" = 'default2',
                                  "Custom Theme from AUC Plots" = 'custom',
                                  "Manually Insert" = 'manual'),
-                  selected = 'default'),      
+                  selected = 'default'
+      ),      
       selectInput(inputId = "binormal_diag_c_opt_modify",
                   label = "Select which object to modify",
                   choices = list("Prior" = 'prior',
                                  "Posterior" = 'post',
-                                 "Relative Belief Ratio" = 'rbr'),
-                 selected = 'prior'),
-                 
+                                 "Relative Belief Ratio" = 'rbr',
+                                 "Plausible Region" = 'pr',
+                                 "Line of y = 1" = 'line_1',
+                                 "Credible Region" = 'cr'),
+                 selected = 'prior'
+      ),
       conditionalPanel(
         condition = "input.binormal_diag_c_opt_modify == 'prior'",
         selectInput(inputId = "binormal_diag_priorc_opt_label", 
                     label = "Line Type for the Prior",
                     choices = default_lty_list,
-                    selected = 1),
-                   
+                    selected = 1
+        ),
         conditionalPanel(
           condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
           textInput(inputId = "binormal_diag_priorc_opt_colour",
@@ -469,7 +479,8 @@ binormal_diag_copt_plots = div(
           selectInput(inputId = "binormal_diag_postc_opt_label", 
                       label = "Line Type for the Posterior",
                       choices = default_lty_list,
-                      selected = 2),
+                      selected = 2
+          ),
           conditionalPanel(
             condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
             textInput(inputId = "binormal_diag_postc_opt_colour",
@@ -479,10 +490,11 @@ binormal_diag_copt_plots = div(
         ),
         conditionalPanel(
           condition = "input.binormal_diag_c_opt_modify == 'rbr'",
-          selectInput(inputId = "binormal_diag_rbc_opt_label", 
+          selectInput(inputId = "binormal_diag_rbrc_opt_label", 
                       label = "Line Type for the RB Ratio",
                       choices = default_lty_list,
-                      selected = 6),
+                      selected = 6
+          ),
           conditionalPanel(
             condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
             textInput(inputId = "binormal_diag_rbrc_opt_colour",
@@ -490,19 +502,65 @@ binormal_diag_copt_plots = div(
                       value = "CE1483"),
           )
         ),
+      
+        conditionalPanel(
+          condition = "input.binormal_diag_c_opt_modify == 'pr'",
+          selectInput(inputId = "binormal_diag_prc_opt_label", 
+                      label = "Line Type for the Plausible Region",
+                      choices = default_lty_list,
+                      selected = 2
+          ),
+          conditionalPanel(
+            condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "binormal_diag_prc_opt_colour",
+                      label = 'Hex Colour for the Plausible Region',
+                      value = "73C1E7"),
+          )
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_c_opt_modify == 'line_1'",
+          selectInput(inputId = "binormal_diag_line_1c_opt_label", 
+                      label = "Line Type for the y = 1 Line",
+                      choices = default_lty_list,
+                      selected = 2
+          ),
+          conditionalPanel(
+            condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "binormal_diag_line_1c_opt_colour",
+                      label = 'Hex Colour for the y = 1 Line',
+                      value = "73C1E7"),
+          )
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_c_opt_modify == 'cr'",
+          selectInput(inputId = "binormal_diag_crc_opt_label", 
+                      label = "Line Type for the Credible Region",
+                      choices = default_lty_list,
+                      selected = 3
+          ),
+          conditionalPanel(
+            condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "binormal_diag_crc_opt_colour",
+                      label = 'Hex Colour for the Credible Region',
+                      value = "9878C3"),
+          )
+        ),
+        # end copy
+      
       sliderInput(inputId = "binormal_diag_c_opt_col_transparency", 
                   label = "Scale for colour transparency",
-                  min = 0, max = 1, value = 0), 
+                  min = 0, max = 1, value = 0.1
+      ), 
     ),
     mainPanel(
       tabPanel("Plots",
-               fluidRow(
-                 splitLayout(
-                   cellWidths = c("50%", "50%"), 
-                   withSpinner(plotOutput("binormal_diag_postprior_cmod_graph")), 
-                   withSpinner(plotOutput("binormal_diag_RB_cmod_graph"))
-                 )
-               )
+        fluidRow(
+          splitLayout(
+            cellWidths = c("50%", "50%"), 
+            withSpinner(plotOutput("binormal_diag_postprior_cmod_graph")), 
+            withSpinner(plotOutput("binormal_diag_RB_cmod_graph"))
+          )
+        )
       ),
     )
   )

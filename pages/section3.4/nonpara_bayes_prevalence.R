@@ -46,16 +46,19 @@ nonpara_bayes_prevalence_plausible_region = div(
   titlePanel("Relative Belief Estimate of Prevalence w & Plausible Region"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 numericInput(inputId = "nonpara_bayes_prevalence_n", 
-                              label = 'Total Sample Size',
-                              value = 100, min = 1),
-                 numericInput(inputId = "nonpara_bayes_prevalence_nD", 
-                              label = 'Total Diseased',
-                              value = 68, min = 0),
-                 numericInput(inputId = "nonpara_bayes_prevalence_delta", 
-                              label = tags$p('Delta (the meaningful difference for the prevalence)', 
-                                             style = "font-size: 90%;"),
-                              value = 0.001, min = 0, max = 1),
+      numericInput(inputId = "nonpara_bayes_prevalence_n", 
+                   label = 'Total Sample Size',
+                   value = 100, min = 1
+      ),
+      numericInput(inputId = "nonpara_bayes_prevalence_nD", 
+                   label = 'Total Diseased',
+                   value = 68, min = 0
+      ),
+      numericInput(inputId = "nonpara_bayes_prevalence_delta", 
+                   label = tags$p('Delta (the meaningful difference for the prevalence)', 
+                           style = "font-size: 90%;"),
+                   value = 0.001, min = 0, max = 1
+      ),
     ),
     mainPanel(
       tabPanel("Plausible Region & Max w", 
@@ -73,83 +76,89 @@ nonpara_bayes_prevalence_plots = div(
   titlePanel("Plots"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-                 
-                 textInput(inputId = "nonpara_bayes_prevalence_gamma", 
-                           label = "Gamma (must be less than posterior content)", 
-                           value = "NA"),
-                 
-                 selectInput(inputId = "nonpara_bayes_prevalence_colour", 
-                             label = 'Select colour theme', 
-                             choices = list("Default Theme 1" = 'default1',
-                                            "Default Theme 2" = 'default2',
-                                            "Dull Life" = 'dull',
-                                            "Lovely Mei" = 'lovelymei',
-                                            "Manually Insert" = 'manual'), 
-                             selected = 'default1'),
-                 
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_prevalence_colour == 'manual'",
-                   selectInput(inputId = "nonpara_bayes_prevalence_modify_colour",
-                               label = 'Select line to modify',
-                               choices = list("Prior" = 'prior',
-                                              "Posterior" = 'post',
-                                              "Relative Belief Ratio" = 'rbr',
-                                              "Plausible Region" = 'pr',
-                                              "Line of y = 1" = 'line_1',
-                                              "Credible Region" = 'cr'),
-                               selected = 'prior'), 
-                 ),
-                 
-                 # Below consists of all of the different types of colour inputs! 
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_prevalence_modify_colour == 'prior'",
-                   textInput(inputId = "nonpara_bayes_prevalence_colour_prior",
-                             label = 'Input the hex colour of the prior',
-                             value = "FF007F"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_prevalence_modify_colour == 'post'",
-                   textInput(inputId = "nonpara_bayes_prevalence_colour_post",
-                             label = 'Input the hex colour of the posterior',
-                             value = "FF00FF"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_prevalence_modify_colour == 'rbr'",
-                   textInput(inputId = "nonpara_bayes_prevalence_colour_rbr",
-                             label = 'Input the hex colour of the relative belief ratio',
-                             value = "7F00FF"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_prevalence_modify_colour == 'pr'",
-                   textInput(inputId = "nonpara_bayes_prevalence_colour_pr",
-                             label = 'Input the hex colour of the plausible region',
-                             value = "A717DB"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_prevalence_modify_colour == 'line_1'",
-                   textInput(inputId = "nonpara_bayes_prevalence_colour_line_1",
-                             label = 'Input the hex colour of the y = 1 line',
-                             value = "5327E4"), 
-                 ),
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_prevalence_modify_colour == 'cr'",
-                   textInput(inputId = "nonpara_bayes_prevalence_colour_cr",
-                             label = 'Input the hex colour of the credible region',
-                             value = "650d84"), 
-                 ),
-                 # Switching back to modifying transparency
-                 sliderInput(inputId = "nonpara_bayes_prevalence_col_transparency", 
-                             label = "Scale for colour transparency",
-                             min = 0, max = 1, value = 0.1),
+      textInput(inputId = "nonpara_bayes_prevalence_gamma", 
+                label = "Gamma (must be less than posterior content)", 
+                value = "NA"
+      ),
+      selectInput(inputId = "nonpara_bayes_prevalence_colour", 
+                  label = 'Select colour theme', 
+                  choices = list("Default Theme 1" = 'default1',
+                                 "Default Theme 2" = 'default2',
+                                 "Dull Life" = 'dull',
+                                 "Lovely Mei" = 'lovelymei',
+                                 "Manually Insert" = 'manual'), 
+                  selected = 'default1'
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_prevalence_colour == 'manual'",
+        selectInput(inputId = "nonpara_bayes_prevalence_modify_colour",
+                    label = 'Select line to modify',
+                    choices = list("Prior" = 'prior',
+                                   "Posterior" = 'post',
+                                   "Relative Belief Ratio" = 'rbr',
+                                   "Plausible Region" = 'pr',
+                                   "Line of y = 1" = 'line_1',
+                                   "Credible Region" = 'cr'),
+                    selected = 'prior'), 
+      ),
+      # Below consists of all of the different types of colour inputs! 
+      conditionalPanel(
+        condition = "input.nonpara_bayes_prevalence_modify_colour == 'prior'",
+        textInput(inputId = "nonpara_bayes_prevalence_colour_prior",
+                  label = 'Input the hex colour of the prior',
+                  value = "FF007F"
+        ), 
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_prevalence_modify_colour == 'post'",
+        textInput(inputId = "nonpara_bayes_prevalence_colour_post",
+                  label = 'Input the hex colour of the posterior',
+                  value = "FF00FF"
+        ), 
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_prevalence_modify_colour == 'rbr'",
+        textInput(inputId = "nonpara_bayes_prevalence_colour_rbr",
+                  label = 'Input the hex colour of the relative belief ratio',
+                  value = "7F00FF"
+        ), 
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_prevalence_modify_colour == 'pr'",
+        textInput(inputId = "nonpara_bayes_prevalence_colour_pr",
+                  label = 'Input the hex colour of the plausible region',
+                  value = "A717DB"
+        ), 
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_prevalence_modify_colour == 'line_1'",
+        textInput(inputId = "nonpara_bayes_prevalence_colour_line_1",
+                  label = 'Input the hex colour of the y = 1 line',
+                  value = "5327E4"
+        ), 
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_prevalence_modify_colour == 'cr'",
+        textInput(inputId = "nonpara_bayes_prevalence_colour_cr",
+                  label = 'Input the hex colour of the credible region',
+                  value = "650d84"
+        ), 
+      ),
+      # Switching back to modifying transparency
+      sliderInput(inputId = "nonpara_bayes_prevalence_col_transparency", 
+                  label = "Scale for colour transparency",
+                  min = 0, max = 1, value = 0.1
+      ),
     ),
     mainPanel(
       tabPanel("Plots",
-               fluidRow(
-                 splitLayout(cellWidths = c("50%", "50%"), 
-                             withSpinner(plotOutput("nonpara_bayes_prevalence_postprior_graph")), 
-                             withSpinner(plotOutput("nonpara_bayes_prevalence_RB_graph"))
-                 )
-               ),
+        fluidRow(
+          splitLayout(
+            cellWidths = c("50%", "50%"), 
+            withSpinner(plotOutput("nonpara_bayes_prevalence_postprior_graph")), 
+            withSpinner(plotOutput("nonpara_bayes_prevalence_RB_graph"))
+          )
+        ),
       ),
     )
   )
@@ -159,24 +168,29 @@ nonpara_bayes_prevalence_plot_alt = div(
   titlePanel("Plot of the Prior of w"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 numericInput(inputId = "nonpara_bayes_prevalence_delta_alt", 
-                              label = tags$p('Delta (the meaningful difference for the prevalence)', 
-                                             style = "font-size: 87%;"),
-                              value = 0.001, min = 0, max = 1),
-                 selectInput(inputId = "nonpara_bayes_prevalence_colour_1", 
-                             label = 'Select a colour', 
-                             choices = list("Red" = 'red', "Blue" = 'blue', "Green" = 'green',
-                                            "Manually Insert" = 'manual'), 
-                             selected = 'red'),
-                 sliderInput(inputId = "nonpara_bayes_prevalence_col_transparency_1", 
-                             label = "Scale for colour transparency",
-                             min = 0, max = 1, value = 0.1),
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_prevalence_colour_1 == 'manual'",
-                   textInput(inputId = "nonpara_bayes_prevalence_colour_2",
-                             label = 'Input the hex colour code.',
-                             value = "AC2DE2"),
-                 ),
+      numericInput(inputId = "nonpara_bayes_prevalence_delta_alt", 
+                   label = tags$p('Delta (the meaningful difference for the prevalence)', 
+                           style = "font-size: 87%;"),
+                   value = 0.001, min = 0, max = 1
+      ),
+      selectInput(inputId = "nonpara_bayes_prevalence_colour_1", 
+                  label = 'Select a colour', 
+                  choices = list("Red" = 'red', 
+                                 "Blue" = 'blue', 
+                                 "Green" = 'green',
+                                 "Manually Insert" = 'manual'), 
+                  selected = 'red'),
+      sliderInput(inputId = "nonpara_bayes_prevalence_col_transparency_1", 
+                  label = "Scale for colour transparency",
+                  min = 0, max = 1, value = 0.1
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_prevalence_colour_1 == 'manual'",
+        textInput(inputId = "nonpara_bayes_prevalence_colour_2",
+                  label = 'Input the hex colour code.',
+                  value = "AC2DE2"
+        ),
+      ),
     ),
     mainPanel(
       withSpinner(plotOutput("nonpara_bayes_prevalence_post_graph_alt"))
@@ -193,19 +207,20 @@ nonpara_bayes_prevalence_relative_belief_plot_of_w0 = div(
   titlePanel("Test of w = w0"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 numericInput(inputId = "nonpara_bayes_prevalence_w0",
-                              label = 'Hypothesis w = w0',
-                              value = 0.6)
+      numericInput(inputId = "nonpara_bayes_prevalence_w0",
+                   label = 'Hypothesis w = w0',
+                   value = 0.6
+      )
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0",
-               fluidRow(
-                 splitLayout(
-                   cellWidths = c("60%", "35%"), 
-                   withSpinner(plotOutput(outputId = "nonpara_bayes_prevalence_w0_graph")), 
-                   withSpinner(verbatimTextOutput("nonpara_bayes_prevalence_values2")),
-                 )
-               )
+        fluidRow(
+          splitLayout(
+            cellWidths = c("60%", "35%"), 
+            withSpinner(plotOutput(outputId = "nonpara_bayes_prevalence_w0_graph")), 
+            withSpinner(verbatimTextOutput("nonpara_bayes_prevalence_values2")),
+          )
+        )
       )
     )
   )
@@ -219,10 +234,11 @@ nonpara_bayes_prevalence_download = div(
   titlePanel("Download Output"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 textInput(inputId = "nonpara_bayes_prevalence_filename", 
-                           label = "Input File Name", 
-                           value = "Prior Post RBR of W"),
-                 downloadButton("nonpara_bayes_prevalence_downloadData", "Download"),
+      textInput(inputId = "nonpara_bayes_prevalence_filename", 
+                label = "Input File Name", 
+                value = "Prior Post RBR of W"
+      ),
+      downloadButton("nonpara_bayes_prevalence_downloadData", "Download"),
     ),
     mainPanel(
       tabPanel("Download Output", 
@@ -236,10 +252,10 @@ nonpara_bayes_prevalence_download_alt = div(
   titlePanel("Download Output"), 
   sidebarLayout(
     sidebarPanel(width = 3, 
-                 textInput(inputId = "nonpara_bayes_prevalence_filename_alt", 
-                           label = "Input File Name", 
-                           value = "Prior Of W"),
-                 downloadButton("nonpara_bayes_prevalence_downloadData_alt", "Download"),
+      textInput(inputId = "nonpara_bayes_prevalence_filename_alt", 
+                label = "Input File Name", 
+                value = "Prior Of W"),
+      downloadButton("nonpara_bayes_prevalence_downloadData_alt", "Download"),
     ),
     mainPanel(
       tabPanel("Download Output", 
@@ -255,7 +271,6 @@ nonpara_bayes_prevalence_download_alt = div(
 ################################################################
 
 page_nonpara_bayes_prevalence = div( 
-  # This is the page that that connects to app.R
   titlePanel("The Prevalence"), 
   conditionalPanel(
     condition = "input.nonpara_bayes_case1 == 1",
