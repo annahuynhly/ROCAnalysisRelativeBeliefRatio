@@ -77,7 +77,7 @@ output$nonpara_bayes_prevalence_prior_values = renderPrint({
 # PLOTS                                                        #
 ################################################################
 
-prevalence_colours = reactive({
+sect3.4_prevalence_colours = reactive({
   # Total order of ALL colours: prior, posterior, relative belief ratio, 
   # plausible region, y = 1 line, credible region, 
   if(input$nonpara_bayes_prevalence_colour == 'default1'){
@@ -107,7 +107,7 @@ output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
                               post = sect3.3_prevalence_info_1()$post, 
                               plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
                               grid = sect3.3_prevalence_grid(),
-                              colour_choice = prevalence_colours()[c(1, 2, 4, 6)],
+                              colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else if (as.numeric(input$nonpara_bayes_prevalence_gamma) >= sect3.3_prevalence_info_1()$posterior_content){
     # Couldn't do the or statement for if because of the case where you can't do
@@ -116,7 +116,7 @@ output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
                               post = sect3.3_prevalence_info_1()$post, 
                               plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
                               grid = sect3.3_prevalence_grid(),
-                              colour_choice = prevalence_colours()[c(1, 2, 4, 6)],
+                              colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else {
     generate_prior_post_graph(prior = sect3.3_prevalence_info_1()$prior, 
@@ -124,7 +124,7 @@ output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
                               plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
                               grid = sect3.3_prevalence_grid(),
                               credible_region = sect3.3_prevalence_cred_region()$credible_region,
-                              colour_choice = prevalence_colours()[c(1, 2, 4, 6)],
+                              colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
   }
 })
@@ -134,13 +134,13 @@ output$nonpara_bayes_prevalence_RB_graph = renderPlot({
     generate_rbr_graph(relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
                        plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
                        grid = sect3.3_prevalence_grid(),
-                       colour_choice = prevalence_colours()[c(3:6)],
+                       colour_choice = sect3.4_prevalence_colours()[c(3:6)],
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else if (as.numeric(input$nonpara_bayes_prevalence_gamma) >= sect3.3_prevalence_info_1()$posterior_content){
     generate_rbr_graph(relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
                        plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
                        grid = sect3.3_prevalence_grid(),
-                       colour_choice = prevalence_colours()[c(3:6)],
+                       colour_choice = sect3.4_prevalence_colours()[c(3:6)],
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else {
     generate_rbr_graph(relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
@@ -148,7 +148,7 @@ output$nonpara_bayes_prevalence_RB_graph = renderPlot({
                        grid = sect3.3_prevalence_grid(),
                        credible_region = sect3.3_prevalence_cred_region()$credible_region, 
                        rb_line = sect3.3_prevalence_cred_region()$rb_line,
-                       colour_choice = prevalence_colours()[c(3:6)],
+                       colour_choice = sect3.4_prevalence_colours()[c(3:6)],
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
   }
 })

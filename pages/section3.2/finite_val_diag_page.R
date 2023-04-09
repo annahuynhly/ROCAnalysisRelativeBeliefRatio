@@ -15,7 +15,6 @@ finite_val_setup_variables = fluidPage(
                            label = "Delta", 
                            value = 0.04, min = 0, max = 1)),
   ),
-  
   fluidRow(
     column(3, h3("Hyperparameters:")),
     column(3, textInput(inputId = "finite_val_alpha_ND",
@@ -25,7 +24,6 @@ finite_val_setup_variables = fluidPage(
                         label = 'alphaD1, ..., alphaDm',
                         value = "1, 1, 1, 1, 1")),
   ),
-  
   fluidRow(
     column(3, h3("Data (Sample Count):")),
     column(3, numericInput(inputId = "finite_val_nND",
@@ -35,7 +33,6 @@ finite_val_setup_variables = fluidPage(
                            label = 'Total Diseased',
                            value = 100, min = 1)),
   ),
-  
   fluidRow(
     column(3, h3("Data (Distribution)")),
     column(3, textInput(inputId = "finite_val_fND",
@@ -59,15 +56,17 @@ finite_val_hypothesizedAUC = div(
     sidebarPanel(width = 3, 
       numericInput(inputId = "finite_val_hypoAUC",
                    label = 'Hypothesized AUC (greater than)',
-                   value = 0.5),
+                   value = 0.5
+      ),
       textInput(inputId = "finite_val_gamma", 
                 label = tags$p("Gamma (must be less than posterior content)", 
                                style = "font-size: 95%"), 
-                value = "NA")
+                value = "NA"
+      )
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
-               withSpinner(verbatimTextOutput("finite_val_hypoAUC_value"))
+        withSpinner(verbatimTextOutput("finite_val_hypoAUC_value"))
       )
     )
   ),
@@ -84,7 +83,7 @@ finite_val_plausible_region = div(
   
   mainPanel(
     tabPanel("Inferences for Optimal Cutoff", 
-             withSpinner(verbatimTextOutput("finite_val_output1"))
+      withSpinner(verbatimTextOutput("finite_val_output1"))
     ),
   ),
   br(style = "line-height:28;")
@@ -99,17 +98,17 @@ finite_val_plots = div(
   sidebarLayout(
     sidebarPanel(width = 3,
       selectInput(inputId = "finite_val_hist_visual", label = "Choose Visual:",
-                   c("With Bars" = "finite_val_withbars",
-                     "Without Bars" = "finite_val_withoutbars"),
-                   selected = "finite_val_withoutbars"),
-      
+                   choices = c("With Bars" = "finite_val_withbars",
+                               "Without Bars" = "finite_val_withoutbars"),
+                   selected = "finite_val_withoutbars"
+      ),
       selectInput(inputId = "finite_val_colour", 
                   label = 'Select a colour', 
                   choices = list("Default Theme 1" = 'default1',
                                  "Default Theme 2" = 'default2',
                                  "Manually Insert" = 'manual'), 
-                  selected = 'default'),
-      
+                  selected = 'default'
+      ),
       conditionalPanel(
         condition = "input.finite_val_colour == 'manual'",
         selectInput(inputId = "finite_val_modify_colour",
@@ -127,53 +126,66 @@ finite_val_plots = div(
         condition = "input.finite_val_modify_colour == 'prior'",
         textInput(inputId = "finite_val_colour_prior",
                   label = 'Input the colour of the prior',
-                  value = "FF007F"), 
+                  value = "FF007F"
+        ), 
       ),
       conditionalPanel(
         condition = "input.finite_val_modify_colour == 'post'",
         textInput(inputId = "finite_val_colour_post",
                   label = 'Input the colour of the posterior',
-                  value = "FF00FF"), 
+                  value = "FF00FF"
+        ), 
       ),
       conditionalPanel(
         condition = "input.finite_val_modify_colour == 'rbr'",
         textInput(inputId = "finite_val_colour_rbr",
                   label = 'Input the colour of the relative belief ratio',
-                  value = "7F00FF"), 
+                  value = "7F00FF"
+        ), 
       ),
       conditionalPanel(
         condition = "input.finite_val_modify_colour == 'pr'",
         textInput(inputId = "finite_val_colour_pr",
                   label = 'Input the colour of the plausible region',
-                  value = "A717DB"), 
+                  value = "A717DB"
+        ), 
       ),
       conditionalPanel(
         condition = "input.finite_val_modify_colour == 'line_1'",
         textInput(inputId = "finite_val_colour_line_1",
                   label = 'Input the colour of the y = 1 line',
-                  value = "5327E4"), 
+                  value = "5327E4"
+        ), 
       ),
       conditionalPanel(
         condition = "input.finite_val_modify_colour == 'cr'",
         textInput(inputId = "finite_val_colour_cr",
                   label = 'Input the colour of the credible region',
-                  value = "650d84"), 
+                  value = "650d84"
+        ), 
       ),
       
       conditionalPanel(
         condition = "input.finite_val_hist_visual == 'finite_val_withbars'",
         sliderInput(inputId = "finite_val_col_transparency", 
                     label = "Scale for colour transparency",
-                    min = 0, max = 1, value = 0.2), 
+                    min = 0, max = 1, value = 0.2
+        ), 
       )
     ),
     mainPanel(
       tabPanel("Plots",
-               fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    withSpinner(plotOutput("finite_val_postprior_graph")), 
-                                    withSpinner(plotOutput("finite_val_RB_graph"))))),
+        fluidRow(
+          splitLayout(
+            cellWidths = c("50%", "50%"), 
+            withSpinner(plotOutput("finite_val_postprior_graph")), 
+            withSpinner(plotOutput("finite_val_RB_graph"))
+          )
+        )
+      ),
     )
   ),
+  
   br(style = "line-height:1;"),
 )
 
@@ -194,31 +206,32 @@ finite_val_copt_plots = div(
     sidebarPanel(width = 3,
       selectInput(inputId = "finite_val_c_opt_carry_colour",
                   label = "Select a colour theme",
-                  list("Default Theme 1" = 'default1',
-                       "Default Theme 2" = 'default2',
-                       "Custom Theme from AUC Plots" = 'custom',
-                       "Manually Insert" = 'manual'),
-                       selected = 'default'),      
+                  choices = list("Default Theme 1" = 'default1',
+                                 "Default Theme 2" = 'default2',
+                                 "Custom Theme from AUC Plots" = 'custom',
+                                 "Manually Insert" = 'manual'),
+                  selected = 'default'
+      ),      
       selectInput(inputId = "finite_val_c_opt_modify",
                   label = "Select which object to modify",
-                  list("Prior" = 'prior',
-                       "Posterior" = 'post',
-                       "Relative Belief Ratio" = 'rbr'),
+                  choices = list("Prior" = 'prior',
+                                 "Posterior" = 'post',
+                                 "Relative Belief Ratio" = 'rbr'),
                   selected = 'prior'
-                  ),
-                 
+      ),
       conditionalPanel(
         condition = "input.finite_val_c_opt_modify == 'prior'",
         selectInput(inputId = "finite_val_priorc_opt_label", 
                     label = "Plot Symbol for Prior",
-                    default_copt_list,
-                    selected = 3),
-        
+                    choices = default_copt_list,
+                    selected = 3
+        ),
         conditionalPanel(
           condition = "input.finite_val_c_opt_carry_colour == 'manual'",
           textInput(inputId = "finite_val_priorc_opt_colour",
                     label = 'Hex Colour for the Prior',
-                    value = "065143"), 
+                    value = "065143"
+          ), 
         )
       ),
       conditionalPanel(
@@ -226,38 +239,45 @@ finite_val_copt_plots = div(
         selectInput(inputId = "finite_val_postc_opt_label", 
                     label = "Plot Symbol for Posterior",
                     default_copt_list,
-                    selected = 4),
+                    selected = 4
+        ),
         conditionalPanel(
           condition = "input.finite_val_c_opt_carry_colour == 'manual'",
           textInput(inputId = "finite_val_postc_opt_colour",
                     label = 'Hex Colour for the Posterior',
-                    value = "70B77E"), 
+                    value = "70B77E"
+          ), 
         )
       ),
       conditionalPanel(
         condition = "input.finite_val_c_opt_modify == 'rbr'",
         selectInput(inputId = "finite_val_rbc_opt_label", 
                     label = "Plot Symbol for RB Ratio",
-                    default_copt_list,
-                    selected = 8),
-        
+                    choices = default_copt_list,
+                    selected = 8
+        ),
         conditionalPanel(
           condition = "input.finite_val_c_opt_carry_colour == 'manual'",
           textInput(inputId = "finite_val_rbrc_opt_colour",
                     label = 'Hex Colour for the RB Ratio',
-                    value = "CE1483"),
+                    value = "CE1483"
+          ),
         )
       ),
-  
     ),
     mainPanel(
       tabPanel("Plots",
-               fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-                                    withSpinner(plotOutput("finite_val_postprior_copt_graph")), 
-                                    withSpinner(plotOutput("finite_val_RB_copt_graph"))))),
-      
+        fluidRow(
+          splitLayout(
+            cellWidths = c("50%", "50%"), 
+            withSpinner(plotOutput("finite_val_postprior_copt_graph")), 
+            withSpinner(plotOutput("finite_val_RB_copt_graph"))
+          )
+        )
+      ),
     )
   ),
+  
   br(style = "line-height:2;"),
 )
 
@@ -289,7 +309,6 @@ finite_val_download_1 = div(
 )
 
 finite_val_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
-  
   grid_pts = closed_bracket_grid(delta)
   AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)$density)
   AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)$density)

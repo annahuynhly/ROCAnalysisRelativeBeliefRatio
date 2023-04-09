@@ -45,7 +45,11 @@ finite_val_colours = reactive({
 })
 
 finite_val_copt_colours = reactive({
-  if(input$finite_val_c_opt_carry_colour != 'manual'){
+  if(input$finite_val_c_opt_carry_colour == 'default1'){
+    c("#FF6666", "#6699FF", "#05DEB2")
+  } else if(input$finite_val_c_opt_carry_colour == 'default2'){
+    c("blue", "green", "red")
+  } else if(input$finite_val_c_opt_carry_colour == 'custom'){
     finite_val_colours()[c(1, 2, 3)]
   } else if (input$finite_val_c_opt_carry_colour == 'manual'){
     c(convert_to_hex(input$finite_val_priorc_opt_colour),

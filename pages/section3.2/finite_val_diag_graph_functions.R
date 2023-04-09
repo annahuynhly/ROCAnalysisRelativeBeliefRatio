@@ -6,7 +6,6 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
                                         showplot = FALSE, colour = "black"){
   # num_average_pts: the number of density bins closely added to each other to get
   # a smoother density plot. (Reduce peaks.)
-  
   if(num_average_pts %% 2 == 0){
     # Note: the even case is harder to code. For this instance, since the number of average points
     # will be pre-determined for the user (in terms of the plots), I have decided to not add
@@ -19,10 +18,10 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
   }
   if(num_average_pts == 1){
     if(showplot == TRUE){
-      lines(new_grid, hist_density, lty = 2, type = "l", lwd = 3, col = colour)#, add = TRUE)
+      lines(new_grid, hist_density, lty = 2, type = "l", lwd = 3, col = colour)
     }
     return(list("grid" = new_grid, "density" = hist_density))
-    #plot(new_grid, hist_density, lty = 1, type = "l")#, add = TRUE)
+
   } else {
     # when we have more items to average out
     new_density = rep(0, length(hist_density))
@@ -38,7 +37,7 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
           } else if ((length(vector) - i) < num_neighbours){
             pts = length(vector) - i
           }
-          new_density[i] = sum(hist_density[(i-pts):(i+pts)])/(2*pts + 1)
+          new_density[i] = sum(hist_density[(i - pts):(i + pts)])/(2*pts + 1)
         }
       } else {
         lower_int = i - num_neighbours
@@ -48,7 +47,7 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
     }
 
     if(showplot == TRUE){
-      lines(new_grid, new_density, lty = 2, type = "l", lwd = 3, col = colour)#, add = TRUE)
+      lines(new_grid, new_density, lty = 2, type = "l", lwd = 3, col = colour)
     }
   }
   return(list("grid" = new_grid, "density" = new_density))
@@ -94,28 +93,26 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
   }
   
   hist_post = hist(AUC_post, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
-                   #ylim = c(0, max(AUC_prior,AUC_post)),
                    main="Density Histogram: The Prior & Posterior of the AUC", 
                    col = post_hist_col, border = "#ffffff") 
   
   hist_prior = hist(AUC_prior, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
-                    #ylim = c(0, max(AUC_prior,AUC_post)),
                     col = prior_hist_col, border = "#ffffff", add = TRUE)
   
-  abline(v=plausible_region[1], col=pr_line_col, lwd = 2, lty = 3)
-  abline(v=plausible_region[2], col=pr_line_col, lwd = 2, lty = 3)
+  abline(v = plausible_region[1], col = pr_line_col, lwd = 2, lty = 3)
+  abline(v = plausible_region[2], col = pr_line_col, lwd = 2, lty = 3)
   
   # credible_region = FALSE
   if(typeof(credible_region) != "double"){
     legend("topleft", legend = c("Prior", "Posterior", "Plausible Region"), 
            lwd = 2,
            col = c(prior_line_col, post_line_col, pr_line_col),
-           lty = c(3, 3, 3), inset=0.02, cex=0.8)
+           lty = c(3, 3, 3), inset = 0.02, cex = 0.8)
   } else {
     legend("topleft", legend = c("Prior", "Posterior", "Plausible Region", "Credible Region"), 
            lwd = 2,
            col = c(prior_line_col, post_line_col, pr_line_col, cr_line_col),
-           lty = c(3, 3, 3, 3), inset=0.02, cex=0.8)
+           lty = c(3, 3, 3, 3), inset = 0.02, cex = 0.8)
   }
   
   if(densityplot == TRUE){
@@ -126,9 +123,8 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
   }
   
   if(typeof(credible_region) == "double"){
-    abline(v=credible_region[1], col=cr_line_col, lwd = 2, lty = 3) # might change lty?
-    abline(v=credible_region[2], col=cr_line_col, lwd = 2, lty = 3)
-    
+    abline(v = credible_region[1], col = cr_line_col, lwd = 2, lty = 3)
+    abline(v = credible_region[2], col = cr_line_col, lwd = 2, lty = 3)
   }
 }
 
@@ -138,7 +134,7 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
                                                   "#3333FF", "#5b10a7"),
                                 transparency = 0.2){
   # Order of colours: RBR, plausible region, y = 1 line, credible region
-  bins = closed_bracket_grid(delta) #bins = c(0, bins, 1)
+  bins = closed_bracket_grid(delta)
   
   rgb_rbr = col2rgb(colour_choice[1])
   if(showbars == FALSE){
@@ -227,7 +223,8 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
     
   } else if(typeof(RBc_opt) == "double"){
     m = length(RBc_opt)
-    plot(1:m, RBc_opt, xlab="X", ylab="Relative Belief Ratio", pch=rb_label, col = colour_choice[3],
+    plot(1:m, RBc_opt, xlab="X", ylab="Relative Belief Ratio", pch = rb_label, 
+         col = colour_choice[3],
          main = "Plot of the Relative Belief Ratio of Copt")
     legend("topright", legend = c("Relative Belief Ratio"),
            lwd = 2, cex = 1.2, col = c(colour_choice[3]), 

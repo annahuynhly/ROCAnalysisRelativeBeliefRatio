@@ -6,42 +6,37 @@ AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
                                      alpha1w = NA, alpha2w = NA,
                                      delta, pND_array, pD_array, 
                                      FNR, FPR, ERROR_w, PPV, priorc_opt){
-  # need to add support for PPV - unsure how
   
   if(length(pND_array) != length(pD_array)){
     return("Error: the length of pND_array and pD_array are different.")
   }
   A = closed_bracket_grid(delta)
-  priorFPRc_opt = rep(0,(1/delta))
-  priorFNRc_opt = rep(0,(1/delta))
-  priorERROR_wc_opt = rep(0,(1/delta))
-  priorFDRc_opt = rep(0,1/delta)
-  priorFNDRc_opt = rep(0,1/delta)
+  priorFPRc_opt = rep(0, (1/delta))
+  priorFNRc_opt = rep(0, (1/delta))
+  priorERROR_wc_opt = rep(0, (1/delta))
+  priorFDRc_opt = rep(0, 1/delta)
+  priorFNDRc_opt = rep(0, 1/delta)
   priorPPVc_opt = rep(0, 1/delta)
-  #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
   for(i in 1:nMonteCarlo){
     # This is for the prevalence w.
     pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
-    
     FPRc_opt = FPR[i, ][c_optfDfND]
     FNRc_opt = FNR[i, ][c_optfDfND]
     ERROR_wc_opt = ERROR_w[i, ][c_optfDfND]
     PPVc_opt = PPV[i, ][c_optfDfND]
-    #print(c(FPRc_opt, FNRc_opt, ERROR_wc_opt))
     
-    if ((pre_w*(1-FNRc_opt)+(1-pre_w)*FPRc_opt) !=  0){
-      FDRc_opt = (1-pre_w)*FPRc_opt/(pre_w*(1-FNRc_opt)+(1-pre_w)*FPRc_opt)}
-    if ((pre_w*FNRc_opt+(1-pre_w)*(1-FPRc_opt)) != 0){
-      FNDRc_opt = pre_w*FNRc_opt/(pre_w*FNRc_opt+(1-pre_w)*(1-FPRc_opt))}
+    if ((pre_w*(1 - FNRc_opt) + (1 - pre_w)*FPRc_opt) !=  0){
+      FDRc_opt = (1 - pre_w)*FPRc_opt/(pre_w*(1 - FNRc_opt) + (1 - pre_w)*FPRc_opt)}
+    if ((pre_w*FNRc_opt + (1 - pre_w)*(1 - FPRc_opt)) != 0){
+      FNDRc_opt = pre_w*FNRc_opt/(pre_w*FNRc_opt + (1 - pre_w)*(1 - FPRc_opt))}
     
     for (i in 1:length(A)) {
-      if ((FPRc_opt > A[i]) & (FPRc_opt <= A[i+1])) {priorFPRc_opt[i]=priorFPRc_opt[i]+1}
-      if ((FNRc_opt > A[i]) & (FNRc_opt <= A[i+1])) {priorFNRc_opt[i]=priorFNRc_opt[i]+1}
-      if ((ERROR_wc_opt > A[i]) & (ERROR_wc_opt <= A[i+1])) {priorERROR_wc_opt[i]=priorERROR_wc_opt[i]+1}
-      if ((FDRc_opt > A[i]) & (FDRc_opt <= A[i+1])) {priorFDRc_opt[i]=priorFDRc_opt[i]+1}
-      if ((FNDRc_opt > A[i]) & (FNDRc_opt <= A[i+1])) {priorFNDRc_opt[i]=priorFNDRc_opt[i]+1}
-      if ((PPVc_opt > A[i]) & (PPVc_opt <= A[i+1])) {priorPPVc_opt[i]=priorPPVc_opt[i]+1}
+      if ((FPRc_opt > A[i]) & (FPRc_opt <= A[i + 1])) {priorFPRc_opt[i] = priorFPRc_opt[i] + 1}
+      if ((FNRc_opt > A[i]) & (FNRc_opt <= A[i + 1])) {priorFNRc_opt[i] = priorFNRc_opt[i] + 1}
+      if ((ERROR_wc_opt > A[i]) & (ERROR_wc_opt <= A[i + 1])) {priorERROR_wc_opt[i] = priorERROR_wc_opt[i] + 1}
+      if ((FDRc_opt > A[i]) & (FDRc_opt <= A[i + 1])) {priorFDRc_opt[i] = priorFDRc_opt[i] + 1}
+      if ((FNDRc_opt > A[i]) & (FNDRc_opt <= A[i + 1])) {priorFNDRc_opt[i] = priorFNDRc_opt[i] + 1}
+      if ((PPVc_opt > A[i]) & (PPVc_opt <= A[i + 1])) {priorPPVc_opt[i] = priorPPVc_opt[i] + 1}
     }
   }
   priorFPRc_opt = priorFPRc_opt/nMonteCarlo
@@ -60,20 +55,17 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
                                     alpha1w = NA, alpha2w = NA, nD = NA, nND = NA, version = NA,
                                     delta, pND_array, pD_array, 
                                     FNR, FPR, ERROR_w, PPV, postc_opt){
-  # need to add support for PPV - unsure how
-  
+
   if(length(pND_array) != length(pD_array)){
     return("Error: the length of pND_array and pD_array are different.")
   }
   A = closed_bracket_grid(delta)
-  postFPRc_opt = rep(0,(1/delta))
-  postFNRc_opt = rep(0,(1/delta))
-  postERROR_wc_opt = rep(0,(1/delta))
-  postFDRc_opt = rep(0,1/delta)
-  postFNDRc_opt = rep(0,1/delta)
-  postPPVc_opt = rep(0,1/delta)
-  #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  #array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  postFPRc_opt = rep(0, (1/delta))
+  postFNRc_opt = rep(0, (1/delta))
+  postERROR_wc_opt = rep(0, (1/delta))
+  postFDRc_opt = rep(0, 1/delta)
+  postFNDRc_opt = rep(0, 1/delta)
+  postPPVc_opt = rep(0, 1/delta)
   for(i in 1:nMonteCarlo){
     # This is for the prevalence w.
     pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version)
@@ -83,18 +75,18 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
     ERROR_wc_opt = ERROR_w[i, ][c_optfDfND]
     PPVc_opt = PPV[i, ][c_optfDfND]
     
-    if ((pre_w*(1-FNRc_opt)+(1-pre_w)*FPRc_opt) !=  0){
-      FDRc_opt = (1-pre_w)*FPRc_opt/(pre_w*(1-FNRc_opt)+(1-pre_w)*FPRc_opt)}
-    if ((pre_w*FNRc_opt+(1-pre_w)*(1-FPRc_opt)) != 0){
-      FNDRc_opt = pre_w*FNRc_opt/(pre_w*FNRc_opt+(1-pre_w)*(1-FPRc_opt))}
+    if ((pre_w*(1 - FNRc_opt) + (1 - pre_w)*FPRc_opt) !=  0){
+      FDRc_opt = (1 - pre_w)*FPRc_opt/(pre_w*(1 - FNRc_opt) + (1 - pre_w)*FPRc_opt)}
+    if ((pre_w*FNRc_opt + (1 - pre_w)*(1 - FPRc_opt)) != 0){
+      FNDRc_opt = pre_w*FNRc_opt/(pre_w*FNRc_opt + (1 - pre_w)*(1-FPRc_opt))}
     
     for (i in 1:length(A)) {
-      if ((FPRc_opt > A[i]) & (FPRc_opt <= A[i+1])) {postFPRc_opt[i] = postFPRc_opt[i]+1}
-      if ((FNRc_opt > A[i]) & (FNRc_opt <= A[i+1])) {postFNRc_opt[i] = postFNRc_opt[i]+1}
-      if ((ERROR_wc_opt > A[i]) & (ERROR_wc_opt <= A[i+1])) {postERROR_wc_opt[i] = postERROR_wc_opt[i]+1}
-      if ((FDRc_opt > A[i]) & (FDRc_opt <= A[i+1])) {postFDRc_opt[i] = postFDRc_opt[i]+1}
-      if ((FNDRc_opt > A[i]) & (FNDRc_opt <= A[i+1])) {postFNDRc_opt[i] = postFNDRc_opt[i]+1}
-      if ((PPVc_opt > A[i]) & (PPVc_opt <= A[i+1])) {postPPVc_opt[i] = postPPVc_opt[i]+1}
+      if ((FPRc_opt > A[i]) & (FPRc_opt <= A[i + 1])) {postFPRc_opt[i] = postFPRc_opt[i] + 1}
+      if ((FNRc_opt > A[i]) & (FNRc_opt <= A[i + 1])) {postFNRc_opt[i] = postFNRc_opt[i] + 1}
+      if ((ERROR_wc_opt > A[i]) & (ERROR_wc_opt <= A[i + 1])) {postERROR_wc_opt[i] = postERROR_wc_opt[i] + 1}
+      if ((FDRc_opt > A[i]) & (FDRc_opt <= A[i + 1])) {postFDRc_opt[i] = postFDRc_opt[i] + 1}
+      if ((FNDRc_opt > A[i]) & (FNDRc_opt <= A[i + 1])) {postFNDRc_opt[i] = postFNDRc_opt[i] + 1}
+      if ((PPVc_opt > A[i]) & (PPVc_opt <= A[i + 1])) {postPPVc_opt[i] = postPPVc_opt[i] + 1}
     }
   }
   postFPRc_opt = postFPRc_opt/nMonteCarlo
@@ -126,17 +118,16 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE,
   }
   m = length(alpha_priorND)
   
-  priorc_opt = rep(0,m) # NEW
+  priorc_opt = rep(0, m) # NEW
   
-  pND_array = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  pD_array = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  FNR = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  FPR = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  ERROR_w = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  PPV = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  pND_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  pD_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  FNR = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  FPR = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  ERROR_w = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  PPV = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
   
   AUC = rep(0, nMonteCarlo)
-  
   for(i in 1:nMonteCarlo){
     # This is for the prevalence w.
     pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
@@ -148,16 +139,14 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE,
     ERROR_w[i, ] = pre_w*FNR[i, ] + (1-pre_w)*FPR[i, ]
     PPV[i, ] = (pre_w*(1 - FNR[i, ]))/(pre_w*(1 - FNR[i, ]) + (1-pre_w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
     
-    AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
+    AUC[i] = sum((1 - FNR[i, ])*pND_array[i,])
     
     # update the prior distribution of c_opt
     c_opt = which.min(ERROR_w[i, ])
-    priorc_opt[c_opt] <- priorc_opt[c_opt]+1
+    priorc_opt[c_opt] = priorc_opt[c_opt] + 1
   }
-  
   priorc_opt = priorc_opt/nMonteCarlo
   
-  # might also want to make a downloadable list
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
                  "FNR" = FNR, "FPR" = FPR, "ERROR_w" = ERROR_w, 
                  "PPV" = PPV, "priorc_opt" = priorc_opt,
@@ -167,9 +156,8 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE,
 
 simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w = FALSE, 
                                 alpha1w = NA, alpha2w = NA, version = NA,
-                                alpha_ND, alpha_D, fND, fD){ # removed m
+                                alpha_ND, alpha_D, fND, fD){
   
-  # Remark: this is because the input can be a string due to R shiny's inputs
   alpha_priorND = create_necessary_vector(alpha_ND)
   alpha_priorD = create_necessary_vector(alpha_D)
   fND = create_necessary_vector(fND)
@@ -178,44 +166,41 @@ simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w = FALSE,
   test_valid_list = c(length(alpha_priorD), length(fND), length(fD))
   for(i in test_valid_list){
     if(i != length(alpha_priorND)){
-      return("At least one of the vectors (alpha ND, alpha D, fND, or fD) are not the same length.")
+      return("At least one of the vectors (alpha ND, alpha D, fND, or fD) 
+             are not the same length.")
     }
   }
   m = length(alpha_priorND)
   
-  postc_opt = rep(0,m) # NEW
+  postc_opt = rep(0, m) 
   
-  pND_array = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  pD_array = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  FNR = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  FPR = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  ERROR_w = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
-  PPV = array(0*c(1:nMonteCarlo*m),dim=c(nMonteCarlo,m))
+  pND_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  pD_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  FNR = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  FPR = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  ERROR_w = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  PPV = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
   
   AUC = rep(0, nMonteCarlo)
-  
   for(i in 1:nMonteCarlo){
     # This is for the prevalence w.
     pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version)
     
-    pND_array[i, ] = rdirichlet(1,alpha_priorND + fND)
-    pD_array[i, ] = rdirichlet(1,alpha_priorD + fD)
+    pND_array[i, ] = rdirichlet(1, alpha_priorND + fND)
+    pD_array[i, ] = rdirichlet(1, alpha_priorD + fD)
     FNR[i, ] = cumsum(pD_array[i, ])
     FPR[i, ] = 1 - cumsum(pND_array[i, ])
     ERROR_w[i, ] = pre_w*FNR[i, ] + (1-pre_w)*FPR[i, ]
-    PPV[i, ] = (pre_w*(1 - FNR[i, ]))/(pre_w*(1 - FNR[i, ]) + (1-pre_w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
+    PPV[i, ] = (pre_w*(1 - FNR[i, ]))/(pre_w*(1 - FNR[i, ]) + (1 - pre_w)*FPR[i, ]) # TPR[i, ] = 1 - FNR[i, ]
     
     AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
-    
     # update the posterior distribution of c_opt
     c_opt = which.min(ERROR_w[i, ])
-    postc_opt[c_opt] = postc_opt[c_opt]+1
+    postc_opt[c_opt] = postc_opt[c_opt] + 1
   }
   
-  #print(postc_opt)
   postc_opt = postc_opt/nMonteCarlo
   
-  # might also want to make a downloadable list
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
                  "FNR" = FNR, "FPR" = FPR, "ERROR_w" = ERROR_w, 
                  "PPV" = PPV, "postc_opt" = postc_opt,
@@ -235,26 +220,22 @@ grab_AUC_RBR_densities_breaks = function(delta, AUC){
   bins = closed_bracket_grid(delta)
   AUC[is.na(AUC)] = 0
   
-  myhist <-list(breaks=bins, counts=AUC, density=AUC/delta)
+  myhist = list(breaks = bins, counts = AUC, density = AUC/delta)
   class(myhist) = "histogram"
-  #print(myhist)
-  #myhist$density = myhist$density[-length(myhist$density)] # removing the last element (not needed)
   
   return(list("density" = myhist$density, "breaks" = myhist$breaks, "counts" = myhist$counts))
 }
 
 compute_AUC_RBR = function(delta, AUC_prior, AUC_post, priorc_opt, postc_opt){
-  # NEED TO COMPUTE THE FOLLOWING: RBR, plausible region, etc...
   
   RBc_opt = postc_opt/priorc_opt
   
   bins = closed_bracket_grid(delta)
   AUC_RBR = rep(0, length(bins))
-  #AUC_RBR = rep(0, length(bins))
   AUC_prior_pts = grab_AUC_densities_breaks(delta, AUC_prior)$density
   AUC_post_pts = grab_AUC_densities_breaks(delta, AUC_post)$density
   
-  for(i in 1:(length(bins)-1)){
+  for(i in 1:(length(bins) - 1)){
     # if statement is to prevent division by 0
     if((AUC_prior_pts[i] > 0) == TRUE){
       AUC_RBR[i] = AUC_post_pts[i] / AUC_prior_pts[i]
@@ -263,7 +244,7 @@ compute_AUC_RBR = function(delta, AUC_prior, AUC_post, priorc_opt, postc_opt){
     }
   }
   
-  c_optfDfND <- which.max(RBc_opt)
+  c_optfDfND = which.max(RBc_opt)
   
   # REMARK: AUC_RBR goes from (0 to bin[1]), ..., to (bin[1/delta], 1)
   newlist = list("grid" = bins, "AUC_RBR" = AUC_RBR, "RBc_opt" = RBc_opt, 
@@ -312,9 +293,7 @@ compute_AUC_credible_region = function(gamma, grid, density, AUC_post,
     if(gamma >= posterior_content){
       err_msg = "Gamma must be less than the posterior content of the plausible region."
       return(list("credible_region" = err_msg, "rb_line" = err_msg))
-    } 
-    # NEED TO MODIFY THIS!!
-    else {
+    } else {
       RBR_values = sort(density, decreasing = TRUE)
       RBR_values = RBR_values[RBR_values > 1] # sorting for values larger than 1
       for(i in 2:length(RBR_values)){ # doesnt start at the top as the AREA of a line is 0
@@ -336,8 +315,7 @@ compute_AUC_credible_region = function(gamma, grid, density, AUC_post,
         }
       }
       newlist = list("credible_region" = credible_region, "rb_line" = rb_line)
-      #print(newlist)
-      # Note: rb_line should be the upper dotted line - helps define a valid credible region
+      #Note: rb_line should be the upper dotted line - helps define a valid credible region
       return(newlist)
     }
   }
@@ -403,7 +381,6 @@ compute_AUC_post_content = function(delta, AUC_post, plausible_region){
       }
     }
   }
-  
   for(i in start:end){
     AUC_post_content = AUC_post_content + AUC_post_pts[i] * delta
   }
@@ -412,7 +389,7 @@ compute_AUC_post_content = function(delta, AUC_post, plausible_region){
 }
 
 grab_density_plot_area = function(grid, density){
-  area = sum(diff(grid) * (head(density,-1)+tail(density,-1)))/2
+  area = sum(diff(grid) * (head(density, -1) + tail(density, -1)))/2
   return(area)
 }
 
@@ -428,15 +405,13 @@ hypothesized_AUC_compute_values = function(hypo_AUC, delta, AUC_prior, AUC_post)
     }
   }
   
-  priorprob=0
-  postprob=0
+  priorprob = 0
+  postprob = 0
   for(i in start_loop:length(grid)){
-    priorprob=priorprob+priors[i]
-    postprob=postprob+posts[i]
+    priorprob=priorprob + priors[i]
+    postprob=postprob + posts[i]
   }
   RB=postprob/priorprob
   
   return(RB)
 }
-
-
