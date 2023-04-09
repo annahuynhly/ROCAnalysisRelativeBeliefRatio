@@ -1,13 +1,6 @@
-################################################################
-# HELPER FUNCTIONS                                             #
-################################################################
-
 #source("C:\\Users\\AnnaH\\OneDrive\\Desktop\\Stats RA\\ShinyWebpage\\pages\\helper_functions.R")
 
-# Note: this doesn't seem to be working that well.
-fcnAUC <- function(z){
-  return (dnorm(z)*pnorm((muDi-muNDi)/sigmaDi+sigmaNDi/sigmaDi*z))
-}
+#fcnAUC = function(z){return (dnorm(z)*pnorm((muDi-muNDi)/sigmaDi+sigmaNDi/sigmaDi*z))}
 
 ################################################################
 # FUNCTIONS FOR COMPUTATIONS                                   #
@@ -16,8 +9,8 @@ fcnAUC <- function(z){
 binormal_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, nND, meanND, 
                                            sND_squared, nD, meanD, sD_squared){
   lambda1post = lambda1 + (nD+nND)/2
-  tau0D = 1/sqrt(nD+1/tau0^2)
-  tau0ND = 1/sqrt(nND+1/tau0^2)
+  tau0D = 1/sqrt(nD + 1/tau0^2)
+  tau0ND = 1/sqrt(nND + 1/tau0^2)
   lambda2post = (lambda2 + (sD_squared+sND_squared)/2 + (tau0D**2)*(nD/tau0^2)*(meanD - mu0)^2/2 + 
                    (tau0ND**2)*(nND/tau0^2)*(meanND - mu0)^2/2)
   mu0Dpost = (tau0D**2)*(nD*meanD + mu0/tau0**2)
@@ -27,7 +20,6 @@ binormal_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, nND, mea
                  "lambda2post" = lambda2post, "mu0Dpost" = mu0Dpost, "mu0NDpost" = mu0NDpost)
 }
 
-# Adding a new condition now
 binormal_diag_prior = function(condition, nMonteprior, delta, lambda1, lambda2, mu0, tau0){
   if(condition != "conditional" && condition != "unconditional"){
     return("condition must either be 'conditional' or 'unconditional'.")
@@ -87,45 +79,6 @@ binormal_diag_prior = function(condition, nMonteprior, delta, lambda1, lambda2, 
     priorAUCdensity = L*priorAUC
     newlist = list("priorAUC" = priorAUC, "priorAUCdensity" = priorAUCdensity)
   }
-  return(newlist)
-}
-
-binormal_diag_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
-                                    nMonteprior, delta, lambda1, lambda2, mu0, tau0){
-  A = closed_bracket_grid(delta)# this is technically their grid
-  L = (1/delta) # length
-  sigmaD = sqrt(1/rgamma(nMonteprior, lambda1, lambda2))
-  sigmaND = sigmaD
-  muD = rnorm(nMonteprior, mu0, (tau0*sigmaD))
-  
-  pre_w = rep(0, nMonteprior)
-  for(i in 1:length(pre_w)){
-    pre_w[i] = generate_w(w, alpha1w, alpha2w, version = "prior")
-  }
-  
-  priorimpwt = pnorm((muD - mu0)/(tau0*sigmaND)) # ADDED FOR COPT
-  U = rbeta(nMonteprior,1,1) # ADDED FOR COPT
-  muND_copt = mu0 + tau0*sigmaND*qnorm(priorimpwt*U) # ADDED FOR COPT
-  c = 0.5*(muD + muND_copt)+(sigmaD**2)*(log((1 - pre_w)/pre_w))/(muD - muND_copt) # ADDED FOR COPT
-  cmod = (pi/2 + atan(c))/pi # ADDED FOR COPT
-  cmodmax = max(cmod) 
-  cmodmin = min(cmod) 
-  priorcmod = rep(0,L) 
-  
-  for (iMonteprior in 1:nMonteprior) {
-    for (igrid in 1:L){
-      if ( (A[igrid] < cmod[iMonteprior]) & (cmod[iMonteprior] <= A[igrid+1]) ) {
-        priorcmod[igrid] = priorcmod[igrid] + priorimpwt[iMonteprior]
-      }
-    }
-  }
-  priorcmod = average_vector_values(priorcmod) # APPLYING SMOOTHER
-  
-  priorcmod = priorcmod/sum(priorcmod) 
-  priorcmoddensity = L*priorcmod 
-  
-  newlist = list("priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity)
-  
   return(newlist)
 }
 
@@ -192,47 +145,6 @@ binormal_diag_post = function(condition, nMontepost, delta, lambda1post, lambda2
   return(newlist)
 }
 
-binormal_diag_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, nD = NA, 
-                                   version, nMontepost, delta, lambda1post, lambda2post, 
-                                   mu0Dpost, mu0NDpost, tau0D, tau0ND){
-  A = closed_bracket_grid(delta) # this is technically their grid
-  L = (1/delta) # length
-  sigmaDpost = sqrt(1/rgamma(nMontepost, lambda1post, lambda2post))
-  sigmaNDpost = sigmaDpost
-  muDpost = mu0Dpost + tau0D*sigmaDpost*rnorm(nMontepost,0,1)
-  
-  pre_w = rep(0, nMontepost)
-  for(i in 1:length(pre_w)){
-    pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) 
-  }
-  
-  postimpwt = pnorm((muDpost - mu0NDpost)/(tau0ND*sigmaNDpost))
-  U = rbeta(nMontepost,1,1) 
-  muNDpost_copt = mu0NDpost + tau0ND*sigmaNDpost*qnorm(postimpwt*U) 
-  
-  c = 0.5*(muDpost + muNDpost_copt)+(sigmaDpost**2)*(log((1-pre_w)/pre_w))/(muDpost-muNDpost_copt) 
-  cmod = (pi/2+atan(c))/pi 
-  cmodmax = max(cmod) 
-  cmodmin = min(cmod) 
-  
-  postcmod = rep(0,L)
-  
-  for (iMontepost in 1:nMontepost) {
-    for (igrid in 1:L){
-      if ( (A[igrid] < cmod[iMontepost]) & (cmod[iMontepost] <= A[igrid+1]) ) {
-        postcmod[igrid] = postcmod[igrid] + postimpwt[iMontepost] 
-      }
-    }
-  }
-  postcmod = average_vector_values(postcmod) # applying a smoother
-  postcmod = postcmod/sum(postcmod)
-  postcmoddensity = L*postcmod
-  
-  newlist = list("postcmod" = postcmod, "postcmoddensity" = postcmoddensity)
-  return(newlist)
-}
-
-# This should be same for the equal and unequal case
 binormal_diag_RBR = function(condition, delta, probAUCprior, probAUCpost, priorAUC, postAUC){
   if(condition != "conditional" && condition != "unconditional"){
     return("condition must either be 'conditional' or 'unconditional'.")
@@ -293,38 +205,6 @@ binormal_diag_RBR = function(condition, delta, probAUCprior, probAUCpost, priorA
   return(newlist)
 }
 
-binormal_diag_RBR_copt = function(delta, priorcmod, postcmod){
-  grid = open_bracket_grid(delta)
-  L = ((1/delta) - 1)
-  
-  RBcmod = postcmod/priorcmod # ADDED FOR COPT
-  
-  # Getting the plausible region for copt
-  postPlcmod = 0 # the posterior content of the plausible region
-  plausible_region = c()
-  for (i in 1:L) {
-    if (priorcmod[i] > 0 & RBcmod[i] > 1) {
-      postPlcmod = postPlcmod + postcmod[i]
-      plausible_region = c(plausible_region, as.numeric(grid[i]))
-    }
-  }
-  plausible_region = c(plausible_region[1], 
-                       plausible_region[length(plausible_region)])
-  
-  imax = 1
-  temp_RBcmod = NA_to_0(RBcmod)
-  for (i in 1:L) {
-    if (priorcmod[i] > 0 & temp_RBcmod[i] > temp_RBcmod[imax]){imax = i}
-  }
-  cmodest = grid[imax]
-  coptest = tan(pi*cmodest-pi/2)
-  
-  newlist = list("RBcmod" = RBcmod, "postPlcmod" = postPlcmod,
-                 "plausible_region" = plausible_region,
-                 "cmodest" = cmodest, "coptest" = coptest)
-}
-
-# ISSUE WITH THIS ONE
 binormal_diag_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prior, AUC_post, 
                                                  plausible_region, posterior_content){
   # Note: credible region is now based on the line plot.
@@ -381,12 +261,120 @@ binormal_diag_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prio
   }
 }
 
-# THIS IS FOR INFERENCES OF THE OPTIMAL CUTOFF
+binormal_diag_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA, 
+                                    nMonteprior, delta, lambda1, lambda2, mu0, tau0){
+  A = closed_bracket_grid(delta)
+  L = (1/delta) # length
+  sigmaD = sqrt(1/rgamma(nMonteprior, lambda1, lambda2))
+  sigmaND = sigmaD
+  muD = rnorm(nMonteprior, mu0, (tau0*sigmaD))
+  
+  pre_w = rep(0, nMonteprior)
+  for(i in 1:length(pre_w)){
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, version = "prior")
+  }
+  
+  priorimpwt = pnorm((muD - mu0)/(tau0*sigmaND))
+  U = rbeta(nMonteprior,1,1) 
+  muND_copt = mu0 + tau0*sigmaND*qnorm(priorimpwt*U) 
+  c = 0.5*(muD + muND_copt)+(sigmaD**2)*(log((1 - pre_w)/pre_w))/(muD - muND_copt) 
+  cmod = (pi/2 + atan(c))/pi 
+  cmodmax = max(cmod) 
+  cmodmin = min(cmod) 
+  priorcmod = rep(0,L) 
+  
+  for (iMonteprior in 1:nMonteprior) {
+    for (igrid in 1:L){
+      if ( (A[igrid] < cmod[iMonteprior]) & (cmod[iMonteprior] <= A[igrid+1]) ) {
+        priorcmod[igrid] = priorcmod[igrid] + priorimpwt[iMonteprior]
+      }
+    }
+  }
+  priorcmod = average_vector_values(priorcmod) # APPLYING SMOOTHER
+  
+  priorcmod = priorcmod/sum(priorcmod) 
+  priorcmoddensity = L*priorcmod 
+  
+  newlist = list("priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity)
+  
+  return(newlist)
+}
+
+binormal_diag_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, nD = NA, 
+                                   version, nMontepost, delta, lambda1post, lambda2post, 
+                                   mu0Dpost, mu0NDpost, tau0D, tau0ND){
+  A = closed_bracket_grid(delta) 
+  L = (1/delta) # length
+  sigmaDpost = sqrt(1/rgamma(nMontepost, lambda1post, lambda2post))
+  sigmaNDpost = sigmaDpost
+  muDpost = mu0Dpost + tau0D*sigmaDpost*rnorm(nMontepost,0,1)
+  
+  pre_w = rep(0, nMontepost)
+  for(i in 1:length(pre_w)){
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) 
+  }
+  
+  postimpwt = pnorm((muDpost - mu0NDpost)/(tau0ND*sigmaNDpost))
+  U = rbeta(nMontepost,1,1) 
+  muNDpost_copt = mu0NDpost + tau0ND*sigmaNDpost*qnorm(postimpwt*U) 
+  
+  c = 0.5*(muDpost + muNDpost_copt) + (sigmaDpost**2)*(log((1-pre_w)/pre_w))/(muDpost-muNDpost_copt) 
+  cmod = (pi/2 + atan(c))/pi 
+  cmodmax = max(cmod) 
+  cmodmin = min(cmod) 
+  
+  postcmod = rep(0,L)
+  
+  for (iMontepost in 1:nMontepost) {
+    for (igrid in 1:L){
+      if ( (A[igrid] < cmod[iMontepost]) & (cmod[iMontepost] <= A[igrid+1]) ) {
+        postcmod[igrid] = postcmod[igrid] + postimpwt[iMontepost] 
+      }
+    }
+  }
+  postcmod = average_vector_values(postcmod) # applying a smoother
+  postcmod = postcmod/sum(postcmod)
+  postcmoddensity = L*postcmod
+  
+  newlist = list("postcmod" = postcmod, "postcmoddensity" = postcmoddensity)
+  return(newlist)
+}
+
+binormal_diag_RBR_copt = function(delta, priorcmod, postcmod){
+  grid = open_bracket_grid(delta)
+  L = ((1/delta) - 1)
+  
+  RBcmod = postcmod/priorcmod
+  
+  # Getting the plausible region for copt
+  postPlcmod = 0 # the posterior content of the plausible region
+  plausible_region = c()
+  for (i in 1:L) {
+    if (priorcmod[i] > 0 & RBcmod[i] > 1) {
+      postPlcmod = postPlcmod + postcmod[i]
+      plausible_region = c(plausible_region, as.numeric(grid[i]))
+    }
+  }
+  plausible_region = c(plausible_region[1], 
+                       plausible_region[length(plausible_region)])
+  
+  imax = 1
+  temp_RBcmod = NA_to_0(RBcmod)
+  for (i in 1:L) {
+    if (priorcmod[i] > 0 & temp_RBcmod[i] > temp_RBcmod[imax]){imax = i}
+  }
+  cmodest = grid[imax]
+  coptest = tan(pi*cmodest-pi/2)
+  
+  newlist = list("RBcmod" = RBcmod, "postPlcmod" = postPlcmod,
+                 "plausible_region" = plausible_region,
+                 "cmodest" = cmodest, "coptest" = coptest)
+}
 
 binormal_diag_AUC_prior_error_char_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
                                                    coptest, nMonteprior, delta, 
                                                    lambda1, lambda2, mu0, tau0){
-  A = closed_bracket_grid(delta)# this is technically their grid
+  A = closed_bracket_grid(delta)
   L = (1/delta) # length
   # samples from (muD,sigmaD,muND,sigmaND) and prevalence w
   sigmaD = sqrt(1/rgamma(nMonteprior, lambda1, lambda2))
@@ -415,23 +403,23 @@ binormal_diag_AUC_prior_error_char_copt = function(w = FALSE, alpha1w = NA, alph
   
   for (iMonteprior in 1:nMonteprior) {
     for (igrid in 1:L){
-      if ( (A[igrid] < FNR[iMonteprior]) & (FNR[iMonteprior] <= A[igrid+1]) ) {
+      if ((A[igrid] < FNR[iMonteprior]) & (FNR[iMonteprior] <= A[igrid + 1])) {
         priorFNR[igrid] = priorFNR[igrid] + priorimpwt[iMonteprior]}
-      if ( (A[igrid] < FPR[iMonteprior]) & (FPR[iMonteprior] <= A[igrid+1]) ) {
+      if ((A[igrid] < FPR[iMonteprior]) & (FPR[iMonteprior] <= A[igrid + 1])) {
         priorFPR[igrid] = priorFPR[igrid] + priorimpwt[iMonteprior]}
-      if ( (A[igrid] < Error[iMonteprior]) & (Error[iMonteprior] <= A[igrid+1]) ) {
+      if ((A[igrid] < Error[iMonteprior]) & (Error[iMonteprior] <= A[igrid + 1])) {
         priorError[igrid] = priorError[igrid] + priorimpwt[iMonteprior]}
-      if ( (A[igrid] < FDR[iMonteprior]) & (FDR[iMonteprior] <= A[igrid+1]) ) {
+      if ((A[igrid] < FDR[iMonteprior]) & (FDR[iMonteprior] <= A[igrid + 1])) {
         priorFDR[igrid] = priorFDR[igrid] + priorimpwt[iMonteprior]}
-      if ( (A[igrid] < FNDR[iMonteprior]) & (FNDR[iMonteprior] <= A[igrid+1]) ) {
+      if ((A[igrid] < FNDR[iMonteprior]) & (FNDR[iMonteprior] <= A[igrid + 1])) {
         priorFNDR[igrid] = priorFNDR[igrid] + priorimpwt[iMonteprior]}
     }
   }
   priorFNR = average_vector_values(priorFNR) # applying the smoother
-  priorFPR = average_vector_values(priorFPR) # applying the smoother
-  priorError = average_vector_values(priorError) # applying the smoother
-  priorFDR = average_vector_values(priorFDR) # applying the smoother
-  priorFNDR = average_vector_values(priorFNDR) # applying the smoother
+  priorFPR = average_vector_values(priorFPR) 
+  priorError = average_vector_values(priorError) 
+  priorFDR = average_vector_values(priorFDR) 
+  priorFNDR = average_vector_values(priorFNDR) 
   
   priorFNR = priorFNR/sum(priorFNR)
   priorFNRdensity = L*priorFNR
@@ -486,23 +474,23 @@ binormal_diag_AUC_post_error_char_copt = function(w = FALSE, alpha1w = NA, alpha
   
   for (iMontepost in 1:nMontepost) {
     for (igrid in 1:L){
-      if ( (A[igrid] < FNRpost[iMontepost]) & (FNRpost[iMontepost] <= A[igrid+1]) ) {
-        postFNR[igrid] = postFNR[igrid]+postimpwt[iMontepost]}
-      if ( (A[igrid] < FPRpost[iMontepost]) & (FPRpost[iMontepost] <= A[igrid+1]) ) {
-        postFPR[igrid] = postFPR[igrid]+postimpwt[iMontepost]}
-      if ( (A[igrid] < Errorpost[iMontepost]) & (Errorpost[iMontepost] <= A[igrid+1]) ) {
-        postError[igrid] = postError[igrid]+postimpwt[iMontepost]}
-      if ( (A[igrid] < FDRpost[iMontepost]) & (FDRpost[iMontepost] <= A[igrid+1]) ) {
-        postFDR[igrid] = postFDR[igrid]+postimpwt[iMontepost]}
-      if ( (A[igrid] < FNDRpost[iMontepost]) & (FNDRpost[iMontepost] <= A[igrid+1]) ) {
-        postFNDR[igrid] = postFNDR[igrid]+postimpwt[iMontepost]}
+      if ((A[igrid] < FNRpost[iMontepost]) & (FNRpost[iMontepost] <= A[igrid + 1])) {
+        postFNR[igrid] = postFNR[igrid] + postimpwt[iMontepost]}
+      if ((A[igrid] < FPRpost[iMontepost]) & (FPRpost[iMontepost] <= A[igrid + 1])) {
+        postFPR[igrid] = postFPR[igrid] + postimpwt[iMontepost]}
+      if ((A[igrid] < Errorpost[iMontepost]) & (Errorpost[iMontepost] <= A[igrid + 1])) {
+        postError[igrid] = postError[igrid] + postimpwt[iMontepost]}
+      if ((A[igrid] < FDRpost[iMontepost]) & (FDRpost[iMontepost] <= A[igrid + 1])) {
+        postFDR[igrid] = postFDR[igrid] + postimpwt[iMontepost]}
+      if ((A[igrid] < FNDRpost[iMontepost]) & (FNDRpost[iMontepost] <= A[igrid + 1])) {
+        postFNDR[igrid] = postFNDR[igrid] + postimpwt[iMontepost]}
     }
   }
   postFNR = average_vector_values(postFNR) # applying the smoother
-  postFPR = average_vector_values(postFPR) # applying the smoother
-  postError = average_vector_values(postError) # applying the smoother
-  postFDR = average_vector_values(postFDR) # applying the smoother
-  postFNDR = average_vector_values(postFNDR) # applying the smoother
+  postFPR = average_vector_values(postFPR) 
+  postError = average_vector_values(postError) 
+  postFDR = average_vector_values(postFDR) 
+  postFNDR = average_vector_values(postFNDR) 
   
   postFNR = postFNR/sum(postFNR)
   postFNRdensity = L*postFNR
@@ -698,23 +686,4 @@ binormal_diag_AUC_RBR_error_char_copt = function(delta, priorFNR, priorFPR, prio
 #plot(grid, prior_err$priorFDRdensity, xlab="FDR",ylab="prior",type="l",lty=1)
 
 #plot(grid, prior_err$priorFNDRdensity, xlab="FNDR",ylab="prior",type="l",lty=1)
-
-
-
-#binormal_diag_prior_post_graph(delta = delta, 
-#                                 prior = prior_val$priorAUCdensity, 
-#                                 post = post_val$postAUCdensity, 
-#                                 plausible_region = rbr_val$plausible_region)
-
-#binormal_diag_rbr_graph(delta = delta, 
-#                          relative_belief_ratio = rbr_val$RB_AUC, 
-#                          plausible_region = rbr_val$plausible_region)
-
-
-#cat("P(AUC>1/2) = ", prior_val$probAUCprior, "\n")
-#cat("P(AUC>1/2 | data) = ", post_val$probAUCpost, "\n")
-#cat("rel. belief ratio of AUC>1/2 = ", rbr_val$RBprobAUC, 
-#    "strength of the evidence = ", post_val$probAUCpost, "\n")
-#cat("The posterior content of the plausible region = ", rbr_val$postPl_AUC,"\n")
-
 

@@ -120,6 +120,13 @@ NA_to_0 = function(vector){
   return(vector)
 }
 
+force_bounds_0 = function(v){
+  # idea: force the first and last values of a vector to be zero
+  # needs to be moved
+  v = v[2:(length(v)-1)]
+  v = c(0, v, 0)
+}
+
 average_vector_values = function(vector, num_average_pts = 3){
   # num_average_pts: the number of density bins closely added to each other to get
   # a smoother density plot. (Reduce peaks.)

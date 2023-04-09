@@ -2,15 +2,6 @@
 # FUNCTIONS FOR GRAPHS                                         #
 ################################################################
 
-# this is a helper function - should be moved to the helper function section
-force_bounds_0 = function(v){
-  # idea: force the first and last values of a vector to be zero
-  # needs to be moved
-  v = v[2:(length(v)-1)]
-  v = c(0, v, 0)
-}
-
-
 binormal_diag_prior_post_graph = function(condition,
                                           delta, prior, post, 
                                           plausible_region,
@@ -23,7 +14,7 @@ binormal_diag_prior_post_graph = function(condition,
   if(condition != "conditional" && condition != "unconditional"){
     return("condition must either be 'conditional' or 'unconditional'.")
   } 
-  if (condition == "unconditional"){
+  if (condition == "unconditional"){ # The intervals change depending on the case.
     grid = open_bracket_grid(delta)
     x_interval = c(0, 1)
   } else if (condition == "conditional"){
@@ -31,10 +22,8 @@ binormal_diag_prior_post_graph = function(condition,
     grid = open_bracket_grid(delta)[(L+1):(2*L)]
     x_interval = c(0.5, 1)
   }
-  
   # Constructs an interval for the y region
   y_interval = c(0, max(c(prior, post)))
-  
   # Plots of the Prior and the Posterior
   plot(grid, prior, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
        main = "Graph of the Prior and Posterior of the AUC", ylab = "Densities", xlab = "w", 
@@ -42,11 +31,9 @@ binormal_diag_prior_post_graph = function(condition,
   lines(grid, post, col=colour_choice[2], type = "l", lty = 2, lwd = 2)
   abline(v=plausible_region[1], col=colour_choice[3], lwd = 2, lty = 3)
   abline(v=plausible_region[2], col=colour_choice[3], lwd = 2, lty = 3)
-  
   # Getting inner rgb colour for transparent effect
   rgb_prior = col2rgb(colour_choice[1])
   rgb_post = col2rgb(colour_choice[2])
-  
   polygon(grid, post, col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255, 
                                 alpha = transparency), border = NA)
   polygon(grid, force_bounds_0(prior), 
@@ -54,11 +41,9 @@ binormal_diag_prior_post_graph = function(condition,
           alpha = transparency), border = NA)
   #original colours: green rgb(146/255, 255/255, 133/255, alpha = 0.3) 
   # blue rgb(133/255, 198/255, 255/255, alpha = 0.3)
-  
   if (typeof(credible_region) == "double") { # need both to run properly
-    abline(v=credible_region[1], col=colour_choice[4], lwd = 2, lty = 3) # might change lty?
-    abline(v=credible_region[2], col=colour_choice[4], lwd = 2, lty = 3)
-    #abline(h=rb_line, col="#81ddff", lwd = 2, lty = 2)
+    abline(v = credible_region[1], col = colour_choice[4], lwd = 2, lty = 3) # lty: to change?
+    abline(v = credible_region[2], col = colour_choice[4], lwd = 2, lty = 3)
     legend("topleft", legend = c("Prior", "Posterior", "Plausible Region", "Credible Region"), lwd = 2, 
            col = c(colour_choice[1], colour_choice[2], colour_choice[3], colour_choice[4]), 
            lty = c(2, 2, 3, 3))
@@ -90,28 +75,19 @@ binormal_diag_rbr_graph = function(condition,
     grid = open_bracket_grid(delta)[(L+1):(2*L)]
     x_interval = c(0.5, 1)
   }
-  
   # Temporarily set NaNs to 0 for graphing purposes
   relative_belief_ratio[is.na(relative_belief_ratio)] = 0
-  
   # Constructs an interval for the x and y region
   y_interval = c(0, max(relative_belief_ratio))
-  # For the Plausible Region
-  lower_bd = plausible_region[1]
-  upper_bd = plausible_region[length(plausible_region)]
-  
-  # NOT WORKING BETWEEN HERE
-  
+  # Plotting the graph of the relative belief ratio
   plot(grid, relative_belief_ratio, type='l', lty = 2, lwd = 2, xlim = x_interval, 
        ylim = y_interval,
        main = "Graph of the Relative Belief Ratio of the AUC", 
        ylab = "RBR", xlab = "w", col = colour_choice[1])
-  
-  abline(h=1, col=colour_choice[3], lwd = 2, lty = 2)
-  
-  abline(v=lower_bd, col=colour_choice[2], lwd = 2, lty = 3)
-  abline(v=upper_bd, col=colour_choice[2], lwd = 2, lty = 3)
-  
+  # For the Plausible Region
+  abline(h = 1, col = colour_choice[3], lwd = 2, lty = 2)
+  abline(v = plausible_region[1], col = colour_choice[2], lwd = 2, lty = 3)
+  abline(v = plausible_region[2], col = colour_choice[2], lwd = 2, lty = 3)
   # Colouring in the area between the plausible region and when the RBR > 1
   l = min(which(grid >= plausible_region[1]))
   h = max(which(grid < plausible_region[2]))
@@ -120,14 +96,14 @@ binormal_diag_rbr_graph = function(condition,
           c(1, relative_belief_ratio[l:h], 1),
           col = rgb(rgb_rb[1]/255, rgb_rb[2]/255, rgb_rb[3]/255, alpha = transparency), 
           border = NA)
-  
   if ((typeof(credible_region) == "double") & (typeof(rb_line) == "double")) { 
-    abline(v=credible_region[1], col=colour_choice[4], lwd = 2, lty = 3) 
-    abline(v=credible_region[2], col=colour_choice[4], lwd = 2, lty = 3)
-    abline(h=rb_line, col=colour_choice[4], lwd = 2, lty = 2)
+    abline(v = credible_region[1], col = colour_choice[4], lwd = 2, lty = 3) 
+    abline(v = credible_region[2], col = colour_choice[4], lwd = 2, lty = 3)
+    abline(h = rb_line, col = colour_choice[4], lwd = 2, lty = 2)
     rgb_cr = col2rgb(colour_choice[4])
-    legend("topleft", legend = c("Relative Belief Ratio", "Plausible Region", "Credible Region",
-                                    "Gamma (Area)"), lwd = 2, 
+    legend("topleft", legend = c("Relative Belief Ratio", "Plausible Region", 
+                                 "Credible Region", "Gamma (Area)"), 
+           lwd = 2, 
            col = c(colour_choice[1], colour_choice[2], colour_choice[4], 
                    rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = transparency)), 
            lty = c(2, 3, 3, 1))
@@ -151,8 +127,9 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
                                         colour_choice = c("blue", "red", "green",
                                                           "#b3bfff", "royalblue1", "#81ddff"),
                                         transparency = 0.1){
-  # colour choice order: prior, posterior, rbr, plausible region, rb line, credible region
+  # Colour choice order: prior, posterior, rbr, plausible region, rb line, credible region
   grid = open_bracket_grid(delta)
+  # TYPE 1: GRAPH OF PRIOR AND POSTERIOR
   if((typeof(priorcmoddensity) == "double") & (typeof(postcmoddensity) == "double")){
     #Graph of posterior
     plot(grid, postcmoddensity, main = "Plot of the Prior and the Posterior of Cmod", 
@@ -171,7 +148,7 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
     polygon(grid, force_bounds_0(priorcmoddensity), 
             col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, 
             alpha = transparency), border = NA)
-    
+    # Checking if a credible region exists
     if (typeof(credible_region) == "double") { # need both to run properly
       abline(v = credible_region[1], col = colour_choice[6], lwd = 2, lty = 3)
       abline(v = credible_region[2], col = colour_choice[6], lwd = 2, lty = 3)
@@ -179,18 +156,17 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
              col = c(colour_choice[1], colour_choice[2], colour_choice[4], colour_choice[6]), 
              lty = c(prior_lty, post_lty, 3, 3))
     } else {
-      # Legend
       legend("topleft", legend = c("Prior", "Posterior", "Plausible Region"), 
              col = c(colour_choice[1], colour_choice[2], colour_choice[4]), lwd = 2,
              lty = c(prior_lty, post_lty, 3))
     }
-    
+    # TYPE 2: GRAPH OF THE RELATIVE BELIEF RATIO
   } else if(typeof(RBcmod) == "double"){
     # Graph of the relative belief ratio
     plot(grid, RBcmod, main = "Plot of the Relative Belief Ratio of Cmod",
          xlab="cmod", ylab=expression("Relative Belief Ratio"), type="l", 
          lty = rbr_lty, lwd = 2, col = colour_choice[3])
-    # The plausible region - if the colouring doesn't work lol
+    # The plausible region
     abline(v = plausible_region[1], col = colour_choice[4], lwd = 2, lty = 3)
     abline(v = plausible_region[2], col = colour_choice[4], lwd = 2, lty = 3)
     # Fill & Transparency effect
@@ -204,14 +180,15 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
             c(1, RBcmod[l:h], 1),
             col = rgb(rgb_rb[1]/255, rgb_rb[2]/255, rgb_rb[3]/255, alpha = transparency), 
             border = NA)
-    
+    # Checking if a credible region exists
     if ((typeof(credible_region) == "double") & (typeof(rb_line) == "double")) { 
       abline(v = credible_region[1], col = colour_choice[6], lwd = 2, lty = 3) 
       abline(v = credible_region[2], col = colour_choice[6], lwd = 2, lty = 3)
       abline(h = rb_line, col = colour_choice[6], lwd = 2, lty = 2)
       rgb_cr = col2rgb(colour_choice[6])
-      legend("bottomleft", legend = c("Relative Belief Ratio", "Plausible Region", "Credible Region",
-                                      "Gamma (Area)"), lwd = 2, 
+      legend("bottomleft", legend = c("Relative Belief Ratio", "Plausible Region", 
+                                      "Credible Region", "Gamma (Area)"), 
+             lwd = 2, 
              col = c(colour_choice[3], colour_choice[4], colour_choice[6], 
                      rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = transparency)), 
              lty = c(rbr_lty, 3, 3, 1))
@@ -226,8 +203,10 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
   }
 }
 
-binormal_diag_err_char_plots = function(delta, prior_vals = FALSE, post_vals = FALSE, rbr_vals = FALSE,
-                                        err_type, prior_lty = 2, post_lty = 1, rbr_lty = 6,
+binormal_diag_err_char_plots = function(delta, 
+                                        prior_vals = FALSE, post_vals = FALSE, rbr_vals = FALSE,
+                                        err_type, 
+                                        prior_lty = 2, post_lty = 1, rbr_lty = 6,
                                         colour_choice = c("blue", "red", "green"),
                                         transparency = 0.1){
   # err_type can either be FNR, FPR, Error, FDR, FNDR
@@ -243,15 +222,14 @@ binormal_diag_err_char_plots = function(delta, prior_vals = FALSE, post_vals = F
     # Fill & Transparent effect
     rgb_prior = col2rgb(colour_choice[1])
     rgb_post = col2rgb(colour_choice[2])
-    
     polygon(grid, post_vals,
             col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255, 
             alpha = transparency), border = NA)
     polygon(grid, force_bounds_0(prior_vals),
             col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, 
             alpha = transparency), border = NA)
-    
-    legend("topleft", legend = c("Prior", "Posterior"), col = c(colour_choice[1], colour_choice[2]), lwd = 2,
+    legend("topleft", legend = c("Prior", "Posterior"), 
+           col = c(colour_choice[1], colour_choice[2]), lwd = 2,
            lty = c(prior_lty, post_lty))
   } else if(typeof(rbr_vals) == "double"){
     # Graph of the relative belief ratio
