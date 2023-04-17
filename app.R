@@ -42,9 +42,8 @@ ui = navbarPage(
     tabPanel("Definitions", page_sect3.2_def),
     tabPanel("Getting Started", page_finite_val_start),
     tabPanel("The Prevalence", page_finite_val_prevalence),
-    tabPanel("Computations", page_finite_val),
-    #tabPanel("Inferences for the AUC", page_finite_val_inference1),
-    #tabPanel("Inferences of the Optimal Cutoff", page_finite_val_inference2)
+    tabPanel("Inferences for the AUC", page_finite_val_inference1),
+    tabPanel("Inferences of the Optimal Cutoff", page_finite_val_inference2)
   ),
   navbarMenu("Binormal Diagnostic",
     tabPanel("Definitions", page_sect3.3_def),
@@ -81,6 +80,7 @@ server = function(input, output, session) {
   
   source(file.path("server/section3.2", "section3.2_definitions.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_prevalence.R"),  local = TRUE)$value
+  #source(file.path("server/section3.2", "section3.2_setup_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_outputs.R"),  local = TRUE)$value
   

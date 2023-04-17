@@ -355,7 +355,7 @@ binormal_diag_RBR_copt = function(delta, priorcmod, postcmod){
   
   RBcmod = postcmod/priorcmod
   
-  # Getting the plausible region for copt
+  # Getting the plausible region for cmod
   postPlcmod = 0 # the posterior content of the plausible region
   plausible_region = c()
   for (i in 1:L) {
@@ -364,8 +364,7 @@ binormal_diag_RBR_copt = function(delta, priorcmod, postcmod){
       plausible_region = c(plausible_region, as.numeric(grid[i]))
     }
   }
-  plausible_region = c(plausible_region[1], 
-                       plausible_region[length(plausible_region)])
+  plausible_region = c(plausible_region[1], plausible_region[length(plausible_region)])
   
   imax = 1
   temp_RBcmod = NA_to_0(RBcmod)
@@ -373,7 +372,7 @@ binormal_diag_RBR_copt = function(delta, priorcmod, postcmod){
     if (priorcmod[i] > 0 & temp_RBcmod[i] > temp_RBcmod[imax]){imax = i}
   }
   cmodest = grid[imax]
-  coptest = tan(pi*cmodest-pi/2)
+  coptest = tan(pi*cmodest - pi/2)
   
   newlist = list("RBcmod" = RBcmod, "postPlcmod" = postPlcmod,
                  "plausible_region" = plausible_region,
