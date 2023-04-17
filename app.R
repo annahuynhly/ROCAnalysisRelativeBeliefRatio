@@ -1,7 +1,6 @@
 ################################################################
 # POTENTIAL OTHER FEATURES                                     #
 ################################################################
-# Add proper link to the resources in the footer
 # Add a github link to the repository
 # Align the headers -> LOW PRIORITY
 # Align the footer margins for the rest of the sections. -> LOW PRIORITY
@@ -44,6 +43,8 @@ ui = navbarPage(
     tabPanel("Getting Started", page_finite_val_start),
     tabPanel("The Prevalence", page_finite_val_prevalence),
     tabPanel("Computations", page_finite_val),
+    #tabPanel("Inferences for the AUC", page_finite_val_inference1),
+    #tabPanel("Inferences of the Optimal Cutoff", page_finite_val_inference2)
   ),
   navbarMenu("Binormal Diagnostic",
     tabPanel("Definitions", page_sect3.3_def),

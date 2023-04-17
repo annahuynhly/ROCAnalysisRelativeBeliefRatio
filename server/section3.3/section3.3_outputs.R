@@ -2,33 +2,48 @@
 # NUMERIC/TEXT OUTPUTS                                         #
 ################################################################
 
+# numbers of samples that were accepted - seems like all are accepted now...?
+binormal_diag_accepted_samples = reactive({
+  if (sect3.3_condition() == "conditional" & input$binormal_case == "equal_var"){
+    temp_df = data.frame(sect3.3_AUC_prior()$n_accepted,
+                         sect3.3_AUC_post()$n_accepted)
+  } else if (sect3.3_condition() == "conditional" & input$binormal_case == "unequal_var"){
+    temp_df = data.frame(sect3.3_AUC_prior_unequal()$n_accepted,
+                         sect3.3_AUC_post_unequal()$n_accepted)
+  }
+  colnames(temp_df) = c("Prior", " | Posterior")
+  temp_df
+})
+
 output$binormal_diag_hypoAUC_value = renderPrint({
   if (sect3.3_condition() == "unconditional" & input$binormal_case == "equal_var"){
-    list("P(AUC > 1/2)" = sect3.3_AUC_prior()$probAUCprior,
-         "P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post()$probAUCpost,
+    list("Prior Probability: P(AUC > 1/2)" = sect3.3_AUC_prior()$probAUCprior,
+         "Posterior Probability: P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post()$probAUCpost,
          "Relative Belief Ratio of AUC > 1/2" = sect3.3_AUC_RBR()$RBprobAUC,
-         "Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
+         "Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
          "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
          "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
          "Credible region for the AUC" = sect3.3_cr()$credible_region)
   } else if (sect3.3_condition() == "conditional" & input$binormal_case == "equal_var"){
-    list("Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
+    list("Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
          "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
          "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
-         "Credible region for the AUC" = sect3.3_cr()$credible_region)
+         "Credible region for the AUC" = sect3.3_cr()$credible_region,
+         "Accepted Monte Carlo Samples" = binormal_diag_accepted_samples())
   } else if (sect3.3_condition() == "unconditional" & input$binormal_case == "unequal_var"){
-    list("P(AUC > 1/2)" = sect3.3_AUC_prior_unequal()$probAUCprior,
-         "P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post_unequal()$probAUCpost,
+    list("Prior Probability: P(AUC > 1/2)" = sect3.3_AUC_prior_unequal()$probAUCprior,
+         "Posterior Probability: P(AUC > 1/2 | data) / Strength of the evidence" = sect3.3_AUC_post_unequal()$probAUCpost,
          "Relative Belief Ratio of AUC > 1/2" = sect3.3_AUC_RBR_unequal()$RBprobAUC,
-         "Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR_unequal()$RB_AUC),
+         "Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR_unequal()$RB_AUC),
          "Plausible Region for the AUC" = sect3.3_AUC_RBR_unequal()$plausible_region,
          "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR_unequal()$postPl_AUC,
          "Credible region for the AUC" = sect3.3_cr_unequal()$credible_region)
   } else if (sect3.3_condition() == "conditional" & input$binormal_case == "unequal_var"){
-    list("Plausible Region for the AUC" = sect3.3_AUC_RBR_unequal()$plausible_region,
+    list("Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR_unequal()$RB_AUC),
+         "Plausible Region for the AUC" = sect3.3_AUC_RBR_unequal()$plausible_region,
          "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR_unequal()$postPl_AUC,
          "Credible region for the AUC" = sect3.3_cr_unequal()$credible_region,
-         "Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR_unequal()$RB_AUC))
+         "Accepted Monte Carlo Samples" = binormal_diag_accepted_samples())
   }
 })
 

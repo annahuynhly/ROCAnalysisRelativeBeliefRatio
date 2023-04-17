@@ -38,9 +38,10 @@ binormal_diag_prior = function(condition, nMonteprior, delta, lambda1, lambda2, 
     A = A[((L/2)+1):(L+1)]
     L = L/2
     priorAUC = rep(0, L)
-    impwt = pnorm((muD-mu0)/(tau0*sigmaND))
-    U = rbeta(nMonteprior,1,1)
-    muND = mu0+tau0*sigmaND*qnorm(impwt*U)
+    impwt = pnorm((muD - mu0)/(tau0*sigmaND))
+    U = rbeta(nMonteprior, 1, 1)
+    muND = mu0 + tau0*sigmaND*qnorm(impwt*U)
+    n_accepted = 0 # keeping a counter for the accepted samples
   }
   
   for (iMonteprior in 1:nMonteprior){
@@ -48,15 +49,17 @@ binormal_diag_prior = function(condition, nMonteprior, delta, lambda1, lambda2, 
     muNDi = muND[iMonteprior]
     if (condition == "unconditional"){
       if (muDi > muNDi){probAUCprior = probAUCprior + 1}
-    }
+    } else if (condition == "conditional"){ # added - may cause bugs
+      if(muDi < muNDi){next} else {n_accepted = n_accepted + 1} # added - may cause bugs
+    } # added - may cause bugs
     sigmaDi = sigmaD[iMonteprior]
     sigmaNDi = sigmaDi
     # Need to create the function here to use for integration
-    fcnAUC = function(z){return (dnorm(z)*pnorm((muDi-muNDi)/sigmaDi+sigmaNDi/sigmaDi*z))}
+    fcnAUC = function(z){return (dnorm(z)*pnorm((muDi - muNDi)/sigmaDi + sigmaNDi/sigmaDi*z))}
     AUC = integrate(fcnAUC, -Inf, Inf, abs.tol = 0.001) 
     
     for (igrid in 1:L){
-      if ( (A[igrid] < as.numeric(AUC[1])) & (as.numeric(AUC[1]) <= A[igrid+1]) ){
+      if ( (A[igrid] < as.numeric(AUC[1])) & (as.numeric(AUC[1]) <= A[igrid + 1]) ){
         if(condition == "unconditional"){
           priorAUC[igrid] = priorAUC[igrid] + 1 
         } else if (condition == "conditional"){
@@ -77,7 +80,8 @@ binormal_diag_prior = function(condition, nMonteprior, delta, lambda1, lambda2, 
   } else if (condition == "conditional"){
     priorAUC = priorAUC/sum(priorAUC)
     priorAUCdensity = L*priorAUC
-    newlist = list("priorAUC" = priorAUC, "priorAUCdensity" = priorAUCdensity)
+    newlist = list("priorAUC" = priorAUC, "priorAUCdensity" = priorAUCdensity,
+                   "n_accepted" = n_accepted)
   }
   return(newlist)
 }
@@ -105,6 +109,7 @@ binormal_diag_post = function(condition, nMontepost, delta, lambda1post, lambda2
     impwt = pnorm((muDpost - mu0NDpost)/(tau0ND*sigmaNDpost))
     U = rbeta(nMontepost, 1, 1)
     muNDpost = mu0NDpost + tau0ND*sigmaNDpost*qnorm(impwt*U)
+    n_accepted = 0 # keeping a counter for the accepted samples
   }
   
   # this is the loop for the Monte Carlo for the posterior
@@ -113,7 +118,10 @@ binormal_diag_post = function(condition, nMontepost, delta, lambda1post, lambda2
     muNDi = muNDpost[iMontepost]
     if (condition == "unconditional"){
       if (muDi > muNDi){probAUCpost = probAUCpost + 1} 
-    }
+    } else if (condition == "conditional"){ # added - may cause bugs
+      if(muDi < muNDi){next} else {n_accepted = n_accepted + 1} # added - may cause bugs
+    } # added - may cause bugs
+    
     sigmaDi = sigmaDpost[iMontepost]
     sigmaNDi = sigmaDi
     # Need to create the function here to use for integration
@@ -140,7 +148,8 @@ binormal_diag_post = function(condition, nMontepost, delta, lambda1post, lambda2
   } else if (condition == "conditional"){
     postAUC = postAUC/sum(postAUC)
     postAUCdensity = L*postAUC
-    newlist = list("postAUC" = postAUC, "postAUCdensity" = postAUCdensity)
+    newlist = list("postAUC" = postAUC, "postAUCdensity" = postAUCdensity,
+                   "n_accepted" = n_accepted)
   }
   return(newlist)
 }

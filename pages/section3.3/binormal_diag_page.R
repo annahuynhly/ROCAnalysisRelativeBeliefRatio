@@ -3,7 +3,7 @@
 ################################################################
 
 binormal_diag_setup_variables_1 = div( 
-  titlePanel("Setup Variables"),
+  titlePanel("Setup Values"),
   sidebarLayout(
     sidebarPanel(width = 3, 
       selectInput(inputId = "binormal_case", 
@@ -82,11 +82,12 @@ binormal_diag_setup_variables_1 = div(
 )
 
 binormal_diag_setup_variables_2 = div( 
-  titlePanel("Setup Variables"),
+  titlePanel("Setup Values"),
   sidebarLayout(
     sidebarPanel(width = 3, 
       selectInput(inputId = "binormal_optimal_cutoff_denote_variables", 
-                  label = "Would you like to use the same variables from the previous section?",
+                  label = "Do you want to use the same values that was used for the inferences 
+                  for the AUC?",
                   choices = c("Yes" = "yes", 
                               "No" = "no"),
                   selected = "yes"
@@ -575,7 +576,7 @@ binormal_diag_copt_plots = div(
 page_binormal_diag_inference1 = div(
   titlePanel("Binormal Diagnostic"),
   tabsetPanel(type = "tabs",
-              tabPanel("Setup Variables", binormal_diag_setup_variables_1),
+              tabPanel("Setup Values", binormal_diag_setup_variables_1),
               tabPanel("Inferences for the AUC", binormal_diag_hypothesizedAUC),
               tabPanel("Plots for the AUC", binormal_diag_plots),
               tabPanel("Download Prior & Posterior", binormal_diag_download_1),
@@ -585,7 +586,7 @@ page_binormal_diag_inference1 = div(
 page_binormal_diag_inference2 = div(
   titlePanel("Binormal Diagnostic"),
   tabsetPanel(type = "tabs",
-              tabPanel("Setup Variables", binormal_diag_setup_variables_2),
+              tabPanel("Setup Values", binormal_diag_setup_variables_2),
               tabPanel("Inferences for Optimal Cutoff", binormal_diag_AUC_inferences),
               tabPanel("Plots for the Optimal Cutoff", binormal_diag_copt_plots),
   )

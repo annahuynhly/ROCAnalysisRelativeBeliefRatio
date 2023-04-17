@@ -58,6 +58,7 @@ binormal_diag_prior_unequal = function(condition, w = FALSE, alpha1w = NA, alpha
     impwt = pnorm((muD - priordeltaTmp - mu0)/(tau0*sigmaND))
     U = rbeta(nMonteprior, 1, 1)
     muND = mu0 + tau0*sigmaND*qnorm(impwt*U)
+    n_accepted = 0 # keeping a counter for the accepted samples
   }
   
   for (iMonteprior in 1:nMonteprior) {
@@ -66,7 +67,7 @@ binormal_diag_prior_unequal = function(condition, w = FALSE, alpha1w = NA, alpha
     if (condition == "unconditional"){
       if (muDi - muNDi > priordeltaTmp[iMonteprior]){probAUCprior = probAUCprior + 1}
     } else if (condition == "conditional"){
-      if( muDi - muNDi < priordeltaTmp[iMonteprior]){next}
+      if( muDi - muNDi < priordeltaTmp[iMonteprior]){next} else {n_accepted = n_accepted + 1}
     }
     sigmaDi = sigmaD[iMonteprior]
     sigmaNDi = sigmaND[iMonteprior]
@@ -94,7 +95,83 @@ binormal_diag_prior_unequal = function(condition, w = FALSE, alpha1w = NA, alpha
   } else if (condition == "conditional"){
     priorAUC = priorAUC/sum(priorAUC)
     priorAUCdensity = L*priorAUC
-    newlist = list("priorAUC" = priorAUC, "priorAUCdensity" = priorAUCdensity)
+    newlist = list("priorAUC" = priorAUC, "priorAUCdensity" = priorAUCdensity,
+                   "n_accepted" = n_accepted)
+  }
+  return(newlist)
+}
+
+binormal_diag_post_unequal = function(condition, w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, nD = NA, version,
+                                      nMontepost, delta, lambda1Dpost, lambda1NDpost, lambda2Dpost, lambda2NDpost, 
+                                      mu0Dpost, mu0NDpost, tau0D, tau0ND){
+  if(condition != "conditional" && condition != "unconditional"){
+    return("condition must either be 'conditional' or 'unconditional'.")
+  }
+  A = closed_bracket_grid(delta) # this is technically their grid
+  L = (1/delta) # length
+  
+  sigmaDpost = sqrt(1/rgamma(nMontepost, lambda1Dpost, lambda2Dpost))
+  sigmaNDpost = sqrt(1/rgamma(nMontepost, lambda1NDpost, lambda2NDpost))
+  pre_w = rep(0, nMontepost)
+  for(i in 1:length(pre_w)){
+    pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
+  }
+  postdeltaTmp = 2*( sigmaDpost**2- sigmaNDpost**2)*log(((1-pre_w)/pre_w)*(sigmaDpost/sigmaNDpost))
+  postdeltaTmp[postdeltaTmp<0] = 0
+  postdeltaTmp = sqrt(postdeltaTmp)
+  muDpost = mu0Dpost + tau0D*sigmaDpost*rnorm(nMontepost, 0, 1)
+  
+  if(condition == "unconditional"){
+    probAUCpost = 0 
+    postAUC = rep(0, L)
+    muNDpost = mu0NDpost + tau0ND*sigmaNDpost*rnorm(nMontepost, 0, 1)
+  } else if (condition == "conditional"){
+    # modify the A array so the intervals span [1/2,1]
+    A = A[((L/2)+1):(L+1)]
+    L = L/2
+    postAUC = rep(0, L)
+    impwt = pnorm((muDpost - postdeltaTmp - mu0NDpost)/(tau0ND*sigmaNDpost))
+    U = rbeta(nMontepost, 1, 1)
+    muNDpost = mu0NDpost + tau0ND*sigmaNDpost*qnorm(impwt*U)
+    n_accepted = 0 # keeping a counter for the accepted samples
+  }
+  
+  # this is the loop for the Monte Carlo for the posterior
+  for (iMontepost in 1:nMontepost) {
+    muDi = muDpost[iMontepost]
+    muNDi = muNDpost[iMontepost]
+    if (condition == "unconditional"){
+      if (muDi - muNDi > postdeltaTmp[iMontepost]){probAUCpost = probAUCpost + 1}
+    } else if (condition == "conditional"){
+      if(muDi - muNDi < postdeltaTmp[iMontepost]){next} else {n_accepted = n_accepted + 1}
+    }
+    sigmaDi = sigmaDpost[iMontepost]
+    sigmaNDi = sigmaNDpost[iMontepost]
+    fcnAUC = function(z){return (dnorm(z)*pnorm((muDi-muNDi)/sigmaDi+sigmaNDi/sigmaDi*z))}
+    AUC = integrate(fcnAUC, -Inf, Inf, abs.tol = 0.001) 
+    for (igrid in 1:L){
+      if ( (A[igrid] < as.numeric(AUC[1])) & (as.numeric(AUC[1]) <= A[igrid + 1])) {
+        if (condition == "unconditional"){
+          postAUC[igrid] = postAUC[igrid] + 1 
+        } else if (condition == "conditional"){
+          postAUC[igrid] = postAUC[igrid]+impwt[iMontepost] 
+        }
+      }
+    }
+  }
+  postAUC = average_vector_values(postAUC) # applying a smoother
+
+  if (condition == "unconditional"){
+    postAUC = postAUC/nMontepost
+    postAUCdensity = L*postAUC
+    probAUCpost = probAUCpost/nMontepost
+    newlist = list("postAUC" = postAUC, "postAUCdensity" = postAUCdensity,
+                   "probAUCpost" = probAUCpost)
+  } else if (condition == "conditional"){
+    postAUC = postAUC/sum(postAUC)
+    postAUCdensity = L*postAUC
+    newlist = list("postAUC" = postAUC, "postAUCdensity" = postAUCdensity,
+                   "n_accepted" = n_accepted)
   }
   return(newlist)
 }
@@ -137,7 +214,7 @@ binormal_diag_prior_copt_unequal = function(w = FALSE, alpha1w = NA, alpha2w = N
     if (muND[i] == -Inf | muND[i] == Inf){c[i] = -Inf} 
     else {
       c[i] = (sigmaND2[i]*muD[i] - sigmaD2[i]*muND[i]) - (sigmaD[i]*sigmaND[i])*sqrt(cond2[i])}
-    }
+  }
   c = c/(sigmaND2 - sigmaD2)
   
   cmod=pt(c,lambda)
@@ -158,79 +235,6 @@ binormal_diag_prior_copt_unequal = function(w = FALSE, alpha1w = NA, alpha2w = N
   priorcmoddensity = L*priorcmod
   
   newlist = list("priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity)
-  return(newlist)
-}
-
-binormal_diag_post_unequal = function(condition, w = FALSE, alpha1w = NA, alpha2w = NA, nND = NA, nD = NA, version,
-                                      nMontepost, delta, lambda1Dpost, lambda1NDpost, lambda2Dpost, lambda2NDpost, 
-                                      mu0Dpost, mu0NDpost, tau0D, tau0ND){
-  if(condition != "conditional" && condition != "unconditional"){
-    return("condition must either be 'conditional' or 'unconditional'.")
-  }
-  A = closed_bracket_grid(delta) # this is technically their grid
-  L = (1/delta) # length
-  
-  sigmaDpost = sqrt(1/rgamma(nMontepost, lambda1Dpost, lambda2Dpost))
-  sigmaNDpost = sqrt(1/rgamma(nMontepost, lambda1NDpost, lambda2NDpost))
-  pre_w = rep(0, nMontepost)
-  for(i in 1:length(pre_w)){
-    pre_w[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version) # ADDED FOR COPT
-  }
-  postdeltaTmp = 2*( sigmaDpost**2- sigmaNDpost**2)*log(((1-pre_w)/pre_w)*(sigmaDpost/sigmaNDpost))
-  postdeltaTmp[postdeltaTmp<0] = 0
-  postdeltaTmp = sqrt(postdeltaTmp)
-  muDpost = mu0Dpost + tau0D*sigmaDpost*rnorm(nMontepost, 0, 1)
-  
-  if(condition == "unconditional"){
-    probAUCpost = 0 
-    postAUC = rep(0, L)
-    muNDpost = mu0NDpost + tau0ND*sigmaNDpost*rnorm(nMontepost, 0, 1)
-  } else if (condition == "conditional"){
-    # modify the A array so the intervals span [1/2,1]
-    A = A[((L/2)+1):(L+1)]
-    L = L/2
-    postAUC = rep(0, L)
-    impwt = pnorm((muDpost - postdeltaTmp - mu0NDpost)/(tau0ND*sigmaNDpost))
-    U = rbeta(nMontepost, 1, 1)
-    muNDpost = mu0NDpost + tau0ND*sigmaNDpost*qnorm(impwt*U)
-  }
-  
-  # this is the loop for the Monte Carlo for the posterior
-  for (iMontepost in 1:nMontepost) {
-    muDi = muDpost[iMontepost]
-    muNDi = muNDpost[iMontepost]
-    if (condition == "unconditional"){
-      if (muDi - muNDi > postdeltaTmp[iMontepost]){probAUCpost = probAUCpost + 1}
-    } else if (condition == "conditional"){
-      if(muDi - muNDi < postdeltaTmp[iMontepost]){ next }
-    }
-    sigmaDi = sigmaDpost[iMontepost]
-    sigmaNDi = sigmaNDpost[iMontepost]
-    fcnAUC = function(z){return (dnorm(z)*pnorm((muDi-muNDi)/sigmaDi+sigmaNDi/sigmaDi*z))}
-    AUC = integrate(fcnAUC, -Inf, Inf, abs.tol = 0.001) 
-    for (igrid in 1:L){
-      if ( (A[igrid] < as.numeric(AUC[1])) & (as.numeric(AUC[1]) <= A[igrid + 1])) {
-        if (condition == "unconditional"){
-          postAUC[igrid] = postAUC[igrid] + 1 
-        } else if (condition == "conditional"){
-          postAUC[igrid] = postAUC[igrid]+impwt[iMontepost] 
-        }
-      }
-    }
-  }
-  postAUC = average_vector_values(postAUC) # applying a smoother
-
-  if (condition == "unconditional"){
-    postAUC = postAUC/nMontepost
-    postAUCdensity = L*postAUC
-    probAUCpost = probAUCpost/nMontepost
-    newlist = list("postAUC" = postAUC, "postAUCdensity" = postAUCdensity,
-                   "probAUCpost" = probAUCpost)
-  } else if (condition == "conditional"){
-    postAUC = postAUC/sum(postAUC)
-    postAUCdensity = L*postAUC
-    newlist = list("postAUC" = postAUC, "postAUCdensity" = postAUCdensity)
-  }
   return(newlist)
 }
 
@@ -477,7 +481,6 @@ binormal_diag_AUC_post_error_char_copt_unequal = function(
 #sD_squared=16.778
 
 #nMonteprior = 100000
-#nMonteprior = 2000000
 #nMontepost = 100000
 #delta = 0.005
 
@@ -492,7 +495,7 @@ binormal_diag_AUC_post_error_char_copt_unequal = function(
 #                                                         nND, meanND, sND_squared, 
 #                                                         nD, meanD, sD_squared)
 
-#prior_vals = binormal_diag_prior_unequal("unconditional", w, alpha1w, alpha2w, 
+#prior_vals = binormal_diag_prior_unequal("conditional", w, alpha1w, alpha2w, 
 #                                         nMonteprior, delta, 
 #                                         lambda1, lambda2, mu0, tau0)
 
