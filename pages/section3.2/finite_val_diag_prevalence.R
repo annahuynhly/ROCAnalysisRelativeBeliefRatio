@@ -135,7 +135,7 @@ finite_val_diag_prevalence_plots = div(
           selectInput(inputId = "finite_val_diag_prevalence_lty_pr", 
                       label = 'Select a line type', 
                       choices = default_lty_list, 
-                      selected = 2
+                      selected = 3
           ),
         ),
         conditionalPanel(
@@ -159,7 +159,7 @@ finite_val_diag_prevalence_plots = div(
           selectInput(inputId = "finite_val_diag_prevalence_lty_cr", 
                       label = 'Select a line type', 
                       choices = default_lty_list, 
-                      selected = 2
+                      selected = 3
           ),
         ),
       ),

@@ -178,58 +178,82 @@ finite_val_plots = div(
         condition = "input.finite_val_colour == 'manual'",
         selectInput(inputId = "finite_val_modify_colour",
                     label = 'Select line to modify',
-                    choices = list("Prior" = 'prior',
-                                   "Posterior" = 'post',
-                                   "Relative Belief Ratio" = 'rbr',
-                                   "Plausible Region" = 'pr',
-                                   "Line of y = 1" = 'line_1',
-                                   "Credible Region" = 'cr'),
+                    choices = output_line_list,
                     selected = 'prior'), 
+        
+        conditionalPanel(
+          condition = "input.finite_val_modify_colour == 'prior'",
+          textInput(inputId = "finite_val_colour_prior",
+                    label = 'Input the colour of the prior',
+                    value = "FF007F"
+          ), 
+          selectInput(inputId = "finite_val_lty_prior", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.finite_val_modify_colour == 'post'",
+          textInput(inputId = "finite_val_colour_post",
+                    label = 'Input the colour of the posterior',
+                    value = "FF00FF"
+          ), 
+          selectInput(inputId = "finite_val_lty_post", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.finite_val_modify_colour == 'rbr'",
+          textInput(inputId = "finite_val_colour_rbr",
+                    label = 'Input the colour of the relative belief ratio',
+                    value = "7F00FF"
+          ), 
+          selectInput(inputId = "finite_val_lty_rbr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.finite_val_modify_colour == 'pr'",
+          textInput(inputId = "finite_val_colour_pr",
+                    label = 'Input the colour of the plausible region',
+                    value = "A717DB"
+          ), 
+          selectInput(inputId = "finite_val_lty_pr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 3
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.finite_val_modify_colour == 'line_1'",
+          textInput(inputId = "finite_val_colour_line_1",
+                    label = 'Input the colour of the y = 1 line',
+                    value = "5327E4"
+          ), 
+          selectInput(inputId = "finite_val_lty_line_1", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.finite_val_modify_colour == 'cr'",
+          textInput(inputId = "finite_val_colour_cr",
+                    label = 'Input the colour of the credible region',
+                    value = "650d84"
+          ), 
+          selectInput(inputId = "finite_val_lty_cr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 3
+          ),
+        ),
       ),
-      
-      conditionalPanel(
-        condition = "input.finite_val_modify_colour == 'prior'",
-        textInput(inputId = "finite_val_colour_prior",
-                  label = 'Input the colour of the prior',
-                  value = "FF007F"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.finite_val_modify_colour == 'post'",
-        textInput(inputId = "finite_val_colour_post",
-                  label = 'Input the colour of the posterior',
-                  value = "FF00FF"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.finite_val_modify_colour == 'rbr'",
-        textInput(inputId = "finite_val_colour_rbr",
-                  label = 'Input the colour of the relative belief ratio',
-                  value = "7F00FF"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.finite_val_modify_colour == 'pr'",
-        textInput(inputId = "finite_val_colour_pr",
-                  label = 'Input the colour of the plausible region',
-                  value = "A717DB"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.finite_val_modify_colour == 'line_1'",
-        textInput(inputId = "finite_val_colour_line_1",
-                  label = 'Input the colour of the y = 1 line',
-                  value = "5327E4"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.finite_val_modify_colour == 'cr'",
-        textInput(inputId = "finite_val_colour_cr",
-                  label = 'Input the colour of the credible region',
-                  value = "650d84"
-        ), 
-      ),
-      
       conditionalPanel(
         condition = "input.finite_val_hist_visual == 'finite_val_withbars'",
         sliderInput(inputId = "finite_val_col_transparency", 

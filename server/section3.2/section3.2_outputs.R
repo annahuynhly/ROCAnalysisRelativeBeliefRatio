@@ -66,6 +66,20 @@ finite_val_copt_colours = reactive({
   }
 })
 
+sect3.2_prior_post_lty = reactive({
+  c(as.numeric(input$finite_val_lty_prior),
+    as.numeric(input$finite_val_lty_post),
+    as.numeric(input$finite_val_lty_pr),
+    as.numeric(input$finite_val_lty_cr))
+})
+
+sect3.2_rbr_lty = reactive({
+  c(as.numeric(input$finite_val_lty_rbr),
+    as.numeric(input$finite_val_lty_pr),
+    as.numeric(input$finite_val_lty_line_1),
+    as.numeric(input$finite_val_lty_cr))
+})
+
 output$finite_val_postprior_graph = renderPlot({
   if(check.numeric(input$finite_val_gamma) == FALSE){
     density_hist_AUC_prior_post(delta = input$finite_val_delta, 
@@ -75,6 +89,7 @@ output$finite_val_postprior_graph = renderPlot({
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
                                 colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                lty_type = sect3.2_prior_post_lty(), 
                                 transparency = input$finite_val_col_transparency)
     
   } else if (as.numeric(input$finite_val_gamma) >= sect3.2_AUC_post_content()){
@@ -85,6 +100,7 @@ output$finite_val_postprior_graph = renderPlot({
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
                                 colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                lty_type = sect3.2_prior_post_lty(), 
                                 transparency = input$finite_val_col_transparency)
   } else {
     density_hist_AUC_prior_post(delta = input$finite_val_delta, 
@@ -95,6 +111,7 @@ output$finite_val_postprior_graph = renderPlot({
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
                                 colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                lty_type = sect3.2_prior_post_lty(), 
                                 transparency = input$finite_val_col_transparency)
   }
 })
@@ -107,6 +124,7 @@ output$finite_val_RB_graph = renderPlot({
                          densityplot = TRUE,
                          showbars = showbarplots(),
                          colour_choice = finite_val_colours()[c(3:6)],
+                         lty_type = sect3.2_rbr_lty(), 
                          transparency = input$finite_val_col_transparency)
   } else if (as.numeric(input$finite_val_gamma) >= sect3.2_AUC_post_content()){
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
@@ -115,6 +133,7 @@ output$finite_val_RB_graph = renderPlot({
                          densityplot = TRUE,
                          showbars = showbarplots(),
                          colour_choice = finite_val_colours()[c(3:6)],
+                         lty_type = sect3.2_rbr_lty(), 
                          transparency = input$finite_val_col_transparency)
   } else {
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
@@ -125,6 +144,7 @@ output$finite_val_RB_graph = renderPlot({
                          densityplot = TRUE,
                          showbars = showbarplots(),
                          colour_choice = finite_val_colours()[c(3:6)],
+                         lty_type = sect3.2_rbr_lty(), 
                          transparency = input$finite_val_col_transparency)
   }
 })
