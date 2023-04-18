@@ -1,8 +1,9 @@
 
 # Source to all different tabs
 
-# Helper functions
+# Helper functions & similar
 source("./pages/helper_functions.R")
+source("./pages/common_lists.R")
 
 # Other Pages
 source("./pages/home_page.R")

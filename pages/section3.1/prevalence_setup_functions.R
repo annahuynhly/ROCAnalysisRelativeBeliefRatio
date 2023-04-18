@@ -137,14 +137,15 @@ generate_prior_post_graph = function(prior, post, plausible_region, grid, credib
   }
 }
 
-generate_prior_graph = function(prior, grid, colour_choice = "blue", transparency = 0.1){
+generate_prior_graph = function(prior, grid, colour_choice = "blue", lty_type = 2,
+                                transparency = 0.1){
 
   # Constructs an interval for the x and y region
   x_interval = obtain_x_interval(prior, grid, 0.1)
   y_interval = c(0, max(prior))
   
   # Plots of the Prior and the Posterior
-  plot(grid, prior, type='l', lty = 2, lwd = 2, xlim = x_interval, ylim = y_interval,
+  plot(grid, prior, type='l', lty = lty_type, lwd = 2, xlim = x_interval, ylim = y_interval,
        main = "Graph of the Prior of w", ylab = "Densities", xlab = "w", col = colour_choice)
   
   # Getting inner rgb colour for transparent effect

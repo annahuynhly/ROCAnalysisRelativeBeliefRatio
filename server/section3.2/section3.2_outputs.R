@@ -31,8 +31,12 @@ finite_val_colours = reactive({
   # plausible region, y = 1 line, credible region, 
   if(input$finite_val_colour == 'default1'){
     c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
-  } else if(input$finite_val_colour == 'default2'){
+  } else if (input$finite_val_colour == 'default2'){
     c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+  } else if (input$finite_val_colour == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+  } else if (input$finite_val_colour == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
   } else if (input$finite_val_colour == 'manual'){
     c(convert_to_hex(input$finite_val_colour_prior),
       convert_to_hex(input$finite_val_colour_post),
@@ -47,9 +51,13 @@ finite_val_colours = reactive({
 finite_val_copt_colours = reactive({
   if(input$finite_val_c_opt_carry_colour == 'default1'){
     c("#FF6666", "#6699FF", "#05DEB2")
-  } else if(input$finite_val_c_opt_carry_colour == 'default2'){
+  } else if (input$finite_val_c_opt_carry_colour == 'default2'){
     c("blue", "green", "red")
-  } else if(input$finite_val_c_opt_carry_colour == 'custom'){
+  } else if (input$finite_val_c_opt_carry_colour == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+  } else if (input$finite_val_c_opt_carry_colour == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+  } else if (input$finite_val_c_opt_carry_colour == 'custom'){
     finite_val_colours()[c(1, 2, 3)]
   } else if (input$finite_val_c_opt_carry_colour == 'manual'){
     c(convert_to_hex(input$finite_val_priorc_opt_colour),

@@ -171,9 +171,7 @@ finite_val_plots = div(
       ),
       selectInput(inputId = "finite_val_colour", 
                   label = 'Select a colour', 
-                  choices = list("Default Theme 1" = 'default1',
-                                 "Default Theme 2" = 'default2',
-                                 "Manually Insert" = 'manual'), 
+                  choices = colour_theme_list, 
                   selected = 'default'
       ),
       conditionalPanel(
@@ -260,23 +258,13 @@ finite_val_plots = div(
 # GRAPH 2 PAGE                                                 #
 ################################################################
 
-# Note: base R : pch values go from 1 to 25
-default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
-                      "6" = 6, "7" = 7, "8" = 8, "9" = 9, "10" = 10,
-                      "11" = 11, "12" = 12, "13" = 13, "14" = 14, "15" = 15,
-                      "16" = 16, "17" = 17, "18" = 18, "19" = 19, "20" = 20,
-                      "21" = 21, "22" = 22, "23" = 23, "24" = 24, "25" = 25)
-
 finite_val_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
     sidebarPanel(width = 3,
       selectInput(inputId = "finite_val_c_opt_carry_colour",
                   label = "Select a colour theme",
-                  choices = list("Default Theme 1" = 'default1',
-                                 "Default Theme 2" = 'default2',
-                                 "Custom Theme from AUC Plots" = 'custom',
-                                 "Manually Insert" = 'manual'),
+                  choices = colour_theme_list_custom,
                   selected = 'default'
       ),      
       selectInput(inputId = "finite_val_c_opt_modify",

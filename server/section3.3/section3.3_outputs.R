@@ -102,6 +102,10 @@ binormal_diag_colours = reactive({
     c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
   } else if(input$binormal_diag_colour == 'default2'){
     c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+  } else if (input$binormal_diag_colour == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+  } else if (input$binormal_diag_colour == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
   } else if (input$binormal_diag_colour == 'manual'){
     c(convert_to_hex(input$binormal_diag_colour_prior),
       convert_to_hex(input$binormal_diag_colour_post),
@@ -118,6 +122,10 @@ binormal_diag_copt_colours = reactive({
     c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
   } else if (input$binormal_diag_c_opt_carry_colour == 'default2'){
     c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+  } else if (input$binormal_diag_c_opt_carry_colour == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+  } else if (input$binormal_diag_c_opt_carry_colour == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
   } else if (input$binormal_diag_c_opt_carry_colour == 'custom'){
     binormal_diag_colours()
   } else if (input$binormal_diag_c_opt_carry_colour == 'manual'){
@@ -135,6 +143,10 @@ binormal_diag_inferences_colours = reactive({
     c("#FF6666", "#6699FF", "#05DEB2")
   } else if (input$binormal_diag_inferences_colour == 'default2'){
     c("blue", "green", "red", "#b3bfff")
+  } else if (input$binormal_diag_inferences_colour == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86")
+  } else if (input$binormal_diag_inferences_colour == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a")
   } else if (input$binormal_diag_inferences_colour == 'custom'){
     binormal_diag_colours()[c(1, 2, 3)]
   } else if (input$binormal_diag_inferences_colour == 'manual'){

@@ -234,21 +234,14 @@ binormal_diag_plots = div(
       #            selected = "binormal_diag_withoutbars"),
       selectInput(inputId = "binormal_diag_colour", 
                   label = 'Select a colour', 
-                  choices = list("Default Theme 1" = 'default1',
-                                 "Default Theme 2" = 'default2',
-                                 "Manually Insert" = 'manual'), 
+                  choices = colour_theme_list, 
                   selected = 'default'
       ),
       conditionalPanel(
         condition = "input.binormal_diag_colour == 'manual'",
         selectInput(inputId = "binormal_diag_modify_colour",
                     label = 'Select line to modify',
-                    choices = list("Prior" = 'prior',
-                                   "Posterior" = 'post',
-                                   "Relative Belief Ratio" = 'rbr',
-                                   "Plausible Region" = 'pr',
-                                   "Line of y = 1" = 'line_1',
-                                   "Credible Region" = 'cr'),
+                    choices = output_line_list,
                     selected = 'prior'
         ), 
         conditionalPanel(
@@ -369,19 +362,14 @@ binormal_diag_AUC_inferences = div(
         ),
         selectInput(inputId = "binormal_diag_inferences_colour", 
                     label = 'Select a colour', 
-                    choices = list("Default Theme 1" = 'default1',
-                                   "Default Theme 2" = 'default2',
-                                   "Custom Theme from AUC Plots" = 'custom',
-                                   "Manually Insert" = 'manual'), 
+                    choices = colour_theme_list_custom, 
                     selected = 'default'
         ),
         conditionalPanel(
           condition = "input.binormal_diag_inferences_colour == 'manual'",
           selectInput(inputId = "binormal_diag_inferences_modify_colour",
                       label = 'Select line to modify',
-                      choices = list("Prior" = 'prior',
-                                     "Posterior" = 'post',
-                                     "Relative Belief Ratio" = 'rbr'),
+                      choices = output_line_list[1:3],
                       selected = 'prior'), 
           
           conditionalPanel(
@@ -437,28 +425,18 @@ binormal_diag_AUC_inferences = div(
 # GRAPHS FOR CMOD DENSITY                                      #
 ################################################################
 
-default_lty_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6)
-
 binormal_diag_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
     sidebarPanel(width = 3,
       selectInput(inputId = "binormal_diag_c_opt_carry_colour",
                   label = "Select a colour theme",
-                  choices = list("Default Theme 1" = 'default1',
-                                 "Default Theme 2" = 'default2',
-                                 "Custom Theme from AUC Plots" = 'custom',
-                                 "Manually Insert" = 'manual'),
+                  choices = colour_theme_list_custom,
                   selected = 'default'
       ),      
       selectInput(inputId = "binormal_diag_c_opt_modify",
                   label = "Select which object to modify",
-                  choices = list("Prior" = 'prior',
-                                 "Posterior" = 'post',
-                                 "Relative Belief Ratio" = 'rbr',
-                                 "Plausible Region" = 'pr',
-                                 "Line of y = 1" = 'line_1',
-                                 "Credible Region" = 'cr'),
+                  choices = output_line_list,
                  selected = 'prior'
       ),
       conditionalPanel(
