@@ -313,18 +313,18 @@ output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
                                  prior_vals = binormal_diag_err_char_plot_type()$prior, 
                                  post_vals = binormal_diag_err_char_plot_type()$post, 
                                  err_type = input$binormal_diag_inferences_plot_type, 
-                                 prior_lty = 2, # temporary - should be changed 
-                                 post_lty = 1,  # temporary - should be changed
-                                 colour_choice = binormal_diag_inferences_colours(), # temp
+                                 prior_lty = as.numeric(input$binormal_diag_lty_inferences_prior), 
+                                 post_lty = as.numeric(input$binormal_diag_lty_inferences_post),
+                                 colour_choice = binormal_diag_inferences_colours(), 
                                  transparency = input$binormal_diag_inferences_col_transparency)
   } else if (sect3.3_copt_case() == "unequal_var"){
     binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),
                                  prior_vals = binormal_diag_err_char_plot_type_unequal()$prior, 
                                  post_vals = binormal_diag_err_char_plot_type_unequal()$post, 
                                  err_type = input$binormal_diag_inferences_plot_type, 
-                                 prior_lty = 2, # temporary - should be changed 
-                                 post_lty = 1,  # temporary - should be changed
-                                 colour_choice = binormal_diag_inferences_colours(), # temp
+                                 prior_lty = as.numeric(input$binormal_diag_lty_inferences_prior), 
+                                 post_lty = as.numeric(input$binormal_diag_lty_inferences_post),
+                                 colour_choice = binormal_diag_inferences_colours(), 
                                  transparency = input$binormal_diag_inferences_col_transparency)
   }
 })
@@ -334,14 +334,14 @@ output$binormal_diag_inf_opt_cutoff_plot2 = renderPlot({
     binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),
                                  rbr_vals = binormal_diag_err_char_plot_type()$RBR, 
                                  err_type = input$binormal_diag_inferences_plot_type, 
-                                 rbr_lty = 6, # temporary - should be changed
+                                 rbr_lty = as.numeric(input$binormal_diag_lty_inferences_rbr),
                                  colour_choice = binormal_diag_inferences_colours(), 
                                  transparency = input$binormal_diag_inferences_col_transparency)
   } else if (sect3.3_copt_case() == "unequal_var"){
     binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),
                                  rbr_vals = binormal_diag_err_char_plot_type_unequal()$RBR, 
                                  err_type = input$binormal_diag_inferences_plot_type, 
-                                 rbr_lty = 6,   # temporary - should be changed
+                                 rbr_lty = as.numeric(input$binormal_diag_lty_inferences_rbr),
                                  colour_choice = binormal_diag_inferences_colours(), 
                                  transparency = input$binormal_diag_inferences_col_transparency)
   }

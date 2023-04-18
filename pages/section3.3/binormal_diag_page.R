@@ -407,18 +407,33 @@ binormal_diag_AUC_inferences = div(
             textInput(inputId = "binormal_diag_colour_inferences_prior",
                       label = 'Input the colour of the prior',
                       value = "FF007F"), 
+            selectInput(inputId = "binormal_diag_lty_inferences_prior", 
+                        label = 'Select a line type', 
+                        choices = default_lty_list, 
+                        selected = 2
+            ),
           ),
           conditionalPanel(
             condition = "input.binormal_diag_inferences_modify_colour == 'post'",
             textInput(inputId = "binormal_diag_colour_inferences_post",
                       label = 'Input the colour of the posterior',
                       value = "FF00FF"), 
+            selectInput(inputId = "binormal_diag_lty_inferences_post", 
+                        label = 'Select a line type', 
+                        choices = default_lty_list, 
+                        selected = 2
+            ),
           ),
           conditionalPanel(
             condition = "input.binormal_diag_inferences_modify_colour == 'rbr'",
             textInput(inputId = "binormal_diag_colour_inferences_rbr",
                       label = 'Input the colour of the relative belief ratio',
                       value = "7F00FF"), 
+            selectInput(inputId = "binormal_diag_lty_inferences_rbr", 
+                        label = 'Select a line type', 
+                        choices = default_lty_list, 
+                        selected = 2
+            ),
           ),
         ),
         sliderInput(inputId = "binormal_diag_inferences_col_transparency", 

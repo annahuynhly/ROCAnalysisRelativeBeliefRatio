@@ -6,6 +6,8 @@
 # Align the footer margins for the rest of the sections. -> LOW PRIORITY
 # Let people change the line type of the graphs -> LOW PRIORITY
 # Make the code look nicer lmao
+# let people modify the graph for test of w = w0 (prevalence section)
+# section 3.3 -> need to add y=1 line for the plots for the optimal cutoff
 
 # ISSUES:
 
