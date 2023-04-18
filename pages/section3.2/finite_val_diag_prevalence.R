@@ -89,35 +89,54 @@ finite_val_diag_prevalence_plots = div(
                     label = 'Select line to modify',
                     choices = output_line_list,
                     selected = 'prior'), 
-      ),
-      # Below consists of all of the different types of colour inputs! 
-      conditionalPanel(
-        condition = "input.finite_val_diag_prevalence_modify_colour == 'prior'",
-        textInput(inputId = "finite_val_diag_prevalence_colour_prior",
-                  label = 'Input the hex colour of the prior',
-                  value = "FF007F"
+        
+        conditionalPanel(
+          condition = "input.finite_val_diag_prevalence_modify_colour == 'prior'",
+          textInput(inputId = "finite_val_diag_prevalence_colour_prior",
+                    label = 'Input the hex colour of the prior',
+                    value = "FF007F"
+          ),
+          selectInput(inputId = "finite_val_diag_prevalence_lty_prior", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
-      ),
         conditionalPanel(
           condition = "input.finite_val_diag_prevalence_modify_colour == 'post'",
           textInput(inputId = "finite_val_diag_prevalence_colour_post",
                     label = 'Input the hex colour of the posterior',
                     value = "FF00FF"
-          ), 
+          ),
+          selectInput(inputId = "finite_val_diag_prevalence_lty_post", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
         conditionalPanel(
           condition = "input.finite_val_diag_prevalence_modify_colour == 'rbr'",
           textInput(inputId = "finite_val_diag_prevalence_colour_rbr",
                     label = 'Input the hex colour of the relative belief ratio',
                     value = "7F00FF"
-          ), 
+          ),
+          selectInput(inputId = "finite_val_diag_prevalence_lty_rbr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
         conditionalPanel(
           condition = "input.finite_val_diag_prevalence_modify_colour == 'pr'",
           textInput(inputId = "finite_val_diag_prevalence_colour_pr",
                     label = 'Input the hex colour of the plausible region',
                     value = "A717DB"
-          ), 
+          ),
+          selectInput(inputId = "finite_val_diag_prevalence_lty_pr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
         conditionalPanel(
           condition = "input.finite_val_diag_prevalence_modify_colour == 'line_1'",
@@ -125,6 +144,11 @@ finite_val_diag_prevalence_plots = div(
                     label = 'Input the hex colour of the y = 1 line',
                     value = "5327E4"
           ), 
+          selectInput(inputId = "finite_val_diag_prevalence_lty_line_1", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
         conditionalPanel(
           condition = "input.finite_val_diag_prevalence_modify_colour == 'cr'",
@@ -132,12 +156,19 @@ finite_val_diag_prevalence_plots = div(
                     label = 'Input the hex colour of the credible region',
                     value = "650d84"
           ), 
+          selectInput(inputId = "finite_val_diag_prevalence_lty_cr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
-                 # Switching back to modifying transparency
-        sliderInput(inputId = "finite_val_diag_prevalence_col_transparency", 
-                    label = "Scale for colour transparency",
-                    min = 0, max = 1, value = 0.1
-        ),
+      ),
+      # Below consists of all of the different types of colour inputs! 
+      # Switching back to modifying transparency
+      sliderInput(inputId = "finite_val_diag_prevalence_col_transparency", 
+                  label = "Scale for colour transparency",
+                  min = 0, max = 1, value = 0.1
+      ),
     ),
     mainPanel(
       tabPanel("Plots",

@@ -100,6 +100,20 @@ sect3.2_prevalence_colours = reactive({
   }
 })
 
+sect3.2_prevalence_prior_post_lty = reactive({
+  c(as.numeric(input$finite_val_diag_prevalence_lty_prior),
+    as.numeric(input$finite_val_diag_prevalence_lty_post),
+    as.numeric(input$finite_val_diag_prevalence_lty_pr),
+    as.numeric(input$finite_val_diag_prevalence_lty_cr))
+})
+
+sect3.2_prevalence_rbr_lty = reactive({
+  c(as.numeric(input$finite_val_diag_prevalence_lty_rbr),
+    as.numeric(input$finite_val_diag_prevalence_lty_pr),
+    as.numeric(input$finite_val_diag_prevalence_lty_line_1),
+    as.numeric(input$finite_val_diag_prevalence_lty_cr))
+})
+
 output$finite_val_diag_prevalence_postprior_graph = renderPlot({
   if(check.numeric(input$finite_val_diag_prevalence_gamma) == FALSE){
     generate_prior_post_graph(prior = sect3.2_prevalence_info_1()$prior, 
@@ -107,6 +121,7 @@ output$finite_val_diag_prevalence_postprior_graph = renderPlot({
                               plausible_region = sect3.2_prevalence_info_1()$plausible_region, 
                               grid = sect3.2_prevalence_grid(),
                               colour_choice = sect3.2_prevalence_colours()[c(1, 2, 4, 6)],
+                              lty_type = sect3.2_prevalence_prior_post_lty(),
                               transparency = input$finite_val_diag_prevalence_col_transparency)
   } else if (as.numeric(input$finite_val_diag_prevalence_gamma) >= sect3.2_prevalence_info_1()$posterior_content){
     # Couldn't do the or statement for if because of the case where you can't do
@@ -116,6 +131,7 @@ output$finite_val_diag_prevalence_postprior_graph = renderPlot({
                               plausible_region = sect3.2_prevalence_info_1()$plausible_region, 
                               grid = sect3.2_prevalence_grid(),
                               colour_choice = sect3.2_prevalence_colours()[c(1, 2, 4, 6)],
+                              lty_type = sect3.2_prevalence_prior_post_lty(),
                               transparency = input$finite_val_diag_prevalence_col_transparency)
   } else {
     generate_prior_post_graph(prior = sect3.2_prevalence_info_1()$prior, 
@@ -124,6 +140,7 @@ output$finite_val_diag_prevalence_postprior_graph = renderPlot({
                               grid = sect3.2_prevalence_grid(),
                               credible_region = sect3.2_prevalence_cred_region()$credible_region,
                               colour_choice = sect3.2_prevalence_colours()[c(1, 2, 4, 6)],
+                              lty_type = sect3.2_prevalence_prior_post_lty(),
                               transparency = input$finite_val_diag_prevalence_col_transparency)
   }
 })
@@ -134,12 +151,14 @@ output$finite_val_diag_prevalence_RB_graph = renderPlot({
                        plausible_region = sect3.2_prevalence_info_1()$plausible_region, 
                        grid = sect3.2_prevalence_grid(),
                        colour_choice = sect3.2_prevalence_colours()[c(3:6)],
+                       lty_type = sect3.2_prevalence_rbr_lty(),
                        transparency = input$finite_val_diag_prevalence_col_transparency)
   } else if (as.numeric(input$finite_val_diag_prevalence_gamma) >= sect3.2_prevalence_info_1()$posterior_content){
     generate_rbr_graph(relative_belief_ratio = sect3.2_prevalence_info_1()$relative_belief_ratio, 
                        plausible_region = sect3.2_prevalence_info_1()$plausible_region, 
                        grid = sect3.2_prevalence_grid(),
                        colour_choice = sect3.2_prevalence_colours()[c(3:6)],
+                       lty_type = sect3.2_prevalence_rbr_lty(),
                        transparency = input$finite_val_diag_prevalence_col_transparency)
   } else {
     generate_rbr_graph(relative_belief_ratio = sect3.2_prevalence_info_1()$relative_belief_ratio, 
@@ -148,6 +167,7 @@ output$finite_val_diag_prevalence_RB_graph = renderPlot({
                        credible_region = sect3.2_prevalence_cred_region()$credible_region, 
                        rb_line = sect3.2_prevalence_cred_region()$rb_line,
                        colour_choice = sect3.2_prevalence_colours()[c(3:6)],
+                       lty_type = sect3.2_prevalence_rbr_lty(),
                        transparency = input$finite_val_diag_prevalence_col_transparency)
   }
 })
