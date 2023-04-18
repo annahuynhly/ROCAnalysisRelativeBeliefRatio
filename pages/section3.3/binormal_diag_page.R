@@ -250,13 +250,23 @@ binormal_diag_plots = div(
                     label = 'Input the colour of the prior',
                     value = "FF007F"
           ), 
+          selectInput(inputId = "binormal_diag_lty_prior", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
         conditionalPanel(
           condition = "input.binormal_diag_modify_colour == 'post'",
           textInput(inputId = "binormal_diag_colour_post",
                     label = 'Input the colour of the posterior',
                     value = "FF00FF"
-          ), 
+          ),
+          selectInput(inputId = "binormal_diag_lty_post", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
         conditionalPanel(
           condition = "input.binormal_diag_modify_colour == 'rbr'",
@@ -264,6 +274,11 @@ binormal_diag_plots = div(
                     label = 'Input the colour of the relative belief ratio',
                     value = "7F00FF"
           ), 
+          selectInput(inputId = "binormal_diag_lty_rbr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
         conditionalPanel(
           condition = "input.binormal_diag_modify_colour == 'pr'",
@@ -271,6 +286,11 @@ binormal_diag_plots = div(
                     label = 'Input the colour of the plausible region',
                     value = "A717DB"
           ), 
+          selectInput(inputId = "binormal_diag_lty_pr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 3
+          ),
         ),
         conditionalPanel(
           condition = "input.binormal_diag_modify_colour == 'line_1'",
@@ -278,12 +298,22 @@ binormal_diag_plots = div(
                     label = 'Input the colour of the y = 1 line',
                     value = "5327E4"
           ), 
+          selectInput(inputId = "binormal_diag_lty_line_1", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
         ),
         conditionalPanel(
           condition = "input.binormal_diag_modify_colour == 'cr'",
           textInput(inputId = "binormal_diag_colour_cr",
                     label = 'Input the colour of the credible region',
                     value = "650d84"), 
+          selectInput(inputId = "binormal_diag_lty_cr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 3
+          ),
         ),
       ),
       sliderInput(inputId = "binormal_diag_col_transparency", 
