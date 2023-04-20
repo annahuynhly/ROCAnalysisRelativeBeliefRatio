@@ -2,6 +2,18 @@
 # HELPER FUNCTIONS                                             #
 ################################################################
 
+finite_diag_check_condition = function(pD_array, pND_array){
+  # example input (based on format of data): pD_array[i, ], pND_array[i, ]
+  if (length(pD_array) != length(pND_array)){
+    return("Error: pD_array is not the same length as pND_array.")
+  }
+  condition_sum = 0
+  for(i in 1:length(pD_array)){
+    condition_sum = condition_sum + sum(pD_array[1:i])*pND_array[i]
+  }
+  if (condition_sum <= 0.5){return(TRUE)} else {return(FALSE)}
+}
+
 AUC_prior_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE, 
                                      alpha1w = NA, alpha2w = NA,
                                      delta, pND_array, pD_array, 
@@ -105,7 +117,8 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
 # FUNCTIONS FOR COMPUTATIONS                                   #
 ################################################################
 
-simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE, 
+simulate_AUC_mc_prior = function(condition = "unconditional", 
+                                 nND, nD, nMonteCarlo, w = FALSE, 
                                  alpha1w = NA, alpha2w = NA,
                                  alpha_ND, alpha_D){ 
   # This is meant to simulate the prior of the AUC.
@@ -128,12 +141,21 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE,
   PPV = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
   
   AUC = rep(0, nMonteCarlo)
-  for(i in 1:nMonteCarlo){
+  i = 1 # changed to while loop
+  while (i < nMonteCarlo){ # changed to while loop
     # This is for the prevalence w.
     pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
     
-    pND_array[i, ] = rdirichlet(1,alpha_priorND)
-    pD_array[i, ] = rdirichlet(1,alpha_priorD)
+    pND_array[i, ] = rdirichlet(1, alpha_priorND)
+    pD_array[i, ] = rdirichlet(1, alpha_priorD)
+    
+    if(condition == "conditional"){
+      check = finite_diag_check_condition(pD_array[i, ], pND_array[i, ])
+      if(check == FALSE){
+        next 
+      }
+    }
+    
     FNR[i, ] = cumsum(pD_array[i, ]) #sum(pD_prior[1:i])
     FPR[i, ] = 1 - cumsum(pND_array[i, ])
     ERROR_w[i, ] = pre_w*FNR[i, ] + (1-pre_w)*FPR[i, ]
@@ -144,6 +166,8 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE,
     # update the prior distribution of c_opt
     c_opt = which.min(ERROR_w[i, ])
     priorc_opt[c_opt] = priorc_opt[c_opt] + 1
+    
+    i = i + 1 # changed to while loop
   }
   priorc_opt = priorc_opt/nMonteCarlo
   
@@ -154,7 +178,8 @@ simulate_AUC_mc_prior = function(nND, nD, nMonteCarlo, w = FALSE,
   return(newlist)
 }
 
-simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w = FALSE, 
+simulate_AUC_mc_post = function(condition = "unconditional", 
+                                nND, nD, nMonteCarlo, w = FALSE, 
                                 alpha1w = NA, alpha2w = NA, version = NA,
                                 alpha_ND, alpha_D, fND, fD){
   
@@ -182,12 +207,20 @@ simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w = FALSE,
   PPV = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
   
   AUC = rep(0, nMonteCarlo)
-  for(i in 1:nMonteCarlo){
-    # This is for the prevalence w.
+  i = 1 # changed to while loop
+  while (i < nMonteCarlo){ # changed to while loop
     pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version)
     
     pND_array[i, ] = rdirichlet(1, alpha_priorND + fND)
     pD_array[i, ] = rdirichlet(1, alpha_priorD + fD)
+    
+    if(condition == "conditional"){
+      check = finite_diag_check_condition(pD_array[i, ], pND_array[i, ])
+      if(check == FALSE){
+        next 
+      }
+    }
+    
     FNR[i, ] = cumsum(pD_array[i, ])
     FPR[i, ] = 1 - cumsum(pND_array[i, ])
     ERROR_w[i, ] = pre_w*FNR[i, ] + (1-pre_w)*FPR[i, ]
@@ -197,8 +230,11 @@ simulate_AUC_mc_post = function(nND, nD, nMonteCarlo, w = FALSE,
     # update the posterior distribution of c_opt
     c_opt = which.min(ERROR_w[i, ])
     postc_opt[c_opt] = postc_opt[c_opt] + 1
+    
+    i = i + 1 # changed to while loop
   }
   
+
   postc_opt = postc_opt/nMonteCarlo
   
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
@@ -415,3 +451,33 @@ hypothesized_AUC_compute_values = function(hypo_AUC, delta, AUC_prior, AUC_post)
   
   return(RB)
 }
+
+
+
+
+
+
+
+
+
+#"pND_array" = pND_array, "pD_array" = pD_array,
+#"FNR" = FNR, "FPR" = FPR, "ERROR_w" = ERROR_w, 
+#"PPV" = PPV, "priorc_opt" = priorc_opt,
+#"AUC" = AUC)
+
+
+#test = simulate_AUC_mc_prior(condition = "conditional", 
+#                      nND = 50, nD = 100, nMonteCarlo = 10, w = 0.65,
+#                      alpha_ND = c(1, 1, 1, 1, 1), 
+#                      alpha_D = c(1, 1, 1, 1, 1))
+
+#test2 = simulate_AUC_mc_post(condition = "conditional", 
+#                             nND = 50, nD = 100, nMonteCarlo = 10, w = 0.65,
+#                             alpha_ND = c(1, 1, 1, 1, 1), 
+#                             alpha_D = c(1, 1, 1, 1, 1),
+#                             fND = c(29, 7, 4, 5, 5), 
+#                             fD = c(14, 7, 25, 33, 21))
+
+
+
+

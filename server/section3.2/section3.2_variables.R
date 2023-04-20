@@ -8,14 +8,16 @@ SECT3.2_SEED = reactive(input$finite_val_diag_seed)
 sect3.2_AUC_prior = reactive({
   set.seed(SECT3.2_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$finite_val_diag_case1 == 1){
-    simulate_AUC_mc_prior(nND = input$finite_val_nND, 
+    simulate_AUC_mc_prior(condition = input$finite_val_condition,
+                          nND = input$finite_val_nND, 
                           nD = input$finite_val_nD, 
                           nMonteCarlo = input$finite_val_nMonteCarlo,
                           w = input$finite_val_diag_prevalence_w, 
                           alpha_ND = input$finite_val_alpha_ND, 
                           alpha_D = input$finite_val_alpha_D)
   } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){ 
-    simulate_AUC_mc_prior(nND = input$finite_val_nND, 
+    simulate_AUC_mc_prior(condition = input$finite_val_condition,
+                          nND = input$finite_val_nND, 
                           nD = input$finite_val_nD, 
                           nMonteCarlo = input$finite_val_nMonteCarlo, 
                           w = FALSE, 
@@ -28,7 +30,8 @@ sect3.2_AUC_prior = reactive({
 
 sect3.2_AUC_post = reactive({
   if(input$finite_val_diag_case1 == 1){
-    simulate_AUC_mc_post(nND = input$finite_val_nND, 
+    simulate_AUC_mc_post(condition = input$finite_val_condition,
+                         nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 
                          w = input$finite_val_diag_prevalence_w, 
@@ -37,7 +40,8 @@ sect3.2_AUC_post = reactive({
                          fND = input$finite_val_fND, 
                          fD = input$finite_val_fD)
   } else if (input$finite_val_diag_case2 == "A"){ # only know the prior
-    simulate_AUC_mc_post(nND = input$finite_val_nND, 
+    simulate_AUC_mc_post(condition = input$finite_val_condition,
+                         nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 
                          w = FALSE, 
@@ -49,7 +53,8 @@ sect3.2_AUC_post = reactive({
                          fND = input$finite_val_fND, 
                          fD = input$finite_val_fD)
   } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
-    simulate_AUC_mc_post(nND = input$finite_val_nND, 
+    simulate_AUC_mc_post(condition = input$finite_val_condition,
+                         nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 
                          w = FALSE, 

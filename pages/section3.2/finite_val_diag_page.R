@@ -125,6 +125,12 @@ finite_val_hypothesizedAUC = div(
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5
       ),
+      selectInput(inputId = "finite_val_condition",
+                  label = "Select whether to use the conditional or non conditional prior.",
+                  choices = list("Conditional" = 'conditional',
+                                 "Unconditional" = 'unconditional'),
+                  selected = 'unconditional'
+      ),
       textInput(inputId = "finite_val_gamma", 
                 label = tags$p("Gamma (must be less than posterior content)", 
                                style = "font-size: 95%"), 
