@@ -107,10 +107,13 @@ generate_w = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   }
 }
 
-RBR_estimate_of_AUC = function(grid, RBR_of_AUC){
+RBR_estimate_of_AUC = function(grid, RBR_of_AUC, condition = "unconditional"){
   # Assumption is that length(grid) == length(RBR_of_AUC)
   max_occurs = which.max(RBR_of_AUC)
   df = data.frame(grid[max_occurs], RBR_of_AUC[max_occurs])
+  if (condition == "conditional"){
+    df[1] = df[1] + 0.5
+  }
   colnames(df) = c("Estimate of AUC", "| Relative Belief Ratio of the Estimated AUC")
   return(df)
 }
@@ -165,5 +168,28 @@ average_vector_values = function(vector, num_average_pts = 3){
   
   return(new_vector)
 }
+
+copt_transform = function(vector){
+  first = vector[1]
+  last = vector[length(vector)]
+  err_msgs = c("Need to put in a valid input for gamma.",
+               "Gamma must be less than the posterior content of the plausible region.")
+
+  if(first %in% err_msgs){
+    return(err_msgs[match(first, err_msgs)])
+  }
+  
+  if (is.numeric(first) == FALSE){
+    first = as.numeric(first)
+  }
+  if (is.numeric(last) == FALSE){
+    last = as.numeric(last)
+  }
+  # Vector in this case is often used for the plausible or the credible region.
+  return(c(tan(pi*first - pi/2), tan(pi*last - pi/2)))
+}
+
+
+
 
 

@@ -25,7 +25,7 @@ output$binormal_diag_hypoAUC_value = renderPrint({
          "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
          "Credible region for the AUC" = sect3.3_cr()$credible_region)
   } else if (sect3.3_condition() == "conditional" & input$binormal_case == "equal_var"){
-    list("Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC),
+    list("Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR()$RB_AUC, "conditional"),
          "Plausible Region for the AUC" = sect3.3_AUC_RBR()$plausible_region,
          "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR()$postPl_AUC,
          "Credible region for the AUC" = sect3.3_cr()$credible_region,
@@ -39,7 +39,7 @@ output$binormal_diag_hypoAUC_value = renderPrint({
          "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR_unequal()$postPl_AUC,
          "Credible region for the AUC" = sect3.3_cr_unequal()$credible_region)
   } else if (sect3.3_condition() == "conditional" & input$binormal_case == "unequal_var"){
-    list("Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR_unequal()$RB_AUC),
+    list("Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$binormal_diag_delta), sect3.3_AUC_RBR_unequal()$RB_AUC, "conditional"),
          "Plausible Region for the AUC" = sect3.3_AUC_RBR_unequal()$plausible_region,
          "Posterior Content of the Plausible Region for the AUC" = sect3.3_AUC_RBR_unequal()$postPl_AUC,
          "Credible region for the AUC" = sect3.3_cr_unequal()$credible_region,
@@ -56,10 +56,12 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                          sect3.3_AUC_RBR_error_char_copt()$FNDRest)
     colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
     list("Copt Estimate" = sect3.3_AUC_RBR_copt()$coptest,
+         "Plausible Region for Copt" = copt_transform(sect3.3_AUC_RBR_copt()$plausible_region),
+         "Credible Region for Copt" = copt_transform(sect3.3_cr_copt()$credible_region),
          "Cmod Estimate" = sect3.3_AUC_RBR_copt()$cmodest,
          "Plausible Region for Cmod" = sect3.3_AUC_RBR_copt()$plausible_region,
          "Posterior Content of the Plausible Region for Cmod" = sect3.3_AUC_RBR_copt()$postPlcmod,
-         "Credible region for Cmod" = sect3.3_cr_copt()$credible_region,
+         "Credible Region for Cmod" = sect3.3_cr_copt()$credible_region,
          "Error Characteristics" = temp_df)
   } else if (sect3.3_copt_case() == "unequal_var"){
     # BELOW REPRESENTS ACTUAL CODE
@@ -70,10 +72,12 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                          sect3.3_AUC_RBR_error_char_copt_unequal()$FNDRest)
     colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
     list("Copt Estimate" = sect3.3_AUC_RBR_copt_unequal()$coptest,
+         "Plausible Region for Copt" = copt_transform(sect3.3_AUC_RBR_copt_unequal()$plausible_region),
+         "Credible Region for Copt" = copt_transform(sect3.3_cr_copt_unequal()$credible_region),
          "Cmod Estimate" = sect3.3_AUC_RBR_copt_unequal()$cmodest,
          "Plausible Region for Cmod" = sect3.3_AUC_RBR_copt_unequal()$plausible_region,
          "Posterior Content of the Plausible Region for Cmod" = sect3.3_AUC_RBR_copt_unequal()$postPlcmod,
-         "Credible region for Cmod" = sect3.3_cr_copt_unequal()$credible_region,
+         "Credible Region for Cmod" = sect3.3_cr_copt_unequal()$credible_region,
          "Error Characteristics" = temp_df)
   }
 })
