@@ -25,6 +25,11 @@ basic_colour_list = list("Red" = 'red',
                          "Green" = 'green', 
                          "Manually Insert" = 'manual')
 
+colour_theme_w0 = list("Relative Belief Ratio" = 'rbr',
+                       "Relative Belief Ratio of w0" = 'rbr_w0',
+                       "Interval" = 'interval',
+                       "Strength (Area)" = "str")
+
 default_lty_list = list("0" = 0, "1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6)
 
 # Note: base R : pch values go from 1 to 25

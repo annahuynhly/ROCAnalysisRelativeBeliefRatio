@@ -231,7 +231,71 @@ binormal_diag_prevalence_relative_belief_plot_of_w0 = div(
       numericInput(inputId = "binormal_diag_prevalence_w0",
                    label = 'Hypothesis w = w0',
                    value = 0.6
-      )
+      ),
+      ############################################################## START
+      selectInput(inputId = "binormal_diag_diag_prevalence_colour_w0", 
+                  label = 'Select colour theme', 
+                  choices = colour_theme_list, 
+                  selected = 'default1'),
+      conditionalPanel(
+        condition = "input.binormal_diag_diag_prevalence_colour_w0 == 'manual'",
+        selectInput(inputId = "binormal_diag_diag_prevalence_modify_colour_w0",
+                    label = 'Select object to modify',
+                    choices = colour_theme_w0,
+                    selected = 'rbr'), 
+        
+        conditionalPanel(
+          condition = "input.binormal_diag_diag_prevalence_modify_colour_w0 == 'rbr'",
+          textInput(inputId = "binormal_diag_diag_prevalence_colour_rbr_w0",
+                    label = 'Input the hex colour of the relative belief ratio',
+                    value = "FF0000"
+          ),
+          selectInput(inputId = "binormal_diag_diag_prevalence_lty_rbr_w0", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_diag_prevalence_modify_colour_w0 == 'rbr_w0'",
+          textInput(inputId = "binormal_diag_diag_prevalence_colour_rbr_at_w0",
+                    label = 'Input the hex colour of the relative belief ratio at w0',
+                    value = "000080"
+          ),
+          selectInput(inputId = "binormal_diag_diag_prevalence_lty_rbr_at_w0", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_diag_prevalence_modify_colour_w0 == 'interval'",
+          textInput(inputId = "binormal_diag_diag_prevalence_colour_interval",
+                    label = 'Input the hex colour of the boundaries of the interval',
+                    value = "7c83e8"
+          ), 
+          selectInput(inputId = "binormal_diag_diag_prevalence_lty_interval", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 3
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_diag_prevalence_modify_colour_w0 == 'str'",
+          textInput(inputId = "binormal_diag_diag_prevalence_colour_str",
+                    label = 'Input the hex colour of the strength',
+                    value = "996DEC"
+          ), 
+        ),
+      ),
+      # Below consists of all of the different types of colour inputs! 
+      # Switching back to modifying transparency
+      sliderInput(inputId = "binormal_diag_diag_prevalence_col_transparency_w0", 
+                  label = "Scale for colour transparency",
+                  min = 0, max = 1, value = 0.3
+      ),
+      
+      ############################################################# END
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0",

@@ -100,6 +100,24 @@ sect3.4_prevalence_colours = reactive({
   }
 })
 
+sect3.4_prevalence_w0_colours = reactive({
+  if(input$nonpara_bayes_diag_prevalence_colour_w0 == 'default1'){
+    c("#FF6666", "#6699FF", "#05DEB2", "#947aff")
+  } else if (input$nonpara_bayes_diag_prevalence_colour_w0 == 'default2'){
+    c("blue", "green", "red", "#b3bfff")
+  } else if (input$nonpara_bayes_diag_prevalence_colour_w0 == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c")
+  } else if (input$nonpara_bayes_diag_prevalence_colour_w0 == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a", "#e69eb7")
+  } else if (input$nonpara_bayes_diag_prevalence_colour_w0 == 'manual'){
+    c(convert_to_hex(input$nonpara_bayes_diag_prevalence_colour_rbr_w0),
+      convert_to_hex(input$nonpara_bayes_diag_prevalence_colour_rbr_at_w0),
+      convert_to_hex(input$nonpara_bayes_diag_prevalence_colour_interval),
+      convert_to_hex(input$nonpara_bayes_diag_prevalence_colour_str)
+    )
+  }
+})
+
 sect3.4_prevalence_prior_post_lty = reactive({
   c(as.numeric(input$nonpara_bayes_prevalence_lty_prior),
     as.numeric(input$nonpara_bayes_prevalence_lty_post),
@@ -112,6 +130,12 @@ sect3.4_prevalence_rbr_lty = reactive({
     as.numeric(input$nonpara_bayes_prevalence_lty_pr),
     as.numeric(input$nonpara_bayes_prevalence_lty_line_1),
     as.numeric(input$nonpara_bayes_prevalence_lty_cr))
+})
+
+sect3.4_prevalence_w0_lty = reactive({
+  c(as.numeric(input$nonpara_bayes_diag_prevalence_lty_rbr_w0),
+    as.numeric(input$nonpara_bayes_diag_prevalence_lty_rbr_at_w0),
+    as.numeric(input$nonpara_bayes_diag_prevalence_lty_interval))
 })
 
 output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
@@ -177,7 +201,10 @@ output$nonpara_bayes_prevalence_w0_graph = renderPlot({
     relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
     relative_belief_ratio_at_w0 = sect3.3_prevalence_info_2()$relative_belief_ratio_at_w0,
     w0_interval = sect3.3_prevalence_info_2()$w0_interval, 
-    grid = sect3.3_prevalence_grid())
+    grid = sect3.3_prevalence_grid(),
+    colour_choice = sect3.4_prevalence_w0_colours(),
+    lty_type = sect3.4_prevalence_w0_lty(),
+    transparency = input$nonpara_bayes_diag_prevalence_col_transparency_w0)
 })
 
 # This is for the prior case only
