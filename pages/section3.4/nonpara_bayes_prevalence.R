@@ -82,68 +82,92 @@ nonpara_bayes_prevalence_plots = div(
       ),
       selectInput(inputId = "nonpara_bayes_prevalence_colour", 
                   label = 'Select colour theme', 
-                  choices = list("Default Theme 1" = 'default1',
-                                 "Default Theme 2" = 'default2',
-                                 "Dull Life" = 'dull',
-                                 "Lovely Mei" = 'lovelymei',
-                                 "Manually Insert" = 'manual'), 
+                  choices = colour_theme_list, 
                   selected = 'default1'
       ),
       conditionalPanel(
         condition = "input.nonpara_bayes_prevalence_colour == 'manual'",
         selectInput(inputId = "nonpara_bayes_prevalence_modify_colour",
                     label = 'Select line to modify',
-                    choices = list("Prior" = 'prior',
-                                   "Posterior" = 'post',
-                                   "Relative Belief Ratio" = 'rbr',
-                                   "Plausible Region" = 'pr',
-                                   "Line of y = 1" = 'line_1',
-                                   "Credible Region" = 'cr'),
+                    choices = output_line_list,
                     selected = 'prior'), 
+        
+        # Below consists of all of the different types of colour inputs! 
+        conditionalPanel(
+          condition = "input.nonpara_bayes_prevalence_modify_colour == 'prior'",
+          textInput(inputId = "nonpara_bayes_prevalence_colour_prior",
+                    label = 'Input the hex colour of the prior',
+                    value = "FF007F"
+          ), 
+          selectInput(inputId = "nonpara_bayes_prevalence_lty_prior", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_prevalence_modify_colour == 'post'",
+          textInput(inputId = "nonpara_bayes_prevalence_colour_post",
+                    label = 'Input the hex colour of the posterior',
+                    value = "FF00FF"
+          ), 
+          selectInput(inputId = "nonpara_bayes_prevalence_lty_post", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_prevalence_modify_colour == 'rbr'",
+          textInput(inputId = "nonpara_bayes_prevalence_colour_rbr",
+                    label = 'Input the hex colour of the relative belief ratio',
+                    value = "7F00FF"
+          ), 
+          selectInput(inputId = "nonpara_bayes_prevalence_lty_rbr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_prevalence_modify_colour == 'pr'",
+          textInput(inputId = "nonpara_bayes_prevalence_colour_pr",
+                    label = 'Input the hex colour of the plausible region',
+                    value = "A717DB"
+          ), 
+          selectInput(inputId = "nonpara_bayes_prevalence_lty_pr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 3
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_prevalence_modify_colour == 'line_1'",
+          textInput(inputId = "nonpara_bayes_prevalence_colour_line_1",
+                    label = 'Input the hex colour of the y = 1 line',
+                    value = "5327E4"
+          ), 
+          selectInput(inputId = "nonpara_bayes_prevalence_lty_line_1", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 2
+          ),
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_prevalence_modify_colour == 'cr'",
+          textInput(inputId = "nonpara_bayes_prevalence_colour_cr",
+                    label = 'Input the hex colour of the credible region',
+                    value = "650d84"
+          ), 
+          selectInput(inputId = "nonpara_bayes_prevalence_lty_cr", 
+                      label = 'Select a line type', 
+                      choices = default_lty_list, 
+                      selected = 3
+          ),
+        ),
+        
       ),
-      # Below consists of all of the different types of colour inputs! 
-      conditionalPanel(
-        condition = "input.nonpara_bayes_prevalence_modify_colour == 'prior'",
-        textInput(inputId = "nonpara_bayes_prevalence_colour_prior",
-                  label = 'Input the hex colour of the prior',
-                  value = "FF007F"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_prevalence_modify_colour == 'post'",
-        textInput(inputId = "nonpara_bayes_prevalence_colour_post",
-                  label = 'Input the hex colour of the posterior',
-                  value = "FF00FF"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_prevalence_modify_colour == 'rbr'",
-        textInput(inputId = "nonpara_bayes_prevalence_colour_rbr",
-                  label = 'Input the hex colour of the relative belief ratio',
-                  value = "7F00FF"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_prevalence_modify_colour == 'pr'",
-        textInput(inputId = "nonpara_bayes_prevalence_colour_pr",
-                  label = 'Input the hex colour of the plausible region',
-                  value = "A717DB"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_prevalence_modify_colour == 'line_1'",
-        textInput(inputId = "nonpara_bayes_prevalence_colour_line_1",
-                  label = 'Input the hex colour of the y = 1 line',
-                  value = "5327E4"
-        ), 
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_prevalence_modify_colour == 'cr'",
-        textInput(inputId = "nonpara_bayes_prevalence_colour_cr",
-                  label = 'Input the hex colour of the credible region',
-                  value = "650d84"
-        ), 
-      ),
+      
       # Switching back to modifying transparency
       sliderInput(inputId = "nonpara_bayes_prevalence_col_transparency", 
                   label = "Scale for colour transparency",
@@ -175,10 +199,7 @@ nonpara_bayes_prevalence_plot_alt = div(
       ),
       selectInput(inputId = "nonpara_bayes_prevalence_colour_1", 
                   label = 'Select a colour', 
-                  choices = list("Red" = 'red', 
-                                 "Blue" = 'blue', 
-                                 "Green" = 'green',
-                                 "Manually Insert" = 'manual'), 
+                  choices = basic_colour_list, 
                   selected = 'red'),
       sliderInput(inputId = "nonpara_bayes_prevalence_col_transparency_1", 
                   label = "Scale for colour transparency",

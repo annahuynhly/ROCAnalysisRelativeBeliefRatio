@@ -4,8 +4,9 @@
 
 finite_val_diag_prevalence_description = div( 
   titlePanel("Page Description"),
-  p("The goal of this section is for the user to compute the prior of w, posterior of w, and the relative belief 
-    ratio of w to estimate the prevalence w. The user is free to download any results."),
+  p("The goal of this section is for the user to compute the prior of w, posterior of w, 
+    and the relative belief ratio of w to estimate the prevalence w. The user is free to 
+    download any results."),
   p("Plot images can be saved by right clicking them."),
   hr(style = "border-top: 1px solid #363e4f;"),
   
