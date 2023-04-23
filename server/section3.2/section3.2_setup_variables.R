@@ -2,6 +2,14 @@
 # SETUP VARIABLES                                              #
 ################################################################
 
+sect3.2_resample = reactive({
+  if(input$finite_val_condition_resampling == 'no'){
+    FALSE
+  } else if (input$finite_val_condition_resampling == 'yes'){
+    TRUE
+  }
+})
+
 sect3.2_copt_nMonteCarlo = reactive({
   if(input$finite_val_optimal_cutoff_denote_variables == 'no'){
     input$finite_val_nMonteCarlo_alt

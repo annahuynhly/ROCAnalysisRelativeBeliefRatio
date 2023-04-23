@@ -131,6 +131,17 @@ finite_val_hypothesizedAUC = div(
                                  "Unconditional" = 'unconditional'),
                   selected = 'unconditional'
       ),
+      conditionalPanel(
+        condition = "input.finite_val_condition == 'conditional'",
+        selectInput(inputId = "finite_val_condition_resampling",
+                    label = "Do you want to resample to match the size of the Monte Carlo 
+                    sample size?",
+                    choices = list("Yes" = 'yes',
+                                   "No" = 'no'),
+                    selected = 'no'
+        ),
+      ),
+      
       textInput(inputId = "finite_val_gamma", 
                 label = tags$p("Gamma (must be less than posterior content)", 
                                style = "font-size: 95%"), 

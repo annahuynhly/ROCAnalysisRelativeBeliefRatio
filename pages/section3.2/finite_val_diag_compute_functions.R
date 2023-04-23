@@ -117,7 +117,7 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
 # FUNCTIONS FOR COMPUTATIONS                                   #
 ################################################################
 
-simulate_AUC_mc_prior = function(condition = "unconditional", 
+simulate_AUC_mc_prior = function(condition = "unconditional", resample = FALSE,
                                  nND, nD, nMonteCarlo, w = FALSE, 
                                  alpha1w = NA, alpha2w = NA,
                                  alpha_ND, alpha_D){ 
@@ -142,6 +142,7 @@ simulate_AUC_mc_prior = function(condition = "unconditional",
   
   AUC = rep(0, nMonteCarlo)
   i = 1 # changed to while loop
+  num_reject = 0
   while (i < nMonteCarlo){ # changed to while loop
     # This is for the prevalence w.
     pre_w = generate_w(w, alpha1w, alpha2w, version = "prior")
@@ -151,8 +152,10 @@ simulate_AUC_mc_prior = function(condition = "unconditional",
     
     if(condition == "conditional"){
       check = finite_diag_check_condition(pD_array[i, ], pND_array[i, ])
-      if(check == FALSE){
-        next 
+      if((check == FALSE) & (resample == TRUE)){
+        next # This forces the function to re-sample instead.
+      } else if ((check == FALSE) & (resample == FALSE)){
+        num_reject = num_reject + 1 
       }
     }
     
@@ -174,11 +177,11 @@ simulate_AUC_mc_prior = function(condition = "unconditional",
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
                  "FNR" = FNR, "FPR" = FPR, "ERROR_w" = ERROR_w, 
                  "PPV" = PPV, "priorc_opt" = priorc_opt,
-                 "AUC" = AUC)
+                 "AUC" = AUC, "n_rejected" = num_reject)
   return(newlist)
 }
 
-simulate_AUC_mc_post = function(condition = "unconditional", 
+simulate_AUC_mc_post = function(condition = "unconditional", resample = FALSE,
                                 nND, nD, nMonteCarlo, w = FALSE, 
                                 alpha1w = NA, alpha2w = NA, version = NA,
                                 alpha_ND, alpha_D, fND, fD){
@@ -207,7 +210,8 @@ simulate_AUC_mc_post = function(condition = "unconditional",
   PPV = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
   
   AUC = rep(0, nMonteCarlo)
-  i = 1 # changed to while loop
+  i = 1 # changed to while loop 
+  num_reject = 0
   while (i < nMonteCarlo){ # changed to while loop
     pre_w = generate_w(w, alpha1w, alpha2w, nD, nND, version)
     
@@ -217,7 +221,9 @@ simulate_AUC_mc_post = function(condition = "unconditional",
     if(condition == "conditional"){
       check = finite_diag_check_condition(pD_array[i, ], pND_array[i, ])
       if(check == FALSE){
-        next 
+        next # This forces the function to re-sample instead.
+      } else if ((check == FALSE) & (resample == FALSE)){
+        num_reject = num_reject + 1 
       }
     }
     
@@ -240,7 +246,7 @@ simulate_AUC_mc_post = function(condition = "unconditional",
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
                  "FNR" = FNR, "FPR" = FPR, "ERROR_w" = ERROR_w, 
                  "PPV" = PPV, "postc_opt" = postc_opt,
-                 "AUC" = AUC)
+                 "AUC" = AUC, "n_rejected" = num_reject)
   return(newlist)
 }
 

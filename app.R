@@ -8,6 +8,8 @@
 # Make the code look nicer lmao
 # let people modify the graph for test of w = w0 (prevalence section)
 # section 3.3 -> need to add y=1 line for the plots for the optimal cutoff
+# make outputs look nicer ???
+
 
 # ISSUES:
 
@@ -29,6 +31,9 @@ library(tidyverse)
 
 # Globally setting the spinner colour and type
 options(spinner.type = 6, spinner.color = "#18bc9b")
+
+# Removing scientific notation
+options(scipen = 999)
 
 # Accessing other R-codes
 source("routes.R")
@@ -82,7 +87,7 @@ server = function(input, output, session) {
   
   source(file.path("server/section3.2", "section3.2_definitions.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_prevalence.R"),  local = TRUE)$value
-  #source(file.path("server/section3.2", "section3.2_setup_variables.R"),  local = TRUE)$value
+  source(file.path("server/section3.2", "section3.2_setup_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_outputs.R"),  local = TRUE)$value
   
@@ -112,6 +117,9 @@ server = function(input, output, session) {
   observe(addHoverAnim(session, 'LuaiImg', 'flip'))
   observe(addHoverAnim(session, 'QiaoyuImg', 'fadeOutDown'))
   observe(addHoverAnim(session, 'calculator', 'pulse'))
+  observe(addHoverAnim(session, 'diseased_group', 'pulse'))
+  observe(addHoverAnim(session, 'diseased_group2', 'pulse'))
+  observe(addHoverAnim(session, 'diseased_group3', 'pulse'))
 }
 
 shinyApp(ui, server)

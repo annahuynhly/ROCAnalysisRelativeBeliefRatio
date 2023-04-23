@@ -282,8 +282,8 @@ generate_relative_belief_ratio_at_w0_graph = function(relative_belief_ratio,
   
   legend("topleft", legend = c("Relative Belief Ratio", "Relative Belief Ratio of w0", 
                                "Interval", "Strength (Area)"), 
-         lwd = c(colour_choice[1], colour_choice[2], colour_choice[3], colour_choice[4]), 
-         col = c('red', 'navy', '#7c83e8', 
+         lwd = c(2, 2, 2, 2), 
+         col = c(colour_choice[1], colour_choice[2], colour_choice[3], 
                  rgb(str_col[1]/255, str_col[2]/255, str_col[3]/255, 
                      alpha = transparency)), 
          lty = c(lty_type[1], lty_type[2], lty_type[3], 1))

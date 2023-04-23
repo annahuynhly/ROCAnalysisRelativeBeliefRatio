@@ -77,8 +77,7 @@ binormal_diag_setup_variables_1 = div(
         ),
       )
     )
-  ),
-  br(style = "line-height:2;"),
+  )
 )
 
 binormal_diag_setup_variables_2 = div( 

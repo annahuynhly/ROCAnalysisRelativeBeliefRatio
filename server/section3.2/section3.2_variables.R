@@ -9,6 +9,7 @@ sect3.2_AUC_prior = reactive({
   set.seed(SECT3.2_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_prior(condition = input$finite_val_condition,
+                          resample = sect3.2_resample(),
                           nND = input$finite_val_nND, 
                           nD = input$finite_val_nD, 
                           nMonteCarlo = input$finite_val_nMonteCarlo,
@@ -17,6 +18,7 @@ sect3.2_AUC_prior = reactive({
                           alpha_D = input$finite_val_alpha_D)
   } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){ 
     simulate_AUC_mc_prior(condition = input$finite_val_condition,
+                          resample = sect3.2_resample(),
                           nND = input$finite_val_nND, 
                           nD = input$finite_val_nD, 
                           nMonteCarlo = input$finite_val_nMonteCarlo, 
@@ -31,6 +33,7 @@ sect3.2_AUC_prior = reactive({
 sect3.2_AUC_post = reactive({
   if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_post(condition = input$finite_val_condition,
+                         resample = sect3.2_resample(),
                          nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 
@@ -41,6 +44,7 @@ sect3.2_AUC_post = reactive({
                          fD = input$finite_val_fD)
   } else if (input$finite_val_diag_case2 == "A"){ # only know the prior
     simulate_AUC_mc_post(condition = input$finite_val_condition,
+                         resample = sect3.2_resample(),
                          nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 
@@ -54,6 +58,7 @@ sect3.2_AUC_post = reactive({
                          fD = input$finite_val_fD)
   } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
     simulate_AUC_mc_post(condition = input$finite_val_condition,
+                         resample = sect3.2_resample(),
                          nND = input$finite_val_nND, 
                          nD = input$finite_val_nD, 
                          nMonteCarlo = input$finite_val_nMonteCarlo, 

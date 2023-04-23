@@ -368,7 +368,7 @@ page_nonpara_bayes_prevalence = div(
                style = "padding:10rem;",
       ),
       h4("The prevalence is already known, so there is nothing to do here. Please proceed
-      to inferences of the AUC (currently labelled as Section 3.2).")
+      to inferences of the AUC.")
     ),
     
   ),

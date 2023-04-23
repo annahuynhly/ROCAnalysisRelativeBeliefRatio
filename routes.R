@@ -11,6 +11,7 @@ source("./pages/contact_page.R")
 
 # Section 3.1 - The Prevalence
 source("./pages/section3.1/prevalence_setup_functions.R")
+source("./pages/section3.1/prevalence_setup_page.R")
 
 # Section 3.2
 source("./pages/section3.2/finite_val_diag_definitions.R")
