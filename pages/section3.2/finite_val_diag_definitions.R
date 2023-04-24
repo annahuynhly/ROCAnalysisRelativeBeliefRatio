@@ -2,13 +2,112 @@
 # DESCRIPTION                                                  #
 ################################################################
 
+table_CSS = "
+table, th, td {
+  border: 1px solid black !important;
+  border-collapse: collapse !important;
+}
+"
+
 sect3.2_def_description = div(
   titlePanel("Page Description"),
   mainPanel(
-      p("This tab lists the meaning behind the inputs and the outputs listed
-        in the AUC page under section 3.2."),
+    p("This tab lists the meaning behind the inputs and the outputs listed
+      in the AUC page under section 3.2."),
+
+    withMathJax(),
+    #div("more math here $$\\sqrt{2}$$"),
+    #div("$$X$$ : $$\\Omega \\mapsto \\mathbb{R}^{1}$$ is defined on a population 
+    #  $$\\Omega = \\Omega_{D} \\cup \\Omega_{ND}$$  with 
+    #  $$\\Omega_{D} \\cap \\Omega_{ND} = \\emptyset$$."),
+    
+    tags$head(
+      tags$link(rel="stylesheet", 
+                href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css", 
+                integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ",
+                crossorigin="anonymous"),
+      HTML('<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>'),
+      HTML('<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>'),
+      HTML('
+    <script>
+      document.addEventListener("DOMContentLoaded", function(){
+        renderMathInElement(document.body, {
+          delimiters: [{left: "$", right: "$", display: false}]
+        });
+      })
+    </script>')
+    ),
+    
+    withMathJax(),
+    p("Latex test below:"),
+    p("Let $\\Omega_{D}$ represent the population of those who are diseased, and $\\Omega_{ND}$ 
+    represent the population who are not diseased. There is a measurement $X$ : $\\Omega \\mapsto 
+    \\mathbb{R}^{1}$ is defined on a population $\\Omega = \\Omega_{D} \\cup \\Omega_{ND}$ with 
+    $\\Omega_{D} \\cap \\Omega_{ND} = \\emptyset$."),
+    p("Here, we say that $F_{ND}(c) = $ # $(\\{w \\in \\Omega_{ND}:X(\\omega) \\leq c\\}) / $ # 
+    $(\\Omega_{ND})$ is the conditional cumulative distribution function (cdf) of X in the non 
+    diseased population. 
+    Similarly, $F_{D}(c) = $ # $(\\{w \\in \\Omega_{D}: X(\\omega) \\leq c\\}) 
+    / $ # $(\\Omega_{D})$ is the conditional cdf of X in the diseased population."),
+    
+    div(
+      tags$head(
+        tags$style(HTML(table_CSS))
+      ),
+      tags$table(
+        style = "width: 755px; height: 175px;",
+        tags$tr(
+          tags$th(""),
+          tags$th(style = "text-align: center", 
+                  "$\\Omega_{D}$"),
+          tags$th(style = "text-align: center",
+                  "$\\Omega_{ND}$"),
+        ),
+        tags$tr(
+          tags$td(style = "text-align: center",
+                  "$X > c$"),
+          tags$td(style = "text-align: center",
+                  "$\\text{TPR}(c) = 1 - F_{D}(c)$", br(),
+                  em("Sensitivity (recall)"), " or", br(),
+                  "True Positive Rate"),
+          tags$td(style = "text-align: center",
+                  "$\\text{FPR}(c) = 1 - F_{ND}(c)$", br(),
+                  "False Positive Rate"),
+        ),
+        tags$tr(
+          tags$td(style = "text-align: center",
+                  "$X \\leq c$"),
+          tags$td(style = "text-align: center",
+                  "$\\text{FNR}(c) = F_{D}(c)$", br(),
+                  "False Negative Rate"),
+          tags$td(style = "text-align: center",
+                  "$\\text{TPR}(c) = F_{ND}(c)$", br(),
+                  em("Specificity"), " or", br(),
+                  "True Negative Rate"),
+        )
+      ),
+    ), # end of table
+    
+    p("In this case, $\\omega = $#$(\\Omega_{D})$/$(\\Omega)$ of the disease in $\\Omega$."),
+    p("Furthermore, the following error characteristics depend on $\\omega$:"),
+    
+    p("$\\text{Error}(c) = $ Misclassification Rate $ = \\omega \\text{FNR}(c) + 
+      (1 - \\omega)\\text{FPR}(c)$"),
+    
+    HTML("<p> $\\text{FDR}(c) = $ False Discovery Rate
+            <span style = 'font-size:20px;'> $ = \\frac{(1-\\omega)\\text{FPR}(c)}{\\omega
+            (1 - \\text{FNR}(c)) + (1 - \\omega)\\text{FPR}(c)}$ </span>
+         </p>"
+    ),
+    
+    HTML("<p> $\\text{FNDR}(c) = $ False Nondiscovery Rate
+            <span style = 'font-size:20px;'> $ = \\frac{\\omega \\text{FNR}(c)}{\\omega 
+            \\text{FNR}(c) + (1 - \\omega)(1 - \\text{FPR}(c))}$
+         </p>"
+    ),
+    
   ),
-  br(style = "line-height:22;")
+  br(style = "line-height:40;")
 )
 
 ################################################################
@@ -19,6 +118,10 @@ sect3.2_def_inputs = div(
   titlePanel("Inputs and their Meanings"),
   mainPanel(
     p("Inputs refer to the users inputs found on the AUC page from section 3.2."),
+    
+    p("$X$ : $\\Omega \\mapsto \\mathbb{R}^{1}$ is defined on a population 
+    $\\Omega = \\Omega_{D} \\cup \\Omega_{ND}$  with 
+    $\\Omega_{D} \\cap \\Omega_{ND} = \\emptyset$."),
     
     tableHTML_output("input_table_description"),
     
@@ -101,7 +204,6 @@ sect3.2_def_tables = div(
   titlePanel("Elaboration of Statistical Terms"),
   mainPanel(
     p("In this section, we refer to some uncommonly known statistical definitions that were used."),
-    
     imageOutput("formulas"),
   ),
   br(style = "line-height:22;")

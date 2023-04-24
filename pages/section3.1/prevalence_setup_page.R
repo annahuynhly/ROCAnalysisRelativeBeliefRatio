@@ -1,11 +1,3 @@
-#p {
-#  line-height: 1.6; 
-#  font-family: Helvetica;
-#  text-align: justify;
-#  margin: 0;
-#  font-size: 14px;
-#}
-
 
 getting_started_CSS = "
 .DiseasedImg {
