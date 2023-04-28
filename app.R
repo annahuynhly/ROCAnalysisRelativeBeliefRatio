@@ -27,6 +27,7 @@ library(shinycssloaders) # for loading screens
 
 # Other libraries used for the code
 library(rBeta2009)
+library(LaplacesDemon)
 library(tidyverse)
 
 # Globally setting the spinner colour and type
@@ -45,25 +46,27 @@ source("routes.R")
 ui = navbarPage(
   title = " ROC Analysis & Relative Belief",
   tabPanel("Home", home_page),
+  tabPanel("Definitions", def_page),
   navbarMenu("Finite Valued Diagnostic",
-    tabPanel("Definitions", page_sect3.2_def),
+    #tabPanel("Definitions", page_sect3.2_def),
     tabPanel("Getting Started", page_finite_val_start),
     tabPanel("The Prevalence", page_finite_val_prevalence),
     tabPanel("Inferences for the AUC", page_finite_val_inference1),
     tabPanel("Inferences of the Optimal Cutoff", page_finite_val_inference2)
   ),
   navbarMenu("Binormal Diagnostic",
-    tabPanel("Definitions", page_sect3.3_def),
+    #tabPanel("Definitions", page_sect3.3_def),
     tabPanel("Getting Started", page_binormal_diag_start),
     tabPanel("The Prevalence", page_binormal_diag_prevalence),
     tabPanel("Inferences for the AUC", page_binormal_diag_inference1),
     tabPanel("Inferences of the Optimal Cutoff", page_binormal_diag_inference2)
   ),
   navbarMenu("Nonparametric Bayes Model",
-    tabPanel("Definitions", page_sect3.4_def),
+    #tabPanel("Definitions", page_sect3.4_def),
     tabPanel("Getting Started", page_nonpara_bayes_start),
     tabPanel("The Prevalence", page_nonpara_bayes_prevalence),
-    tabPanel("Computations", page_nonpara_bayes)
+    tabPanel("Inferences for the AUC", page_nonpara_bayes), # change to page_nonpara_bayes1 later
+    #tabPanel("Inferences for the Optimal Cutoff", page_nonpara_bayes2),
   ),
   tabPanel("Contact & Credits", contact_page),
   id = "navbarID",

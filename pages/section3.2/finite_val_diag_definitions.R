@@ -4,7 +4,7 @@
 
 table_CSS = "
 table, th, td {
-  border: 1px solid black !important;
+  border: 1px solid #2c3e50 !important;
   border-collapse: collapse !important;
 }
 "
@@ -14,8 +14,6 @@ sect3.2_def_description = div(
   mainPanel(
     p("This tab lists the meaning behind the inputs and the outputs listed
       in the AUC page under section 3.2."),
-
-    withMathJax(),
     #div("more math here $$\\sqrt{2}$$"),
     #div("$$X$$ : $$\\Omega \\mapsto \\mathbb{R}^{1}$$ is defined on a population 
     #  $$\\Omega = \\Omega_{D} \\cup \\Omega_{ND}$$  with 
@@ -91,20 +89,32 @@ sect3.2_def_description = div(
     p("In this case, $\\omega = $#$(\\Omega_{D})$/$(\\Omega)$ of the disease in $\\Omega$."),
     p("Furthermore, the following error characteristics depend on $\\omega$:"),
     
-    p("$\\text{Error}(c) = $ Misclassification Rate $ = \\omega \\text{FNR}(c) + 
-      (1 - \\omega)\\text{FPR}(c)$"),
+    p("$\\text{Error}(c) = $ Misclassification Rate $ = w \\text{FNR}(c) + 
+      (1 - w)\\text{FPR}(c)$"),
     
     HTML("<p> $\\text{FDR}(c) = $ False Discovery Rate
-            <span style = 'font-size:20px;'> $ = \\frac{(1-\\omega)\\text{FPR}(c)}{\\omega
-            (1 - \\text{FNR}(c)) + (1 - \\omega)\\text{FPR}(c)}$ </span>
+            <span style = 'font-size:20px;'> $ = \\frac{(1-w)\\text{FPR}(c)}{w
+            (1 - \\text{FNR}(c)) + (1 - w)\\text{FPR}(c)}$ </span>
          </p>"
     ),
     
     HTML("<p> $\\text{FNDR}(c) = $ False Nondiscovery Rate
-            <span style = 'font-size:20px;'> $ = \\frac{\\omega \\text{FNR}(c)}{\\omega 
-            \\text{FNR}(c) + (1 - \\omega)(1 - \\text{FPR}(c))}$
+            <span style = 'font-size:20px;'> $ = \\frac{w \\text{FNR}(c)}{w 
+            \\text{FNR}(c) + (1 - w)(1 - \\text{FPR}(c))}$ </span>
          </p>"
     ),
+    
+    HTML("<p> $\\text{PPV}(c) = $ Positive Predictive Value
+            <span style = 'font-size:20px;'> $ = \\frac{w \\text{TPR}(c)}{w 
+            \\text{TPR}(c) + (1 - w){FPR}(c)}$
+         </p>"
+    ),
+    
+    HTML("<p> <span style = 'font-size:16px;'>
+         $c_{opt} = $ optimal cutoff $ = $ arg inf Error$(c)$ 
+         </span> </p>"
+    ),
+    
     
   ),
   br(style = "line-height:40;")

@@ -2,54 +2,59 @@
 # DESCRIPTION                                                  #
 ################################################################
 
-nonpara_bayes_setup_variables = fluidPage(
-  titlePanel("Setup Variables"),
+nonpara_bayes_setup_variables_1 = div(
+  titlePanel("Setup Values"),
   
-  variables3.4_control_panel = fluidPage( # CHANGE THIS
-    
-    fluidRow(
-      column(3, 
-             numericInput(inputId = "nonpara_bayes_mu0", # CHANGE THIS
-                          tags$p('mu0', style = "font-size: 90%;"),value = 45)),
-      column(3,
-             numericInput(inputId = "nonpara_bayes_tau0", # CHANGE THIS
-                          tags$p('tau0', style = "font-size: 90%;"),value = 0.5)),
-      column(3, 
-             numericInput(inputId = "nonpara_bayes_lambda1", # CHANGE THIS
-                          tags$p('lambda1', style = "font-size: 90%;"),value = 8.545)),
-      column(3, 
-             numericInput(inputId = "nonpara_bayes_lambda2", # CHANGE THIS
-                          tags$p('lambda2', style = "font-size: 90%;"),value = 1080.596)),
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+      selectInput(inputId = "nonpara_bayes_DP_method", 
+                  label = "Manually input a_D or input epsilon to generate a_D?",
+                  choices = c("Choose a_D" = "aD", 
+                              "Choose epsilon" = "epsilon"),
+                  selected = "epsilon"
+      ),
     ),
-    
-    fluidRow(
-      column(3, 
-             numericInput(inputId = "nonpara_bayes_a1", # CHANGE THIS
-                          tags$p('a1', style = "font-size: 90%;"),value = 9.81)),
-      column(3,
-             numericInput(inputId = "nonpara_bayes_a2", # CHANGE THIS
-                          tags$p('a2', style = "font-size: 90%;"),value = 109.66)),
-      column(3, 
-             numericInput(inputId = "nonpara_bayes_a", # CHANGE THIS
-                          tags$p('a', style = "font-size: 90%;"),value = 9.8)),
-      column(3, 
-             numericInput(inputId = "nonpara_bayes_L", # CHANGE THIS
-                          tags$p('L', style = "font-size: 90%;"),value = 200)),
+    mainPanel(
+      fluidPage( # CHANGE THIS
+        
+        fluidRow(
+          column(3, h4("Hyperparameters of $H_{D}$:")),
+          column(3, numericInput(inputId = "nonpara_bayes_muD",
+                                 label = 'muD',
+                                 value = 45)),
+          column(3, numericInput(inputId = "nonpara_bayes_sigma_squared", 
+                                 label = 'sigma squared',
+                                 value = 0.5)),
+        ),
+        
+        fluidRow(
+          column(3, h4("Hyperparameters of DP:")),
+          conditionalPanel(
+            condition = "input.nonpara_bayes_DP_method == 'aD'",
+            column(3, numericInput(inputId = "nonpara_bayes_aD", 
+                                   label = "aD",
+                                   value = 9),),
+          ),
+          conditionalPanel(
+            condition = "input.nonpara_bayes_DP_method == 'epsilon'",
+            column(3, numericInput(inputId = "nonpara_bayes_aD", 
+                                   label = "epsilon",
+                                   value = 0.25),),
+          ),
+        ),
+        
+        fluidRow(
+          column(3, h4("Simulation Sizes:")),
+          column(3, numericInput(inputId = "nonpara_bayes_nMonteprior", # CHANGE THIS
+                                 label = "Simulation Sample Size",
+                                 value = 200000)),
+          column(3, numericInput(inputId = "nonpara_bayes_nstar", # CHANGE THIS
+                    label = "nstar",
+                    value = 200)),
+        ),
+      ),
     ),
-    
-    fluidRow(
-      column(3, 
-             numericInput(inputId = "nonpara_bayes_nMonteprior", # CHANGE THIS
-                          tags$p('nMonteprior', style = "font-size: 90%;"),value = 200000)),
-      
-      column(3,
-             numericInput(inputId = "nonpara_bayes_nMontepost", # CHANGE THIS
-                          tags$p('nMontepost', style = "font-size: 90%;"),value = 200000)),
-      column(3, 
-             numericInput(inputId = "nonpara_bayes_nstar", # CHANGE THIS
-                          tags$p('nstar', style = "font-size: 90%;"),value = 200)),
-    ),
-  )
+  ),
 )
 
 
@@ -291,7 +296,7 @@ page_nonpara_bayes = div(
   titlePanel("Nonparametric Bayes Model"),
   # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
-              tabPanel("Setup Variables", nonpara_bayes_setup_variables),
+              tabPanel("Setup Variables", nonpara_bayes_setup_variables_1),
               #tabPanel("Description", nonpara_bayes_description),
               tabPanel("Inferences for the AUC", nonpara_bayes_hypothesizedAUC),
               tabPanel("Plots for the AUC", nonpara_bayes_plots),

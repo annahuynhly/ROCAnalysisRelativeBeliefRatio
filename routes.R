@@ -7,6 +7,7 @@ source("./pages/common_lists.R")
 
 # Other Pages
 source("./pages/home_page.R")
+source("./pages/definition_page.R")
 source("./pages/contact_page.R")
 
 # Section 3.1 - The Prevalence

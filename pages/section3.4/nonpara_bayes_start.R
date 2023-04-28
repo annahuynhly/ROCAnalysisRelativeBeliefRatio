@@ -7,7 +7,7 @@ page_nonpara_bayes_start = fluidPage(
                    label = "Please select a seed for the computations.",
                    value = 1),
       selectInput(inputId = "nonpara_bayes_case1", 
-                  label = "Please select whether the prevalence is known or unknown.",
+                  label = "Please select whether the prevalence $\\omega$ is known or unknown.",
                   choices = c("The prevalence w is known" = 1, 
                               "The prevalence w is unknown" = 2),
                   selected = 1
@@ -17,19 +17,19 @@ page_nonpara_bayes_start = fluidPage(
         numericInput(inputId = "nonpara_bayes_prevalence_w",
                      label = 'Please Input the Prevalence w.',
                      value = 0.65), #
-        p("The prevalence has been determined. Please proceed to the computations. 
-        The Prevalence section may be skipped, as it is used to estimate the prevalence.")
+        p("The prevalence $\\omega$ has been determined. Please proceed to the computations. 
+        The Prevalence section may be skipped, as it is used to estimate the prevalence $\\omega$.")
       ),
 
       conditionalPanel(
         condition = "input.nonpara_bayes_case1 == 2",
-        p("Please select the beta prior parameters (alpha1w and alpha2w), and then the sampling regime."),
-                   
+        p("Please select the beta prior parameters ($\\alpha_{1\\omega}$ and $\\alpha_{2\\omega}$), 
+          and then the sampling regime."),
         numericInput(inputId = "nonpara_bayes_prevalence_alpha1w", 
-                     label = 'alpha1w',
+                     label = '$\\alpha_{1\\omega}$',
                      value = 391.72),
         numericInput(inputId = "nonpara_bayes_prevalence_alpha2w", 
-                     label = 'alpha2w',
+                     label = '$\\alpha_{2\\omega}$',
                      value = 211.39),
         selectInput(inputId = "nonpara_bayes_case2", 
                     label = "Please select the sampling regime.",
@@ -41,12 +41,12 @@ page_nonpara_bayes_start = fluidPage(
         conditionalPanel(
           condition ="input.nonpara_bayes_case2 == 'A'",
           p("The sampling regime has been chosen. You may observe The Prevalence section to see the prior. 
-          Since we do not have data on the posterior, we cannot make more estimates for the prevalence w.")
+          Since we do not have data on the posterior, we cannot make more estimates for the prevalence $\\omega$.")
         ),
         conditionalPanel(
           condition ="input.nonpara_bayes_case2 == 'B'",
           p("The sampling regime has been chosen. You may observe The Prevalence section to see the estimation 
-          for the prevalence.")
+          for the prevalence $\\omega$.")
         )
       ),
     ),

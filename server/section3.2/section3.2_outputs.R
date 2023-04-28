@@ -19,7 +19,7 @@ output$finite_val_hypoAUC_value = renderPrint({
     list2 = append(list1, sect3.2_hypo_test())
     list2 = append(list2, list3)
   }
-  if(sect3.2_resample() == TRUE){ # this is if resampling is ocuring 
+  if(sect3.2_resample() == FALSE){ # this is if resampling is occuring 
     temp_df = data.frame(input$finite_val_nMonteCarlo - as.numeric(sect3.2_AUC_prior()$n_rejected), 
                          input$finite_val_nMonteCarlo - as.numeric(sect3.2_AUC_post()$n_rejected))
     colnames(temp_df) = c("Accepted Samples for the Prior", " | Accepted Samples for the Posterior")
