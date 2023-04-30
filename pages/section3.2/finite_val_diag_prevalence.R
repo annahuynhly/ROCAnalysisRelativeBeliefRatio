@@ -391,7 +391,7 @@ page_finite_val_prevalence = div(
     conditionalPanel(
       condition = "input.finite_val_diag_case2 == 'B'",
       tabsetPanel(type = "tabs",
-                  tabPanel("Description", finite_val_diag_prevalence_description), 
+                  #tabPanel("Description", finite_val_diag_prevalence_description), 
                   tabPanel("Relative Belief Estimate of w", finite_val_diag_prevalence_plausible_region),
                   tabPanel("Plots", finite_val_diag_prevalence_plots),
                   #tabPanel("Strength of w0", finite_val_diag_prevalence_Strength_of_w0),

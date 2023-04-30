@@ -200,7 +200,13 @@ nonpara_bayes_prevalence_plot_alt = div(
       selectInput(inputId = "nonpara_bayes_prevalence_colour_1", 
                   label = 'Select a colour', 
                   choices = basic_colour_list, 
-                  selected = 'red'),
+                  selected = 'red'
+      ),
+      selectInput(inputId = "nonpara_bayes_prevalence_lty_1", 
+                  label = 'Select a line type', 
+                  choices = default_lty_list, 
+                  selected = 2
+      ),
       sliderInput(inputId = "nonpara_bayes_prevalence_col_transparency_1", 
                   label = "Scale for colour transparency",
                   min = 0, max = 1, value = 0.1
@@ -386,7 +392,7 @@ page_nonpara_bayes_prevalence = div(
     conditionalPanel(
       condition = "input.nonpara_bayes_case2 == 'B'",
       tabsetPanel(type = "tabs",
-                  tabPanel("Description", nonpara_bayes_prevalence_description), 
+                  #tabPanel("Description", nonpara_bayes_prevalence_description), 
                   tabPanel("Relative Belief Estimate of w", nonpara_bayes_prevalence_plausible_region),
                   tabPanel("Plots", nonpara_bayes_prevalence_plots),
                   #tabPanel("Strength of w0", nonpara_bayes_prevalence_Strength_of_w0),

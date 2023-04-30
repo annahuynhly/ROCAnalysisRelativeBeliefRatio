@@ -201,6 +201,11 @@ binormal_diag_prevalence_plot_alt = div(
                   choices = basic_colour_list, 
                  selected = 'red'
       ),
+      selectInput(inputId = "binormal_diag_prevalence_lty_1", 
+                  label = 'Select a line type', 
+                  choices = default_lty_list, 
+                  selected = 2
+      ),
       sliderInput(inputId = "binormal_diag_prevalence_col_transparency_1", 
                   label = "Scale for colour transparency",
                   min = 0, max = 1, value = 0.1
@@ -388,7 +393,7 @@ page_binormal_diag_prevalence = div(
     conditionalPanel(
       condition = "input.binormal_diag_case2 == 'B'",
       tabsetPanel(type = "tabs",
-                  tabPanel("Description", binormal_diag_prevalence_description), 
+                  #tabPanel("Description", binormal_diag_prevalence_description), 
                   tabPanel("Relative Belief Estimate of w", binormal_diag_prevalence_plausible_region),
                   tabPanel("Plots", binormal_diag_prevalence_plots),
                   #tabPanel("Strength of w0", binormal_diag_prevalence_Strength_of_w0),

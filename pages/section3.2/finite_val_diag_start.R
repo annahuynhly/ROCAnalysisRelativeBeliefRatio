@@ -4,12 +4,14 @@ page_finite_val_start = fluidPage(
   sidebarLayout(
     sidebarPanel(width = 4, 
                  
-      #added this for latex support
+      #added this for latex support - probs not needed for the future
       tags$head(
         tags$link(rel = "stylesheet", 
-                  href = "https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css", integrity="sha384-9tPv11A+glH/on/wEu99NVwDPwkMQESOocs/ZGXPoIiLE8MU/qkqUcZ3zzL+6DuH", 
+                  href = "https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css", 
+                  integrity="sha384-9tPv11A+glH/on/wEu99NVwDPwkMQESOocs/ZGXPoIiLE8MU/qkqUcZ3zzL+6DuH", 
                   crossorigin="anonymous"),
-        tags$script(src="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.js", integrity="sha384-U8Vrjwb8fuHMt6ewaCy8uqeUXv4oitYACKdB0VziCerzt011iQ/0TqlSlv8MReCm", 
+        tags$script(src="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.js", 
+                    integrity="sha384-U8Vrjwb8fuHMt6ewaCy8uqeUXv4oitYACKdB0VziCerzt011iQ/0TqlSlv8MReCm", 
                   crossorigin="anonymous")
       ),
       
@@ -35,12 +37,6 @@ page_finite_val_start = fluidPage(
       }")
         ),
       ),
-      #selectInput(inputId = "finite_val_diag_case1", 
-      #            label = "Please select whether the prevalence $\\omega$ is known or unknown.",
-      #            choices = c("The prevalence is known" = 1, 
-      #                        "The prevalence w is unknown" = 2),
-      #            selected = 1
-      #),
       conditionalPanel(
         condition = "input.finite_val_diag_case1 == 1",
         numericInput(inputId = "finite_val_diag_prevalence_w",
@@ -61,40 +57,54 @@ page_finite_val_start = fluidPage(
                      label = '$\\alpha_{2\\omega}$',
                      value = 211.39),
         
-#        selectizeInput(
-#          inputId = "finite_val_diag_case2", 
-#          label = "Please select the sampling regime.",
-#          choices = c("\\text{A sample of } n_{D} \\text{ from diseased and } n_{ND}
-#                      \\text{ from non diseased.}" = "A", 
-#                      "\\text{A sample of } n \\text{ from population, observe } n_{D} 
-#                      \\text{ diseased and } n_{ND} \\text{ nondiseased.}" = "B"),
-#          options = list(render = I("
-#      {
-#        item: function(item, escape) { 
-#                var html = katex.renderToString(item.label);
-#                return '<div>' + html + '</div>'; 
-#              },
-#        option: function(item, escape) { 
-#                  var html = katex.renderToString(item.label);
-#                  return '<div>' + html + '</div>'; 
-#                }
-#      }")
-#          ),
-#        ),
-        selectInput(inputId = "finite_val_diag_case2", 
-                    label = "Please select the sampling regime.",
-                    choices = c("A sample of n_D from diseased and n_ND from non diseased." = "A", 
-                    "A sample of n from population, observe n_D diseased and n_ND nondiseased." = "B"),
-                    selected = "case_a_opt"),
+        selectizeInput(
+          inputId = "finite_val_diag_case2", 
+          label = "Please select the sampling regime.", 
+          choices = NULL,
+          options = list(
+            options = list(
+              list(
+                value = "A",
+                head = "A sample of ",
+                latex = "n_{D}",
+                tail = " from diseased and ",
+                latex2 = "n_{ND}",
+                end = " from non-diseased."
+              ),
+              list(
+                value = "B",
+                head = "A sample of n from the population, observe ",
+                latex = "n_{ND}",
+                tail = " diseased and ",
+                latex2 = "n_{ND}",
+                end = " from non-diseased."
+              )
+            ),
+            valueField = "value",
+            render = I("{
+        item: function(item, escape) { 
+                var html = katex.renderToString(item.latex);
+                var html2 = katex.renderToString(item.latex2);
+                return '<div>' + item.head + html + item.tail + html2 + item.end + '</div>'; 
+              },
+        option: function(item, escape) { 
+                  var html = katex.renderToString(item.latex);
+                  var html2 = katex.renderToString(item.latex2);
+                  return '<div>' + item.head + html + item.tail + html2 + item.end + '</div>';; 
+                }
+      }")
+          )
+        ), # end
+        
         conditionalPanel(
           condition ="input.finite_val_diag_case2 == 'A'",
           p("The sampling regime has been chosen. You may observe The Prevalence section to see the prior. 
-            Since we do not have data on the posterior, we cannot make more estimates for the prevalence $\\omega$.")
+          Since we do not have data on the posterior, we cannot make more estimates for the prevalence $\\omega$.")
         ),
         conditionalPanel(
           condition ="input.finite_val_diag_case2 == 'B'",
           p("The sampling regime has been chosen. You may observe The Prevalence section to see the estimation 
-            for the prevalence $\\omega$.")
+          for the prevalence $\\omega$.")
         )
       ),
     ),

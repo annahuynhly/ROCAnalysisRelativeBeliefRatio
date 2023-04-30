@@ -7,16 +7,30 @@ page_binormal_diag_start = fluidPage(
                    label = "Please select a seed for the computations.",
                    value = 1
       ),
-      selectInput(inputId = "binormal_diag_case1", 
-                  label = "Please select whether the prevalence $\\omega$ is known or unknown.",
-                  choices = c("The prevalence w is known" = 1, 
-                              "The prevalence w is unknown" = 2),
-                  selected = 1
+
+      selectizeInput(
+        inputId = "binormal_diag_case1", 
+        label = "Please select whether the prevalence $\\omega$ is known or unknown.",
+        choices = c("\\text{The prevalence is known}" = 1, 
+                    "\\text{The prevalence } \\omega \\text{ is unknown}" = 2),
+        options = list(render = I("
+      {
+        item: function(item, escape) { 
+                var html = katex.renderToString(item.label);
+                return '<div>' + html + '</div>'; 
+              },
+        option: function(item, escape) { 
+                  var html = katex.renderToString(item.label);
+                  return '<div>' + html + '</div>'; 
+                }
+      }")
+        ),
       ),
+      
       conditionalPanel(
         condition = "input.binormal_diag_case1 == 1",
         numericInput(inputId = "binormal_diag_prevalence_w",
-                     label = 'Please Input the Prevalence $\\omega$.',
+                     label = 'Please Input the prevalence $\\omega$.',
                      value = 0.40),
         p("The prevalence $\\omega$ has been determined. Please proceed to the computations. 
         The Prevalence section may be skipped, as it is used to estimate the prevalence $\\omega$.")
@@ -32,21 +46,55 @@ page_binormal_diag_start = fluidPage(
         numericInput(inputId = "binormal_diag_prevalence_alpha2w", 
                      label = '$\\alpha_{2\\omega}$',
                      value = 22.53835),
-        selectInput(inputId = "binormal_diag_case2", 
-                    label = "Please select the sampling regime.",
-                    choices = c("A sample of n_D from diseased and n_ND from non diseased." = "A", 
-                                "A sample of n from population, observe n_D diseased and n_ND nondiseased." = "B"),
-                    selected = "case_a_opt"
-        ),
+        
+        selectizeInput(
+          inputId = "binormal_diag_case2", 
+          label = "Please select the sampling regime.", 
+          choices = NULL,
+          options = list(
+            options = list(
+              list(
+                value = "A",
+                head = "A sample of ",
+                latex = "n_{D}",
+                tail = " from diseased and ",
+                latex2 = "n_{ND}",
+                end = " from non-diseased."
+              ),
+              list(
+                value = "B",
+                head = "A sample of n from the population, observe ",
+                latex = "n_{ND}",
+                tail = " diseased and ",
+                latex2 = "n_{ND}",
+                end = " from non-diseased."
+              )
+            ),
+            valueField = "value",
+            render = I("{
+        item: function(item, escape) { 
+                var html = katex.renderToString(item.latex);
+                var html2 = katex.renderToString(item.latex2);
+                return '<div>' + item.head + html + item.tail + html2 + item.end + '</div>'; 
+              },
+        option: function(item, escape) { 
+                  var html = katex.renderToString(item.latex);
+                  var html2 = katex.renderToString(item.latex2);
+                  return '<div>' + item.head + html + item.tail + html2 + item.end + '</div>';; 
+                }
+      }")
+          )
+        ), # end
+        
         conditionalPanel(
           condition ="input.binormal_diag_case2 == 'A'",
-            p("The sampling regime has been chosen. You may observe The Prevalence section to see the prior. 
-            Since we do not have data on the posterior, we cannot make more estimates for the prevalence $\\omega$.")
+          p("The sampling regime has been chosen. You may observe The Prevalence section to see the prior. 
+          Since we do not have data on the posterior, we cannot make more estimates for the prevalence $\\omega$.")
         ),
         conditionalPanel(
           condition ="input.binormal_diag_case2 == 'B'",
-            p("The sampling regime has been chosen. You may observe The Prevalence section to see 
-            the estimation for the prevalence $\\omega$.")
+          p("The sampling regime has been chosen. You may observe The Prevalence section to see 
+          the estimation for the prevalence $\\omega$.")
         )
       ),
     ),

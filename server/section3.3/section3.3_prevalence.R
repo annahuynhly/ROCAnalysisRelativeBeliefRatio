@@ -213,6 +213,7 @@ output$binormal_diag_prevalence_post_graph_alt = renderPlot({
     generate_prior_graph(prior = sect3.3_prevalence_prior(), 
                          grid = sect3.3_prevalence_grid(),
                          colour_choice = input$binormal_diag_prevalence_colour_1,
+                         lty_type = as.numeric(input$binormal_diag_prevalence_lty_1),
                          transparency = input$binormal_diag_prevalence_col_transparency_1)
   } else if (input$binormal_diag_prevalence_colour_1 == 'manual'){
     generate_prior_graph(prior = sect3.3_prevalence_prior(), 
