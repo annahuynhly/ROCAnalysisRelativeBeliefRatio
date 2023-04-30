@@ -48,7 +48,7 @@ ui = navbarPage(
   tabPanel("Home", home_page),
   tabPanel("Definitions", def_page),
   navbarMenu("Finite Valued Diagnostic",
-    tabPanel("Definitions", page_sect3.2_def),
+    #tabPanel("Definitions", page_sect3.2_def),
     tabPanel("Getting Started", page_finite_val_start),
     tabPanel("The Prevalence", page_finite_val_prevalence),
     tabPanel("Inferences for the AUC", page_finite_val_inference1),
