@@ -10,6 +10,13 @@ output$finite_val_hypoAUC_value = renderPrint({
                  "Credible region for the AUC" = sect3.2_cr()$credible_region,
                  "Area Under the Line Plot (next section)" = sect3.2_lineplot_area())
     list2 = append(list1, list3)
+    if(sect3.2_resample() == FALSE){ # this is if resampling is occuring 
+      temp_df = data.frame(input$finite_val_nMonteCarlo - as.numeric(sect3.2_AUC_prior()$n_rejected), 
+                           input$finite_val_nMonteCarlo - as.numeric(sect3.2_AUC_post()$n_rejected))
+      colnames(temp_df) = c("Accepted Samples for the Prior", " | Accepted Samples for the Posterior")
+      temp_list = list("Number of Samples that were accepted" = temp_df)
+      list2 = append(list2, temp_list)
+    }
   } else {
     list1 = list("Actual Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(closed_bracket_grid(input$finite_val_delta), sect3.2_AUC_RBR()$AUC_RBR))
     list3 = list("Plausible Region for the AUC" = sect3.2_pr()$plausible_region,
@@ -18,13 +25,6 @@ output$finite_val_hypoAUC_value = renderPrint({
                  "Area Under the Line Plot (next section)" = sect3.2_lineplot_area())
     list2 = append(list1, sect3.2_hypo_test())
     list2 = append(list2, list3)
-  }
-  if(sect3.2_resample() == FALSE){ # this is if resampling is occuring 
-    temp_df = data.frame(input$finite_val_nMonteCarlo - as.numeric(sect3.2_AUC_prior()$n_rejected), 
-                         input$finite_val_nMonteCarlo - as.numeric(sect3.2_AUC_post()$n_rejected))
-    colnames(temp_df) = c("Accepted Samples for the Prior", " | Accepted Samples for the Posterior")
-    temp_list = list("Number of Samples that were accepted" = temp_df)
-    list2 = append(list2, temp_list)
   }
   list2
 })

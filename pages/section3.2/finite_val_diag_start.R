@@ -93,7 +93,8 @@ page_finite_val_start = fluidPage(
                   return '<div>' + item.head + html + item.tail + html2 + item.end + '</div>';; 
                 }
       }")
-          )
+          ),
+          selected = "A"
         ), # end
         
         conditionalPanel(

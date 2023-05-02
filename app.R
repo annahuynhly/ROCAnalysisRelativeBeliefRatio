@@ -2,14 +2,13 @@
 # POTENTIAL OTHER FEATURES                                     #
 ################################################################
 # Add a github link to the repository
-# Align the headers -> LOW PRIORITY
 # Align the footer margins for the rest of the sections. -> LOW PRIORITY
-# Let people change the line type of the graphs -> LOW PRIORITY
+# Make sure the seed is consistent
 # Make the code look nicer lmao
-# let people modify the graph for test of w = w0 (prevalence section)
-# section 3.3 -> need to add y=1 line for the plots for the optimal cutoff
-# make outputs look nicer ???
-
+# make outputs look nicer ??? -> probably not, looks decent enough anyways...
+# make sure there is seed support for the inferences for the optimal cutoff
+# maybe add more resources for understanding?
+# add more colour themes and make the code more efficient for selecting a colour
 
 # ISSUES:
 
@@ -123,6 +122,9 @@ server = function(input, output, session) {
   observe(addHoverAnim(session, 'diseased_group', 'pulse'))
   observe(addHoverAnim(session, 'diseased_group2', 'pulse'))
   observe(addHoverAnim(session, 'diseased_group3', 'pulse'))
+  observe(addHoverAnim(session, 'groups', 'pulse'))
+  observe(addHoverAnim(session, 'chart', 'pulse'))
+  observe(addHoverAnim(session, 'ROC_AUC_graph', 'pulse'))
 }
 
 shinyApp(ui, server)

@@ -31,6 +31,7 @@ sect3.2_AUC_prior = reactive({
 })
 
 sect3.2_AUC_post = reactive({
+  set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_post(condition = input$finite_val_condition,
                          resample = sect3.2_resample(),
@@ -106,6 +107,7 @@ sect3.2_cr = reactive({
 ######################################
 
 sect3.2_copt_prior = reactive({
+  set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
     AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
                               nMonteCarlo = input$finite_val_nMonteCarlo, 
@@ -136,6 +138,7 @@ sect3.2_copt_prior = reactive({
 })
 
 sect3.2_copt_post = reactive({
+  set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
     AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = input$finite_val_nMonteCarlo, 

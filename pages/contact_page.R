@@ -25,8 +25,9 @@ contact_page = fluidPage(
   ),
   p(""),
   p('This website is maintained by Anna Ly. If you find any bugs on this website, please contact 
-    [firstname]huynh.[lastname]@mail.utoronto.ca. The weird formatting of the email is to avoid spam.'),
+    [firstname]huynh.[lastname]@mail.utoronto.ca.'),
   p(""),
+  p("The weird formatting of the email is to avoid spam."),
   
   tags$style("#project-grid {
                       display: grid;
@@ -38,8 +39,9 @@ contact_page = fluidPage(
       div(h3('Anna Ly'),
           h4('Research Assistant @ University of Toronto'),
           p('Main programmer & maintainer of this website. An undergraduate statistics & 
-            math student at the University of Toronto and an experienced teaching assistant for 
-            the Department of Mathematical & Computational Sciences at the Mississauga campus.', 
+            math student at the University of', style = "color:#61646b"),
+          p("Toronto and an experienced teaching assistant for the Department of Mathematical 
+          & Computational Sciences at the Mississauga campus.", 
             style = "color:#61646b"),
           #tags$script(src = "https://kit.fontawesome.com/5e940c3ade.js"),
           tags$div(
@@ -54,8 +56,9 @@ contact_page = fluidPage(
       div(id = "MikeImg", img(src = "mike_evans.PNG", style = 'border-radius: 50%', width = '120px')),
       div(h3('Michael Evans'),
           h4('Department Chair of Statistical Sciences & Professor @ University of Toronto'),
-          p('The main author of the paper and assisted with designing the user layout.', 
-            style = "color:#61646b"),
+          p('The main author of the paper. Supplied most of the R codes for graph generation & computations.
+            Assisted with', style = "color:#61646b"),
+          p('designing the user layout of the website.', style = "color:#61646b"),
           tags$div(
             tags$i(class = "fa-solid fa-user"),
             tags$a(href="https://utstat.toronto.edu/mikevans/", "Personal Website"), " | ",
@@ -67,8 +70,8 @@ contact_page = fluidPage(
       div(id = "LuaiImg", img(src = "luai_labadi.PNG", style = 'border-radius: 50%', width = '120px')),
       div(h3('Luai Al Labadi'),
           h4('Associate Chair & Assistant Professor @ University of Toronto'),
-          p('One of the authors of the paper and assisted with some codes pertaining to 
-            the dirichlet process.', 
+          p('One of the authors of the paper and assisted with codes pertaining to 
+            the dirichlet process (the nonparametric bayes model.)', 
             style = "color:#61646b"),
           tags$div(
             tags$i(class = "fa-solid fa-building-columns"),
@@ -81,8 +84,9 @@ contact_page = fluidPage(
       div(id = "QiaoyuImg", img(src = "generic_photo.png", style = 'border-radius: 50%', width = '120px')),
       div(h3('Qiaoyu Liang'),
           h4('PhD Student @ University of Toronto'),
-          p('One of the authors of the paper. (There is no image of him online, so the placeholder 
-          image was drawn by Anna Ly.)', style = "color:#61646b"),
+          p('One of the authors of the paper and assisted Mike Evans with R-codes. 
+          (There is no image of him online, so the placeholder', style = "color:#61646b"),
+          p('image was drawn by Anna Ly.)', style = "color:#61646b"),
           tags$div(
             tags$i(class = "fa-solid fa-building-columns"),
             tags$a(href="https://www.statistics.utoronto.ca/people/directories/graduate-students/qiaoyu-liang", 

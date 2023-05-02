@@ -12,12 +12,6 @@ binormal_diag_setup_variables_1 = div(
                             "Assume variances are unequal" = "unequal_var"),
                   selected = "equal_var"
       ),
-      #conditionalPanel(
-      #  condition = "input.binormal_case == 'unequal_var'",
-      #  numericInput(inputId = "binormal_diag_lambda", 
-      #               label = 'df for transforming c values to {0,1] using Student(lambda) cdf',
-      #               value = 1),
-      #),
     ),
     mainPanel(
       fluidPage(
@@ -184,7 +178,7 @@ binormal_diag_setup_variables_2 = div(
       ),
     )
   ),
-  br(style = "line-height:2;"),
+  #br(style = "line-height:2;"),
 )
 
 ################################################################
