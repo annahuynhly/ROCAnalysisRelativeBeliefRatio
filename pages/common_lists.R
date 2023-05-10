@@ -38,3 +38,15 @@ default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
                          "11" = 11, "12" = 12, "13" = 13, "14" = 14, "15" = 15,
                          "16" = 16, "17" = 17, "18" = 18, "19" = 19, "20" = 20,
                          "21" = 21, "22" = 22, "23" = 23, "24" = 24, "25" = 25)
+
+# The actual colour list
+default1 = c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+default2 = c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+dull = c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+lovelymei = c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+# ones that are not added yet
+jackin_execute = c("#0092d6", "#212c57", "#f85210", "#ffc710", "#0092d6", "#da1a1a")
+
+
+
+
