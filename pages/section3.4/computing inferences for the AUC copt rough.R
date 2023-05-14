@@ -14,45 +14,69 @@ a2=22.53835
 #concentration parameter for the Dirichlet process
 a=20
 
-# L= number of subintervals of [0,1] for estimating densities of continuous quantities 
-L<-200
-A=rep(0,L+1)
-for (i in 1:(L+1)) {
-  A[i]=(i-1)/L
-}
-grid=rep(0,L)
-for (i in 1:L) {
-  grid[i]=(i-1/2)/L
-}
 
-#----------------------------------------------------------------
-#2. get the prior distribution of AUC and c_opt
+# HELPER FUNCTIONS #############################################
 
-#set.seed(45673)
-
-#set Monte Carlo ssample size for the prior
-nMonteprior= 10000 #200000
-# set nstar for approximating random measure
-nstar=100
-
-# HELPER FUNCTIONS ~~~~~~~~~~~~~~~
-# cdf function
-cdf=function(x,y,z) {
-  n=length(x)
-  dum=0*c(1:n)
-  for (i in 1:n) {
-    dum[i]=sum(z[which(y <= x[i])])
+cdf = function(x,y,z) {
+  n = length(x)
+  dum = 0*c(1:n)
+  for(i in 1:n) {
+    dum[i] = sum(z[which(y <= x[i])])
   }
   return(dum)
 }
 
+create_gridcopt = function(mincopt, maxcopt, A, grid){
+  diffcopt = maxcopt - mincopt
+  Acopt = mincopt + diffcopt * A
+  gridcopt = mincopt + diffcopt*grid
+  newlist = list("diffcopt" = diffcopt, "Acopt" = Acopt, "gridcopt" = gridcopt)
+}
+
+# algorithm for generating from the xDdata discrete empirical distibution
+
+gen_emp = function(x, n_count, x_data){
+  # this is a general function to save lines
+  x_unique = sort(unique(x_data))
+  arg = n_count*x
+  ihold = n_count
+  for (i in 1:n_count){
+    if (((i-1) < arg ) & (arg <= i)){ihold = i} 
+  }
+  return(x_data[ihold])
+}
+
+# note: this function exists in the other file.
+nonpara_bayes_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, 
+                                                nD, nND, sD2, sND2, xD, xND){
+  # the values of the hyperparameters for the posterior based on the prior and the data 
+  lambda1Dpost = lambda1 + nD/2
+  lambda1NDpost = lambda1 + nND/2
+  tau0D = 1/sqrt(nD + 1/tau0^2)
+  tau0ND = 1/sqrt(nND + 1/tau0^2)
+  lambda2Dpost = lambda2 + sD2/2 + (tau0D**2)*(nD/tau0^2)*(xD - mu0)^2/2
+  lambda2NDpost = lambda2 + sND2/2 + (tau0ND**2)*(nND/tau0^2)*(xND - mu0)^2/2
+  mu0Dpost = (tau0D**2)*(nD*xD + mu0/tau0**2)
+  mu0NDpost = (tau0ND**2)*(nND*xND + mu0/tau0**2)
+  
+  newlist = list("lambda1Dpost" = lambda1Dpost, "lambda1NDpost" = lambda1NDpost,
+                 "tau0D" = tau0D, "tau0ND" = tau0ND, "lambda2Dpost" = lambda2Dpost,
+                 "lambda2NDpost" = lambda2NDpost, "mu0Dpost" = mu0Dpost,
+                 "mu0NDpost" = mu0NDpost)
+}
 
 
 
+nMonteprior = 200000 # MAY NEED TO CHANGE THIS LATER
+nstar = 100 # set nstar for approximating random measure
+
+
+# check to see if it still works
 nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
                                         nMonteprior, nstar, a, delta,
                                         mu0, tau0, lambda1, lambda2){
   A = closed_bracket_grid(delta) # this is technically their grid
+  grid = open_bracket_grid(delta)
   L = (1/delta) # length
   
   #generate mu's and sigma's
@@ -104,12 +128,11 @@ nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   }
   
   # create relevant grid for c_opt
-  mincopt = -10 # do these values..?
-  maxcopt = 10
-  diffcopt = maxcopt-mincopt
-  Acopt = mincopt + diffcopt*A
-  gridcopt = mincopt + diffcopt*grid
-  
+  grids_for_copt = create_gridcopt(mincopt = -10, maxcopt = 10, A, grid)
+  Acopt = grids_for_copt$Acopt
+  gridcopt = grids_for_copt$gridcopt
+  diffcopt = grids_for_copt$diffcopt
+    
   #computing FNR, FPR and Error at grid values
   FNR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
   FPR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
@@ -173,15 +196,17 @@ nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   priorcoptmod = priorcoptmod/AUCchecksumprior
   priorcoptmoddensity = rep(0,L)
   
-  for (i in 1:L){
-    priorcoptmoddensity[i] = priorcoptmod[i]/(Acoptmod[i+1] - Acoptmod[i])}
+  for(i in 1:L){
+    priorcoptmoddensity[i] = priorcoptmod[i]/(Acoptmod[i+1] - Acoptmod[i])
+  }
 
   int=0
-  for (i in 1:L){
+  for(i in 1:L){
     int = int + (priorcoptmoddensity[i])*(Acoptmod[i+1] - Acoptmod[i])
   }
   
-  newlist = list("gridmod" = gridmod, "priorcoptmoddensity" = priorcoptmoddensity,
+  newlist = list("priorcopt" = priorcopt, "priorcoptmod" = priorcoptmod,
+                 "gridmod" = gridmod, "priorcoptmoddensity" = priorcoptmoddensity,
                  "gridcopt" = gridcopt, "priorcoptdensity" = priorcoptdensity)
   return(newlist)
 }
@@ -189,16 +214,14 @@ nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
 w = 0.4
 delta = 0.005
 
+# Running the functions
 test = nonpara_bayes_AUC_prior_copt(w, alpha1w = NA, alpha2w = NA,
                                         nMonteprior, nstar, a, delta,
                                         mu0, tau0, lambda1, lambda2)
 
-plot(test$gridmod, test$priorcoptmoddensity,xlab="coptmod",ylab="prior density",type="l",lty=1)
-plot(test$gridcopt, test$priorcoptdensity,xlab="copt",ylab="prior density",type="l",lty=1)
+#plot(test$gridmod, test$priorcoptmoddensity,xlab="coptmod",ylab="prior density",type="l",lty=1)
+#plot(test$gridcopt, test$priorcoptdensity,xlab="copt",ylab="prior density",type="l",lty=1)
 
-
-#-------------------------------------------------------------------------------------
-#3. the setup for the posterior calculations
 
 # the data 
 xNDdata=c(-0.11315894,  0.03273954, -0.69180664, -0.05459313, -1.22760962, -0.25705819,
@@ -206,97 +229,46 @@ xNDdata=c(-0.11315894,  0.03273954, -0.69180664, -0.05459313, -1.22760962, -0.25
           -0.34052122,  1.03882232, -0.26665494,  0.48965747,  0.80441378, -1.31205550,
           -1.09934759,  1.55522803, -0.19981736,  0.51936199,  0.95234605,  1.56027376,
           -1.42501031)
-xNDdata=sort(xNDdata)
-xNDdata
-# [1] -1.55799712 -1.42501031 -1.31205550 -1.22760962 -1.11229004 -1.09934759
-# [7] -0.69180664 -0.34339482 -0.34052122 -0.26665494 -0.25705819 -0.19981736
-# [13] -0.11315894 -0.05459313  0.03273954  0.11031882  0.37785845  0.48965747
-# [19]  0.51936199  0.76029521  0.80441378  0.95234605  1.03882232  1.55522803
-# [25]  1.56027376
 nND=length(unique(xNDdata))
 xND=mean(xNDdata)
 s2ND=(nND-1)*var(xNDdata)
-nND
-xND
-s2ND
 
-# algorithm for generating from the xNDdata discrete empirical distibution
-genNDemp <- function(x) {
-  arg=nND*x
-  ihold=nND
-  for (i in 1:nND){
-    if (((i-1) < arg ) & (arg <= i)){
-      ihold=i} 
-  }
-  return(xNDdata[ihold])
-}
-
-
-xDdata=c(0.89345810, -0.09544302,  1.52694609,  2.30531596,  0.45009081,  0.97189716,
+xDdata = c(0.89345810, -0.09544302,  1.52694609,  2.30531596,  0.45009081,  0.97189716,
          0.85430995,  2.40987144,  1.44936186, -0.31305846,  0.19524931,  0.75202021,
          1.63136183,  1.31617751, -0.26481975,  1.69469220,  1.67520405,  1.50587628,
          -1.18927465,  1.75076313)
-xDdata=sort(xDdata)
-xDdata
-# [1] -1.18927465 -0.31305846 -0.26481975 -0.09544302  0.19524931  0.45009081
-# [7]  0.75202021  0.85430995  0.89345810  0.97189716  1.31617751  1.44936186
-# [13]  1.50587628  1.52694609  1.63136183  1.67520405  1.69469220  1.75076313
-# [19]  2.30531596  2.40987144
 nD=length(unique(xDdata))
 xD=mean(xDdata)
 s2D=(nD-1)*var(xDdata)
-nD
-xD
-s2D
 
 
-# algorithm for generating from the xDdata discrete empirical distibution
-
-gen_emp = function(x, n_count, x_data){
-  # this is a general function to save lines
-  x_unique = sort(unique(x_data))
-  arg = n_count*x
-  ihold = n_count
-  for (i in 1:n_count){
-    if (((i-1) < arg ) & (arg <= i)){ihold = i} 
-  }
-  return(x_data[ihold])
-}
+#---------------------------------------------------------------------
+#4. The posterior simulation for c_opt 
 
 
 
-# note: this function exists in the other file.
-nonpara_bayes_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, 
-                                                nD, nND, sD2, sND2, xD, xND){
-  # the values of the hyperparameters for the posterior based on the prior and the data 
-  lambda1Dpost = lambda1 + nD/2
-  lambda1NDpost = lambda1 + nND/2
-  tau0D = 1/sqrt(nD + 1/tau0^2)
-  tau0ND = 1/sqrt(nND + 1/tau0^2)
-  lambda2Dpost = lambda2 + sD2/2 + (tau0D**2)*(nD/tau0^2)*(xD - mu0)^2/2
-  lambda2NDpost = lambda2 + sND2/2 + (tau0ND**2)*(nND/tau0^2)*(xND - mu0)^2/2
-  mu0Dpost = (tau0D**2)*(nD*xD + mu0/tau0**2)
-  mu0NDpost = (tau0ND**2)*(nND*xND + mu0/tau0**2)
-  
-  newlist = list("lambda1Dpost" = lambda1Dpost, "lambda1NDpost" = lambda1NDpost,
-                 "tau0D" = tau0D, "tau0ND" = tau0ND, "lambda2Dpost" = lambda2Dpost,
-                 "lambda2NDpost" = lambda2NDpost, "mu0Dpost" = mu0Dpost,
-                 "mu0NDpost" = mu0NDpost)
-}
-
+nMontepost =  200000
+nstar = 100
 
 nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
                                        nND = NA, nD = NA, version,
-                                       nMonteprior, nstar, a, a1, a2, delta,
+                                       nMontepost, nstar, a, a1, a2, delta,
                                        mu0, tau0, lambda1, lambda2,
                                        sD2 = NA, sND2 = NA, xD = NA, xND = NA,
                                        xDdata, xNDdata){
   L = 1/delta
-  A = closed_bracket_grid(delta)# this is technically their grid
+  A = closed_bracket_grid(delta) # this is technically their grid
+  grid = open_bracket_grid(delta)
+  grids_for_copt = create_gridcopt(mincopt = -10, maxcopt = 10, A, grid)
+  Acopt = grids_for_copt$Acopt
+  gridcopt = grids_for_copt$gridcopt
+  diffcopt = grids_for_copt$diffcopt
   
-  if(is.na(SD2) == TRUE || is.na(SND2) == TRUE || is.na(xD) == TRUE || is.na(xND) == TRUE){
-    s2D=(nD-1)*var(xDdata)
-    s2D=(nND-1)*var(xNDdata)
+  # The user can either put in actual numbers or put in the actual data 
+  # - need to check that the same is for the other function
+  if(is.na(sD2) == TRUE || is.na(sND2) == TRUE || is.na(xD) == TRUE || is.na(xND) == TRUE){
+    sD2 = (nD - 1)*var(xDdata)
+    sND2 = (nND - 1)*var(xNDdata)
     xD = mean(xDdata)
     xND = mean(xNDdata)
   }
@@ -305,20 +277,19 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
                                             nD, nND, sD2, sND2, xD, xND)
   a1post = a1 + nD
   a2post = a2 + nND
-  
   # concentration parameters and mixture probabilities for the posterior Dirichlet processes
   aD = a + nD
   pD = a/aD
   aND = a + nND
   pND = a/aND
-  
   #generate the mu's and sigma's
+  
   sigmaDpost = sqrt(1/rgamma(nMontepost, hy$lambda1Dpost, hy$lambda2Dpost))
   sigmaNDpost = sqrt(1/rgamma(nMontepost, hy$lambda1NDpost, hy$lambda2NDpost))
   muDpost = hy$mu0Dpost + hy$tau0D*sigmaDpost*rnorm(nMontepost, 0, 1)
   muNDpost = hy$mu0NDpost + hy$tau0ND*sigmaNDpost*rnorm(nMontepost, 0, 1)
-  wpost = rep(0, nMonteprior) # generate value of w
-  for(i in 1:length(pre_w)){
+  wpost = rep(0, nMontepost) # generate value of w
+  for(i in 1:length(wpost)){
     wpost[i] = generate_w(w, alpha1w, alpha2w, nD, nND, version = version) 
   }
   
@@ -402,7 +373,10 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
     }
     copt[i] = gridcopt[hold[which.min(abs(hold - mid))]]
   }
-  coptmod = .5 + atan(copt)/pi
+  
+  coptmod = .5 + atan(copt)/pi # grid for coptmod
+  Acoptmod = .5+atan(Acopt)/pi
+  gridmod = .5+atan(gridcopt)/pi
   
   #estimate the posterior density of c_opt and coptmod
   AUCchecksumpost = 0
@@ -427,38 +401,37 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   for (i in 1:L){
     postcoptmoddensity[i] = postcoptmod[i]/(Acoptmod[i + 1] - Acoptmod[i])
   }
+  
+  newlist = list("gridcopt" = gridcopt, "gridmod" = gridmod,
+                 "postcopt" = postcopt, "postcoptdensity" = postcoptdensity, 
+                 "postcoptmod" = postcoptmod, "postcoptmoddensity" = postcoptmoddensity,
+                 "FNRpost" = FNRpost, "FPRpost" = FPRpost, 
+                 "Errorpost" = Errorpost, "FDRpost" = FDRpost, 
+                 "FNDRpost" = FNDRpost)
+  return(newlist)
 }
 
 
 test3 = nonpara_bayes_AUC_post_copt(w = 0.4, alpha1w = NA, alpha2w = NA,
-                                    nND = NA, nD = NA, version,
-                                    nMonteprior, nstar, a, a1, a2, delta,
-                                    mu0, tau0, lambda1, lambda2)
+                                    nND = nND, nD = nD, version = "prior",
+                                    nMontepost, nstar, a, a1, a2, delta,
+                                    mu0, tau0, lambda1, lambda2,
+                                    sD2 = NA, sND2 = NA, xD = NA, xND = NA,
+                                    xDdata = xDdata, xNDdata = xNDdata)
 
+plot(test3$gridcopt,
+     test3$postcoptdensity,xlab="copt",ylab="posterior density",type="l",lty=1)
 
+plot(test3$gridmod,
+     test3$postcoptmoddensity,xlab="coptmod",ylab="posterior density",type="l",lty=1)
 
-
-
-
-
-#---------------------------------------------------------------------
-#4. The posterior simulation for c_opt 
-nMontepost=200000
-nstar=100
-
-
-
-
-
-plot(gridcopt,postcoptdensity,xlab="copt",ylab="posterior density",type="l",lty=1)
-
-plot(gridmod,postcoptmoddensity,xlab="coptmod",ylab="posterior density",type="l",lty=1)
 
 
 #-------------------------------------------------------------------------------------
 #5. obtain relative belief ratio and inferences
 
-nonpara_bayes_AUC_prior_copt = function(priorcoptdensity, postcoptdensity){
+nonpara_bayes_AUC_rbr_copt = function(gridcopt, priorcoptdensity, postcoptdensity,
+                                      priorcopt, postcopt){
   # note: check to see if this is repeated so we can just re-use it instead.
   RBcopt = postcoptdensity/priorcoptdensity
   for (i in 1:L){
@@ -477,12 +450,18 @@ nonpara_bayes_AUC_prior_copt = function(priorcoptdensity, postcoptdensity){
     }
   }
   
-  newlist = list(RBcopt, coptest, postPlcopt)
+  newlist = list("RBcopt" = RBcopt, "coptest" = coptest, 
+                 "postPlcopt" = postPlcopt)
   return(newlist)
 }
+
+test5 = nonpara_bayes_AUC_rbr_copt(test$gridcopt, test$priorcoptdensity, test3$postcoptdensity, 
+                                   test$priorcopt, test3$postcopt)
 
 
 par(mfrow=c(1,2))
 plot(gridcopt,postcoptdensity,xlab="copt",ylab="prior and posterior",type="l",lty=1)
 lines(gridcopt, priorcoptdensity, type="l",lty=2)
-plot(gridcopt,RBcopt,xlab="copt",ylab=expression("RB"),type="l",lty=1)
+
+
+plot(test$gridcopt,test5$RBcopt,xlab="copt",ylab=expression("RB"),type="l",lty=1)

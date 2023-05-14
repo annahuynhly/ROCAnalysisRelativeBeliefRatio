@@ -117,8 +117,6 @@ gen_emp = function(x, n_count, x_data){
   return(x_data[ihold])
 }
 
-
-
 nonpara_bayes_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, 
                                                 nD, nND, sD2, sND2, xD, xND){
   # the values of the hyperparameters for the posterior based on the prior and the data 
