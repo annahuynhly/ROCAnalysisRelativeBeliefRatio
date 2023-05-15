@@ -105,7 +105,7 @@ server = function(input, output, session) {
   
   source(file.path("server/section3.4", "section3.4.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_prevalence.R"),  local = TRUE)$value
-  #source(file.path("server/section3.4", "section3.4_variables.R"),  local = TRUE)$value
+  source(file.path("server/section3.4", "section3.4_variables.R"),  local = TRUE)$value
   #source(file.path("server/section3.4", "section3.4_outputs.R"),  local = TRUE)$value
   
   # ANIMATIONS ###################################################

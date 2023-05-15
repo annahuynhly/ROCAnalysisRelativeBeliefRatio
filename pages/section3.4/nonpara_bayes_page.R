@@ -6,13 +6,48 @@ nonpara_bayes_setup_variables_1 = div(
   titlePanel("Setup Values"),
   
   sidebarLayout(
-    sidebarPanel(width = 3, 
+    sidebarPanel(width = 4, 
       selectInput(inputId = "nonpara_bayes_DP_method", 
-                  label = "Manually input a_D or input epsilon to generate a_D?",
+                  label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
                   choices = c("Choose a_D" = "aD", 
                               "Choose epsilon" = "epsilon"),
                   selected = "epsilon"
       ),
+      selectInput(inputId = "nonpara_bayes_data_method",
+                  label = "Insert the data for the diseased and non-diseased groups,
+                  or input the descriptive statistics instead?",
+                  choices = c("Insert descriptive statistics" = 1,
+                              "Insert the raw data" = 2),
+                  selected = 1
+      ),
+      
+      conditionalPanel(
+        condition = "input.nonpara_bayes_data_method == 2",
+        
+        textInput(inputId = "nonpara_bayes_data_values", 
+                  label = "Please enter in new values.", 
+                  value = "-0.012920,  0.033001, -0.31001"),
+        p("If you are adding multiple values, please separate them by a comma."),
+        h4("Diseased Group"),
+        actionButton(inputId = "nonpara_bayes_add_values_diseased", 
+                     label = "Add Values"),
+        actionButton(inputId = "nonpara_bayes_reset_last_diseased",
+                     label = "Remove Last Entry"),
+        actionButton(inputId = "nonpara_bayes_reset_diseased",
+                     label = "Reset"),
+        verbatimTextOutput("nonpara_bayes_show_diseased_vec"),
+        br(),
+        h4("Non-diseased Group"),
+        actionButton(inputId = "nonpara_bayes_add_values_nondiseased",
+                     label = "Add Values"),
+        actionButton(inputId = "nonpara_bayes_reset_last_nondiseased",
+                     label = "Remove Last Entry"),
+        actionButton(inputId = "nonpara_bayes_reset_nondiseased",
+                     label = "Reset"),
+        verbatimTextOutput("nonpara_bayes_show_nondiseased_vec"),
+      ),
+      
+      
     ),
     mainPanel(
       fluidPage( # CHANGE THIS
@@ -20,10 +55,10 @@ nonpara_bayes_setup_variables_1 = div(
         fluidRow(
           column(3, h4("Hyperparameters of $H_{D}$:")),
           column(3, numericInput(inputId = "nonpara_bayes_muD",
-                                 label = 'muD',
+                                 label = '$\\mu_{D}$',
                                  value = 45)),
           column(3, numericInput(inputId = "nonpara_bayes_sigma_squared", 
-                                 label = 'sigma squared',
+                                 label = '$\\sigma^{2}$',
                                  value = 0.5)),
         ),
         
@@ -32,36 +67,30 @@ nonpara_bayes_setup_variables_1 = div(
           conditionalPanel(
             condition = "input.nonpara_bayes_DP_method == 'aD'",
             column(3, numericInput(inputId = "nonpara_bayes_aD", 
-                                   label = "aD",
+                                   label = "$a_{D}$",
                                    value = 9),),
           ),
           conditionalPanel(
             condition = "input.nonpara_bayes_DP_method == 'epsilon'",
-            column(3, numericInput(inputId = "nonpara_bayes_aD", 
-                                   label = "epsilon",
+            column(3, numericInput(inputId = "nonpara_bayes_epsilon", 
+                                   label = "$\\text{Epsilon } (\\epsilon)$",
                                    value = 0.25),),
           ),
-        ),
-        
-        fluidRow(
-          column(3, h4("Simulation Sizes:")),
-          column(3, numericInput(inputId = "nonpara_bayes_nMonteprior", # CHANGE THIS
-                                 label = "Simulation Sample Size",
-                                 value = 200000)),
-          column(3, numericInput(inputId = "nonpara_bayes_nstar", # CHANGE THIS
-                    label = "nstar",
-                    value = 200)),
+          column(3, numericInput(inputId = "nonpara_bayes_delta", 
+                                 label = '$\\text{Delta } (\\delta)$',
+                                 value = 0.005)),
         ),
         
         fluidRow(
           column(3, h4("Simulation Sizes:")),
           column(3, numericInput(inputId = "nonpara_bayes_nMonteCarlo", 
                                  label = '$\\text{Simulation Sample Size}$',
-                                 value = 300000, min = 1)),
-          column(3, numericInput(inputId = "nonpara_bayes_delta", 
-                                 label = '$\\text{Delta } (\\delta)$',
-                                 value = 0.005)),
+                                 value = 100000, min = 1)),
+          column(3, numericInput(inputId = "nonpara_bayes_nstar", # CHANGE THIS
+                    label = "$n^{*}$",
+                    value = 200)),
         ),
+        
         fluidRow(
           column(3, h4("Hyperparameters 1:")),
           column(3, numericInput(inputId = "nonpara_bayes_mu0", 
@@ -80,32 +109,37 @@ nonpara_bayes_setup_variables_1 = div(
                                  label = '$\\lambda_{2}$',
                                  value = 1.056)),
         ),
-        fluidRow(
-          column(3, h4("Data Sample Size:")),
-          column(3, numericInput(inputId = "nonpara_bayes_nND",
-                                 label = '$n_{ND}$',
-                                 value = 25)),
-          column(3, numericInput(inputId = "nonpara_bayes_nD", 
-                                 label = '$n_{D}$',
-                                 value = 20)),
-        ),
-        fluidRow(
-          column(3, h4("Data Means:")),
-          column(3, numericInput(inputId = "nonpara_bayes_meanND", 
-                                 label = '$\\bar{x}_{ND}$',
-                                 value = -0.072)),
-          column(3, numericInput(inputId = "nonpara_bayes_meanD", 
-                                 label = '$\\bar{x}_{D}$',
-                                 value = 0.976)),
-        ),
-        fluidRow(
-          column(3, h4("Data Sum of Squares:")),
-          column(3, numericInput(inputId = "nonpara_bayes_sND_squared", 
-                                 label = '$s^{2}_{ND}$',
-                                 value = 19.638)),
-          column(3, numericInput(inputId = "nonpara_bayes_sD_squared", 
-                                 label = '$s^{2}_{D}$',
-                                 value = 16.778)),
+        
+        conditionalPanel(
+          condition = "input.nonpara_bayes_data_method == 1",
+          fluidRow(
+            column(3, h4("Data Sample Size:")),
+            column(3, numericInput(inputId = "nonpara_bayes_nND",
+                                   label = '$n_{ND}$',
+                                   value = 25)),
+            column(3, numericInput(inputId = "nonpara_bayes_nD", 
+                                   label = '$n_{D}$',
+                                   value = 20)),
+          ),
+          fluidRow(
+            column(3, h4("Data Means:")),
+            column(3, numericInput(inputId = "nonpara_bayes_meanND", 
+                                   label = '$\\bar{x}_{ND}$',
+                                   value = -0.072)),
+            column(3, numericInput(inputId = "nonpara_bayes_meanD", 
+                                   label = '$\\bar{x}_{D}$',
+                                   value = 0.976)),
+          ),
+          fluidRow(
+            column(3, h4("Data Sum of Squares:")),
+            column(3, numericInput(inputId = "nonpara_bayes_sND_squared", 
+                                   label = '$s^{2}_{ND}$',
+                                   value = 19.638)),
+            column(3, numericInput(inputId = "nonpara_bayes_sD_squared", 
+                                   label = '$s^{2}_{D}$',
+                                   value = 16.778)),
+          ),
+          
         ),
       ),
     ),

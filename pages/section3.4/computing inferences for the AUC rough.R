@@ -86,6 +86,7 @@ nonpara_bayes_AUC_prior = function(condition, nMonteprior, nstar, a, delta,
 
 # algorithms for generating from the two empirical distibutions
 genFDemp = function(x, nD, xDdata){
+  # note: SHOULD NOT NEED ANYMORE.
   xDunique = sort(unique(xDdata))
   arg = nD*x
   ihold = nD
@@ -97,6 +98,7 @@ genFDemp = function(x, nD, xDdata){
 }
 
 genFNDemp = function(x, nND, xNDdata){
+  # note: SHOULD NOT NEED ANYMORE.
   xNDunique = sort(unique(xNDdata))
   arg = nND*x
   ihold = nND
@@ -141,11 +143,19 @@ nonpara_bayes_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2,
 # generated.
 
 nonpara_bayes_AUC_post = function(condition, nMontepost, nstar, a, delta,
-                                  mu0, tau0, lambda1, lambda2, 
-                                  nD, nND, sD2, sND2, xD, xND,
-                                  xDdata, xNDdata){
+                                  mu0, tau0, lambda1, lambda2, xDdata, xNDdata,
+                                  nD, nND, sD2 = NA, sND2 = NA, xD = NA, xND = NA){
   L = 1/delta
   A = closed_bracket_grid(delta)# this is technically their grid
+  
+  # The user can either put in actual numbers or put in the actual data 
+  # - need to check that the same is for the other function
+  if(is.na(sD2) == TRUE || is.na(sND2) == TRUE || is.na(xD) == TRUE || is.na(xND) == TRUE){
+    sD2 = (nD - 1)*var(xDdata)
+    sND2 = (nND - 1)*var(xNDdata)
+    xD = mean(xDdata)
+    xND = mean(xNDdata)
+  }
   
   if(condition == "conditional"){
     A = 1/2+A/2 # the new grid when conditioning H_0: AUC>=1/2 
@@ -243,6 +253,8 @@ nonpara_bayes_AUC_post = function(condition, nMontepost, nstar, a, delta,
                  "probAUCpost" = probAUCpost)
   return(newlist)
 }
+
+
 
 
 
