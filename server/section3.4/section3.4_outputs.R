@@ -1,0 +1,221 @@
+################################################################
+# NUMERIC/TEXT OUTPUTS                                         #
+################################################################
+
+output$nonpara_bayes_hypoAUC_value = renderPrint({
+  #sect3.4_AUC_prior()
+  #sect3.4_AUC_post()
+  #sect3.4_AUC_RBR()
+  # HIDE FOR NOW -> TRYING TO DEBUG
+  pr = sect3.4_AUC_RBR()$plausible_region
+  pr = c(pr[1], pr[length(pr)])
+  cr = sect3.4_cr()$credible_region
+  cr = c(cr[1], cr[length(cr)])
+  list("Prior Probability: P(AUC > 1/2)" = sect3.4_AUC_prior()$probAUCprior,
+       "Posterior Probability: P(AUC > 1/2 | data) / Strength of the evidence" = sect3.4_AUC_post()$probAUCpost,
+       "Relative Belief Ratio of AUC > 1/2" = sect3.4_AUC_RBR()$RBprobAUC,
+       "Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$nonpara_bayes_delta), sect3.4_AUC_RBR()$RB_AUC),
+       "Plausible Region for the AUC" = pr,
+       "Posterior Content of the Plausible Region for the AUC" = sect3.4_AUC_RBR()$postPl_AUC,
+       "Credible region for the AUC" = sect3.4_cr()$credible_region
+  )
+})
+
+output$nonpara_bayes_inf_opt_cutoff = renderPrint({
+  sect3.4_AUC_post_copt()
+  #temp_df = data.frame(sect3.4_AUC_RBR_error_char_copt()$FNRest,
+  #                     sect3.4_AUC_RBR_error_char_copt()$FPRest,
+  #                     sect3.4_AUC_RBR_error_char_copt()$Errorest,
+  #                     sect3.4_AUC_RBR_error_char_copt()$FDRest,
+  #                     sect3.4_AUC_RBR_error_char_copt()$FNDRest)
+  #colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
+  #list("Copt Estimate" = sect3.4_AUC_RBR_copt()$coptest,
+  #     "Plausible Region for Copt" = copt_transform(sect3.4_AUC_RBR_copt()$plausible_region)
+  #     "Credible Region for Copt" = copt_transform(sect3.4_cr_copt()$credible_region),
+  #     "Cmod Estimate" = sect3.4_AUC_RBR_copt()$cmodest,
+  #     "Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$plausible_region,
+  #     "Posterior Content of the Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$postPlcmod,
+  #     "Credible Region for Cmod" = sect3.4_cr_copt()$credible_region,
+  #     "Error Characteristics" = temp_df)
+  #)
+})
+
+
+################################################################
+# HISTOGRAMS                                                   #
+################################################################
+
+sect3.4_prior_post_lty = reactive({
+  c(as.numeric(input$nonpara_bayes_lty_prior),
+    as.numeric(input$nonpara_bayes_lty_post),
+    as.numeric(input$nonpara_bayes_lty_pr),
+    as.numeric(input$nonpara_bayes_lty_cr))
+})
+
+sect3.4_rbr_lty = reactive({
+  c(as.numeric(input$nonpara_bayes_lty_rbr),
+    as.numeric(input$nonpara_bayes_lty_pr),
+    as.numeric(input$nonpara_bayes_lty_line_1),
+    as.numeric(input$nonpara_bayes_lty_cr))
+})
+
+nonpara_bayes_lty_types_copt = reactive({
+  c(as.numeric(input$nonpara_bayes_priorc_opt_label),
+    as.numeric(input$nonpara_bayes_postc_opt_label),
+    as.numeric(input$nonpara_bayes_rbrc_opt_label),
+    as.numeric(input$nonpara_bayes_prc_opt_label),
+    as.numeric(input$nonpara_bayes_line_1c_opt_label),
+    as.numeric(input$nonpara_bayes_crc_opt_label))
+})
+
+
+
+# Denoting colours
+
+nonpara_bayes_colours = reactive({
+  # Total order of ALL colours: prior, posterior, relative belief ratio, 
+  # plausible region, y = 1 line, credible region, 
+  if(input$nonpara_bayes_colour == 'default1'){
+    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+  } else if(input$nonpara_bayes_colour == 'default2'){
+    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+  } else if (input$nonpara_bayes_colour == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+  } else if (input$nonpara_bayes_colour == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+  } else if (input$nonpara_bayes_colour == 'manual'){
+    c(convert_to_hex(input$nonpara_bayes_colour_prior),
+      convert_to_hex(input$nonpara_bayes_colour_post),
+      convert_to_hex(input$nonpara_bayes_colour_rbr),
+      convert_to_hex(input$nonpara_bayes_colour_pr),
+      convert_to_hex(input$nonpara_bayes_colour_line_1),
+      convert_to_hex(input$nonpara_bayes_colour_cr)
+    )
+  }
+})
+
+nonpara_bayes_copt_colours = reactive({
+  if(input$nonpara_bayes_c_opt_carry_colour == 'default1'){
+    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+  } else if (input$nonpara_bayes_c_opt_carry_colour == 'default2'){
+    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+  } else if (input$nonpara_bayes_c_opt_carry_colour == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+  } else if (input$nonpara_bayes_c_opt_carry_colour == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+  } else if (input$nonpara_bayes_c_opt_carry_colour == 'custom'){
+    nonpara_bayes_colours()
+  } else if (input$nonpara_bayes_c_opt_carry_colour == 'manual'){
+    c(convert_to_hex(input$nonpara_bayes_priorc_opt_colour),
+      convert_to_hex(input$nonpara_bayes_postc_opt_colour),
+      convert_to_hex(input$nonpara_bayes_rbrc_opt_colour),
+      convert_to_hex(input$nonpara_bayes_prc_opt_colour),
+      convert_to_hex(input$nonpara_bayes_line_1c_opt_colour),
+      convert_to_hex(input$nonpara_bayes_crc_opt_colour))
+  }
+})
+
+nonpara_bayes_inferences_colours = reactive({
+  if(input$nonpara_bayes_inferences_colour == 'default1'){
+    c("#FF6666", "#6699FF", "#05DEB2")
+  } else if (input$nonpara_bayes_inferences_colour == 'default2'){
+    c("blue", "green", "red", "#b3bfff")
+  } else if (input$nonpara_bayes_inferences_colour == 'dull'){
+    c("#EE4266", "#3cbbb1", "#b33c86")
+  } else if (input$nonpara_bayes_inferences_colour == 'lovelymei'){
+    c("#3800c2", "#676bf8", "#58887a")
+  } else if (input$nonpara_bayes_inferences_colour == 'custom'){
+    nonpara_bayes_colours()[c(1, 2, 3)]
+  } else if (input$nonpara_bayes_inferences_colour == 'manual'){
+    c(convert_to_hex(input$nonpara_bayes_colour_inferences_prior),
+      convert_to_hex(input$nonpara_bayes_colour_inferences_post),
+      convert_to_hex(input$nonpara_bayes_colour_inferences_rbr))
+  }
+})
+
+# Determining the existence of a credible region
+
+nonpara_bayes_cr_AUC = reactive({
+  # For the plots, determines if there will be a credible region.
+  if (check.numeric(input$nonpara_bayes_gamma) == TRUE){
+    sect3.4_cr()$credible_region
+  } else {
+    FALSE
+  }
+})
+
+nonpara_bayes_rb_line_AUC = reactive({
+  # Assuming there will be a credible region, there will be a line associated
+  # to make the graph.
+  if (check.numeric(input$nonpara_bayes_gamma) == TRUE){
+    sect3.4_cr()$rb_line
+  } else {
+    FALSE
+  }
+})
+
+nonpara_bayes_pr_modified = reactive({
+  pr = sect3.4_AUC_RBR()$plausible_region
+  c(pr[1], pr[length(pr)])
+})
+
+output$nonpara_bayes_postprior_graph = renderPlot({
+  nonpara_bayes_prior_post_graph(delta = input$nonpara_bayes_delta, 
+                                 prior = sect3.4_AUC_prior()$priorAUCdensity, 
+                                 post = sect3.4_AUC_post()$postAUCdensity, 
+                                 plausible_region = nonpara_bayes_pr_modified(),
+                                 credible_region = nonpara_bayes_cr_AUC(),
+                                 colour_choice = nonpara_bayes_colours()[c(1, 2, 4, 6)],
+                                 lty_type = sect3.4_prior_post_lty(),
+                                 transparency = input$nonpara_bayes_col_transparency)
+})
+
+output$nonpara_bayes_RB_graph = renderPlot({
+  nonpara_bayes_rbr_graph(delta = input$nonpara_bayes_delta,
+                          relative_belief_ratio = sect3.4_AUC_RBR()$RB_AUC, 
+                          plausible_region = nonpara_bayes_pr_modified(),
+                          credible_region = nonpara_bayes_cr_AUC(),
+                          rb_line = nonpara_bayes_rb_line_AUC(),
+                          colour_choice = nonpara_bayes_colours()[c(3:6)],
+                          lty_type = sect3.4_rbr_lty(),
+                          transparency = input$nonpara_bayes_col_transparency)
+})
+
+################################################################
+# DOWNLOAD DATAFRAME                                           #
+################################################################
+
+nonpara_bayes_generate_dataframe = reactive({
+  grid = open_bracket_grid(input$nonpara_bayes_delta)
+  if (sect3.4_condition() == "conditional"){
+    grid = grid[grid >= 0.5]
+  }
+  if (input$binormal_case == "equal_var"){
+    df = data.frame(grid,
+                    sect3.4_AUC_prior()$priorAUCdensity, 
+                    sect3.4_AUC_post()$postAUCdensity, 
+                    sect3.4_AUC_RBR()$RB_AUC)
+  }
+  colnames(df) = c("Grid point", "Prior of the AUC", "Posterior of the AUC", 
+                   "Relative Belief Ratio of the AUC")
+  df
+})
+
+nonpara_bayes_download = reactive({
+  nonpara_bayes_generate_dataframe()
+})
+
+output$nonpara_bayes_dataframe = renderDataTable({
+  nonpara_bayes_download()
+})
+
+output$nonpara_bayes_downloadData = downloadHandler(
+  filename = function() {
+    paste(input$nonpara_bayes_filename, ".csv", sep = "")
+  },
+  content = function(file) {
+    write.csv(nonpara_bayes_download(), file, row.names = FALSE)
+  }
+)
+
+

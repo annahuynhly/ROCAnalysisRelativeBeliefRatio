@@ -42,10 +42,10 @@ page_nonpara_bayes_start = fluidPage(
           and then the sampling regime."),
         numericInput(inputId = "nonpara_bayes_prevalence_alpha1w", 
                      label = '$\\alpha_{1\\omega}$',
-                     value = 391.72),
+                     value = 15.3589),
         numericInput(inputId = "nonpara_bayes_prevalence_alpha2w", 
                      label = '$\\alpha_{2\\omega}$',
-                     value = 211.39),
+                     value = 22.53835),
         
         selectizeInput(
           inputId = "nonpara_bayes_case2", 

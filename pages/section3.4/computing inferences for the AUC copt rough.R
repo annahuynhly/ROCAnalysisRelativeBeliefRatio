@@ -9,11 +9,87 @@ mu0=0
 tau0=0.5
 lambda1=1.787
 lambda2=1.056
-a1=15.3589
-a2=22.53835
+alpha1w=15.3589
+alpha2w=22.53835
 #concentration parameter for the Dirichlet process
 a=20
 
+nMonteprior = 10000 # MAY NEED TO CHANGE THIS LATER
+nstar = 100 # set nstar for approximating random measure
+w = 0.4
+delta = 0.005
+nMontepost =  10000
+nstar = 100
+
+
+test = nonpara_bayes_AUC_prior_copt(w = 0.4, 
+                                   alpha1w = NA, 
+                                   alpha2w = NA,
+                                   nMonteprior = 10000, #sect3.4_copt_nMonteCarlo(), 
+                                   nstar = 100, #sect3.4_copt_nstar(), 
+                                   a = 20, #sect3.4_a_copt(), 
+                                   delta = 0.005, #sect3.4_copt_delta(),
+                                   mu0 = 0, #sect3.4_copt_mu0(), 
+                                   tau0 = 0.5, # sect3.4_copt_tau0(), 
+                                   lambda1 = 1.787, #sect3.4_copt_lambda1(), 
+                                   lambda2 = 1.056 #sect3.4_copt_lambda2(),
+)
+
+
+plot(test$gridmod, test$priorcoptmoddensity,xlab="coptmod",ylab="prior density",type="l",lty=1)
+plot(test$gridcopt, test$priorcoptdensity,xlab="copt",ylab="prior density",type="l",lty=1)
+
+
+# Running the functions
+#test = nonpara_bayes_AUC_prior_copt(w, alpha1w = NA, alpha2w = NA,
+#                                        nMonteprior, nstar, a, delta,
+#                                        mu0, tau0, lambda1, lambda2)
+
+
+
+xNDdata=c(-0.11315894,  0.03273954, -0.69180664, -0.05459313, -1.22760962, -0.25705819,
+          -1.55799712, -0.34339482, -1.11229004,  0.11031882,  0.37785845,  0.76029521,
+          -0.34052122,  1.03882232, -0.26665494,  0.48965747,  0.80441378, -1.31205550,
+          -1.09934759,  1.55522803, -0.19981736,  0.51936199,  0.95234605,  1.56027376,
+          -1.42501031)
+
+xDdata=c(0.89345810, -0.09544302,  1.52694609,  2.30531596,  0.45009081,  0.97189716,
+         0.85430995,  2.40987144,  1.44936186, -0.31305846,  0.19524931,  0.75202021,
+         1.63136183,  1.31617751, -0.26481975,  1.69469220,  1.67520405,  1.50587628,
+         -1.18927465,  1.75076313)
+
+
+test2 = nonpara_bayes_AUC_post_copt(w = 0.4, 
+                                    alpha1w = NA, 
+                                    alpha2w = NA,
+                                    nND = NA, 
+                                    nD = NA, 
+                                    version = "prior",
+                                    nMontepost, 
+                                    nstar, 
+                                    a, 
+                                    delta,
+                                    mu0, 
+                                    tau0, 
+                                    lambda1, 
+                                    lambda2,
+                                    sD_squared = NA, 
+                                    sND_squared = NA, 
+                                    meanD = NA, 
+                                    meanND = NA,
+                                    xDdata = xDdata, 
+                                    xNDdata = xNDdata)
+
+plot(test3$gridcopt,
+     test3$postcoptdensity,xlab="copt",ylab="posterior density",type="l",lty=1)
+
+plot(test3$gridmod,
+     test3$postcoptmoddensity,xlab="coptmod",ylab="posterior density",type="l",lty=1)
+
+
+
+test5 = nonpara_bayes_AUC_rbr_copt(test$gridcopt, test$priorcoptdensity, test3$postcoptdensity, 
+                                   test$priorcopt, test3$postcopt)
 
 # HELPER FUNCTIONS #############################################
 
@@ -48,16 +124,16 @@ gen_emp = function(x, n_count, x_data){
 
 # note: this function exists in the other file.
 nonpara_bayes_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2, 
-                                                nD, nND, sD2, sND2, xD, xND){
+                                                nD, nND, sD_squared, sND_squared, meanD, meanND){
   # the values of the hyperparameters for the posterior based on the prior and the data 
   lambda1Dpost = lambda1 + nD/2
   lambda1NDpost = lambda1 + nND/2
   tau0D = 1/sqrt(nD + 1/tau0^2)
   tau0ND = 1/sqrt(nND + 1/tau0^2)
-  lambda2Dpost = lambda2 + sD2/2 + (tau0D**2)*(nD/tau0^2)*(xD - mu0)^2/2
-  lambda2NDpost = lambda2 + sND2/2 + (tau0ND**2)*(nND/tau0^2)*(xND - mu0)^2/2
-  mu0Dpost = (tau0D**2)*(nD*xD + mu0/tau0**2)
-  mu0NDpost = (tau0ND**2)*(nND*xND + mu0/tau0**2)
+  lambda2Dpost = lambda2 + sD_squared/2 + (tau0D**2)*(nD/tau0^2)*(meanD - mu0)^2/2
+  lambda2NDpost = lambda2 + sND_squared/2 + (tau0ND**2)*(nND/tau0^2)*(meanND - mu0)^2/2
+  mu0Dpost = (tau0D**2)*(nD*meanD + mu0/tau0**2)
+  mu0NDpost = (tau0ND**2)*(nND*meanND + mu0/tau0**2)
   
   newlist = list("lambda1Dpost" = lambda1Dpost, "lambda1NDpost" = lambda1NDpost,
                  "tau0D" = tau0D, "tau0ND" = tau0ND, "lambda2Dpost" = lambda2Dpost,
@@ -66,12 +142,6 @@ nonpara_bayes_compute_post_hyperpara = function(mu0, tau0, lambda1, lambda2,
 }
 
 
-
-nMonteprior = 200000 # MAY NEED TO CHANGE THIS LATER
-nstar = 100 # set nstar for approximating random measure
-
-
-# check to see if it still works
 nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
                                         nMonteprior, nstar, a, delta,
                                         mu0, tau0, lambda1, lambda2){
@@ -211,51 +281,12 @@ nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   return(newlist)
 }
 
-w = 0.4
-delta = 0.005
-
-# Running the functions
-test = nonpara_bayes_AUC_prior_copt(w, alpha1w = NA, alpha2w = NA,
-                                        nMonteprior, nstar, a, delta,
-                                        mu0, tau0, lambda1, lambda2)
-
-#plot(test$gridmod, test$priorcoptmoddensity,xlab="coptmod",ylab="prior density",type="l",lty=1)
-#plot(test$gridcopt, test$priorcoptdensity,xlab="copt",ylab="prior density",type="l",lty=1)
-
-
-# the data 
-xNDdata=c(-0.11315894,  0.03273954, -0.69180664, -0.05459313, -1.22760962, -0.25705819,
-          -1.55799712, -0.34339482, -1.11229004,  0.11031882,  0.37785845,  0.76029521,
-          -0.34052122,  1.03882232, -0.26665494,  0.48965747,  0.80441378, -1.31205550,
-          -1.09934759,  1.55522803, -0.19981736,  0.51936199,  0.95234605,  1.56027376,
-          -1.42501031)
-nND=length(unique(xNDdata))
-xND=mean(xNDdata)
-s2ND=(nND-1)*var(xNDdata)
-
-xDdata = c(0.89345810, -0.09544302,  1.52694609,  2.30531596,  0.45009081,  0.97189716,
-         0.85430995,  2.40987144,  1.44936186, -0.31305846,  0.19524931,  0.75202021,
-         1.63136183,  1.31617751, -0.26481975,  1.69469220,  1.67520405,  1.50587628,
-         -1.18927465,  1.75076313)
-nD=length(unique(xDdata))
-xD=mean(xDdata)
-s2D=(nD-1)*var(xDdata)
-
-
-#---------------------------------------------------------------------
-#4. The posterior simulation for c_opt 
-
-
-
-nMontepost =  200000
-nstar = 100
-
 nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
                                        nND = NA, nD = NA, version,
-                                       nMontepost, nstar, a, a1, a2, delta,
+                                       nMontepost, nstar, a, delta,
                                        mu0, tau0, lambda1, lambda2,
-                                       sD2 = NA, sND2 = NA, xD = NA, xND = NA,
-                                       xDdata, xNDdata){
+                                       xDdata = NA, xNDdata = NA,
+                                       sD_squared = NA, sND_squared = NA, meanD = NA, meanND = NA){
   L = 1/delta
   A = closed_bracket_grid(delta) # this is technically their grid
   grid = open_bracket_grid(delta)
@@ -266,17 +297,26 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   
   # The user can either put in actual numbers or put in the actual data 
   # - need to check that the same is for the other function
-  if(is.na(sD2) == TRUE || is.na(sND2) == TRUE || is.na(xD) == TRUE || is.na(xND) == TRUE){
-    sD2 = (nD - 1)*var(xDdata)
-    sND2 = (nND - 1)*var(xNDdata)
-    xD = mean(xDdata)
-    xND = mean(xNDdata)
+  if(is.na(sD_squared) == TRUE || is.na(sND_squared) == TRUE || is.na(meanD) == TRUE || is.na(meanND) == TRUE){
+    sD_squared = (nD - 1)*var(xDdata)
+    sND_squared = (nND - 1)*var(xNDdata)
+    meanD = mean(xDdata)
+    meanND = mean(xNDdata)
+  } else if (is.na(sD_squared) == FALSE & is.na(sND_squared) == FALSE & is.na(meanD) == FALSE & is.na(meanND) == FALSE
+             & is.na(xDdata) == TRUE & is.na(xNDdata) == TRUE){
+    # this is the case where the data needs to be generated -- add to the other one as well
+    z = rnorm(nND, 0, 1)
+    xNDdata = meanND + sqrt(sND_squared/(nND - 1))*(z - mean(z))/sqrt(var(z))
+    z = rnorm(nD, 0, 1)
+    xDdata = meanD + sqrt(sD_squared/(nD - 1))*(z - mean(z))/sqrt(var(z))
+  } else if (is.na(sD_squared) == FALSE & is.na(sND_squared) == FALSE & is.na(meanD) == FALSE & is.na(meanND) == FALSE
+             & is.na(xDdata) == FALSE & is.na(xNDdata) == FALSE){
+    return("There is no data. Either put in the descriptive statistics (nD, nND, sD_squared, sND_squared),
+           or put in the data (xDdata, xNDdata.)")
   }
   
   hy = nonpara_bayes_compute_post_hyperpara(mu0, tau0, lambda1, lambda2, 
-                                            nD, nND, sD2, sND2, xD, xND)
-  a1post = a1 + nD
-  a2post = a2 + nND
+                                            nD, nND, sD_squared, sND_squared, meanD, meanND)
   # concentration parameters and mixture probabilities for the posterior Dirichlet processes
   aD = a + nD
   pD = a/aD
@@ -412,20 +452,6 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
 }
 
 
-test3 = nonpara_bayes_AUC_post_copt(w = 0.4, alpha1w = NA, alpha2w = NA,
-                                    nND = nND, nD = nD, version = "prior",
-                                    nMontepost, nstar, a, a1, a2, delta,
-                                    mu0, tau0, lambda1, lambda2,
-                                    sD2 = NA, sND2 = NA, xD = NA, xND = NA,
-                                    xDdata = xDdata, xNDdata = xNDdata)
-
-plot(test3$gridcopt,
-     test3$postcoptdensity,xlab="copt",ylab="posterior density",type="l",lty=1)
-
-plot(test3$gridmod,
-     test3$postcoptmoddensity,xlab="coptmod",ylab="posterior density",type="l",lty=1)
-
-
 
 #-------------------------------------------------------------------------------------
 #5. obtain relative belief ratio and inferences
@@ -454,9 +480,6 @@ nonpara_bayes_AUC_rbr_copt = function(gridcopt, priorcoptdensity, postcoptdensit
                  "postPlcopt" = postPlcopt)
   return(newlist)
 }
-
-test5 = nonpara_bayes_AUC_rbr_copt(test$gridcopt, test$priorcoptdensity, test3$postcoptdensity, 
-                                   test$priorcopt, test3$postcopt)
 
 
 par(mfrow=c(1,2))

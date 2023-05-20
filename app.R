@@ -64,8 +64,8 @@ ui = navbarPage(
     #tabPanel("Definitions", page_sect3.4_def),
     tabPanel("Getting Started", page_nonpara_bayes_start),
     tabPanel("The Prevalence", page_nonpara_bayes_prevalence),
-    tabPanel("Inferences for the AUC", page_nonpara_bayes), # change to page_nonpara_bayes1 later
-    #tabPanel("Inferences for the Optimal Cutoff", page_nonpara_bayes2),
+    tabPanel("Inferences for the AUC", page_nonpara_bayes1),
+    tabPanel("Inferences for the Optimal Cutoff", page_nonpara_bayes2),
   ),
   tabPanel("Contact & Credits", contact_page),
   id = "navbarID",
@@ -105,8 +105,9 @@ server = function(input, output, session) {
   
   source(file.path("server/section3.4", "section3.4.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_prevalence.R"),  local = TRUE)$value
+  source(file.path("server/section3.4", "section3.4_setup_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_variables.R"),  local = TRUE)$value
-  #source(file.path("server/section3.4", "section3.4_outputs.R"),  local = TRUE)$value
+  source(file.path("server/section3.4", "section3.4_outputs.R"),  local = TRUE)$value
   
   # ANIMATIONS ###################################################
   # Note: may make a separate .R file based on the number of animations

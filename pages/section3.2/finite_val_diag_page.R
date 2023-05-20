@@ -182,7 +182,10 @@ finite_val_plausible_region = div(
       withSpinner(verbatimTextOutput("finite_val_output1"))
     ),
   ),
-  br(style = "line-height:28;")
+  br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
+  br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
+  br(),br(),br(),br(),br(),br(),br(),br()
+  #br(style = "line-height:28;")
 )
 
 ################################################################
