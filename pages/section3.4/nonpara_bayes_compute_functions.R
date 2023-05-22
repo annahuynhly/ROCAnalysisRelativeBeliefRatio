@@ -485,23 +485,21 @@ nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   diffcopt = grids_for_copt$diffcopt
   
   #computing FNR, FPR and Error at grid values
-  FNR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
-  FPR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
-  Error = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
-  FDR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
-  FNDR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
+  priorFNR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
+  priorFPR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
+  priorError = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
+  priorFDR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
+  priorFNDR = array(0*c(1:nMonteprior*L), dim = c(nMonteprior, L))
   for(i in 1:nMonteprior){
-    FNR[i,] = cdf(gridcopt, cD[i,], pDarray[i,])
-    FPR[i,] = abs(1 - cdf(gridcopt, cND[i,], pNDarray[i,]))
-    #print(FNR[i,])
-    #print(pre_w[i])
-    Error[i,] = pre_w[i]*FNR[i,] + (1 - pre_w[i])*FPR[i,]
+    priorFNR[i,] = cdf(gridcopt, cD[i,], pDarray[i,])
+    priorFPR[i,] = abs(1 - cdf(gridcopt, cND[i,], pNDarray[i,]))
+    priorError[i,] = pre_w[i]*priorFNR[i,] + (1 - pre_w[i])*priorFPR[i,]
     for(j in 1:L){
-      if((1 - pre_w[i])*FPR[i,j] + pre_w[i]*(1 - FNR[i,j]) > 10^(-15)){
-        FDR[i,j] = (1 - pre_w[i])*FPR[i,j]/((1 - pre_w[i])*FPR[i,j] + pre_w[i]*(1 - FNR[i,j])) 
+      if((1 - pre_w[i])*priorFPR[i,j] + pre_w[i]*(1 - priorFNR[i,j]) > 10^(-15)){
+        priorFDR[i,j] = (1 - pre_w[i])*priorFPR[i,j]/((1 - pre_w[i])*priorFPR[i,j] + pre_w[i]*(1 - priorFNR[i,j])) 
       }
-      if((1 - pre_w[i])*FPR[i,j] + pre_w[i]*FNR[i,j] > 10^(-15)) {
-        FNDR[i,j] = pre_w[i]*FNR[i,j]/((1 - pre_w[i])*FPR[i,j] + pre_w[i]*FNR[i,j])
+      if((1 - pre_w[i])*priorFPR[i,j] + pre_w[i]*priorFNR[i,j] > 10^(-15)) {
+        priorFNDR[i,j] = pre_w[i]*priorFNR[i,j]/((1 - pre_w[i])*priorFPR[i,j] + pre_w[i]*priorFNR[i,j])
       }
     }
   }
@@ -511,11 +509,11 @@ nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   copt = rep(0,nMonteprior)
   mid = L/2
   for(i in 1:nMonteprior) {
-    errmin = Error[i,which.min(Error[i,])]
+    errmin = priorError[i,which.min(priorError[i,])]
     hold = rep(L+1, L)
     j0 = 1
     for(j in 1:L){
-      if(Error[i,j] == errmin){
+      if(priorError[i,j] == errmin){
         hold[j0] = j
         j0 = j0 + 1}
     }
@@ -558,7 +556,10 @@ nonpara_bayes_AUC_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   
   newlist = list("priorcopt" = priorcopt, "priorcoptmod" = priorcoptmod,
                  "gridmod" = gridmod, "priorcoptmoddensity" = priorcoptmoddensity,
-                 "gridcopt" = gridcopt, "priorcoptdensity" = priorcoptdensity)
+                 "gridcopt" = gridcopt, "priorcoptdensity" = priorcoptdensity,
+                 "priorFNR" = priorFNR, "priorFPR" = priorFPR, 
+                 "priorError" = priorError, "priorFDR" = priorFDR, 
+                 "priorFNDR" = priorFNDR)
   return(newlist)
 }
 
@@ -569,10 +570,6 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
                                        xDdata = NA, xNDdata = NA,
                                        sD_squared = NA, sND_squared = NA, 
                                        meanD = NA, meanND = NA){
-  # this is for debugging
-  return(list(w, alpha1w, alpha2w, nD, nND, version, nMontepost, nstar, a, delta,
-              mu0, tau0, lambda1, lambda2, xDdata, xNDdata,
-              sD_squared, sND_squared, meanD, meanND))
   
   L = 1/delta
   A = closed_bracket_grid(delta) # this is technically their grid
@@ -591,10 +588,6 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
     sND_squared = (nND - 1)*var(xNDdata)
     meanD = mean(xDdata)
     meanND = mean(xNDdata)
-    
-    # debugging
-    #return(list(nD, nND, sD_squared, sND_squared, meanD, meanND))
-    
   } else if (is.na(sD_squared) == FALSE & is.na(sND_squared) == FALSE & is.na(meanD) == FALSE & is.na(meanND) == FALSE
              & is.na(nD) == FALSE & is.na(nND) == FALSE & is.na(xDdata) == TRUE & is.na(xNDdata) == TRUE){
     # this is the case where the data needs to be generated from a normal dist -- add to the other one as well
@@ -673,21 +666,21 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   }
   
   #computing FNR, FPR and Error at grid values
-  FNRpost = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
-  FPRpost = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
-  Errorpost = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
-  FDRpost = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
-  FNDRpost = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
+  postFNR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
+  postFPR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
+  postError = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
+  postFNR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
+  postFNDR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
   for (i in 1:nMontepost){
-    FNRpost[i,] = abs(cdf(gridcopt, cDpost[i,], pDarraypost[i,]))
-    FPRpost[i,] = abs(1 - cdf(gridcopt, cNDpost[i,], pNDarraypost[i,]))
-    Errorpost[i,] = wpost[i]*FNRpost[i,] + (1 - wpost[i])*FPRpost[i,]
+    postFNR[i,] = abs(cdf(gridcopt, cDpost[i,], pDarraypost[i,]))
+    postFPR[i,] = abs(1 - cdf(gridcopt, cNDpost[i,], pNDarraypost[i,]))
+    postError[i,] = wpost[i]*postFNR[i,] + (1 - wpost[i])*postFPR[i,]
   }
   for (j in 1:L){
-    if ((1 - wpost[i])*FPRpost[i,j] + abs(wpost[i]*(1 - FNRpost[i,j])) > 0) {
-      FDRpost[i,j] = (1 - wpost[i])*FPRpost[i,j]/((1 - wpost[i])*FPRpost[i,j] + wpost[i]*(1 - FNRpost[i,j])) }
-    if (abs((1 - wpost[i])*(1 - FPRpost[i,j])) + wpost[i]*FNRpost[i,j] > 0) {
-      FNDRpost[i,j] = wpost[i]*FNRpost[i,j]/(abs((1 - wpost[i])*(1-FPRpost[i,j])) + wpost[i]*FNRpost[i,j])}
+    if ((1 - wpost[i])*postFPR[i,j] + abs(wpost[i]*(1 - postFNR[i,j])) > 0) {
+      postFNR[i,j] = (1 - wpost[i])*postFPR[i,j]/((1 - wpost[i])*postFPR[i,j] + wpost[i]*(1 - postFNR[i,j])) }
+    if (abs((1 - wpost[i])*(1 - postFPR[i,j])) + wpost[i]*postFNR[i,j] > 0) {
+      postFNDR[i,j] = wpost[i]*postFNR[i,j]/(abs((1 - wpost[i])*(1-postFPR[i,j])) + wpost[i]*postFNR[i,j])}
   }
   
   # determine the minimizing c value of some criterion such as Error(c)
@@ -695,11 +688,11 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   copt = rep(0,nMontepost)
   mid = L/2
   for(i in 1:nMontepost){
-    errmin = Errorpost[i,which.min(Errorpost[i,])]
+    errmin = postError[i,which.min(postError[i,])]
     hold = rep(L+1, L)
     j0 = 1
     for(j in 1:L){
-      if(Errorpost[i,j] == errmin){
+      if(postError[i,j] == errmin){
         hold[j0] = j
         j0 = j0 + 1
       }
@@ -738,16 +731,21 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   newlist = list("gridcopt" = gridcopt, "gridmod" = gridmod,
                  "postcopt" = postcopt, "postcoptdensity" = postcoptdensity, 
                  "postcoptmod" = postcoptmod, "postcoptmoddensity" = postcoptmoddensity,
-                 "FNRpost" = FNRpost, "FPRpost" = FPRpost, 
-                 "Errorpost" = Errorpost, "FDRpost" = FDRpost, 
-                 "FNDRpost" = FNDRpost)
+                 "postFNR" = postFNR, "postFPR" = postFPR, 
+                 "postError" = postError, "postFNR" = postFNR, 
+                 "postFNDR" = postFNDR)
   return(newlist)
 }
 
-nonpara_bayes_AUC_rbr_copt = function(gridcopt, priorcoptdensity, postcoptdensity,
-                                      priorcopt, postcopt){
+nonpara_bayes_AUC_rbr_copt = function(delta, gridcopt, gridmod, 
+                                      priorcoptdensity, postcoptdensity,
+                                      priorcopt, postcopt, 
+                                      priorcoptmod, postcoptmod){
+  L = 1/delta
   # note: check to see if this is repeated so we can just re-use it instead.
   RBcopt = postcoptdensity/priorcoptdensity
+  RBcoptmod = postcoptmod/priorcoptmod
+  
   for (i in 1:L){
     if (priorcoptdensity[i] > 0){imax = i}
   }
@@ -764,16 +762,75 @@ nonpara_bayes_AUC_rbr_copt = function(gridcopt, priorcoptdensity, postcoptdensit
     }
   }
   
-  plausible_region = c()
-  for (i in 1:length(grid)){
-    if (priorcopt[i] > 0 & postcopt[i] > 0 & RBcopt[i] > 1){
-      plausible_region = c(plausible_region, as.numeric(grid[i]))
+  # to remove the NAs to reduce errors
+  RBcopt_alt = RBcopt
+  RBcopt_alt[is.na(RBcopt_alt)] = 0
+  RBcoptmod_alt = RBcoptmod
+  RBcoptmod_alt[is.na(RBcoptmod_alt)] = 0
+  
+  copt_plausible_region = c()
+  for (i in 1:length(gridcopt)){
+    if (RBcopt_alt[i] > 1){ # priorcopt[i] > 0 & postcopt[i] > 0
+      copt_plausible_region = c(copt_plausible_region, as.numeric(gridcopt[i]))
+    }
+  }
+  cmod_plausible_region = c()
+  for (i in 1:length(gridmod)){
+    if (RBcoptmod_alt[i] > 1){ # priorcopt[i] > 0 & postcopt[i] > 0
+      cmod_plausible_region = c(cmod_plausible_region, as.numeric(gridmod[i]))
     }
   }
   
-  
   newlist = list("RBcopt" = RBcopt, "coptest" = coptest, 
-                 "postPlcopt" = postPlcopt, "plausible_region" = plausible_region)
+                 "postPlcopt" = postPlcopt, "copt_plausible_region" = copt_plausible_region,
+                 "RBcoptmod" = RBcoptmod, "cmod_plausible_region" = cmod_plausible_region)
   return(newlist)
 }
+
+nonpara_bayes_AUC_rbr_error_char_copt = function(grid, # usually use gridcopt
+                                                 priorFNR, priorFPR, 
+                                                 priorError, priorFDR, 
+                                                 priorFNDR, postFNR, 
+                                                 postFPR, postError, 
+                                                 postFDR, postFNDR){
+  L = length(grid)
+  RBFNR = postFNR/priorFNR
+  RBFPR = postFPR/priorFPR
+  RBError = postError/priorError
+  RBFDR = postFDR/priorFDR
+  RBFNDR = postFNDR/priorFNDR
+  
+  # to get a starting value for imax
+  for (i in 1:L) {
+    if (priorFNR[i] > 0){imaxFNR = i}
+    if (priorFPR[i] > 0){imaxFPR = i}
+    if (priorError[i] > 0){imaxError = i}
+    if (priorFDR[i] > 0){imaxFDR = i}
+    if (priorFNDR[i] > 0){imaxFNDR = i}
+  }
+  
+  for (i in 1:L) {
+    if (priorFNR[i] > 0 & RBFNR[i] > RBFNR[imaxFNR] ){imaxFNR = i}
+    if (priorFPR[i] > 0 & RBFPR[i] > RBFPR[imaxFPR] ){imaxFPR = i}
+    if (priorError[i] > 0 & RBError[i] > RBError[imaxError] ){imaxError = i}
+    if (priorFDR[i] > 0 & RBFDR[i] > RBFDR[imaxFDR] ){imaxFDR = i}
+    if (priorFNDR[i] > 0 & RBFNDR[i] > RBFNDR[imaxFNDR] ){imaxFNDR = i}
+  }
+  
+  FNRest = grid[imaxFNR]
+  FPRest = grid[imaxFPR]
+  Errorest = grid[imaxError]
+  FDRest = grid[imaxFDR]
+  FNDRest = grid[imaxFNDR]
+  
+  #RBFNR, RBFPR, RBError, RBFDR, RBFNDR
+  newlist = list("RBFNR" = RBFNR, "RBFPR" = RBFPR, "RBError" = RBError,
+                 "RBFDR" = RBFDR, "RBFNDR" = RBFNDR,
+                 "FNRest" = FNRest, "FPRest" = FPRest, "Errorest" = Errorest,
+                 "FDRest" = FDRest, "FNDRest" = FNDRest)
+  return(newlist)
+}
+
+
+
 

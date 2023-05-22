@@ -98,7 +98,7 @@ sect3.4_AUC_prior_copt = reactive({
                                  lambda1 = sect3.4_copt_lambda1(), 
                                  lambda2 = sect3.4_copt_lambda2())
   } else if (input$nonpara_bayes_case1 == 2){
-    nonpara_bayes_AUC_prior_copt(w = NA,
+    nonpara_bayes_AUC_prior_copt(w = FALSE,
                                  alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
                                  alpha2w = input$nonpara_bayes_prevalence_alpha2w,
                                  nMonteprior = sect3.4_copt_nMonteCarlo(), 
@@ -180,11 +180,15 @@ sect3.4_AUC_post_copt = reactive({
 })
 
 sect3.4_AUC_RBR_copt = reactive({
-  nonpara_bayes_AUC_rbr_copt(gridcopt = sect3.4_AUC_prior_copt()$gridcopt, 
+  nonpara_bayes_AUC_rbr_copt(delta = sect3.4_copt_delta(),
+                             gridcopt = sect3.4_AUC_prior_copt()$gridcopt, 
+                             gridmod = sect3.4_AUC_prior_copt()$gridmod,
                              priorcoptdensity = sect3.4_AUC_prior_copt()$priorcoptdensity, 
                              postcoptdensity = sect3.4_AUC_post_copt()$postcoptdensity,
                              priorcopt = sect3.4_AUC_prior_copt()$priorcopt, 
-                             postcopt = sect3.4_AUC_post_copt()$postcopt)
+                             postcopt = sect3.4_AUC_post_copt()$postcopt,
+                             priorcoptmod = sect3.4_AUC_prior_copt()$priorcoptmod,
+                             postcoptmod = sect3.4_AUC_post_copt()$postcoptmod)
 })
 
 sect3.4_cr = reactive({

@@ -22,9 +22,9 @@ nMontepost =  10000
 nstar = 100
 
 
-test = nonpara_bayes_AUC_prior_copt(w = 0.4, 
-                                   alpha1w = NA, 
-                                   alpha2w = NA,
+test1 = nonpara_bayes_AUC_prior_copt(w = FALSE, 
+                                   alpha1w = 15.3589, 
+                                   alpha2w = 22.53835,
                                    nMonteprior = 10000, #sect3.4_copt_nMonteCarlo(), 
                                    nstar = 100, #sect3.4_copt_nstar(), 
                                    a = 20, #sect3.4_a_copt(), 
@@ -52,13 +52,18 @@ xNDdata=c(-0.11315894,  0.03273954, -0.69180664, -0.05459313, -1.22760962, -0.25
           -0.34052122,  1.03882232, -0.26665494,  0.48965747,  0.80441378, -1.31205550,
           -1.09934759,  1.55522803, -0.19981736,  0.51936199,  0.95234605,  1.56027376,
           -1.42501031)
-
 xDdata=c(0.89345810, -0.09544302,  1.52694609,  2.30531596,  0.45009081,  0.97189716,
          0.85430995,  2.40987144,  1.44936186, -0.31305846,  0.19524931,  0.75202021,
          1.63136183,  1.31617751, -0.26481975,  1.69469220,  1.67520405,  1.50587628,
          -1.18927465,  1.75076313)
+nD = length(xDdata)
+nND = length(xNDdata)
+sD_squared = (nD - 1)*var(xDdata)
+sND_squared = (nND - 1)*var(xNDdata)
+meanD = mean(xDdata)
+meanND = mean(xNDdata)
 
-
+# this one is with raw data
 test2 = nonpara_bayes_AUC_post_copt(w = 0.4, 
                                     alpha1w = NA, 
                                     alpha2w = NA,
@@ -79,6 +84,104 @@ test2 = nonpara_bayes_AUC_post_copt(w = 0.4,
                                     meanND = NA,
                                     xDdata = xDdata, 
                                     xNDdata = xNDdata)
+
+# this one is without raw data
+test2 = nonpara_bayes_AUC_post_copt(w = 0.4, 
+                                    alpha1w = NA, 
+                                    alpha2w = NA,
+                                    nND = nND, 
+                                    nD = nD, 
+                                    version = "prior",
+                                    nMontepost = nMontepost, 
+                                    nstar = nstar, 
+                                    a = a, 
+                                    delta = delta,
+                                    mu0 = mu0, 
+                                    tau0 = tau0, 
+                                    lambda1 = lambda1, 
+                                    lambda2 = lambda2,
+                                    sD_squared = sD_squared, 
+                                    sND_squared = sND_squared, 
+                                    meanD = meanD, 
+                                    meanND = meanND,
+                                    xDdata = NA, 
+                                    xNDdata = NA)
+
+test3 = nonpara_bayes_AUC_rbr_copt(delta = delta, 
+                                   gridcopt = test1$gridcopt, 
+                                   gridmod = test1$gridmod, 
+                                   priorcoptdensity = test1$priorcoptdensity, 
+                                   postcoptdensity = test2$postcoptdensity,
+                                   priorcopt = test1$priorcopt, 
+                                   postcopt = test2$postcopt,
+                                   priorcoptmod = test1$priorcoptmod,
+                                   postcoptmod = test2$postcoptmod)
+
+pr_modified = test3$copt_plausible_region
+pr_modified = c(pr_modified[1], pr_modified[length(pr_modified)])
+
+nonpara_bayes_plots_AUC_copt(grid = test1$gridcopt, # used gridcopt
+                             prior = test1$priorcoptdensity, 
+                             post = test2$postcoptdensity,
+                             rbr = FALSE,
+                             plausible_region = pr_modified,
+                             credible_region = FALSE,
+                             rb_line = FALSE,
+                             lty_type = c(2, 1, 6, 3, 2, 3),
+                             colour_choice = c("blue", "red", "green",
+                                               "#b3bfff", "royalblue1", "#81ddff"),
+                             transparency = 0.1)
+
+nonpara_bayes_plots_AUC_copt(grid = test1$gridcopt, # used gridcopt
+                             prior = FALSE,
+                             post = FALSE,
+                             rbr = test3$RBcopt,
+                             plausible_region = pr_modified,
+                             credible_region = FALSE,
+                             rb_line = FALSE,
+                             lty_type = c(2, 1, 6, 3, 2, 3),
+                             colour_choice = c("blue", "red", "green",
+                                               "#b3bfff", "royalblue1", "#81ddff"),
+                             transparency = 0.1)
+
+pr_modified = test3$cmod_plausible_region
+pr_modified = c(pr_modified[1], pr_modified[length(pr_modified)])
+
+nonpara_bayes_plots_AUC_copt(grid = test1$gridmod, # used gridcopt
+                             prior = test1$priorcoptmoddensity, 
+                             post = test2$postcoptmoddensity,
+                             rbr = FALSE,
+                             plausible_region = pr_modified,
+                             credible_region = FALSE,
+                             rb_line = FALSE,
+                             lty_type = c(2, 1, 6, 3, 2, 3),
+                             colour_choice = c("blue", "red", "green",
+                                               "#b3bfff", "royalblue1", "#81ddff"),
+                             transparency = 0.1)
+
+nonpara_bayes_plots_AUC_copt(grid = test1$gridmod, # used gridcopt
+                             prior = FALSE,
+                             post = FALSE,
+                             rbr = test3$RBcoptmod,
+                             plausible_region = pr_modified,
+                             credible_region = FALSE,
+                             rb_line = FALSE,
+                             lty_type = c(2, 1, 6, 3, 2, 3),
+                             colour_choice = c("blue", "red", "green",
+                                               "#b3bfff", "royalblue1", "#81ddff"),
+                             transparency = 0.1)
+
+
+
+
+
+
+
+
+
+
+
+
 
 plot(test3$gridcopt,
      test3$postcoptdensity,xlab="copt",ylab="posterior density",type="l",lty=1)
@@ -487,4 +590,4 @@ plot(gridcopt,postcoptdensity,xlab="copt",ylab="prior and posterior",type="l",lt
 lines(gridcopt, priorcoptdensity, type="l",lty=2)
 
 
-plot(test$gridcopt,test5$RBcopt,xlab="copt",ylab=expression("RB"),type="l",lty=1)
+plot(test1$gridcopt,test3$RBcopt,xlab="copt",ylab=expression("RB"),type="l",lty=1)

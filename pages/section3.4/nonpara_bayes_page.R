@@ -6,7 +6,7 @@ nonpara_bayes_setup_variables_1 = div(
   titlePanel("Setup Values"),
   
   sidebarLayout(
-    sidebarPanel(width = 4, 
+    sidebarPanel(width = 4,    
       selectInput(inputId = "nonpara_bayes_DP_method", 
                   label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
                   choices = c("Choose a_D" = "aD", 
@@ -354,6 +354,9 @@ nonpara_bayes_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
+      sliderInput(inputId = "nonpara_bayes_smoother", 
+                  label = "Number of Average Points (Smoother)", 
+                  min = 1, max = 49, value = 3, step = 2),
       selectInput(inputId = "nonpara_bayes_colour", 
                   label = 'Select a colour', 
                   choices = colour_theme_list, 
@@ -458,86 +461,138 @@ nonpara_bayes_plots = div(
 )
 
 ################################################################
-# GRAPH 2 PAGE                                                 #
+# PLOTS FOR COPT                                               #
 ################################################################
 
-default_copt_list = list("1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5,
-                         "6" = 6, "7" = 7, "8" = 8, "9" = 9, "10" = 10,
-                         "11" = 11, "12" = 12, "13" = 13, "14" = 14, "15" = 15,
-                         "16" = 16, "17" = 17, "18" = 18, "19" = 19, "20" = 20,
-                         "21" = 21, "22" = 22, "23" = 23, "24" = 24, "25" = 25)
 
 nonpara_bayes_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-                 selectInput(inputId = "nonpara_bayes_c_opt_carry_colour",
-                             label = "Select a colour theme",
-                             list("Default Theme" = 'default',
-                                  "Custom Theme from AUC Plots" = 'custom',
-                                  "Manually Insert" = 'manual'),
-                             selected = 'default'),      
-                 selectInput(inputId = "nonpara_bayes_c_opt_modify",
-                             label = "Select which object to modify",
-                             list("Prior" = 'prior',
-                                  "Posterior" = 'post',
-                                  "Relative Belief Ratio" = 'rbr'),
-                             selected = 'prior'
-                 ),
-                 
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_c_opt_modify == 'prior'",
-                   selectInput(inputId = "nonpara_bayes_priorc_opt_label", 
-                               label = "Plot Symbol for Prior",
-                               default_copt_list,
-                               selected = 3),
-                   
-                   conditionalPanel(
-                     condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-                     textInput(inputId = "nonpara_bayes_priorc_opt_colour",
-                               label = 'Hex Colour for the Prior',
-                               value = "065143"), 
-                   )
-                 ),
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_c_opt_modify == 'post'",
-                   selectInput(inputId = "nonpara_bayes_postc_opt_label", 
-                               label = "Plot Symbol for Posterior",
-                               default_copt_list,
-                               selected = 4),
-                   conditionalPanel(
-                     condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-                     textInput(inputId = "nonpara_bayes_postc_opt_colour",
-                               label = 'Hex Colour for the Posterior',
-                               value = "70B77E"), 
-                   )
-                 ),
-                 conditionalPanel(
-                   condition = "input.nonpara_bayes_c_opt_modify == 'rbr'",
-                   selectInput(inputId = "nonpara_bayes_rbc_opt_label", 
-                               label = "Plot Symbol for RB Ratio",
-                               default_copt_list,
-                               selected = 8),
-                   
-                   conditionalPanel(
-                     condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-                     textInput(inputId = "nonpara_bayes_rbrc_opt_colour",
-                               label = 'Hex Colour for the RB Ratio',
-                               value = "CE1483"),
-                   )
-                 ),
-                 
+      selectInput(inputId = "nonpara_bayes_plot_type",
+                  label = "Select the type of plot.",
+                  choices = list("Copt" = "copt",
+                                 "Cmod" = "cmod"),
+                  selected = 'copt'
+      ),
+      sliderInput(inputId = "nonpara_bayes_smoother_copt", 
+                  label = "Number of Average Points (Smoother)", 
+                  min = 1, max = 49, value = 3, step = 2
+      ),
+      selectInput(inputId = "nonpara_bayes_c_opt_carry_colour",
+                  label = "Select a colour theme",
+                  choices = colour_theme_list_custom,
+                  selected = 'default'
+      ),      
+      selectInput(inputId = "nonpara_bayes_c_opt_modify",
+                  label = "Select which object to modify",
+                  choices = output_line_list,
+                  selected = 'prior'
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_c_opt_modify == 'prior'",
+        selectInput(inputId = "nonpara_bayes_priorc_opt_label", 
+                    label = "Line Type for the Prior",
+                    choices = default_lty_list,
+                    selected = 1
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "nonpara_bayes_priorc_opt_colour",
+                    label = 'Hex Colour for the Prior',
+                    value = "065143"),
+        )
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_c_opt_modify == 'post'",
+        selectInput(inputId = "nonpara_bayes_postc_opt_label", 
+                    label = "Line Type for the Posterior",
+                    choices = default_lty_list,
+                    selected = 2
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "nonpara_bayes_postc_opt_colour",
+                    label = 'Hex Colour for the Posterior',
+                    value = "70B77E"), 
+        )
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_c_opt_modify == 'rbr'",
+        selectInput(inputId = "nonpara_bayes_rbrc_opt_label", 
+                    label = "Line Type for the RB Ratio",
+                    choices = default_lty_list,
+                    selected = 6
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "nonpara_bayes_rbrc_opt_colour",
+                    label = 'Hex Colour for the RB Ratio',
+                    value = "CE1483"),
+        )
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_c_opt_modify == 'pr'",
+        selectInput(inputId = "nonpara_bayes_prc_opt_label", 
+                    label = "Line Type for the Plausible Region",
+                    choices = default_lty_list,
+                    selected = 2
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "nonpara_bayes_prc_opt_colour",
+                    label = 'Hex Colour for the Plausible Region',
+                    value = "73C1E7"),
+        )
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_c_opt_modify == 'line_1'",
+        selectInput(inputId = "nonpara_bayes_line_1c_opt_label", 
+                    label = "Line Type for the y = 1 Line",
+                    choices = default_lty_list,
+                    selected = 2
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "nonpara_bayes_line_1c_opt_colour",
+                    label = 'Hex Colour for the y = 1 Line',
+                    value = "73C1E7"),
+        )
+      ),
+      conditionalPanel(
+        condition = "input.nonpara_bayes_c_opt_modify == 'cr'",
+        selectInput(inputId = "nonpara_bayes_crc_opt_label", 
+                    label = "Line Type for the Credible Region",
+                    choices = default_lty_list,
+                    selected = 3
+        ),
+        conditionalPanel(
+          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+          textInput(inputId = "nonpara_bayes_crc_opt_colour",
+                    label = 'Hex Colour for the Credible Region',
+                    value = "9878C3"),
+        )
+      ),
+      sliderInput(inputId = "nonpara_bayes_c_opt_col_transparency", 
+                  label = "Scale for colour transparency",
+                  min = 0, max = 1, value = 0.1
+      ), 
     ),
+    
     mainPanel(
-      p("This is currently being worked on. Come back later!"),
-      #tabPanel("Plots",
-      #         fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
-      #                              plotOutput("nonpara_bayes_postprior_copt_graph"), 
-      #                              plotOutput("nonpara_bayes_RB_copt_graph")))),
-      
+      tabPanel("Plots",
+        fluidRow(
+          splitLayout(
+            cellWidths = c("50%", "50%"),
+            withSpinner(plotOutput("nonpara_bayes_postprior_cmod_graph")), 
+            withSpinner(plotOutput("nonpara_bayes_RB_cmod_graph"))
+          )
+        )
+      ),
     )
   )
 )
+
 
 ################################################################
 # DOWNLOAD PAGE                                                #
