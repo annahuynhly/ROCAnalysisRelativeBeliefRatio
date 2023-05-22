@@ -191,6 +191,20 @@ sect3.4_AUC_RBR_copt = reactive({
                              postcoptmod = sect3.4_AUC_post_copt()$postcoptmod)
 })
 
+sect3.4_AUC_RBR_error_char_copt = reactive({
+  nonpara_bayes_AUC_rbr_error_char_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
+                                        priorFNR = sect3.4_AUC_prior_copt()$priorFNR, 
+                                        priorFPR = sect3.4_AUC_prior_copt()$priorFPR, 
+                                        priorError = sect3.4_AUC_prior_copt()$priorError, 
+                                        priorFDR = sect3.4_AUC_prior_copt()$priorFDR, 
+                                        priorFNDR = sect3.4_AUC_prior_copt()$priorFNDR, 
+                                        postFNR = sect3.4_AUC_post_copt()$postFNR, 
+                                        postFPR = sect3.4_AUC_post_copt()$postFPR, 
+                                        postError = sect3.4_AUC_post_copt()$postError, 
+                                        postFDR = sect3.4_AUC_post_copt()$postFDR, 
+                                        postFNDR = sect3.4_AUC_post_copt()$postFNDR)
+})
+
 sect3.4_cr = reactive({
   nonpara_bayes_compute_credible_region(gamma = input$nonpara_bayes_gamma, 
                                         delta = sect3.4_copt_delta(), 

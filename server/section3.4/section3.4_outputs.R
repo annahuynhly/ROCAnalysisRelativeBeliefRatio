@@ -3,10 +3,6 @@
 ################################################################
 
 output$nonpara_bayes_hypoAUC_value = renderPrint({
-  #sect3.4_AUC_prior()
-  #sect3.4_AUC_post()
-  #sect3.4_AUC_RBR()
-  # HIDE FOR NOW -> TRYING TO DEBUG
   pr = sect3.4_AUC_RBR()$plausible_region
   pr = c(pr[1], pr[length(pr)])
   cr = sect3.4_cr()$credible_region
@@ -22,22 +18,21 @@ output$nonpara_bayes_hypoAUC_value = renderPrint({
 })
 
 output$nonpara_bayes_inf_opt_cutoff = renderPrint({
-  #temp_df = data.frame(sect3.4_AUC_RBR_error_char_copt()$FNRest,
-  #                     sect3.4_AUC_RBR_error_char_copt()$FPRest,
-  #                     sect3.4_AUC_RBR_error_char_copt()$Errorest,
-  #                     sect3.4_AUC_RBR_error_char_copt()$FDRest,
-  #                     sect3.4_AUC_RBR_error_char_copt()$FNDRest)
-  #colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
+  temp_df = data.frame(sect3.4_AUC_RBR_error_char_copt()$FNRest,
+                       sect3.4_AUC_RBR_error_char_copt()$FPRest,
+                       sect3.4_AUC_RBR_error_char_copt()$Errorest,
+                       sect3.4_AUC_RBR_error_char_copt()$FDRest,
+                       sect3.4_AUC_RBR_error_char_copt()$FNDRest)
+  colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
   list("Copt Estimate" = sect3.4_AUC_RBR_copt()$coptest,
-       "Plausible Region for Copt" = copt_transform(sect3.4_AUC_RBR_copt()$copt_plausible_region),
-       "prior" = sect3.4_AUC_prior_copt()$priorcoptdensity,
-       "post" = sect3.4_AUC_post_copt()$postcoptdensity
+       "Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$copt_plausible_region,
+       "Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$cmod_plausible_region,
+       "Posterior Content of the Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$postPlcopt,
+       "Error Characteristics" = temp_df
+  #     "Plausible Region for Copt" = copt_transform(sect3.4_AUC_RBR_copt()$copt_plausible_region),
   #     "Credible Region for Copt" = copt_transform(sect3.4_cr_copt()$credible_region),
   #     "Cmod Estimate" = sect3.4_AUC_RBR_copt()$cmodest,
-  #     "Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$plausible_region,
-  #     "Posterior Content of the Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$postPlcmod,
   #     "Credible Region for Cmod" = sect3.4_cr_copt()$credible_region,
-  #     "Error Characteristics" = temp_df)
   )
 })
 

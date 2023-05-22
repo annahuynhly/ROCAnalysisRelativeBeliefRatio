@@ -85,6 +85,20 @@ test2 = nonpara_bayes_AUC_post_copt(w = 0.4,
                                     xDdata = xDdata, 
                                     xNDdata = xNDdata)
 
+
+nonpara_bayes_AUC_rbr_error_char_copt(grid = test1$gridcopt, # usually use gridcopt
+                                      priorFNR = test1$priorFNR, 
+                                      priorFPR = test1$priorFPR, 
+                                      priorError = test1$priorError, 
+                                      priorFDR = test1$priorFDR, 
+                                      priorFNDR = test1$priorFNDR, 
+                                      postFNR = test2$postFNR, 
+                                      postFPR = test2$postFPR, 
+                                      postError = test2$postError, 
+                                      postFDR = test2$postFDR, 
+                                      postFNDR = test2$postFNDR)
+
+
 # this one is without raw data
 test2 = nonpara_bayes_AUC_post_copt(w = 0.4, 
                                     alpha1w = NA, 

@@ -669,7 +669,7 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   postFNR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
   postFPR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
   postError = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
-  postFNR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
+  postFDR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
   postFNDR = array(0*c(1:nMontepost*L), dim = c(nMontepost, L))
   for (i in 1:nMontepost){
     postFNR[i,] = abs(cdf(gridcopt, cDpost[i,], pDarraypost[i,]))
@@ -678,7 +678,7 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   }
   for (j in 1:L){
     if ((1 - wpost[i])*postFPR[i,j] + abs(wpost[i]*(1 - postFNR[i,j])) > 0) {
-      postFNR[i,j] = (1 - wpost[i])*postFPR[i,j]/((1 - wpost[i])*postFPR[i,j] + wpost[i]*(1 - postFNR[i,j])) }
+      postFDR[i,j] = (1 - wpost[i])*postFPR[i,j]/((1 - wpost[i])*postFPR[i,j] + wpost[i]*(1 - postFNR[i,j])) }
     if (abs((1 - wpost[i])*(1 - postFPR[i,j])) + wpost[i]*postFNR[i,j] > 0) {
       postFNDR[i,j] = wpost[i]*postFNR[i,j]/(abs((1 - wpost[i])*(1-postFPR[i,j])) + wpost[i]*postFNR[i,j])}
   }
@@ -732,7 +732,7 @@ nonpara_bayes_AUC_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
                  "postcopt" = postcopt, "postcoptdensity" = postcoptdensity, 
                  "postcoptmod" = postcoptmod, "postcoptmoddensity" = postcoptmoddensity,
                  "postFNR" = postFNR, "postFPR" = postFPR, 
-                 "postError" = postError, "postFNR" = postFNR, 
+                 "postError" = postError, "postFDR" = postFDR, 
                  "postFNDR" = postFNDR)
   return(newlist)
 }
@@ -749,9 +749,10 @@ nonpara_bayes_AUC_rbr_copt = function(delta, gridcopt, gridmod,
   for (i in 1:L){
     if (priorcoptdensity[i] > 0){imax = i}
   }
+  
   for (i in 1:L){
     if((priorcopt[i] > 0) & (postcopt[i] > 0)){
-      if(RBcopt[i] > RBcopt[imax]){max=i}
+      if(RBcopt[i] > RBcopt[imax]){imax=i}
     }
   }
   coptest = gridcopt[imax]
@@ -800,6 +801,23 @@ nonpara_bayes_AUC_rbr_error_char_copt = function(grid, # usually use gridcopt
   RBFDR = postFDR/priorFDR
   RBFNDR = postFNDR/priorFNDR
   
+  # mutating the values to deal with the errors
+  priorFNR[is.na(priorFNR)] = 0
+  priorFPR[is.na(priorFPR)] = 0
+  priorError[is.na(priorError)] = 0
+  priorFDR[is.na(priorFDR)] = 0
+  priorFNDR[is.na(priorFNDR)] = 0
+  RBFNR_alt = RBFNR
+  RBFPR_alt = RBFPR
+  RBError_alt = RBError
+  RBFDR_alt = RBFDR
+  RBFNDR_alt = RBFNDR
+  RBFNR_alt[is.na(RBFNR_alt)] = 0
+  RBFPR_alt[is.na(RBFPR_alt)] = 0
+  RBError_alt[is.na(RBError_alt)] = 0
+  RBFDR_alt[is.na(RBFDR_alt)] = 0
+  RBFNDR_alt[is.na(RBFNDR_alt)] = 0
+  
   # to get a starting value for imax
   for (i in 1:L) {
     if (priorFNR[i] > 0){imaxFNR = i}
@@ -810,11 +828,11 @@ nonpara_bayes_AUC_rbr_error_char_copt = function(grid, # usually use gridcopt
   }
   
   for (i in 1:L) {
-    if (priorFNR[i] > 0 & RBFNR[i] > RBFNR[imaxFNR] ){imaxFNR = i}
-    if (priorFPR[i] > 0 & RBFPR[i] > RBFPR[imaxFPR] ){imaxFPR = i}
-    if (priorError[i] > 0 & RBError[i] > RBError[imaxError] ){imaxError = i}
-    if (priorFDR[i] > 0 & RBFDR[i] > RBFDR[imaxFDR] ){imaxFDR = i}
-    if (priorFNDR[i] > 0 & RBFNDR[i] > RBFNDR[imaxFNDR] ){imaxFNDR = i}
+    if (priorFNR[i] > 0 & RBFNR_alt[i] > RBFNR_alt[imaxFNR] ){imaxFNR = i}
+    if (priorFPR[i] > 0 & RBFPR_alt[i] > RBFPR_alt[imaxFPR] ){imaxFPR = i}
+    if (priorError[i] > 0 & RBError_alt[i] > RBError_alt[imaxError] ){imaxError = i}
+    if (priorFDR[i] > 0 & RBFDR_alt[i] > RBFDR_alt[imaxFDR] ){imaxFDR = i}
+    if (priorFNDR[i] > 0 & RBFNDR_alt[i] > RBFNDR_alt[imaxFNDR] ){imaxFNDR = i}
   }
   
   FNRest = grid[imaxFNR]

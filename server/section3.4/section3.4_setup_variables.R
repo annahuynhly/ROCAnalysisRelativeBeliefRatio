@@ -5,7 +5,6 @@
 # minor variables (this is based on whether they want to carry on or use a previous selection)
 
 # NOTE: the selection for which xData or xND data is within the other section.
-
 sect3.4_condition = reactive({
   if(input$nonpara_bayes_condition == "uncond"){
     "unconditional"
