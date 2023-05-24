@@ -3,12 +3,13 @@
 ################################################################
 # Add a github link to the repository
 # Align the footer margins for the rest of the sections. -> LOW PRIORITY
-# Make sure the seed is consistent
-# Make the code look nicer lmao
-# make outputs look nicer ??? -> probably not, looks decent enough anyways...
+# Make sure the seed is consistent -> for the nonparametric case
 # make sure there is seed support for the inferences for the optimal cutoff
-# maybe add more resources for understanding?
+# Make the code look nicer lmao
+# make outputs look nicer ??? (difficult task based on searches)
+# maybe add more resources for understanding? such as videos
 # add more colour themes and make the code more efficient for selecting a colour
+# let people generate their own data
 
 # ISSUES:
 

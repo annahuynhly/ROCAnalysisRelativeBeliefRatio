@@ -36,6 +36,7 @@ sect3.4_AUC_prior = reactive({
 }) 
 
 sect3.4_AUC_post = reactive({
+  set.seed(SECT3.4_SEED()) # SETTING THE SEED 
   # check whether or not setting the seed is necessary
   if(input$nonpara_bayes_data_method == 1){ # inserting descriptive statistics
     nonpara_bayes_AUC_post(condition = input$nonpara_bayes_condition, 
@@ -85,6 +86,7 @@ sect3.4_AUC_RBR = reactive({
 })
 
 sect3.4_AUC_prior_copt = reactive({
+  set.seed(SECT3.4_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$nonpara_bayes_case1 == 1){
     nonpara_bayes_AUC_prior_copt(w = input$nonpara_bayes_prevalence_w,
                                  alpha1w = NA, 
@@ -113,6 +115,7 @@ sect3.4_AUC_prior_copt = reactive({
 })
 
 sect3.4_AUC_post_copt = reactive({
+  set.seed(SECT3.4_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$nonpara_bayes_case1 == 1){
     nonpara_bayes_AUC_post_copt(w = input$nonpara_bayes_prevalence_w, 
                                 alpha1w = NA, 

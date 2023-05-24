@@ -82,6 +82,7 @@ sect3.3_cr = reactive({
 })
 
 sect3.3_AUC_prior_copt = reactive({
+  set.seed(SECT3.3_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$binormal_diag_case1 == 1){
     binormal_diag_prior_copt(w = input$binormal_diag_prevalence_w,
                              alpha1w = NA, 
