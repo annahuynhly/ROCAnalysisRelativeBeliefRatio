@@ -25,11 +25,11 @@ RBR_compute_values = function(alpha1w, alpha2w, n, nD, grid){
   RB_estimate_of_prevalence_w = (match(max(relative_belief_ratio), relative_belief_ratio))/length(grid)
   
   # Shortens the plausible region
-  plausible_region = c(plausible_region[1], plausible_region[length(plausible_region)])
+  pr_short = c(plausible_region[1], plausible_region[length(plausible_region)])
   
   # finding the prior and posterior content
-  prior_content = pbeta(plausible_region[2], alpha1w, alpha2w) - pbeta(plausible_region[1], alpha1w, alpha2w)
-  posterior_content = pbeta(plausible_region[2], alpha1w + nD, alpha2w + nND) - pbeta(plausible_region[1], alpha1w + nD, alpha2w + nND)
+  prior_content = pbeta(pr_short[2], alpha1w, alpha2w) - pbeta(pr_short[1], alpha1w, alpha2w)
+  posterior_content = pbeta(pr_short[2], alpha1w + nD, alpha2w + nND) - pbeta(pr_short[1], alpha1w + nD, alpha2w + nND)
   
   newlist = list("nND" = nND, "prior" = prior, "post" = post, 
                  "relative_belief_ratio" = relative_belief_ratio, "plausible_region" = plausible_region,
@@ -59,7 +59,7 @@ compute_credible_region = function(alpha1w, alpha2w, n, nD, grid, gamma, delta, 
       return(list("credible_region" = err_msg, "rb_line" = err_msg))
     } 
     else {
-      #half_distance = floor((plausible_region[2]-plausible_region[1])*(1/delta)/2)
+      #half_distance = floor((plausible_region[length(plausible_region)]-plausible_region[1])*(1/delta)/2)
       RBR_values = sort(relative_belief_ratio, decreasing = TRUE)
       RBR_values = RBR_values[RBR_values > 1] # sorting for values larger than 1
       for(i in 2:length(RBR_values)){ # doesn't start at the top as the length is 0
@@ -145,6 +145,7 @@ generate_prior_post_graph = function(prior, post, plausible_region, grid, credib
   
   # Constructs an interval for the x and y region
   x_interval = c(min(x_prior[1], x_post[1]), max(x_prior[length(x_prior)], x_post[length(x_post)]))
+  #x_interval = c(0, 1)
   y_interval = c(0, max(c(prior, post)))
   
   # Plots of the Prior and the Posterior
@@ -153,7 +154,7 @@ generate_prior_post_graph = function(prior, post, plausible_region, grid, credib
        col = colour_choice[1])
   lines(grid, post, col = colour_choice[2], type = "l", lty = lty_type[2], lwd = 2)
   abline(v = plausible_region[1], col = colour_choice[3], lwd = 2, lty = lty_type[3])
-  abline(v = plausible_region[2], col = colour_choice[3], lwd = 2, lty = lty_type[3])
+  abline(v = plausible_region[length(plausible_region)], col = colour_choice[3], lwd = 2, lty = lty_type[3])
   
   # Getting inner rgb colour for transparent effect
   rgb_prior = col2rgb(colour_choice[1])
@@ -226,7 +227,7 @@ generate_rbr_graph = function(relative_belief_ratio, plausible_region, grid, cre
   abline(v = upper_bd, col = colour_choice[2], lwd = 2, lty = lty_type[2])
   # Colouring in the area between the plausible region and when the RBR > 1
   l = min(which(grid >= plausible_region[1]))
-  h = max(which(grid < plausible_region[2]))
+  h = max(which(grid < plausible_region[length(plausible_region)]))
   rgb_rb = col2rgb(colour_choice[1])
   polygon(c(grid[c(l, l:h, h)]),
           c(1, relative_belief_ratio[l:h], 1),

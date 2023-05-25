@@ -2,59 +2,68 @@
 # DESCRIPTION                                                  #
 ################################################################
 
-finite_val_setup_variables_1 = fluidPage(
+finite_val_setup_variables_1 = div(
   titlePanel("Setup Values"),
-  br(),
-  
-  fluidRow(
-    column(3, h3("Simulation Sizes:")),
-    column(3, numericInput(inputId = "finite_val_nMonteCarlo",
-                           label = '$\\text{Monte Carlo (Simulation) Sample Size}$',
-                           #label = 'Monte Carlo (Simulation) Sample Size',
-                           value = 100000, min = 0)),
-    column(3, numericInput(inputId = "finite_val_delta", 
-                           label = "$\\text{Delta } (\\delta$)",
-                           #label = "Delta ($\\delta$)", 
-                           value = 0.04, min = 0, max = 1)),
+  sidebarLayout(
+    sidebarPanel(width = 3,
+      selectInput(inputId = "finite_val_condition",
+                  label = "Select whether to use the conditional or non conditional prior.",
+                  choices = list("Conditional" = 'conditional',
+                                 "Unconditional" = 'unconditional'),
+                  selected = 'unconditional'
+      ),
+    ),
+    mainPanel(
+      fluidRow(
+        column(3, h4("Simulation Sizes:")),
+        column(3, numericInput(inputId = "finite_val_nMonteCarlo",
+                               label = '$\\text{Simulation Sample Size}$',
+                               #label = 'Monte Carlo (Simulation) Sample Size',
+                               value = 100000, min = 0)),
+        column(3, numericInput(inputId = "finite_val_delta", 
+                               label = "$\\text{Delta } (\\delta$)",
+                               #label = "Delta ($\\delta$)", 
+                               value = 0.04, min = 0, max = 1)),
+      ),
+      fluidRow(
+        column(3, h4("Hyperparameters:")),
+        column(3, textInput(inputId = "finite_val_alpha_ND",
+                            label = p(style = 'font-size:18px;',
+                                      "$\\alpha_{\\text{ND1}}, ..., \\alpha_{\\text{NDm}}$"),
+                            #label = 'alphaND1, ..., alphaNDm',
+                            value = "1, 1, 1, 1, 1")),
+        column(3, textInput(inputId = "finite_val_alpha_D",
+                            label = p(style = 'font-size:18px;',
+                                      "$\\alpha_{\\text{D1}}, ..., \\alpha_{\\text{Dm}}$"),
+                            #label = 'alphaD1, ..., alphaDm',
+                            value = "1, 1, 1, 1, 1")),
+      ),
+      fluidRow(
+        column(3, h4("Data (Sample Count):")),
+        column(3, numericInput(inputId = "finite_val_nND",
+                               label = '$\\text{Total Non-Diseased}$',
+                               #label = 'Total Non-Diseased',
+                               value = 50, min = 1)),
+        column(3, numericInput(inputId = "finite_val_nD", 
+                               label = '$\\text{Total Diseased}$',
+                               #label = 'Total Diseased',
+                               value = 100, min = 1)),
+      ),
+      fluidRow(
+        column(3, h4("Data (Distribution)")),
+        column(3, textInput(inputId = "finite_val_fND",
+                            label = p(style = 'font-size:16px;',
+                                      "$f_{\\text{ND}}$"),
+                            #label = 'fNd',
+                            value = "29, 7, 4, 5, 5")),
+        column(3, textInput(inputId = "finite_val_fD",
+                            label = p(style = 'font-size:16px;',
+                                      "$f_{\\text{D}}$"),
+                            #label = 'fD',
+                            value = "14, 7, 25, 33, 21")),
+      ),
+    )
   ),
-  fluidRow(
-    column(3, h3("Hyperparameters:")),
-    column(3, textInput(inputId = "finite_val_alpha_ND",
-                        label = p(style = 'font-size:18px;',
-                        "$\\alpha_{\\text{ND1}}, ..., \\alpha_{\\text{NDm}}$"),
-                        #label = 'alphaND1, ..., alphaNDm',
-                        value = "1, 1, 1, 1, 1")),
-    column(3, textInput(inputId = "finite_val_alpha_D",
-                        label = p(style = 'font-size:18px;',
-                        "$\\alpha_{\\text{D1}}, ..., \\alpha_{\\text{Dm}}$"),
-                        #label = 'alphaD1, ..., alphaDm',
-                        value = "1, 1, 1, 1, 1")),
-  ),
-  fluidRow(
-    column(3, h3("Data (Sample Count):")),
-    column(3, numericInput(inputId = "finite_val_nND",
-                           label = '$\\text{Total Non-Diseased}$',
-                           #label = 'Total Non-Diseased',
-                           value = 50, min = 1)),
-    column(3, numericInput(inputId = "finite_val_nD", 
-                           label = '$\\text{Total Diseased}$',
-                           #label = 'Total Diseased',
-                           value = 100, min = 1)),
-  ),
-  fluidRow(
-    column(3, h3("Data (Distribution)")),
-    column(3, textInput(inputId = "finite_val_fND",
-                        label = p(style = 'font-size:16px;',
-                                  "$f_{\\text{ND}}$"),
-                        #label = 'fNd',
-                        value = "29, 7, 4, 5, 5")),
-    column(3, textInput(inputId = "finite_val_fD",
-                        label = p(style = 'font-size:16px;',
-                                  "$f_{\\text{D}}$"),
-                        #label = 'fD',
-                        value = "14, 7, 25, 33, 21")),
-  ),
-  
   br(style = "line-height:10;"),
 )
 
@@ -136,12 +145,6 @@ finite_val_hypothesizedAUC = div(
       numericInput(inputId = "finite_val_hypoAUC",
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5
-      ),
-      selectInput(inputId = "finite_val_condition",
-                  label = "Select whether to use the conditional or non conditional prior.",
-                  choices = list("Conditional" = 'conditional',
-                                 "Unconditional" = 'unconditional'),
-                  selected = 'unconditional'
       ),
       conditionalPanel(
         condition = "input.finite_val_condition == 'conditional'",

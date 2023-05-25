@@ -48,12 +48,17 @@ sect3.3_prevalence_prior = reactive({
                        grid = sect3.3_prevalence_grid())
 })
 
+sect3.3_pr_short = reactive({
+  pr = sect3.3_prevalence_info_1()$plausible_region
+  pr = c(pr[1], pr[length(pr)])
+})
+
 ################################################################
 # NUMERIC/TEXT OUTPUTS                                         #
 ################################################################
 
 output$binormal_diag_prevalence_values1 = renderPrint({
-  list("Plausible Region of Prevalence w" = sect3.3_prevalence_info_1()$plausible_region,
+  list("Plausible Region of Prevalence w" = sect3.3_pr_short(),
        "Relative Belief Estimate of Prevalence w" = sect3.3_prevalence_info_1()$RB_estimate_of_prevalence_w,
        "Prior Content" = sect3.3_prevalence_info_1()$prior_content,
        "Posterior Content" = sect3.3_prevalence_info_1()$posterior_content,

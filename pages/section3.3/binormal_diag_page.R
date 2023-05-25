@@ -12,6 +12,12 @@ binormal_diag_setup_variables_1 = div(
                             "Assume variances are unequal" = "unequal_var"),
                   selected = "equal_var"
       ),
+      selectInput(inputId = "binormal_diag_condition",
+                  label = "Select whether to use the conditional or non conditional prior.",
+                  choices = list("Conditional" = 'cond',
+                                 "Unconditional" = 'uncond'),
+                  selected = 'uncond'
+      ),
     ),
     mainPanel(
       fluidPage(
@@ -192,12 +198,6 @@ binormal_diag_hypothesizedAUC = div(
       numericInput(inputId = "binormal_diag_hypoAUC",
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5
-      ),
-      selectInput(inputId = "binormal_diag_condition",
-                  label = "Select whether to use the conditional or non conditional prior.",
-                  choices = list("Conditional" = 'cond',
-                                 "Unconditional" = 'uncond'),
-                  selected = 'uncond'
       ),
       textInput(inputId = "binormal_diag_gamma", 
                 label = tags$p("Gamma (must be less than posterior content)", 
@@ -594,8 +594,8 @@ page_binormal_diag_inference1 = div(
   titlePanel("Binormal Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", binormal_diag_setup_variables_1),
-              tabPanel("Inferences for the AUC", binormal_diag_hypothesizedAUC),
               tabPanel("Plots for the AUC", binormal_diag_plots),
+              tabPanel("Inferences for the AUC", binormal_diag_hypothesizedAUC),
               tabPanel("Download Prior & Posterior", binormal_diag_download_1),
   )
 )

@@ -6,7 +6,13 @@ nonpara_bayes_setup_variables_1 = div(
   titlePanel("Setup Values"),
   
   sidebarLayout(
-    sidebarPanel(width = 4,    
+    sidebarPanel(width = 4,
+      selectInput(inputId = "nonpara_bayes_condition",
+                  label = "Select whether to use the conditional or non conditional prior.",
+                  choices = list("Conditional" = 'cond',
+                                 "Unconditional" = 'uncond'),
+                  selected = 'cond'
+      ),
       selectInput(inputId = "nonpara_bayes_DP_method", 
                   label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
                   choices = c("Choose a_D" = "aD", 
@@ -313,12 +319,6 @@ nonpara_bayes_hypothesizedAUC = div(
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-      selectInput(inputId = "nonpara_bayes_condition",
-                  label = "Select whether to use the conditional or non conditional prior.",
-                  choices = list("Conditional" = 'cond',
-                                 "Unconditional" = 'uncond'),
-                  selected = 'cond'
-      ),
       textInput(inputId = "nonpara_bayes_gamma", 
                 label = tags$p("Gamma (must be less than posterior content)", 
                                style = "font-size: 95%"), 
@@ -637,8 +637,8 @@ page_nonpara_bayes1 = div(
   # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
               tabPanel("Setup Variables", nonpara_bayes_setup_variables_1),
-              tabPanel("Inferences for the AUC", nonpara_bayes_hypothesizedAUC),
               tabPanel("Plots for the AUC", nonpara_bayes_plots),
+              tabPanel("Inferences for the AUC", nonpara_bayes_hypothesizedAUC),
               tabPanel("Download Prior & Posterior", nonpara_bayes_download_1),
   )
 )

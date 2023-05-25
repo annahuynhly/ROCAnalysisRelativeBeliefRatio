@@ -2,7 +2,7 @@
 # VARIABLES                                                    #
 ################################################################
 
-sect3.3_prevalence_grid = reactive({
+sect3.4_prevalence_grid = reactive({
   if(input$nonpara_bayes_case2 == 'A'){
     open_bracket_grid(input$nonpara_bayes_prevalence_delta_alt)
   } else {
@@ -10,42 +10,47 @@ sect3.3_prevalence_grid = reactive({
   }
 })
 
-sect3.3_prevalence_info_1 = reactive({
+sect3.4_prevalence_info_1 = reactive({
   RBR_compute_values(alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
                      alpha2w = input$nonpara_bayes_prevalence_alpha2w, 
                      n = input$nonpara_bayes_prevalence_n, 
                      nD = input$nonpara_bayes_prevalence_nD, 
-                     grid = sect3.3_prevalence_grid())
+                     grid = sect3.4_prevalence_grid())
 })
 
-sect3.3_prevalence_info_2 = reactive({
+sect3.4_prevalence_info_2 = reactive({
   w0_compute_values(alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
                     alpha2w = input$nonpara_bayes_prevalence_alpha2w, 
                     n = input$nonpara_bayes_prevalence_n, 
                     nD = input$nonpara_bayes_prevalence_nD, 
                     w0 = input$nonpara_bayes_prevalence_w0, 
-                    relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
-                    grid = sect3.3_prevalence_grid())
+                    relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
+                    grid = sect3.4_prevalence_grid())
 })
 
-sect3.3_prevalence_cred_region = reactive({
+sect3.4_prevalence_cred_region = reactive({
   compute_credible_region(alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
                           alpha2w = input$nonpara_bayes_prevalence_alpha2w, 
                           n = input$nonpara_bayes_prevalence_n, 
                           nD = input$nonpara_bayes_prevalence_nD, 
-                          grid = sect3.3_prevalence_grid(), 
+                          grid = sect3.4_prevalence_grid(), 
                           gamma = input$nonpara_bayes_prevalence_gamma, 
                           delta = input$nonpara_bayes_prevalence_delta, 
-                          relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
-                          posterior_content = sect3.3_prevalence_info_1()$posterior_content, 
-                          plausible_region = sect3.3_prevalence_info_1()$plausible_region)
+                          relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
+                          posterior_content = sect3.4_prevalence_info_1()$posterior_content, 
+                          plausible_region = sect3.4_prevalence_info_1()$plausible_region)
 })
 
 # This is for the prior case only
-sect3.3_prevalence_prior = reactive({
+sect3.4_prevalence_prior = reactive({
   prior_compute_values(alpha1w = input$nonpara_bayes_prevalence_alpha1w,
                        alpha2w = input$nonpara_bayes_prevalence_alpha2w, 
-                       grid = sect3.3_prevalence_grid())
+                       grid = sect3.4_prevalence_grid())
+})
+
+sect3.4_pr_short = reactive({
+  pr = sect3.4_prevalence_info_1()$plausible_region
+  pr = c(pr[1], pr[length(pr)])
 })
 
 ################################################################
@@ -53,23 +58,23 @@ sect3.3_prevalence_prior = reactive({
 ################################################################
 
 output$nonpara_bayes_prevalence_values1 = renderPrint({
-  list("Plausible Region of Prevalence w" = sect3.3_prevalence_info_1()$plausible_region,
-       "Relative Belief Estimate of Prevalence w" = sect3.3_prevalence_info_1()$RB_estimate_of_prevalence_w,
-       "Prior Content" = sect3.3_prevalence_info_1()$prior_content,
-       "Posterior Content" = sect3.3_prevalence_info_1()$posterior_content,
-       "Credible Region of Prevalence w" = sect3.3_prevalence_cred_region()$credible_region,
-       "Max RBR Value for the Credible Region" = sect3.3_prevalence_cred_region()$rb_line)
+  list("Plausible Region of Prevalence w" = sect3.4_pr_short(),
+       "Relative Belief Estimate of Prevalence w" = sect3.4_prevalence_info_1()$RB_estimate_of_prevalence_w,
+       "Prior Content" = sect3.4_prevalence_info_1()$prior_content,
+       "Posterior Content" = sect3.4_prevalence_info_1()$posterior_content,
+       "Credible Region of Prevalence w" = sect3.4_prevalence_cred_region()$credible_region,
+       "Max RBR Value for the Credible Region" = sect3.4_prevalence_cred_region()$rb_line)
 })
 
 output$nonpara_bayes_prevalence_values2 = renderPrint({
-  #sect3.3_prevalence_info_2()
-  list("Relative Belief Ratio at w0" = sect3.3_prevalence_info_2()$relative_belief_ratio_at_w0,
-       "Strength" = sect3.3_prevalence_info_2()$strength)
+  #sect3.4_prevalence_info_2()
+  list("Relative Belief Ratio at w0" = sect3.4_prevalence_info_2()$relative_belief_ratio_at_w0,
+       "Strength" = sect3.4_prevalence_info_2()$strength)
 })
 
 output$nonpara_bayes_prevalence_prior_values = renderPrint({
   list(
-    "Relative Belief Estimate of Prevalence w" = (match(max(sect3.3_prevalence_prior()), sect3.3_prevalence_prior())/length(sect3.3_prevalence_grid()))
+    "Relative Belief Estimate of Prevalence w" = (match(max(sect3.4_prevalence_prior()), sect3.4_prevalence_prior())/length(sect3.4_prevalence_grid()))
   )
 })
 
@@ -140,29 +145,29 @@ sect3.4_prevalence_w0_lty = reactive({
 
 output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
   if(check.numeric(input$nonpara_bayes_prevalence_gamma) == FALSE){
-    generate_prior_post_graph(prior = sect3.3_prevalence_info_1()$prior, 
-                              post = sect3.3_prevalence_info_1()$post, 
-                              plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
-                              grid = sect3.3_prevalence_grid(),
+    generate_prior_post_graph(prior = sect3.4_prevalence_info_1()$prior, 
+                              post = sect3.4_prevalence_info_1()$post, 
+                              plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
+                              grid = sect3.4_prevalence_grid(),
                               colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
                               lty_type = sect3.4_prevalence_prior_post_lty(),
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
-  } else if (as.numeric(input$nonpara_bayes_prevalence_gamma) >= sect3.3_prevalence_info_1()$posterior_content){
+  } else if (as.numeric(input$nonpara_bayes_prevalence_gamma) >= sect3.4_prevalence_info_1()$posterior_content){
     # Couldn't do the or statement for if because of the case where you can't do
     # as.numeric() for input$gamma
-    generate_prior_post_graph(prior = sect3.3_prevalence_info_1()$prior, 
-                              post = sect3.3_prevalence_info_1()$post, 
-                              plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
-                              grid = sect3.3_prevalence_grid(),
+    generate_prior_post_graph(prior = sect3.4_prevalence_info_1()$prior, 
+                              post = sect3.4_prevalence_info_1()$post, 
+                              plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
+                              grid = sect3.4_prevalence_grid(),
                               colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
                               lty_type = sect3.4_prevalence_prior_post_lty(),
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else {
-    generate_prior_post_graph(prior = sect3.3_prevalence_info_1()$prior, 
-                              post = sect3.3_prevalence_info_1()$post, 
-                              plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
-                              grid = sect3.3_prevalence_grid(),
-                              credible_region = sect3.3_prevalence_cred_region()$credible_region,
+    generate_prior_post_graph(prior = sect3.4_prevalence_info_1()$prior, 
+                              post = sect3.4_prevalence_info_1()$post, 
+                              plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
+                              grid = sect3.4_prevalence_grid(),
+                              credible_region = sect3.4_prevalence_cred_region()$credible_region,
                               colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
                               lty_type = sect3.4_prevalence_prior_post_lty(),
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
@@ -171,25 +176,25 @@ output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
 
 output$nonpara_bayes_prevalence_RB_graph = renderPlot({
   if(check.numeric(input$nonpara_bayes_prevalence_gamma) == FALSE){
-    generate_rbr_graph(relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
-                       plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
-                       grid = sect3.3_prevalence_grid(),
+    generate_rbr_graph(relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
+                       plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
+                       grid = sect3.4_prevalence_grid(),
                        colour_choice = sect3.4_prevalence_colours()[c(3:6)],
                        lty_type = sect3.4_prevalence_rbr_lty(),
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
-  } else if (as.numeric(input$nonpara_bayes_prevalence_gamma) >= sect3.3_prevalence_info_1()$posterior_content){
-    generate_rbr_graph(relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
-                       plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
-                       grid = sect3.3_prevalence_grid(),
+  } else if (as.numeric(input$nonpara_bayes_prevalence_gamma) >= sect3.4_prevalence_info_1()$posterior_content){
+    generate_rbr_graph(relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
+                       plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
+                       grid = sect3.4_prevalence_grid(),
                        colour_choice = sect3.4_prevalence_colours()[c(3:6)],
                        lty_type = sect3.4_prevalence_rbr_lty(),
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else {
-    generate_rbr_graph(relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
-                       plausible_region = sect3.3_prevalence_info_1()$plausible_region, 
-                       grid = sect3.3_prevalence_grid(),
-                       credible_region = sect3.3_prevalence_cred_region()$credible_region, 
-                       rb_line = sect3.3_prevalence_cred_region()$rb_line,
+    generate_rbr_graph(relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
+                       plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
+                       grid = sect3.4_prevalence_grid(),
+                       credible_region = sect3.4_prevalence_cred_region()$credible_region, 
+                       rb_line = sect3.4_prevalence_cred_region()$rb_line,
                        colour_choice = sect3.4_prevalence_colours()[c(3:6)],
                        lty_type = sect3.4_prevalence_rbr_lty(),
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
@@ -198,10 +203,10 @@ output$nonpara_bayes_prevalence_RB_graph = renderPlot({
 
 output$nonpara_bayes_prevalence_w0_graph = renderPlot({
   generate_relative_belief_ratio_at_w0_graph(
-    relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
-    relative_belief_ratio_at_w0 = sect3.3_prevalence_info_2()$relative_belief_ratio_at_w0,
-    w0_interval = sect3.3_prevalence_info_2()$w0_interval, 
-    grid = sect3.3_prevalence_grid(),
+    relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
+    relative_belief_ratio_at_w0 = sect3.4_prevalence_info_2()$relative_belief_ratio_at_w0,
+    w0_interval = sect3.4_prevalence_info_2()$w0_interval, 
+    grid = sect3.4_prevalence_grid(),
     colour_choice = sect3.4_prevalence_w0_colours(),
     lty_type = sect3.4_prevalence_w0_lty(),
     transparency = input$nonpara_bayes_diag_prevalence_col_transparency_w0)
@@ -210,14 +215,14 @@ output$nonpara_bayes_prevalence_w0_graph = renderPlot({
 # This is for the prior case only
 output$nonpara_bayes_prevalence_post_graph_alt = renderPlot({
   if(input$nonpara_bayes_prevalence_colour_1 != 'manual'){
-    generate_prior_graph(prior = sect3.3_prevalence_prior(), 
-                         grid = sect3.3_prevalence_grid(),
+    generate_prior_graph(prior = sect3.4_prevalence_prior(), 
+                         grid = sect3.4_prevalence_grid(),
                          colour_choice = input$nonpara_bayes_prevalence_colour_1,
                          lty_type = as.numeric(input$nonpara_bayes_prevalence_lty_1),
                          transparency = input$nonpara_bayes_prevalence_col_transparency_1)
   } else if (input$nonpara_bayes_prevalence_colour_1 == 'manual'){
-    generate_prior_graph(prior = sect3.3_prevalence_prior(), 
-                         grid = sect3.3_prevalence_grid(),
+    generate_prior_graph(prior = sect3.4_prevalence_prior(), 
+                         grid = sect3.4_prevalence_grid(),
                          colour_choice = paste("#", input$nonpara_bayes_prevalence_colour_2, sep = ""),
                          transparency = input$nonpara_bayes_prevalence_col_transparency_1)
   }
@@ -229,10 +234,10 @@ output$nonpara_bayes_prevalence_post_graph_alt = renderPlot({
 ################################################################
 
 nonpara_bayes_prevalence_download = reactive({
-  RB_generate_dataframe(sect3.3_prevalence_grid(), 
-                        sect3.3_prevalence_info_1()$prior, 
-                        sect3.3_prevalence_info_1()$post, 
-                        sect3.3_prevalence_info_1()$relative_belief)
+  RB_generate_dataframe(sect3.4_prevalence_grid(), 
+                        sect3.4_prevalence_info_1()$prior, 
+                        sect3.4_prevalence_info_1()$post, 
+                        sect3.4_prevalence_info_1()$relative_belief)
 })
 
 output$nonpara_bayes_prevalence_dataframe <- renderDataTable({
@@ -250,8 +255,8 @@ output$nonpara_bayes_prevalence_downloadData <- downloadHandler(
 
 # This is for the prior only case
 nonpara_bayes_prevalence_download_prior = reactive({
-  RB_generate_priorframe(grid = sect3.3_prevalence_grid(),
-                         prior = sect3.3_prevalence_prior())
+  RB_generate_priorframe(grid = sect3.4_prevalence_grid(),
+                         prior = sect3.4_prevalence_prior())
 })
 
 output$nonpara_bayes_prevalence_dataframe_alt <- renderDataTable({
