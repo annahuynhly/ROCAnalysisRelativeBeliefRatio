@@ -14,7 +14,7 @@ nonpara_bayes_prior_post_graph = function(delta, prior, post,
   y_interval = c(0, max(c(prior, post)))
   # Plots of the Prior and the Posterior
   plot(grid, prior, type='l', lty = lty_type[1], lwd = 2, xlim = x_interval, ylim = y_interval,
-       main = "Graph of the Prior and Posterior of the AUC", ylab = "Densities", xlab = "w", 
+       main = "Graph of the Prior and Posterior of the AUC", ylab = "Densities", xlab = "AUC", 
        col = colour_choice[1])
   lines(grid, post, col = colour_choice[2], type = "l", lty = lty_type[2], lwd = 2)
   abline(v = plausible_region[1], col = colour_choice[3], lwd = 2, lty = lty_type[3])
@@ -63,7 +63,7 @@ nonpara_bayes_rbr_graph = function(delta, relative_belief_ratio,
   plot(grid, relative_belief_ratio, type='l', lty = lty_type[1], lwd = 2, xlim = x_interval, 
        ylim = y_interval,
        main = "Graph of the Relative Belief Ratio of the AUC", 
-       ylab = "RBR", xlab = "w", col = colour_choice[1])
+       ylab = "RBR", xlab = "AUC", col = colour_choice[1])
   # For the Plausible Region
   abline(h = 1, col = colour_choice[3], lwd = 2, lty = lty_type[3])
   abline(v = plausible_region[1], col = colour_choice[2], lwd = 2, lty = lty_type[2])
@@ -100,7 +100,7 @@ nonpara_bayes_rbr_graph = function(delta, relative_belief_ratio,
 
 # LAST THING I WAS TYRING TO GET DONE:
 # realised there isn't an RBcmod the same way as the rest
-# ->NEED TO CHANGE THE NAMES, not necesasrily using mod
+# ->NEED TO CHANGE THE NAMES OF THE TITLE, not necesasrily using mod!!!!!!!!
 
 # note: see if this needs to be modified or if it is the same as the binormal case.
 nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
@@ -113,16 +113,19 @@ nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
                                         lty_type = c(2, 1, 6, 3, 2, 3),
                                         colour_choice = c("blue", "red", "green",
                                                           "#b3bfff", "royalblue1", "#81ddff"),
-                                        transparency = 0.1){
+                                        transparency = 0.1,
+                                        x_title = "cmod"){
+  # x_title should either be cmod or copt
   
   # Colour choice order: prior, posterior, rbr, plausible region, rb line, credible region
   #grid = open_bracket_grid(delta)
   # TYPE 1: GRAPH OF PRIOR AND POSTERIOR
   if((typeof(prior) == "double") & (typeof(post) == "double")){
     
+    title = paste("Plot of the Prior and the Posterior of", str_to_title(x_title), sep = " ")
     #Graph of posterior
-    plot(grid, post, main = "Plot of the Prior and the Posterior of Cmod", 
-         xlab = "cmod", ylab = "Prior and Posterior", type = "l", 
+    plot(grid, post, main = title, 
+         xlab = x_title, ylab = "Prior and Posterior", type = "l", 
          lty = lty_type[2], lwd = 2, col = colour_choice[2])
     # Graph of prior 
     lines(grid, prior, type = "l", lty = lty_type[1], lwd = 2, col = colour_choice[1])
@@ -153,7 +156,9 @@ nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
   } else if(typeof(rbr) == "double"){
     
     # Graph of the relative belief ratio
-    plot(grid, rbr, main = "Plot of the Relative Belief Ratio of Cmod",
+    title = paste("Plot of the Relative Belief Ratio of", str_to_title(x_title), sep = " ")
+    
+    plot(grid, rbr, main = title,
          xlab="cmod", ylab=expression("Relative Belief Ratio"), type="l", 
          lty = lty_type[3], lwd = 2, col = colour_choice[3])
     # The plausible region

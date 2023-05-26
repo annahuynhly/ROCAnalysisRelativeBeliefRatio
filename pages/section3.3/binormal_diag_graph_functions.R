@@ -27,7 +27,7 @@ binormal_diag_prior_post_graph = function(condition,
   y_interval = c(0, max(c(prior, post)))
   # Plots of the Prior and the Posterior
   plot(grid, prior, type='l', lty = lty_type[1], lwd = 2, xlim = x_interval, ylim = y_interval,
-       main = "Graph of the Prior and Posterior of the AUC", ylab = "Densities", xlab = "w", 
+       main = "Graph of the Prior and Posterior of the AUC", ylab = "Densities", xlab = "AUC", 
        col = colour_choice[1])
   lines(grid, post, col = colour_choice[2], type = "l", lty = lty_type[2], lwd = 2)
   abline(v = plausible_region[1], col = colour_choice[3], lwd = 2, lty = lty_type[3])
@@ -86,7 +86,7 @@ binormal_diag_rbr_graph = function(condition,
   plot(grid, relative_belief_ratio, type='l', lty = lty_type[1], lwd = 2, xlim = x_interval, 
        ylim = y_interval,
        main = "Graph of the Relative Belief Ratio of the AUC", 
-       ylab = "RBR", xlab = "w", col = colour_choice[1])
+       ylab = "RBR", xlab = "AUC", col = colour_choice[1])
   # For the Plausible Region
   abline(h = 1, col = colour_choice[3], lwd = 2, lty = lty_type[3])
   abline(v = plausible_region[1], col = colour_choice[2], lwd = 2, lty = lty_type[2])

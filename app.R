@@ -42,7 +42,7 @@ source("routes.R")
 ################################################################
 
 ui = navbarPage(
-  title = " ROC Analysis & Relative Belief",
+  title = "Relative Belief Ratio for ROC Analysis",
   tabPanel("Home", home_page),
   tabPanel("Definitions", def_page),
   navbarMenu("Finite Valued Diagnostic",

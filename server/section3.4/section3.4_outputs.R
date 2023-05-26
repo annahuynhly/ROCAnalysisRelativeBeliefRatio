@@ -221,7 +221,8 @@ output$nonpara_bayes_postprior_cmod_graph = renderPlot({
                                  #credible_region = FALSE, #nonpara_bayes_cr_AUC_cmod(), - none right now
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
-                                 transparency = input$nonpara_bayes_c_opt_col_transparency)
+                                 transparency = input$nonpara_bayes_c_opt_col_transparency,
+                                 x_title = "cmod")
   } else if (input$nonpara_bayes_plot_type == "copt"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
                                  prior = nonpara_bayes_AUC_smoothing_copt()$priorcoptdensity,
@@ -230,7 +231,8 @@ output$nonpara_bayes_postprior_cmod_graph = renderPlot({
                                  #credible_region = FALSE, #nonpara_bayes_cr_AUC_cmod(), - none right now
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
-                                 transparency = input$nonpara_bayes_c_opt_col_transparency)
+                                 transparency = input$nonpara_bayes_c_opt_col_transparency,
+                                 x_title = "copt")
   }
 })
 
@@ -243,7 +245,8 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
                                  #rb_line = nonpara_bayes_rb_line_AUC_cmod(),
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
-                                 transparency = input$nonpara_bayes_c_opt_col_transparency)
+                                 transparency = input$nonpara_bayes_c_opt_col_transparency,
+                                 x_title = "cmod")
   } else if (input$nonpara_bayes_plot_type == "copt"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
                                  rbr = nonpara_bayes_AUC_smoothing_copt()$RBcopt, 
@@ -252,7 +255,8 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
                                  #rb_line = FALSE, #nonpara_bayes_rb_line_AUC_cmod(),
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
-                                 transparency = input$nonpara_bayes_c_opt_col_transparency)
+                                 transparency = input$nonpara_bayes_c_opt_col_transparency,
+                                 x_title = "copt")
   }
 })
 

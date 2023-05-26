@@ -21,9 +21,9 @@ nonpara_bayes_setup_variables_1 = div(
       ),
       selectInput(inputId = "nonpara_bayes_data_method",
                   label = "Insert the data for the diseased and non-diseased groups,
-                  or input the descriptive statistics instead?",
-                  choices = c("Insert descriptive statistics" = 1,
-                              "Insert the raw data" = 2),
+                  or use the minimal sufficient statistics instead?",
+                  choices = c("Use the minimal sufficient statistics" = 1,
+                              "Use the raw data" = 2),
                   selected = 1
       ),
       
@@ -83,14 +83,14 @@ nonpara_bayes_setup_variables_1 = div(
           ),
           column(3, numericInput(inputId = "nonpara_bayes_delta", 
                                  label = '$\\text{Delta } (\\delta)$',
-                                 value = 0.005)),
+                                 value = 0.05)),
         ),
         
         fluidRow(
           column(3, h4("Simulation Sizes:")),
           column(3, numericInput(inputId = "nonpara_bayes_nMonteCarlo", 
                                  label = '$\\text{Simulation Sample Size}$',
-                                 value = 100000, min = 1)),
+                                 value = 5000, min = 1)),
           column(3, numericInput(inputId = "nonpara_bayes_nstar", # CHANGE THIS
                     label = "$n^{*}$",
                     value = 200)),
@@ -176,9 +176,9 @@ nonpara_bayes_setup_variables_2 = div(
         ),
         selectInput(inputId = "nonpara_bayes_data_method_alt",
                     label = "Insert the data for the diseased and non-diseased groups,
-                    or input the descriptive statistics instead?",
-                    choices = c("Insert descriptive statistics" = 1,
-                                "Insert the raw data" = 2),
+                    or use the minimal sufficient statistics instead?",
+                    choices = c("Use the minimal sufficient statistics" = 1,
+                                "Use the raw data" = 2),
                     selected = 1
         ),
         conditionalPanel(
@@ -244,14 +244,14 @@ nonpara_bayes_setup_variables_2 = div(
             ),
             column(3, numericInput(inputId = "nonpara_bayes_delta_alt", 
                                    label = '$\\text{Delta } (\\delta)$',
-                                   value = 0.005)),
+                                   value = 0.05)),
           ),
           
           fluidRow(
             column(3, h4("Simulation Sizes:")),
             column(3, numericInput(inputId = "nonpara_bayes_nMonteCarlo_alt", 
                                    label = '$\\text{Simulation Sample Size}$',
-                                   value = 100000, min = 1)),
+                                   value = 5000, min = 1)),
             column(3, numericInput(inputId = "nonpara_bayes_nstar_alt", # CHANGE THIS
                                    label = "$n^{*}$",
                                    value = 100)),
