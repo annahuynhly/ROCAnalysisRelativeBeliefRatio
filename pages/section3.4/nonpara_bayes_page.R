@@ -29,31 +29,12 @@ nonpara_bayes_setup_variables_1 = div(
       
       conditionalPanel(
         condition = "input.nonpara_bayes_data_method == 2",
-        
-        textInput(inputId = "nonpara_bayes_data_values", 
-                  label = "Please enter in new values.", 
-                  value = "-0.012920,  0.033001, -0.31001"),
-        p("If you are adding multiple values, please separate them by a comma. Note that the values
-          of the groups won't show if you are currently running another simulation."),
-        h4("Diseased Group"),
-        actionButton(inputId = "nonpara_bayes_add_values_diseased", 
-                     label = "Add Values"),
-        actionButton(inputId = "nonpara_bayes_reset_last_diseased",
-                     label = "Remove Last Entry"),
-        actionButton(inputId = "nonpara_bayes_reset_diseased",
-                     label = "Reset"),
-        verbatimTextOutput("nonpara_bayes_show_diseased_vec"),
-        br(),
-        h4("Non-diseased Group"),
-        actionButton(inputId = "nonpara_bayes_add_values_nondiseased",
-                     label = "Add Values"),
-        actionButton(inputId = "nonpara_bayes_reset_last_nondiseased",
-                     label = "Remove Last Entry"),
-        actionButton(inputId = "nonpara_bayes_reset_nondiseased",
-                     label = "Reset"),
-        verbatimTextOutput("nonpara_bayes_show_nondiseased_vec"),
+        fileInput(inputId = "nonpara_bayes_csv", 
+                  label = "Choose CSV File",
+                  multiple = FALSE,
+                  accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
+        ),
       ),
-      
       
     ),
     mainPanel(
@@ -183,28 +164,13 @@ nonpara_bayes_setup_variables_2 = div(
         ),
         conditionalPanel(
           condition = "input.nonpara_bayes_data_method_alt == 2",
-          textInput(inputId = "nonpara_bayes_data_values_alt", 
-                    label = "Please enter in new values.", 
-                    value = "-0.012920,  0.033001, -0.31001"),
-          p("If you are adding multiple values, please separate them by a comma. Note that the values
-          of the groups won't show if you are currently running another simulation."),
-          h4("Diseased Group"),
-          actionButton(inputId = "nonpara_bayes_add_values_diseased_alt", 
-                       label = "Add Values"),
-          actionButton(inputId = "nonpara_bayes_reset_last_diseased_alt",
-                       label = "Remove Last Entry"),
-          actionButton(inputId = "nonpara_bayes_reset_diseased_alt",
-                       label = "Reset"),
-          verbatimTextOutput("nonpara_bayes_show_diseased_vec_alt"),
-          br(),
-          h4("Non-diseased Group"),
-          actionButton(inputId = "nonpara_bayes_add_values_nondiseased_alt",
-                       label = "Add Values"),
-          actionButton(inputId = "nonpara_bayes_reset_last_nondiseased_alt",
-                       label = "Remove Last Entry"),
-          actionButton(inputId = "nonpara_bayes_reset_nondiseased_alt",
-                       label = "Reset"),
-          verbatimTextOutput("nonpara_bayes_show_nondiseased_vec_alt"),
+          fileInput(inputId = "nonpara_bayes_csv_alt", 
+                    label = "Choose CSV File",
+                    multiple = FALSE,
+                    accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
+          ),
+          
+          
         ),
       ), # end for conditional panel where user puts in new inputs
     ),
@@ -244,7 +210,7 @@ nonpara_bayes_setup_variables_2 = div(
             ),
             column(3, numericInput(inputId = "nonpara_bayes_delta_alt", 
                                    label = '$\\text{Delta } (\\delta)$',
-                                   value = 0.05)),
+                                   value = 0.005)),
           ),
           
           fluidRow(
@@ -651,5 +617,57 @@ page_nonpara_bayes2 = div(
               tabPanel("Plots for the Optimal Cutoff", nonpara_bayes_copt_plots),
   )
 )
+
+################################################################
+# CANCELLED FEATURES (KEPT IF NEEDED)                          #
+################################################################
+
+
+#textInput(inputId = "nonpara_bayes_data_values", 
+#          label = "Please enter in new values.", 
+#          value = "-0.012920,  0.033001, -0.31001"),
+#p("If you are adding multiple values, please separate them by a comma. Note that the values
+#          of the groups won't show if you are currently running another simulation."),
+#h4("Diseased Group"),
+#actionButton(inputId = "nonpara_bayes_add_values_diseased", 
+#             label = "Add Values"),
+#actionButton(inputId = "nonpara_bayes_reset_last_diseased",
+#             label = "Remove Last Entry"),
+#actionButton(inputId = "nonpara_bayes_reset_diseased",
+#             label = "Reset"),
+#verbatimTextOutput("nonpara_bayes_show_diseased_vec"),
+#br(),
+#h4("Non-diseased Group"),
+#actionButton(inputId = "nonpara_bayes_add_values_nondiseased",
+#             label = "Add Values"),
+#actionButton(inputId = "nonpara_bayes_reset_last_nondiseased",
+#             label = "Remove Last Entry"),
+#actionButton(inputId = "nonpara_bayes_reset_nondiseased",
+#             label = "Reset"),
+#verbatimTextOutput("nonpara_bayes_show_nondiseased_vec"),
+
+#textInput(inputId = "nonpara_bayes_data_values_alt", 
+#          label = "Please enter in new values.", 
+#          value = "-0.012920,  0.033001, -0.31001"),
+#p("If you are adding multiple values, please separate them by a comma. Note that the values
+#          of the groups won't show if you are currently running another simulation."),
+#h4("Diseased Group"),
+#actionButton(inputId = "nonpara_bayes_add_values_diseased_alt", 
+#             label = "Add Values"),
+#actionButton(inputId = "nonpara_bayes_reset_last_diseased_alt",
+#             label = "Remove Last Entry"),
+#actionButton(inputId = "nonpara_bayes_reset_diseased_alt",
+#             label = "Reset"),
+#verbatimTextOutput("nonpara_bayes_show_diseased_vec_alt"),
+#br(),
+#h4("Non-diseased Group"),
+#actionButton(inputId = "nonpara_bayes_add_values_nondiseased_alt",
+#             label = "Add Values"),
+#actionButton(inputId = "nonpara_bayes_reset_last_nondiseased_alt",
+#             label = "Remove Last Entry"),
+#actionButton(inputId = "nonpara_bayes_reset_nondiseased_alt",
+#             label = "Reset"),
+#verbatimTextOutput("nonpara_bayes_show_nondiseased_vec_alt"),
+
 
 

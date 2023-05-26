@@ -746,8 +746,17 @@ nonpara_bayes_AUC_rbr_copt = function(delta, gridcopt, gridmod,
   RBcopt = postcoptdensity/priorcoptdensity
   RBcoptmod = postcoptmod/priorcoptmod
   
+  imax = NA
   for (i in 1:L){
     if (priorcoptdensity[i] > 0){imax = i}
+  }
+  
+  if(is.na(imax) == TRUE){
+    err_msg = "ERROR: Could not find values when priorcoptdensity is greater than 0."
+    newlist = list("RBcopt" = err_msg, "coptest" = err_msg, 
+                   "postPlcopt" = err_msg, "copt_plausible_region" = err_msg,
+                   "RBcoptmod" = err_msg, "cmod_plausible_region" = err_msg)
+    return(newlist)
   }
   
   for (i in 1:L){
@@ -755,6 +764,7 @@ nonpara_bayes_AUC_rbr_copt = function(delta, gridcopt, gridmod,
       if(RBcopt[i] > RBcopt[imax]){imax=i}
     }
   }
+  
   coptest = gridcopt[imax]
   postPlcopt = 0 # Posterior content of the plausible region
   for (i in 1:L) {
@@ -818,6 +828,12 @@ nonpara_bayes_AUC_rbr_error_char_copt = function(grid, # usually use gridcopt
   RBFDR_alt[is.na(RBFDR_alt)] = 0
   RBFNDR_alt[is.na(RBFNDR_alt)] = 0
   
+  imaxFNR = NA
+  imaxFPR = NA 
+  imaxError = NA
+  imaxFDR = NA
+  imaxFNDR = NA
+  
   # to get a starting value for imax
   for (i in 1:L) {
     if (priorFNR[i] > 0){imaxFNR = i}
@@ -828,19 +844,39 @@ nonpara_bayes_AUC_rbr_error_char_copt = function(grid, # usually use gridcopt
   }
   
   for (i in 1:L) {
-    if (priorFNR[i] > 0 & RBFNR_alt[i] > RBFNR_alt[imaxFNR] ){imaxFNR = i}
-    if (priorFPR[i] > 0 & RBFPR_alt[i] > RBFPR_alt[imaxFPR] ){imaxFPR = i}
-    if (priorError[i] > 0 & RBError_alt[i] > RBError_alt[imaxError] ){imaxError = i}
-    if (priorFDR[i] > 0 & RBFDR_alt[i] > RBFDR_alt[imaxFDR] ){imaxFDR = i}
-    if (priorFNDR[i] > 0 & RBFNDR_alt[i] > RBFNDR_alt[imaxFNDR] ){imaxFNDR = i}
+    if(is.na(imaxFNR) == TRUE){
+      FNRest = NA
+    } else {
+      if (priorFNR[i] > 0 & RBFNR_alt[i] > RBFNR_alt[imaxFNR]){imaxFNR = i}
+      FNRest = grid[imaxFNR]
+    }
+    if(is.na(imaxFPR) == TRUE){
+      FPRest = NA
+    } else {
+      if (priorFPR[i] > 0 & RBFPR_alt[i] > RBFPR_alt[imaxFPR]){imaxFPR = i}
+      FPRest = grid[imaxFPR]
+    }
+    if(is.na(imaxError) == TRUE){
+      Errorest = NA
+    } else {
+      if (priorError[i] > 0 & RBError_alt[i] > RBError_alt[imaxError] ){imaxError = i}
+      Errorest = grid[imaxError]
+    }
+    if(is.na(imaxFDR) == TRUE){
+      FDRest = NA
+    } else {
+      if (priorFDR[i] > 0 & RBFDR_alt[i] > RBFDR_alt[imaxFDR]){imaxFDR = i}
+      FDRest = grid[imaxFDR]
+    }
+    
+    if(is.na(imaxFNDR) == TRUE){
+      FNDRest = NA
+    } else {
+      if (priorFNDR[i] > 0 & RBFNDR_alt[i] > RBFNDR_alt[imaxFNDR]){imaxFNDR = i}
+      FNDRest = grid[imaxFNDR]
+    }
+
   }
-  
-  FNRest = grid[imaxFNR]
-  FPRest = grid[imaxFPR]
-  Errorest = grid[imaxError]
-  FDRest = grid[imaxFDR]
-  FNDRest = grid[imaxFNDR]
-  
   #RBFNR, RBFPR, RBError, RBFDR, RBFNDR
   newlist = list("RBFNR" = RBFNR, "RBFPR" = RBFPR, "RBError" = RBError,
                  "RBFDR" = RBFDR, "RBFNDR" = RBFNDR,

@@ -8,6 +8,8 @@
 # make outputs look nicer ??? (difficult task based on searches)
 # add more colour themes and make the code more efficient for selecting a colour
 # let people generate their own actual data..? -> maybe?
+# need to add instructions for the format of the file
+# let users do the same to upload files for the 2nd case
 
 # ISSUES:
 

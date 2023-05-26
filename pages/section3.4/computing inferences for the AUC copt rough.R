@@ -14,21 +14,21 @@ alpha2w=22.53835
 #concentration parameter for the Dirichlet process
 a=20
 
-nMonteprior = 10000 # MAY NEED TO CHANGE THIS LATER
+nMonteprior = 5000 # MAY NEED TO CHANGE THIS LATER
 nstar = 100 # set nstar for approximating random measure
 w = 0.4
-delta = 0.005
-nMontepost =  10000
+delta = 0.05
+nMontepost =  5000
 nstar = 100
 
 
 test1 = nonpara_bayes_AUC_prior_copt(w = FALSE, 
                                    alpha1w = 15.3589, 
                                    alpha2w = 22.53835,
-                                   nMonteprior = 10000, #sect3.4_copt_nMonteCarlo(), 
+                                   nMonteprior = 5000, #sect3.4_copt_nMonteCarlo(), 
                                    nstar = 100, #sect3.4_copt_nstar(), 
                                    a = 20, #sect3.4_a_copt(), 
-                                   delta = 0.005, #sect3.4_copt_delta(),
+                                   delta = 0.05, #sect3.4_copt_delta(),
                                    mu0 = 0, #sect3.4_copt_mu0(), 
                                    tau0 = 0.5, # sect3.4_copt_tau0(), 
                                    lambda1 = 1.787, #sect3.4_copt_lambda1(), 
@@ -184,6 +184,16 @@ nonpara_bayes_plots_AUC_copt(grid = test1$gridmod, # used gridcopt
                              colour_choice = c("blue", "red", "green",
                                                "#b3bfff", "royalblue1", "#81ddff"),
                              transparency = 0.1)
+
+
+
+
+nonpara_bayes_AUC_rbr_error_char_copt(test1$gridcopt, 
+                                      test1$priorFNR, test1$priorFPR, 
+                                      test1$priorError, test1$priorFDR, 
+                                      test1$priorFNDR, test2$postFNR, 
+                                      test2$postFPR, test2$postError, 
+                                      test2$postFDR, test2$postFNDR)
 
 
 

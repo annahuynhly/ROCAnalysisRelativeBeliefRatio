@@ -3,6 +3,8 @@
 ################################################################
 
 output$nonpara_bayes_hypoAUC_value = renderPrint({
+  #nonpara_bayes_df()
+  # temporarily disabling this to see the problem
   pr = sect3.4_AUC_RBR()$plausible_region
   pr = c(pr[1], pr[length(pr)])
   cr = sect3.4_cr()$credible_region
