@@ -338,7 +338,7 @@ nonpara_bayes_AUC_rbr = function(delta, probAUCprior, probAUCpost,
   return(newlist)
 }
 
-# note: similar to the binormal diag version -> might want to generalise if it works?
+# -> there may be a slight issue with this version (ask for help)
 nonpara_bayes_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prior, AUC_post, 
                                                  plausible_region, posterior_content){
   # Note: credible region is now based on the line plot.
@@ -366,7 +366,7 @@ nonpara_bayes_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prio
         # find the region associated with it
         # WARNING: BOLD ASSUMPTION NO BREAKPOINTS/PEAKS
         for(j in 1:length(AUC_RBR)){
-          if ((grid[j] >= plausible_region[1]) & (grid[j] <= plausible_region[2])) {
+          if ((grid[j] >= plausible_region[1]) & (grid[j] <= plausible_region[length(plausible_region)])) {
             if((AUC_RBR[j] > rb_line)){
               credible_region = c(credible_region, grid[j])
               j_vals = c(j_vals, j)

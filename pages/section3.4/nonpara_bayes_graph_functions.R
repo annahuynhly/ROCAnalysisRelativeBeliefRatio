@@ -18,7 +18,7 @@ nonpara_bayes_prior_post_graph = function(delta, prior, post,
        col = colour_choice[1])
   lines(grid, post, col = colour_choice[2], type = "l", lty = lty_type[2], lwd = 2)
   abline(v = plausible_region[1], col = colour_choice[3], lwd = 2, lty = lty_type[3])
-  abline(v = plausible_region[2], col = colour_choice[3], lwd = 2, lty = lty_type[3])
+  abline(v = plausible_region[length(plausible_region)], col = colour_choice[3], lwd = 2, lty = lty_type[3])
   # Getting inner rgb colour for transparent effect
   rgb_prior = col2rgb(colour_choice[1])
   rgb_post = col2rgb(colour_choice[2])
@@ -31,7 +31,7 @@ nonpara_bayes_prior_post_graph = function(delta, prior, post,
   # blue rgb(133/255, 198/255, 255/255, alpha = 0.3)
   if (typeof(credible_region) == "double") { # need both to run properly
     abline(v = credible_region[1], col = colour_choice[4], lwd = 2, lty = lty_type[4]) 
-    abline(v = credible_region[2], col = colour_choice[4], lwd = 2, lty = lty_type[4])
+    abline(v = credible_region[length(credible_region)], col = colour_choice[4], lwd = 2, lty = lty_type[4])
     legend("topleft", legend = c("Prior", "Posterior", "Plausible Region", "Credible Region"), 
            lwd = 2, 
            col = c(colour_choice[1], colour_choice[2], colour_choice[3], colour_choice[4]), 
@@ -67,10 +67,10 @@ nonpara_bayes_rbr_graph = function(delta, relative_belief_ratio,
   # For the Plausible Region
   abline(h = 1, col = colour_choice[3], lwd = 2, lty = lty_type[3])
   abline(v = plausible_region[1], col = colour_choice[2], lwd = 2, lty = lty_type[2])
-  abline(v = plausible_region[2], col = colour_choice[2], lwd = 2, lty = lty_type[2])
+  abline(v = plausible_region[length(plausible_region)], col = colour_choice[2], lwd = 2, lty = lty_type[2])
   # Colouring in the area between the plausible region and when the RBR > 1
   l = min(which(grid >= plausible_region[1]))
-  h = max(which(grid < plausible_region[2]))
+  h = max(which(grid < plausible_region[length(plausible_region)]))
   rgb_rb = col2rgb(colour_choice[1])
   polygon(c(grid[c(l, l:h, h)]),
           c(1, relative_belief_ratio[l:h], 1),
@@ -78,7 +78,7 @@ nonpara_bayes_rbr_graph = function(delta, relative_belief_ratio,
           border = NA)
   if ((typeof(credible_region) == "double") & (typeof(rb_line) == "double")) { 
     abline(v = credible_region[1], col = colour_choice[4], lwd = 2, lty = lty_type[4]) 
-    abline(v = credible_region[2], col = colour_choice[4], lwd = 2, lty = lty_type[4])
+    abline(v = credible_region[length(credible_region)], col = colour_choice[4], lwd = 2, lty = lty_type[4])
     abline(h = rb_line, col = colour_choice[4], lwd = 2, lty = lty_type[4])
     rgb_cr = col2rgb(colour_choice[4])
     legend("topleft", legend = c("Relative Belief Ratio", "Plausible Region", 
@@ -87,7 +87,7 @@ nonpara_bayes_rbr_graph = function(delta, relative_belief_ratio,
            col = c(colour_choice[1], colour_choice[2], colour_choice[4], 
                    rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = transparency)), 
            lty = c(lty_type[1], lty_type[2], lty_type[4], 1))
-    polygon(x = c(credible_region[1], credible_region[1], credible_region[2], credible_region[2]), 
+    polygon(x = c(credible_region[1], credible_region[1], credible_region[length(credible_region)], credible_region[length(credible_region)]), 
             y = c(0, rb_line, rb_line, 0), 
             col = rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = transparency), 
             border = NA)   
@@ -131,7 +131,7 @@ nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
     lines(grid, prior, type = "l", lty = lty_type[1], lwd = 2, col = colour_choice[1])
     # The plausible region
     abline(v = plausible_region[1], col = colour_choice[4], lwd = 2, lty = lty_type[4])
-    abline(v = plausible_region[2], col = colour_choice[4], lwd = 2, lty = lty_type[4])
+    abline(v = plausible_region[length(plausible_region)], col = colour_choice[4], lwd = 2, lty = lty_type[4])
     # Fill & Transparency effect
     rgb_prior = col2rgb(colour_choice[1])
     rgb_post = col2rgb(colour_choice[2])
@@ -143,7 +143,7 @@ nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
     # Checking if a credible region exists
     if (typeof(credible_region) == "double") { # need both to run properly
       abline(v = credible_region[1], col = colour_choice[6], lwd = 2, lty = lty_type[6])
-      abline(v = credible_region[2], col = colour_choice[6], lwd = 2, lty = lty_type[6])
+      abline(v = credible_region[length(credible_region)], col = colour_choice[6], lwd = 2, lty = lty_type[6])
       legend("topleft", legend = c("Prior", "Posterior", "Plausible Region", "Credible Region"), lwd = 2, 
              col = c(colour_choice[1], colour_choice[2], colour_choice[4], colour_choice[6]), 
              lty = c(lty_type[1], lty_type[2], lty_type[4], lty_type[6]))
@@ -163,13 +163,13 @@ nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
          lty = lty_type[3], lwd = 2, col = colour_choice[3])
     # The plausible region
     abline(v = plausible_region[1], col = colour_choice[4], lwd = 2, lty = lty_type[4])
-    abline(v = plausible_region[2], col = colour_choice[4], lwd = 2, lty = lty_type[4])
+    abline(v = plausible_region[length(plausible_region)], col = colour_choice[4], lwd = 2, lty = lty_type[4])
     # Fill & Transparency effect
     rgb_rbr = col2rgb(colour_choice[3])
     # Colouring in the area between the plausible region and when the RBR > 1
     abline(h = 1, col = colour_choice[4], lwd = 2, lty = lty_type[4])
     l = min(which(grid >= plausible_region[1]))
-    h = max(which(grid < plausible_region[2]))
+    h = max(which(grid < plausible_region[length(plausible_region)]))
     rgb_rb = col2rgb(colour_choice[3])
     polygon(c(grid[c(l, l:h, h)]),
             c(1, rbr[l:h], 1),
@@ -178,7 +178,7 @@ nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
     # Checking if a credible region exists
     if ((typeof(credible_region) == "double") & (typeof(rb_line) == "double")) { 
       abline(v = credible_region[1], col = colour_choice[6], lwd = 2, lty = lty_type[6]) 
-      abline(v = credible_region[2], col = colour_choice[6], lwd = 2, lty = lty_type[6])
+      abline(v = credible_region[length(credible_region)], col = colour_choice[6], lwd = 2, lty = lty_type[6])
       abline(h = rb_line, col = colour_choice[6], lwd = 2, lty = lty_type[5])
       rgb_cr = col2rgb(colour_choice[6])
       legend("bottomleft", legend = c("Relative Belief Ratio", "Plausible Region", 
@@ -187,7 +187,7 @@ nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
              col = c(colour_choice[3], colour_choice[4], colour_choice[6], 
                      rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = transparency)), 
              lty = c(lty_type[3], lty_type[4], lty_type[6], 1))
-      polygon(x = c(credible_region[1], credible_region[1], credible_region[2], credible_region[2]), 
+      polygon(x = c(credible_region[1], credible_region[1], credible_region[length(credible_region)], credible_region[length(credible_region)]), 
               y = c(0, rb_line, rb_line, 0), 
               col = rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = transparency), 
               border = NA)   

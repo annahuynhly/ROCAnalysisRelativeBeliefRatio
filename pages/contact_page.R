@@ -81,12 +81,10 @@ contact_page = fluidPage(
           ),
       ),
       
-      div(id = "QiaoyuImg", img(src = "generic_photo.png", style = 'border-radius: 50%', width = '120px')),
+      div(id = "QiaoyuImg", img(src = "qiaoyu_liang.PNG", style = 'border-radius: 50%', width = '120px')),
       div(h3('Qiaoyu Liang'),
           h4('PhD Student @ University of Toronto'),
-          p('One of the authors of the paper and assisted Mike Evans with R-codes. 
-          (There is no image of him online, so the placeholder', style = "color:#61646b"),
-          p('image was drawn by Anna Ly.)', style = "color:#61646b"),
+          p('One of the authors of the paper and assisted Mike Evans with R-codes.', style = "color:#61646b"),
           tags$div(
             tags$i(class = "fa-solid fa-building-columns"),
             tags$a(href="https://www.statistics.utoronto.ca/people/directories/graduate-students/qiaoyu-liang", 

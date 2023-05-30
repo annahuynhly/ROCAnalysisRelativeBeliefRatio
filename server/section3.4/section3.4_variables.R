@@ -78,11 +78,14 @@ sect3.4_AUC_post = reactive({
 })
 
 sect3.4_AUC_RBR = reactive({
+  # smoothing the results
+  priorAUC_smo = average_vector_values(sect3.4_AUC_prior()$priorAUC, input$nonpara_bayes_smoother)
+  postAUC_smo = average_vector_values(sect3.4_AUC_post()$postAUC, input$nonpara_bayes_smoother)
   nonpara_bayes_AUC_rbr(delta = input$nonpara_bayes_delta, 
                         probAUCprior = sect3.4_AUC_prior()$probAUCprior, 
                         probAUCpost = sect3.4_AUC_post()$probAUCpost,
-                        priorAUC = sect3.4_AUC_prior()$priorAUC, 
-                        postAUC = sect3.4_AUC_post()$postAUC)
+                        priorAUC = priorAUC_smo, #sect3.4_AUC_prior()$priorAUC, 
+                        postAUC = postAUC_smo) #sect3.4_AUC_post()$postAUC)
 })
 
 sect3.4_AUC_prior_copt = reactive({
@@ -183,15 +186,24 @@ sect3.4_AUC_post_copt = reactive({
 })
 
 sect3.4_AUC_RBR_copt = reactive({
+  # smoothing the results
+  priorcoptdensity_smo = average_vector_values(sect3.4_AUC_prior_copt()$priorcoptdensity, 
+                                               input$nonpara_bayes_smoother)
+  postcoptdensity_smo = average_vector_values(sect3.4_AUC_post_copt()$postcoptdensity, 
+                                               input$nonpara_bayes_smoother)
+  priorcoptmod_smo = average_vector_values(sect3.4_AUC_prior_copt()$priorcoptmod, 
+                                           input$nonpara_bayes_smoother)
+  postcoptmod_smo = average_vector_values(sect3.4_AUC_post_copt()$postcoptmod, 
+                                          input$nonpara_bayes_smoother)
   nonpara_bayes_AUC_rbr_copt(delta = sect3.4_copt_delta(),
                              gridcopt = sect3.4_AUC_prior_copt()$gridcopt, 
                              gridmod = sect3.4_AUC_prior_copt()$gridmod,
-                             priorcoptdensity = sect3.4_AUC_prior_copt()$priorcoptdensity, 
-                             postcoptdensity = sect3.4_AUC_post_copt()$postcoptdensity,
+                             priorcoptdensity = priorcoptdensity_smo, #sect3.4_AUC_prior_copt()$priorcoptdensity, 
+                             postcoptdensity = postcoptdensity_smo, #sect3.4_AUC_post_copt()$postcoptdensity,
                              priorcopt = sect3.4_AUC_prior_copt()$priorcopt, 
                              postcopt = sect3.4_AUC_post_copt()$postcopt,
-                             priorcoptmod = sect3.4_AUC_prior_copt()$priorcoptmod,
-                             postcoptmod = sect3.4_AUC_post_copt()$postcoptmod)
+                             priorcoptmod = priorcoptmod_smo, #sect3.4_AUC_prior_copt()$priorcoptmod,
+                             postcoptmod = postcoptmod_smo) #sect3.4_AUC_post_copt()$postcoptmod)
 })
 
 sect3.4_AUC_RBR_error_char_copt = reactive({

@@ -161,6 +161,7 @@ nonpara_bayes_AUC_smoothing = reactive({
                                                  input$nonpara_bayes_smoother),
        "postAUCdensity" = average_vector_values(sect3.4_AUC_post()$postAUCdensity,
                                                 input$nonpara_bayes_smoother),
+       # not using this since it has already been smoothed
        "RB_AUC" = average_vector_values(sect3.4_AUC_RBR()$RB_AUC,
                                         input$nonpara_bayes_smoother))
 })
@@ -178,7 +179,7 @@ output$nonpara_bayes_postprior_graph = renderPlot({
 
 output$nonpara_bayes_RB_graph = renderPlot({
   nonpara_bayes_rbr_graph(delta = input$nonpara_bayes_delta,
-                          relative_belief_ratio = nonpara_bayes_AUC_smoothing()$RB_AUC, #sect3.4_AUC_RBR()$RB_AUC, 
+                          relative_belief_ratio = sect3.4_AUC_RBR()$RB_AUC, #nonpara_bayes_AUC_smoothing()$RB_AUC,
                           plausible_region = nonpara_bayes_pr_modified(),
                           credible_region = nonpara_bayes_cr_AUC(),
                           rb_line = nonpara_bayes_rb_line_AUC(),
@@ -204,16 +205,18 @@ nonpara_bayes_AUC_smoothing_copt = reactive({
                                                      input$nonpara_bayes_smoother_copt),
        "postcoptmoddensity" = average_vector_values(sect3.4_AUC_post_copt()$postcoptmoddensity,
                                                     input$nonpara_bayes_smoother_copt),
-       "RBcoptmod" = average_vector_values(sect3.4_AUC_RBR_copt()$RBcoptmod,
-                                           input$nonpara_bayes_smoother_copt),
        "priorcoptdensity" = average_vector_values(sect3.4_AUC_prior_copt()$priorcoptdensity,
                                                   input$nonpara_bayes_smoother_copt),
        "postcoptdensity" = average_vector_values(sect3.4_AUC_post_copt()$postcoptdensity,
-                                                 input$nonpara_bayes_smoother_copt),
-       "RBcopt" = average_vector_values(sect3.4_AUC_RBR_copt()$RBcopt,
-                                        input$nonpara_bayes_smoother_copt))
+                                                input$nonpara_bayes_smoother_copt))
+  # Removed the following for now since the smoother is already applied:
+      # "RBcoptmod" = average_vector_values(sect3.4_AUC_RBR_copt()$RBcoptmod,
+      #                                     input$nonpara_bayes_smoother_copt),
+      # "RBcopt" = average_vector_values(sect3.4_AUC_RBR_copt()$RBcopt,
+      #                                  input$nonpara_bayes_smoother_copt))
 })
 
+# TODO: need to add credible region!!!
 output$nonpara_bayes_postprior_cmod_graph = renderPlot({
   if(input$nonpara_bayes_plot_type == "cmod"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridmod,
@@ -241,7 +244,7 @@ output$nonpara_bayes_postprior_cmod_graph = renderPlot({
 output$nonpara_bayes_RB_cmod_graph = renderPlot({
   if(input$nonpara_bayes_plot_type == "cmod"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridmod,
-                                 rbr = nonpara_bayes_AUC_smoothing_copt()$RBcoptmod, 
+                                 rbr = sect3.4_AUC_RBR_copt()$RBcoptmod, #nonpara_bayes_AUC_smoothing_copt()$RBcoptmod, 
                                  plausible_region = nonpara_bayes_pr_modified_cmod(),
                                  #credible_region = FALSE, #nonpara_bayes_cr_AUC_cmod(),
                                  #rb_line = nonpara_bayes_rb_line_AUC_cmod(),
@@ -251,7 +254,7 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
                                  x_title = "cmod")
   } else if (input$nonpara_bayes_plot_type == "copt"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
-                                 rbr = nonpara_bayes_AUC_smoothing_copt()$RBcopt, 
+                                 rbr = sect3.4_AUC_RBR_copt()$RBcopt, #nonpara_bayes_AUC_smoothing_copt()$RBcopt, 
                                  plausible_region = nonpara_bayes_pr_modified_copt(),
                                  #credible_region = FALSE, #nonpara_bayes_cr_AUC_cmod(),
                                  #rb_line = FALSE, #nonpara_bayes_rb_line_AUC_cmod(),
