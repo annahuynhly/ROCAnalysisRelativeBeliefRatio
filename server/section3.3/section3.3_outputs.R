@@ -199,20 +199,28 @@ binormal_diag_rb_line_AUC = reactive({
 
 output$binormal_diag_postprior_graph = renderPlot({
   if (input$binormal_case == "equal_var"){
+    priorAUCdensity_smo = average_vector_values(sect3.3_AUC_prior()$priorAUCdensity, 
+                                         input$binormal_diag_smoother)
+    postAUCdensity_smo = average_vector_values(sect3.3_AUC_post()$postAUCdensity, 
+                                        input$binormal_diag_smoother)
     binormal_diag_prior_post_graph(condition = sect3.3_condition(),
                                    delta = input$binormal_diag_delta, 
-                                   prior = sect3.3_AUC_prior()$priorAUCdensity, 
-                                   post = sect3.3_AUC_post()$postAUCdensity, 
+                                   prior = priorAUCdensity_smo, #sect3.3_AUC_prior()$priorAUCdensity, 
+                                   post = postAUCdensity_smo, #sect3.3_AUC_post()$postAUCdensity, 
                                    plausible_region = sect3.3_AUC_RBR()$plausible_region,
                                    credible_region = binormal_diag_cr_AUC(),
                                    colour_choice = binormal_diag_colours()[c(1, 2, 4, 6)],
                                    lty_type = sect3.3_prior_post_lty(),
                                    transparency = input$binormal_diag_col_transparency)
   } else if (input$binormal_case == "unequal_var"){
+    priorAUCdensity_smo = average_vector_values(sect3.3_AUC_prior_unequal()$priorAUCdensity, 
+                                                input$binormal_diag_smoother)
+    postAUCdensity_smo = average_vector_values(sect3.3_AUC_post_unequal()$postAUCdensity, 
+                                               input$binormal_diag_smoother)
     binormal_diag_prior_post_graph(condition = sect3.3_condition(),
                                    delta = input$binormal_diag_delta, 
-                                   prior = sect3.3_AUC_prior_unequal()$priorAUCdensity, 
-                                   post = sect3.3_AUC_post_unequal()$postAUCdensity, 
+                                   prior = priorAUCdensity_smo, #sect3.3_AUC_prior_unequal()$priorAUCdensity, 
+                                   post = postAUCdensity_smo, #sect3.3_AUC_post_unequal()$postAUCdensity, 
                                    plausible_region = sect3.3_AUC_RBR_unequal()$plausible_region,
                                    credible_region = binormal_diag_cr_AUC(),
                                    colour_choice = binormal_diag_colours()[c(1, 2, 4, 6)],
@@ -266,25 +274,34 @@ binormal_diag_rb_line_AUC_cmod = reactive({
 # Plots for cmod
 output$binormal_diag_postprior_cmod_graph = renderPlot({
   if (sect3.3_copt_case() == "equal_var"){
+    priorcmoddensity_smo = average_vector_values(sect3.3_AUC_prior_copt()$priorcmoddensity, 
+                                                input$binormal_diag_smoother_copt)
+    postcmoddensity_smo = average_vector_values(sect3.3_AUC_post_copt()$postcmoddensity, 
+                                               input$binormal_diag_smoother_copt)
+    
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
-                                 priorcmoddensity = sect3.3_AUC_prior_copt()$priorcmoddensity, 
-                                 postcmoddensity = sect3.3_AUC_post_copt()$postcmoddensity,
+                                 priorcmoddensity = priorcmoddensity_smo, #sect3.3_AUC_prior_copt()$priorcmoddensity, 
+                                 postcmoddensity = postcmoddensity_smo, #sect3.3_AUC_post_copt()$postcmoddensity,
                                  plausible_region = sect3.3_AUC_RBR_copt()$plausible_region,
                                  credible_region = binormal_diag_cr_AUC_cmod(),
                                  lty_type = binormal_diag_lty_types_copt(),
                                  colour_choice = binormal_diag_copt_colours(),
                                  transparency = input$binormal_diag_c_opt_col_transparency)
   } else if (sect3.3_copt_case() == "unequal_var"){
+    priorcmoddensity_smo = average_vector_values(sect3.3_AUC_prior_copt_unequal()$priorcmoddensity, 
+                                                 input$binormal_diag_smoother_copt)
+    postcmoddensity_smo = average_vector_values(sect3.3_AUC_post_copt_unequal()$postcmoddensity, 
+                                                input$binormal_diag_smoother_copt)
+    
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
-                                 priorcmoddensity = sect3.3_AUC_prior_copt_unequal()$priorcmoddensity, 
-                                 postcmoddensity = sect3.3_AUC_post_copt_unequal()$postcmoddensity,
+                                 priorcmoddensity = priorcmoddensity_smo, #sect3.3_AUC_prior_copt_unequal()$priorcmoddensity, 
+                                 postcmoddensity = postcmoddensity_smo, #sect3.3_AUC_post_copt_unequal()$postcmoddensity,
                                  plausible_region = sect3.3_AUC_RBR_copt()$plausible_region,
                                  credible_region = binormal_diag_cr_AUC_cmod(),
                                  lty_type = binormal_diag_lty_types_copt(),
                                  colour_choice = binormal_diag_copt_colours(),
                                  transparency = input$binormal_diag_c_opt_col_transparency)
   }
-  
 })
 
 output$binormal_diag_RB_cmod_graph = renderPlot({
@@ -313,18 +330,28 @@ output$binormal_diag_RB_cmod_graph = renderPlot({
 # Note: colour situation here is temporary -- needs to be modified!!
 output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
   if (sect3.3_copt_case() == "equal_var"){
+    prior_vals_smo = average_vector_values(binormal_diag_err_char_plot_type()$prior, 
+                                           input$binormal_diag_smoother_inferences)
+    post_vals_smo = average_vector_values(binormal_diag_err_char_plot_type()$post, 
+                                          input$binormal_diag_smoother_inferences)
+    
     binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),
-                                 prior_vals = binormal_diag_err_char_plot_type()$prior, 
-                                 post_vals = binormal_diag_err_char_plot_type()$post, 
+                                 prior_vals = prior_vals_smo, #binormal_diag_err_char_plot_type()$prior, 
+                                 post_vals = post_vals_smo, #binormal_diag_err_char_plot_type()$post, 
                                  err_type = input$binormal_diag_inferences_plot_type, 
                                  prior_lty = as.numeric(input$binormal_diag_lty_inferences_prior), 
                                  post_lty = as.numeric(input$binormal_diag_lty_inferences_post),
                                  colour_choice = binormal_diag_inferences_colours(), 
                                  transparency = input$binormal_diag_inferences_col_transparency)
   } else if (sect3.3_copt_case() == "unequal_var"){
+    prior_vals_smo = average_vector_values(binormal_diag_err_char_plot_type_unequal()$prior, 
+                                           input$binormal_diag_smoother_inferences)
+    post_vals_smo = average_vector_values(binormal_diag_err_char_plot_type_unequal()$post, 
+                                          input$binormal_diag_smoother_inferences)
+    
     binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),
-                                 prior_vals = binormal_diag_err_char_plot_type_unequal()$prior, 
-                                 post_vals = binormal_diag_err_char_plot_type_unequal()$post, 
+                                 prior_vals = prior_vals_smo, #binormal_diag_err_char_plot_type_unequal()$prior, 
+                                 post_vals = post_vals_smo, #binormal_diag_err_char_plot_type_unequal()$post, 
                                  err_type = input$binormal_diag_inferences_plot_type, 
                                  prior_lty = as.numeric(input$binormal_diag_lty_inferences_prior), 
                                  post_lty = as.numeric(input$binormal_diag_lty_inferences_post),

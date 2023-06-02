@@ -56,27 +56,35 @@ sect3.3_AUC_post = reactive({
 })
 
 sect3.3_AUC_RBR = reactive({
+  priorAUC_smo = average_vector_values(sect3.3_AUC_prior()$priorAUC, 
+                                       input$binormal_diag_smoother)
+  postAUC_smo = average_vector_values(sect3.3_AUC_post()$postAUC, 
+                                      input$binormal_diag_smoother)
   if (sect3.3_condition() == "conditional"){
     binormal_diag_RBR(condition = sect3.3_condition(),
                       delta = input$binormal_diag_delta,
-                      priorAUC = sect3.3_AUC_prior()$priorAUC,
-                      postAUC = sect3.3_AUC_post()$postAUC)
+                      priorAUC = priorAUC_smo, #sect3.3_AUC_prior()$priorAUC,
+                      postAUC = postAUC_smo) #sect3.3_AUC_post()$postAUC)
   } else if (sect3.3_condition() == "unconditional"){
     binormal_diag_RBR(condition = sect3.3_condition(),
                       delta = input$binormal_diag_delta, 
                       probAUCprior = sect3.3_AUC_prior()$probAUCprior, 
                       probAUCpost = sect3.3_AUC_post()$probAUCpost,
-                      priorAUC = sect3.3_AUC_prior()$priorAUC, 
-                      postAUC = sect3.3_AUC_post()$postAUC)
+                      priorAUC = priorAUC_smo, #sect3.3_AUC_prior()$priorAUC, 
+                      postAUC = postAUC_smo) #sect3.3_AUC_post()$postAUC)
   }
 })
 
 sect3.3_cr = reactive({
+  priorAUC_smo = average_vector_values(sect3.3_AUC_prior()$priorAUC, 
+                                       input$binormal_diag_smoother)
+  postAUC_smo = average_vector_values(sect3.3_AUC_post()$postAUC, 
+                                      input$binormal_diag_smoother)
   binormal_diag_compute_credible_region(gamma = input$binormal_diag_gamma, 
                                         delta = input$binormal_diag_delta, 
                                         AUC_RBR = sect3.3_AUC_RBR()$RB_AUC, 
-                                        AUC_prior = sect3.3_AUC_prior()$priorAUC, 
-                                        AUC_post = sect3.3_AUC_post()$postAUC, 
+                                        AUC_prior = priorAUC_smo, #sect3.3_AUC_prior()$priorAUC, 
+                                        AUC_post = postAUC_smo, #sect3.3_AUC_post()$postAUC, 
                                         plausible_region = sect3.3_AUC_RBR()$plausible_region,
                                         posterior_content = sect3.3_AUC_RBR()$postPl_AUC)
 })
@@ -156,17 +164,25 @@ sect3.3_AUC_post_copt = reactive({
 })
 
 sect3.3_AUC_RBR_copt = reactive({
-  binormal_diag_RBR_copt(sect3.3_copt_delta(), 
-                         sect3.3_AUC_prior_copt()$priorcmod, 
-                         sect3.3_AUC_post_copt()$postcmod)
+  priorcmod_smo = average_vector_values(sect3.3_AUC_prior_copt()$priorcmod, 
+                                       input$binormal_diag_smoother_copt)
+  postcmod_smo = average_vector_values(sect3.3_AUC_post_copt()$postcmod, 
+                                      input$binormal_diag_smoother_copt)
+  binormal_diag_RBR_copt(delta = sect3.3_copt_delta(), 
+                         priorcmod = priorcmod_smo, #sect3.3_AUC_prior_copt()$priorcmod, 
+                         postcmod = postcmod_smo) #sect3.3_AUC_post_copt()$postcmod)
 })
 
 sect3.3_cr_copt = reactive({
+  priorcmod_smo = average_vector_values(sect3.3_AUC_prior_copt()$priorcmod, 
+                                        input$binormal_diag_smoother_copt)
+  postcmod_smo = average_vector_values(sect3.3_AUC_post_copt()$postcmod, 
+                                       input$binormal_diag_smoother_copt)
   binormal_diag_compute_credible_region(gamma = input$binormal_diag_gamma_copt, 
                                         delta = input$binormal_diag_delta, 
                                         AUC_RBR = sect3.3_AUC_RBR_copt()$RBcmod, 
-                                        AUC_prior = sect3.3_AUC_prior_copt()$priorcmod, 
-                                        AUC_post = sect3.3_AUC_post_copt()$postcmod, 
+                                        AUC_prior = priorcmod_smo, #sect3.3_AUC_prior_copt()$priorcmod, 
+                                        AUC_post = postcmod_smo, #sect3.3_AUC_post_copt()$postcmod, 
                                         plausible_region = sect3.3_AUC_RBR_copt()$plausible_region,
                                         posterior_content = sect3.3_AUC_RBR_copt()$postPlcmod)
 })
@@ -249,17 +265,33 @@ sect3.3_AUC_post_error_char_copt = reactive({
 })
 
 sect3.3_AUC_RBR_error_char_copt = reactive({
+  priorFNR_smo = average_vector_values(sect3.3_AUC_prior_error_char_copt()$priorFNR, 
+                                       input$binormal_diag_smoother_inferences)
+  priorFPR_smo = average_vector_values(sect3.3_AUC_prior_error_char_copt()$priorFPR, 
+                                       input$binormal_diag_smoother_inferences)
+  priorError_smo = average_vector_values(sect3.3_AUC_prior_error_char_copt()$priorError, 
+                                       input$binormal_diag_smoother_inferences)
+  priorFDR_smo = average_vector_values(sect3.3_AUC_prior_error_char_copt()$priorFDR, 
+                                       input$binormal_diag_smoother_inferences)
+  priorFNDR_smo = average_vector_values(sect3.3_AUC_prior_error_char_copt()$priorFNDR, 
+                                       input$binormal_diag_smoother_inferences)
+  postFNR_smo = average_vector_values(sect3.3_AUC_post_error_char_copt()$postFNR, 
+                                       input$binormal_diag_smoother_inferences)
+  postFPR_smo = average_vector_values(sect3.3_AUC_post_error_char_copt()$postFPR, 
+                                      input$binormal_diag_smoother_inferences)
+  postError_smo = average_vector_values(sect3.3_AUC_post_error_char_copt()$postError, 
+                                      input$binormal_diag_smoother_inferences)
+  postFDR_smo = average_vector_values(sect3.3_AUC_post_error_char_copt()$postFDR, 
+                                      input$binormal_diag_smoother_inferences)
+  postFNDR_smo = average_vector_values(sect3.3_AUC_post_error_char_copt()$postFNDR, 
+                                      input$binormal_diag_smoother_inferences)
   binormal_diag_AUC_RBR_error_char_copt(delta = sect3.3_copt_delta(),
-                                        priorFNR =  sect3.3_AUC_prior_error_char_copt()$priorFNR, 
-                                        priorFPR = sect3.3_AUC_prior_error_char_copt()$priorFPR, 
-                                        priorError = sect3.3_AUC_prior_error_char_copt()$priorError,
-                                        priorFDR = sect3.3_AUC_prior_error_char_copt()$priorFDR, 
-                                        priorFNDR = sect3.3_AUC_prior_error_char_copt()$priorFNDR, 
-                                        postFNR = sect3.3_AUC_post_error_char_copt()$postFNR, 
-                                        postFPR = sect3.3_AUC_post_error_char_copt()$postFPR,
-                                        postError = sect3.3_AUC_post_error_char_copt()$postError, 
-                                        postFDR = sect3.3_AUC_post_error_char_copt()$postFDR, 
-                                        postFNDR = sect3.3_AUC_post_error_char_copt()$postFNDR)
+                                        priorFNR =  priorFNR_smo, priorFPR = priorFPR_smo, 
+                                        priorError = priorError_smo, priorFDR = priorFDR_smo, 
+                                        priorFNDR = priorFNDR_smo, 
+                                        postFNR = postFNR_smo, postFPR = postFPR_smo,
+                                        postError = postError_smo, postFDR = postFDR_smo, 
+                                        postFNDR = postFNDR_smo)
 })
 
 binormal_diag_err_char_plot_type = reactive({

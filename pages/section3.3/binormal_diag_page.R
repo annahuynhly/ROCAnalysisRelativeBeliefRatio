@@ -221,6 +221,10 @@ binormal_diag_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
+      sliderInput(inputId = "binormal_diag_smoother", 
+                  label = "Number of Average Points (Smoother)", 
+                  min = 1, max = 49, value = 3, step = 2
+      ),
       #selectInput(inputId = "binormal_diag_hist_visual", 
       #            label = "Choose Visual:",
       #            choices = list("With Bars" = "binormal_diag_withbars",
@@ -375,6 +379,10 @@ binormal_diag_AUC_inferences = div(
       
       conditionalPanel(
         condition = "input.binormal_diag_inferences == 'plots'",
+        sliderInput(inputId = "binormal_diag_smoother_inferences", 
+                    label = "Number of Average Points (Smoother)", 
+                    min = 1, max = 49, value = 3, step = 2
+        ),
         selectInput(inputId = "binormal_diag_inferences_plot_type",
                     label = 'Select which plot to view.',
                     choices = list("FNR" = 'FNR',
@@ -468,6 +476,10 @@ binormal_diag_copt_plots = div(
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
     sidebarPanel(width = 3,
+      sliderInput(inputId = "binormal_diag_smoother_copt", 
+                  label = "Number of Average Points (Smoother)", 
+                  min = 1, max = 49, value = 3, step = 2
+      ),
       selectInput(inputId = "binormal_diag_c_opt_carry_colour",
                   label = "Select a colour theme",
                   choices = colour_theme_list_custom,
@@ -604,7 +616,7 @@ page_binormal_diag_inference2 = div(
   titlePanel("Binormal Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", binormal_diag_setup_variables_2),
-              tabPanel("Inferences for Optimal Cutoff", binormal_diag_AUC_inferences),
               tabPanel("Plots for the Optimal Cutoff", binormal_diag_copt_plots),
+              tabPanel("Inferences for Optimal Cutoff", binormal_diag_AUC_inferences),
   )
 )
