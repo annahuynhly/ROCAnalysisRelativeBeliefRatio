@@ -188,13 +188,13 @@ sect3.4_AUC_post_copt = reactive({
 sect3.4_AUC_RBR_copt = reactive({
   # smoothing the results
   priorcoptdensity_smo = average_vector_values(sect3.4_AUC_prior_copt()$priorcoptdensity, 
-                                               input$nonpara_bayes_smoother)
+                                               input$nonpara_bayes_smoother_copt)
   postcoptdensity_smo = average_vector_values(sect3.4_AUC_post_copt()$postcoptdensity, 
-                                               input$nonpara_bayes_smoother)
+                                               input$nonpara_bayes_smoother_copt)
   priorcoptmod_smo = average_vector_values(sect3.4_AUC_prior_copt()$priorcoptmod, 
-                                           input$nonpara_bayes_smoother)
+                                           input$nonpara_bayes_smoother_copt)
   postcoptmod_smo = average_vector_values(sect3.4_AUC_post_copt()$postcoptmod, 
-                                          input$nonpara_bayes_smoother)
+                                          input$nonpara_bayes_smoother_copt)
   nonpara_bayes_AUC_rbr_copt(delta = sect3.4_copt_delta(),
                              gridcopt = sect3.4_AUC_prior_copt()$gridcopt, 
                              gridmod = sect3.4_AUC_prior_copt()$gridmod,
@@ -221,13 +221,49 @@ sect3.4_AUC_RBR_error_char_copt = reactive({
 })
 
 sect3.4_cr = reactive({
+  # smoothing the results
+  priorAUC_smo = average_vector_values(sect3.4_AUC_prior()$priorAUC, input$nonpara_bayes_smoother)
+  postAUC_smo = average_vector_values(sect3.4_AUC_post()$postAUC, input$nonpara_bayes_smoother)
   nonpara_bayes_compute_credible_region(gamma = input$nonpara_bayes_gamma, 
-                                        delta = sect3.4_copt_delta(), 
+                                        grid = open_bracket_grid(input$nonpara_bayes_delta), 
                                         AUC_RBR = sect3.4_AUC_RBR()$RB_AUC, 
-                                        AUC_prior = sect3.4_AUC_prior()$priorAUC, 
-                                        AUC_post = sect3.4_AUC_post()$postAUC, 
+                                        AUC_prior = priorAUC_smo, #sect3.4_AUC_prior()$priorAUC, 
+                                        AUC_post = postAUC_smo, #sect3.4_AUC_post()$postAUC, 
                                         plausible_region = sect3.4_AUC_RBR()$plausible_region, 
                                         posterior_content = sect3.4_AUC_RBR()$postPl_AUC)
 })
+
+# Note: these credible regions are NOT within the code yet.
+
+sect3.4_cr_copt = reactive({
+  priorcopt_smo = average_vector_values(sect3.4_AUC_prior_copt()$priorcopt, 
+                                               input$nonpara_bayes_smoother_copt)
+  postcopt_smo = average_vector_values(sect3.4_AUC_post_copt()$postcopt, 
+                                              input$nonpara_bayes_smoother_copt)
+  nonpara_bayes_compute_credible_region(gamma = input$nonpara_bayes_gamma_alt, 
+                                        grid = sect3.4_AUC_prior_copt()$gridcopt, 
+                                        AUC_RBR = sect3.4_AUC_RBR_copt()$RBcopt, 
+                                        AUC_prior = priorcopt_smo, #sect3.4_AUC_prior_copt()$priorcopt, 
+                                        AUC_post =  postcopt_smo, #sect3.4_AUC_post_copt()$postcopt, 
+                                        plausible_region = sect3.4_AUC_RBR_copt()$copt_plausible_region, 
+                                        posterior_content = sect3.4_AUC_RBR_copt()$postPlcopt)
+})
+
+sect3.4_cr_cmod = reactive({
+  priorcoptmod_smo = average_vector_values(sect3.4_AUC_prior_copt()$priorcoptmod, 
+                                           input$nonpara_bayes_smoother_copt)
+  postcoptmod_smo = average_vector_values(sect3.4_AUC_post_copt()$postcoptmod, 
+                                          input$nonpara_bayes_smoother_copt)
+  nonpara_bayes_compute_credible_region(gamma = input$nonpara_bayes_gamma_alt, 
+                                        grid = sect3.4_AUC_prior_copt()$gridmod, 
+                                        AUC_RBR = NA_to_0(sect3.4_AUC_RBR_copt()$RBcoptmod), 
+                                        AUC_prior = sect3.4_AUC_prior_copt()$priorcoptmod, #priorcoptmod_smo, #sect3.4_AUC_prior_copt()$priorcoptmod, 
+                                        AUC_post = sect3.4_AUC_post_copt()$postcoptmod, #postcoptmod_smo, #sect3.4_AUC_post_copt()$postcoptmod, 
+                                        plausible_region = sect3.4_AUC_RBR_copt()$cmod_plausible_region, 
+                                        posterior_content = sect3.4_AUC_RBR_copt()$postPlcmod)
+})
+
+
+
 
 

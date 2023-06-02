@@ -4,7 +4,6 @@
 
 output$nonpara_bayes_hypoAUC_value = renderPrint({
   #nonpara_bayes_df()
-  # temporarily disabling this to see the problem
   pr = sect3.4_AUC_RBR()$plausible_region
   pr = c(pr[1], pr[length(pr)])
   cr = sect3.4_cr()$credible_region
@@ -30,6 +29,7 @@ output$nonpara_bayes_inf_opt_cutoff = renderPrint({
        "Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$copt_plausible_region,
        "Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$cmod_plausible_region,
        "Posterior Content of the Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$postPlcopt,
+       "Posterior Content of the Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$postPlcmod,
        "Error Characteristics" = temp_df
   #     "Plausible Region for Copt" = copt_transform(sect3.4_AUC_RBR_copt()$copt_plausible_region),
   #     "Credible Region for Copt" = copt_transform(sect3.4_cr_copt()$credible_region),
@@ -200,6 +200,47 @@ nonpara_bayes_pr_modified_copt = reactive({
   c(pr[1], pr[length(pr)])
 })
 
+# Determining the existence of a credible region
+
+nonpara_bayes_cr_AUC_copt = reactive({
+  # For the plots, determines if there will be a credible region.
+  if (check.numeric(input$nonpara_bayes_gamma_alt) == TRUE){
+    sect3.4_cr_copt()$credible_region
+  } else {
+    FALSE
+  }
+})
+
+nonpara_bayes_rb_line_AUC_copt = reactive({
+  # Assuming there will be a credible region, there will be a line associated
+  # to make the graph.
+  if (check.numeric(input$nonpara_bayes_gamma_alt) == TRUE){
+    sect3.4_cr_copt()$rb_line
+  } else {
+    FALSE
+  }
+})
+
+nonpara_bayes_cr_AUC_cmod = reactive({
+  # For the plots, determines if there will be a credible region.
+  if (check.numeric(input$nonpara_bayes_gamma_alt) == TRUE){
+    sect3.4_cr_cmod()$credible_region
+  } else {
+    FALSE
+  }
+})
+
+nonpara_bayes_rb_line_AUC_cmod = reactive({
+  # Assuming there will be a credible region, there will be a line associated
+  # to make the graph.
+  if (check.numeric(input$nonpara_bayes_gamma_alt) == TRUE){
+    sect3.4_cr_cmod()$rb_line
+  } else {
+    FALSE
+  }
+})
+
+
 nonpara_bayes_AUC_smoothing_copt = reactive({
   list("priorcoptmoddensity" = average_vector_values(sect3.4_AUC_prior_copt()$priorcoptmoddensity,
                                                      input$nonpara_bayes_smoother_copt),
@@ -216,14 +257,13 @@ nonpara_bayes_AUC_smoothing_copt = reactive({
       #                                  input$nonpara_bayes_smoother_copt))
 })
 
-# TODO: need to add credible region!!!
 output$nonpara_bayes_postprior_cmod_graph = renderPlot({
   if(input$nonpara_bayes_plot_type == "cmod"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridmod,
                                  prior = nonpara_bayes_AUC_smoothing_copt()$priorcoptmoddensity, 
                                  post = nonpara_bayes_AUC_smoothing_copt()$postcoptmoddensity,
                                  plausible_region = nonpara_bayes_pr_modified_cmod(),
-                                 #credible_region = FALSE, #nonpara_bayes_cr_AUC_cmod(), - none right now
+                                 credible_region = nonpara_bayes_cr_AUC_cmod(), # see if this works
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
@@ -233,7 +273,7 @@ output$nonpara_bayes_postprior_cmod_graph = renderPlot({
                                  prior = nonpara_bayes_AUC_smoothing_copt()$priorcoptdensity,
                                  post = nonpara_bayes_AUC_smoothing_copt()$postcoptdensity,
                                  plausible_region = nonpara_bayes_pr_modified_copt(),
-                                 #credible_region = FALSE, #nonpara_bayes_cr_AUC_cmod(), - none right now
+                                 credible_region = nonpara_bayes_cr_AUC_copt(),
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
@@ -246,8 +286,8 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridmod,
                                  rbr = sect3.4_AUC_RBR_copt()$RBcoptmod, #nonpara_bayes_AUC_smoothing_copt()$RBcoptmod, 
                                  plausible_region = nonpara_bayes_pr_modified_cmod(),
-                                 #credible_region = FALSE, #nonpara_bayes_cr_AUC_cmod(),
-                                 #rb_line = nonpara_bayes_rb_line_AUC_cmod(),
+                                 credible_region = nonpara_bayes_cr_AUC_cmod(), # see if this works
+                                 rb_line = nonpara_bayes_rb_line_AUC_cmod(),
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
@@ -256,8 +296,8 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
                                  rbr = sect3.4_AUC_RBR_copt()$RBcopt, #nonpara_bayes_AUC_smoothing_copt()$RBcopt, 
                                  plausible_region = nonpara_bayes_pr_modified_copt(),
-                                 #credible_region = FALSE, #nonpara_bayes_cr_AUC_cmod(),
-                                 #rb_line = FALSE, #nonpara_bayes_rb_line_AUC_cmod(),
+                                 credible_region = nonpara_bayes_cr_AUC_copt(),
+                                 rb_line = nonpara_bayes_rb_line_AUC_copt(),
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,

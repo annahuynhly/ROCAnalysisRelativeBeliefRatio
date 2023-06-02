@@ -17,10 +17,9 @@ a=20
 nMonteprior = 5000 # MAY NEED TO CHANGE THIS LATER
 nstar = 100 # set nstar for approximating random measure
 w = 0.4
-delta = 0.05
+delta = 0.005
 nMontepost =  5000
 nstar = 100
-
 
 test1 = nonpara_bayes_AUC_prior_copt(w = FALSE, 
                                    alpha1w = 15.3589, 
@@ -28,7 +27,7 @@ test1 = nonpara_bayes_AUC_prior_copt(w = FALSE,
                                    nMonteprior = 5000, #sect3.4_copt_nMonteCarlo(), 
                                    nstar = 100, #sect3.4_copt_nstar(), 
                                    a = 20, #sect3.4_a_copt(), 
-                                   delta = 0.05, #sect3.4_copt_delta(),
+                                   delta = 0.005, #sect3.4_copt_delta(),
                                    mu0 = 0, #sect3.4_copt_mu0(), 
                                    tau0 = 0.5, # sect3.4_copt_tau0(), 
                                    lambda1 = 1.787, #sect3.4_copt_lambda1(), 
@@ -121,6 +120,9 @@ test2 = nonpara_bayes_AUC_post_copt(w = 0.4,
                                     xDdata = NA, 
                                     xNDdata = NA)
 
+
+
+
 test3 = nonpara_bayes_AUC_rbr_copt(delta = delta, 
                                    gridcopt = test1$gridcopt, 
                                    gridmod = test1$gridmod, 
@@ -130,6 +132,15 @@ test3 = nonpara_bayes_AUC_rbr_copt(delta = delta,
                                    postcopt = test2$postcopt,
                                    priorcoptmod = test1$priorcoptmod,
                                    postcoptmod = test2$postcoptmod)
+
+################
+nonpara_bayes_compute_credible_region(gamma = 0.3, 
+                                      grid = test1$gridmod,
+                                      AUC_RBR = RBcoptmod, #test3$RBcoptmod, 
+                                      AUC_prior = priorcoptmod, #test1$priorcoptmod, 
+                                      AUC_post = postcoptmod, #test2$postcoptmod, 
+                                      plausible_region = test3$cmod_plausible_region, 
+                                      posterior_content = test3$postPlcmod)
 
 pr_modified = test3$copt_plausible_region
 pr_modified = c(pr_modified[1], pr_modified[length(pr_modified)])

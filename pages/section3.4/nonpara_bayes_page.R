@@ -145,7 +145,7 @@ nonpara_bayes_setup_variables_2 = div(
                   for the AUC?",
                   choices = c("Yes" = "yes", 
                               "No" = "no"),
-                  selected = "yes"
+                  selected = "no"
       ),
       conditionalPanel(
         condition = "input.nonpara_bayes_optimal_cutoff_denote_variables == 'no'",
@@ -303,10 +303,18 @@ nonpara_bayes_hypothesizedAUC = div(
 
 nonpara_bayes_inferences_for_copt = div( 
   titlePanel("Inferences for Optimal Cutoff"),
-  mainPanel(
-    #p("This is currently in progress. Come back later!")
-    tabPanel("test", 
-             withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
+  sidebarLayout(
+    sidebarPanel(width = 3,
+      textInput(inputId = "nonpara_bayes_gamma_alt", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      )
+    ),
+    mainPanel(
+      tabPanel("test", 
+               withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
+    ),
   ),
   br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
   br(),br(),br(),
@@ -613,8 +621,8 @@ page_nonpara_bayes2 = div(
   titlePanel("Nonparametric Bayes Model"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", nonpara_bayes_setup_variables_2),
-              tabPanel("Inferences for Optimal Cutoff", nonpara_bayes_inferences_for_copt),
               tabPanel("Plots for the Optimal Cutoff", nonpara_bayes_copt_plots),
+              tabPanel("Inferences for Optimal Cutoff", nonpara_bayes_inferences_for_copt)
   )
 )
 

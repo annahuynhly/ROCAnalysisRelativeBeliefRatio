@@ -338,11 +338,11 @@ nonpara_bayes_AUC_rbr = function(delta, probAUCprior, probAUCpost,
   return(newlist)
 }
 
-# -> there may be a slight issue with this version (ask for help)
-nonpara_bayes_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prior, AUC_post, 
+# need to edit!!
+nonpara_bayes_compute_credible_region = function(gamma, grid, AUC_RBR, AUC_prior, AUC_post, 
                                                  plausible_region, posterior_content){
   # Note: credible region is now based on the line plot.
-  grid = open_bracket_grid(delta)
+  #grid = open_bracket_grid(delta) # NOTE: user needs to insert the grid as it changes.
   AUC_RBR[is.na(AUC_RBR)] = 0
   # Computes the credible region. At first, there's no default input to avoid generating
   # a credible region automatically (it is not necessary.)
@@ -366,6 +366,7 @@ nonpara_bayes_compute_credible_region = function(gamma, delta, AUC_RBR, AUC_prio
         # find the region associated with it
         # WARNING: BOLD ASSUMPTION NO BREAKPOINTS/PEAKS
         for(j in 1:length(AUC_RBR)){
+          # debugging
           if ((grid[j] >= plausible_region[1]) & (grid[j] <= plausible_region[length(plausible_region)])) {
             if((AUC_RBR[j] > rb_line)){
               credible_region = c(credible_region, grid[j])
@@ -766,12 +767,14 @@ nonpara_bayes_AUC_rbr_copt = function(delta, gridcopt, gridmod,
   }
   
   coptest = gridcopt[imax]
-  postPlcopt = 0 # Posterior content of the plausible region
-  for (i in 1:L) {
-    if (priorcopt[i] > 0 & (postcopt[i] > 0)){
-      if( RBcopt[i] > 1 ){postPlcopt = postPlcopt + postcopt[i]}
-    }
-  }
+  postPlcopt = 0 # Posterior content of the plausible region for copt
+  postPlcmod = 0 # Posterior content of the plausible region for cmod
+  
+  #for (i in 1:L) { # NOTE: this section may be redundant
+  #  if (priorcopt[i] > 0 & (postcopt[i] > 0)){
+  #    if( RBcopt[i] > 1 ){postPlcopt = postPlcopt + postcopt[i]}
+  #  }
+  #}
   
   # to remove the NAs to reduce errors
   RBcopt_alt = RBcopt
@@ -781,20 +784,25 @@ nonpara_bayes_AUC_rbr_copt = function(delta, gridcopt, gridmod,
   
   copt_plausible_region = c()
   for (i in 1:length(gridcopt)){
-    if (RBcopt_alt[i] > 1){ # priorcopt[i] > 0 & postcopt[i] > 0
-      copt_plausible_region = c(copt_plausible_region, as.numeric(gridcopt[i]))
+    if(priorcopt[i] > 0 & postcopt[i] > 0){ # note: this may be too much.
+      if (RBcopt_alt[i] > 1){ 
+        postPlcopt = postPlcopt + postcopt[i]
+        copt_plausible_region = c(copt_plausible_region, as.numeric(gridcopt[i]))
+      }
     }
   }
   cmod_plausible_region = c()
   for (i in 1:length(gridmod)){
-    if (RBcoptmod_alt[i] > 1){ # priorcopt[i] > 0 & postcopt[i] > 0
+    if (RBcoptmod_alt[i] > 1){ # may not need the extra measure for this one?
+      postPlcmod = postPlcmod + postcoptmod[i]
       cmod_plausible_region = c(cmod_plausible_region, as.numeric(gridmod[i]))
     }
   }
   
   newlist = list("RBcopt" = RBcopt, "coptest" = coptest, 
                  "postPlcopt" = postPlcopt, "copt_plausible_region" = copt_plausible_region,
-                 "RBcoptmod" = RBcoptmod, "cmod_plausible_region" = cmod_plausible_region)
+                 "RBcoptmod" = RBcoptmod, "postPlcmod" = postPlcmod,
+                 "cmod_plausible_region" = cmod_plausible_region)
   return(newlist)
 }
 
