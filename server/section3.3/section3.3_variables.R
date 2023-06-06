@@ -11,12 +11,13 @@ sect3.3_hyperpara = reactive({
                                   tau0 = input$binormal_diag_tau0, 
                                   lambda1 = input$binormal_diag_lambda1, 
                                   lambda2 = input$binormal_diag_lambda2, 
-                                  nND = input$binormal_diag_nND, 
-                                  meanND = input$binormal_diag_meanND, 
-                                  sND_squared = input$binormal_diag_sND_squared, 
-                                  nD = input$binormal_diag_nD, 
-                                  meanD = input$binormal_diag_meanD, 
-                                  sD_squared = input$binormal_diag_sD_squared)
+                                  nND = sect3.4_AUC_nND(), #input$binormal_diag_nND, 
+                                  meanND = sect3.4_AUC_meanND(), #input$binormal_diag_meanND, 
+                                  sND_squared = sect3.4_AUC_sND_squared(), #input$binormal_diag_sND_squared, 
+                                  nD = sect3.4_AUC_nD(), #input$binormal_diag_nD, 
+                                  meanD = sect3.4_AUC_meanD(), #input$binormal_diag_meanD, 
+                                  sD_squared = sect3.4_AUC_sD_squared() #input$binormal_diag_sD_squared)
+  )
 })
 
 sect3.3_hyperpara_copt = reactive({
@@ -325,12 +326,13 @@ sect3.3_hyperpara_unequal = reactive({
                                   tau0 = input$binormal_diag_tau0, 
                                   lambda1 = input$binormal_diag_lambda1, 
                                   lambda2 = input$binormal_diag_lambda2, 
-                                  nND = input$binormal_diag_nND, 
-                                  meanND = input$binormal_diag_meanND, 
-                                  sND_squared = input$binormal_diag_sND_squared, 
-                                  nD = input$binormal_diag_nD, 
-                                  meanD = input$binormal_diag_meanD, 
-                                  sD_squared = input$binormal_diag_sD_squared)
+                                  nND = sect3.4_AUC_nND(), #input$binormal_diag_nND, 
+                                  meanND = sect3.4_AUC_meanND(), #input$binormal_diag_meanND, 
+                                  sND_squared = sect3.4_AUC_sND_squared(), #input$binormal_diag_sND_squared, 
+                                  nD = sect3.4_AUC_nD(), #input$binormal_diag_nD, 
+                                  meanD = sect3.4_AUC_meanD(), #input$binormal_diag_meanD, 
+                                  sD_squared = sect3.4_AUC_sD_squared() #input$binormal_diag_sD_squared)
+  )
 })
 
 sect3.3_hyperpara_copt_unequal = reactive({

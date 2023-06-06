@@ -5,7 +5,7 @@
 binormal_diag_setup_variables_1 = div( 
   titlePanel("Setup Values"),
   sidebarLayout(
-    sidebarPanel(width = 3, 
+    sidebarPanel(width = 4, 
       selectInput(inputId = "binormal_case", 
                   label = "Please select the scenario.",
                   choices = c("Assume variances are equal" = "equal_var", 
@@ -18,6 +18,23 @@ binormal_diag_setup_variables_1 = div(
                                  "Unconditional" = 'uncond'),
                   selected = 'uncond'
       ),
+      selectInput(inputId = "binormal_diag_data_method",
+                  label = "Insert the data for the diseased and non-diseased groups,
+                  or use the minimal sufficient statistics instead?",
+                  choices = c("Use the minimal sufficient statistics" = 1,
+                              "Use the raw data" = 2),
+                  selected = 1
+      ),
+      
+      conditionalPanel(
+        condition = "input.binormal_diag_data_method == 2",
+        fileInput(inputId = "binormal_diag_csv", 
+                  label = "Choose CSV File",
+                  multiple = FALSE,
+                  accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
+        ),
+      ),
+      
     ),
     mainPanel(
       fluidPage(
@@ -25,7 +42,7 @@ binormal_diag_setup_variables_1 = div(
           column(3, h4("Simulation Sizes:")),
           column(3, numericInput(inputId = "binormal_diag_nMonteCarlo", 
                                  label = '$\\text{Simulation Sample Size}$',
-                                 value = 300000, min = 1)),
+                                 value = 100000, min = 1)),
           column(3, numericInput(inputId = "binormal_diag_delta", 
                                  label = '$\\text{Delta } (\\delta)$',
                                  value = 0.005)),
@@ -48,33 +65,38 @@ binormal_diag_setup_variables_1 = div(
                                  label = '$\\lambda_{2}$',
                                  value = 1.056)),
         ),
-        fluidRow(
-          column(3, h4("Data Sample Size:")),
-          column(3, numericInput(inputId = "binormal_diag_nND",
-                                 label = '$n_{ND}$',
-                                 value = 25)),
-          column(3, numericInput(inputId = "binormal_diag_nD", 
-                                 label = '$n_{D}$',
-                                 value = 20)),
+        
+        conditionalPanel(
+          condition = "input.binormal_diag_data_method == 1",
+          fluidRow(
+            column(3, h4("Data Sample Size:")),
+            column(3, numericInput(inputId = "binormal_diag_nND",
+                                   label = '$n_{ND}$',
+                                   value = 25)),
+            column(3, numericInput(inputId = "binormal_diag_nD", 
+                                   label = '$n_{D}$',
+                                   value = 20)),
+          ),
+          fluidRow(
+            column(3, h4("Data Means:")),
+            column(3, numericInput(inputId = "binormal_diag_meanND", 
+                                   label = '$\\bar{x}_{ND}$',
+                                   value = -0.072)),
+            column(3, numericInput(inputId = "binormal_diag_meanD", 
+                                   label = '$\\bar{x}_{D}$',
+                                   value = 0.976)),
+          ),
+          fluidRow(
+            column(3, h4("Data Sum of Squares:")),
+            column(3, numericInput(inputId = "binormal_diag_sND_squared", 
+                                   label = '$s^{2}_{ND}$',
+                                   value = 19.638)),
+            column(3, numericInput(inputId = "binormal_diag_sD_squared", 
+                                   label = '$s^{2}_{D}$',
+                                   value = 16.778)),
+          ),
         ),
-        fluidRow(
-          column(3, h4("Data Means:")),
-          column(3, numericInput(inputId = "binormal_diag_meanND", 
-                                 label = '$\\bar{x}_{ND}$',
-                                 value = -0.072)),
-          column(3, numericInput(inputId = "binormal_diag_meanD", 
-                                 label = '$\\bar{x}_{D}$',
-                                 value = 0.976)),
-        ),
-        fluidRow(
-          column(3, h4("Data Sum of Squares:")),
-          column(3, numericInput(inputId = "binormal_diag_sND_squared", 
-                                 label = '$s^{2}_{ND}$',
-                                 value = 19.638)),
-          column(3, numericInput(inputId = "binormal_diag_sD_squared", 
-                                 label = '$s^{2}_{D}$',
-                                 value = 16.778)),
-        ),
+        
       )
     )
   )
@@ -83,7 +105,7 @@ binormal_diag_setup_variables_1 = div(
 binormal_diag_setup_variables_2 = div( 
   titlePanel("Setup Values"),
   sidebarLayout(
-    sidebarPanel(width = 3, 
+    sidebarPanel(width = 4, 
       selectInput(inputId = "binormal_optimal_cutoff_denote_variables", 
                   label = "Do you want to use the same values that was used for the inferences 
                   for the AUC?",
@@ -103,6 +125,24 @@ binormal_diag_setup_variables_2 = div(
                     choices = c("Assume variances are equal" = "equal_var", 
                                 "Assume variances are unequal" = "unequal_var"),
                     selected = "equal_var"),
+        
+        selectInput(inputId = "binormal_diag_data_method_alt",
+                    label = "Insert the data for the diseased and non-diseased groups,
+                    or use the minimal sufficient statistics instead?",
+                    choices = c("Use the minimal sufficient statistics" = 1,
+                                "Use the raw data" = 2),
+                    selected = 1
+        ),
+        
+        conditionalPanel(
+          condition = "input.binormal_diag_data_method_alt == 2",
+          fileInput(inputId = "binormal_diag_csv_alt", 
+                    label = "Choose CSV File",
+                    multiple = FALSE,
+                    accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
+          ),
+        ),
+        
       ),
       selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
                   label = "Would you like to hardcode the copt estimate?",
@@ -126,7 +166,7 @@ binormal_diag_setup_variables_2 = div(
             column(3, h4("Simulation Sizes:")),
             column(3, numericInput(inputId = "binormal_diag_nMonteCarlo_alt", 
                                    label = '$\\text{Simulation Sample Size}$',
-                                   value = 300000, min = 1)),
+                                   value = 100000, min = 1)),
             column(3, numericInput(inputId = "binormal_diag_delta_alt", 
                                    label = '$\\text{Delta } (\\delta)$',
                                    value = 0.005)),
@@ -149,33 +189,38 @@ binormal_diag_setup_variables_2 = div(
                                    label = '$\\lambda_{2}$',
                                    value = 1.056)),
           ),
-          fluidRow(
-            column(3, h4("Data Sample Size:")),
-            column(3, numericInput(inputId = "binormal_diag_nND_alt",
-                                   label = '$n_{ND}$',
-                                   value = 25)),
-            column(3, numericInput(inputId = "binormal_diag_nD_alt", 
-                                   label = '$n_{D}$',
-                                   value = 20)),
+          
+          conditionalPanel(
+            condition = "input.binormal_diag_data_method_alt == 1",
+            fluidRow(
+              column(3, h4("Data Sample Size:")),
+              column(3, numericInput(inputId = "binormal_diag_nND_alt",
+                                     label = '$n_{ND}$',
+                                     value = 25)),
+              column(3, numericInput(inputId = "binormal_diag_nD_alt", 
+                                     label = '$n_{D}$',
+                                     value = 20)),
+            ),
+            fluidRow(
+              column(3, h4("Data Means:")),
+              column(3, numericInput(inputId = "binormal_diag_meanND_alt", 
+                                     label = '$\\bar{x}_{ND}$',
+                                     value = -0.072)),
+              column(3, numericInput(inputId = "binormal_diag_meanD_alt", 
+                                     label = '$\\bar{x}_{D}$',
+                                     value = 0.976)),
+            ),
+            fluidRow(
+              column(3, h4("Data Sum of Squares:")),
+              column(3, numericInput(inputId = "binormal_diag_sND_squared_alt", 
+                                     label = '$s^{2}_{ND}$',
+                                     value = 19.638)),
+              column(3, numericInput(inputId = "binormal_diag_sD_squared_alt", 
+                                     label = '$s^{2}_{D}$',
+                                     value = 16.778)),
+            ),
           ),
-          fluidRow(
-            column(3, h4("Data Means:")),
-            column(3, numericInput(inputId = "binormal_diag_meanND_alt", 
-                                   label = '$\\bar{x}_{ND}$',
-                                   value = -0.072)),
-            column(3, numericInput(inputId = "binormal_diag_meanD_alt", 
-                                   label = '$\\bar{x}_{D}$',
-                                   value = 0.976)),
-          ),
-          fluidRow(
-            column(3, h4("Data Sum of Squares:")),
-            column(3, numericInput(inputId = "binormal_diag_sND_squared_alt", 
-                                   label = '$s^{2}_{ND}$',
-                                   value = 19.638)),
-            column(3, numericInput(inputId = "binormal_diag_sD_squared_alt", 
-                                   label = '$s^{2}_{D}$',
-                                   value = 16.778)),
-          ),
+          
         )
       ),
       conditionalPanel(

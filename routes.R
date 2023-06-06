@@ -46,10 +46,10 @@ source("./pages/section3.4/nonpara_bayes_compute_functions.R")
 source("./pages/section3.4/nonpara_bayes_graph_functions.R")
 
 # Relevant files, datasets
-gender_covid_dataset = read.csv("./pages/section3.4/gender_covid.csv")
-
-Females_Covid_Data = subset(gender_covid_dataset, gender_covid_dataset$Gender=='female', select=c(Age, Death))
-Males_Covid_Data = subset(gender_covid_dataset, gender_covid_dataset$Gender=='male', select=c(Age, Death))
+# Note: we are not using the gender covid dataset anymore.
+#gender_covid_dataset = read.csv("./pages/section3.4/gender_covid.csv")
+#Females_Covid_Data = subset(gender_covid_dataset, gender_covid_dataset$Gender=='female', select=c(Age, Death))
+#Males_Covid_Data = subset(gender_covid_dataset, gender_covid_dataset$Gender=='male', select=c(Age, Death))
 
 
 
