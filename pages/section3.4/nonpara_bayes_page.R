@@ -13,12 +13,37 @@ nonpara_bayes_setup_variables_1 = div(
                                  "Unconditional" = 'uncond'),
                   selected = 'cond'
       ),
-      selectInput(inputId = "nonpara_bayes_DP_method", 
-                  label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
-                  choices = c("Choose a_D" = "aD", 
-                              "Choose epsilon" = "epsilon"),
-                  selected = "epsilon"
-      ),
+      #selectInput(inputId = "nonpara_bayes_DP_method", 
+      #            label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
+      #            choices = c("Choose a_D" = "aD", 
+      #                        "Choose epsilon" = "epsilon"),
+      #            selected = "epsilon"
+      #),
+      
+      selectizeInput(
+        inputId = "nonpara_bayes_DP_method", 
+        label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?", 
+        choices = NULL,
+        options = list(
+          options = list(
+            list(value = "aD", head = "Choose ", latex = "a_{D}"),
+            list(value = "epsilon", head = "Choose ", latex = "\\epsilon")
+          ),
+          valueField = "value",
+          render = I("{
+        item: function(item, escape) { 
+                var html = katex.renderToString(item.latex);
+                return '<div>' + item.head + html + '</div>'; 
+              },
+        option: function(item, escape) { 
+                  var html = katex.renderToString(item.latex);
+                  return '<div>' + item.head + html + '</div>';; 
+                }
+      }")
+        ),
+        selected = "aD"
+      ), # end
+      
       selectInput(inputId = "nonpara_bayes_data_method",
                   label = "Insert the data for the diseased and non-diseased groups,
                   or use the minimal sufficient statistics instead?",
@@ -126,9 +151,14 @@ nonpara_bayes_setup_variables_1 = div(
                                    label = '$s^{2}_{D}$',
                                    value = 16.778)),
           ),
-          
+        ), # end of conditional panel
+        conditionalPanel(
+          condition = "input.nonpara_bayes_data_method == 2",
+          file_upload_example,
+          downloadButton(outputId = "nonpara_bayes_sample", 
+                         label = "Download Sample")
         ),
-      ),
+      ), # end of fluid page
     ),
   ),
 )
@@ -149,12 +179,37 @@ nonpara_bayes_setup_variables_2 = div(
       ),
       conditionalPanel(
         condition = "input.nonpara_bayes_optimal_cutoff_denote_variables == 'no'",
-        selectInput(inputId = "nonpara_bayes_DP_method_alt", 
-                    label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
-                    choices = c("Choose a_D" = "aD", 
-                                "Choose epsilon" = "epsilon"),
-                    selected = "epsilon"
-        ),
+        #selectInput(inputId = "nonpara_bayes_DP_method_alt", 
+        #            label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
+        #            choices = c("Choose a_D" = "aD", 
+        #                        "Choose epsilon" = "epsilon"),
+        #            selected = "epsilon"
+        #),
+        
+        selectizeInput(
+          inputId = "nonpara_bayes_DP_method_alt", 
+          label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?", 
+          choices = NULL,
+          options = list(
+            options = list(
+              list(value = "aD", head = "Choose ", latex = "a_{D}"),
+              list(value = "epsilon", head = "Choose ", latex = "\\epsilon")
+            ),
+            valueField = "value",
+            render = I("{
+        item: function(item, escape) { 
+                var html = katex.renderToString(item.latex);
+                return '<div>' + item.head + html + '</div>'; 
+              },
+        option: function(item, escape) { 
+                  var html = katex.renderToString(item.latex);
+                  return '<div>' + item.head + html + '</div>';; 
+                }
+      }")
+          ),
+          selected = "aD"
+        ), # end
+        
         selectInput(inputId = "nonpara_bayes_data_method_alt",
                     label = "Insert the data for the diseased and non-diseased groups,
                     or use the minimal sufficient statistics instead?",
@@ -270,6 +325,12 @@ nonpara_bayes_setup_variables_2 = div(
                                      label = '$s^{2}_{D}$',
                                      value = 16.778)),
             ),
+          ), # end of conditional panel
+          conditionalPanel(
+            condition = "input.nonpara_bayes_data_method_alt == 2",
+            file_upload_example,
+            downloadButton(outputId = "nonpara_bayes_sample_2", 
+                           label = "Download Sample")
           ),
         ),
       ),

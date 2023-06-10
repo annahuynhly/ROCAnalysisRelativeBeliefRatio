@@ -32,18 +32,18 @@ def_problem = fluidPage(
     mainPanel(
       p("Let $\\Omega_{D}$ represent the population of those who are diseased, and $\\Omega_{ND}$ 
         represent the population who are not diseased."),
-      p("There is a measurement $X$ : $\\Omega \\mapsto 
-        \\mathbb{R}^{1}$ is defined on a population $\\Omega = \\Omega_{D} \\cup \\Omega_{ND}$ with 
+      p("There is a diagnostic $X$ : $\\Omega \\mapsto 
+        \\mathbb{R}^{1}$ defined on a population $\\Omega = \\Omega_{D} \\cup \\Omega_{ND}$ with 
         $\\Omega_{D} \\cap \\Omega_{ND} = \\emptyset$."),
       p("Here, we say that $F_{ND}(c) = $ # $(\\{w \\in \\Omega_{ND}:X(\\omega) \\leq c\\}) / $ # 
         $(\\Omega_{ND})$ is the conditional cumulative distribution function (cdf) of X in the non 
         diseased population."),
       p("Similarly, $F_{D}(c) = $ # $(\\{w \\in \\Omega_{D}: X(\\omega) \\leq c\\}) 
         / $ # $(\\Omega_{D})$ is the conditional cdf of X in the diseased population."),
-      p("There are two was to sample from $\\Omega$, either:"),
+      p("There are two ways to sample from $\\Omega$, either:"),
       HTML("<ol>
               <li>Take samples from either $\\Omega_{D}$ and $\\Omega_{ND}$ separately 
-                (relevant in case-control studies.)
+                (relevant in case-control studies,)
               </li>
               <li>Take a sample from $\\Omega$ (relevant in cross-sectional studies.)</li>
       </ol>"
@@ -90,12 +90,11 @@ def_problem = fluidPage(
       ), # end of table
       br(),
       
-      p("In this case, $\\omega = $#$(\\Omega_{D})$/$(\\Omega)$ of the disease in $\\Omega$."),
-      p("Furthermore, the following error characteristics depend on $\\omega$:"),
+      p("In general, $\\omega = $#$(\\Omega_{D})$/$(\\Omega)$ is the prevalence of the disease in $\\Omega$."),
+      p("The following error characteristics depend on $\\omega$:"),
       
       p("$\\text{Error}(c) = $ Misclassification Rate $ = w \\text{FNR}(c) + 
-          (1 - w)\\text{FPR}(c)$"),
-      p("Where $\\text{Error}(c)$ is the probability of misclassifying a subject."),
+          (1 - w)\\text{FPR}(c)$ which is the probability of misclassifying a subject."),
       
       HTML("<p> $\\text{FDR}(c) = $ False Discovery Rate
                 <span style = 'font-size:20px;'> $ = \\frac{(1-w)\\text{FPR}(c)}{w
@@ -103,7 +102,7 @@ def_problem = fluidPage(
              </p>"
       ),
       p("In other words, $\\text{FDR}(c)$ is the conditional probability of someone being mistaken
-        as having the disease when they do not have it."),
+        as having the disease given that they have been classified as having the disease"),
       
       HTML("<p> $\\text{FNDR}(c) = $ False Nondiscovery Rate
                 <span style = 'font-size:20px;'> $ = \\frac{w \\text{FNR}(c)}{w 
@@ -111,22 +110,22 @@ def_problem = fluidPage(
              </p>"
       ),
       p("In simpler terms, $\\text{FNDR}(c)$ is the conditional probability of someone being 
-      mistaken as not being diseased when they have the disease."),
+      mistaken as not being diseased when they have been classified as not having the disease"),
       
       HTML("<p> $\\text{PPV}(c) = $ Positive Predictive Value
                 <span style = 'font-size:20px;'> $ = \\frac{w \\text{TPR}(c)}{w 
                 \\text{TPR}(c) + (1 - w){FPR}(c)}$
              </p>"
       ),
-      p("In plain English, $\\text{PPV}(c)$ is the conditional probability that given we claim that a subject 
-        is tested as positive, the subject is actually positive."),
+      p("In plain English, $\\text{PPV}(c)$ is the conditional probability that given that a subject 
+        has been tested as positive, the subject is actually positive."),
       
       HTML("<p> <span style = 'font-size:16px;'>
              $c_{opt} = $ optimal cutoff $ =  \\text{arg inf Error}(c)$ 
              </span> </p>"
       ),
       p("This represents the value that minimizes the probability of misclassifying someone (making 
-        an error.) We plan to find $c_{opt}$ through bayesian statistics."),
+        an error.)"),
       
     ),
     sidebarPanel(width = 4,

@@ -1,17 +1,7 @@
 ################################################################
-# POTENTIAL OTHER FEATURES                                     #
+# TODO LIST                                                    #
 ################################################################
-# Add a github link to the repository
-# Align the footer margins for the rest of the sections. -> LOW PRIORITY
-# Make sure the seed is consistent -> for the nonparametric case
-# Make the code look nicer lmao
-# make outputs look nicer ??? (difficult task based on searches)
 # add more colour themes and make the code more efficient for selecting a colour
-# let people generate their own actual data..? -> maybe?
-# need to add instructions for the format of the file
-# let users do the same to upload files for the 2nd case
-
-# ISSUES:
 
 ################################################################
 # LIBRARIES                                                    #
@@ -104,7 +94,6 @@ server = function(input, output, session) {
   
   # SECTION 3.3 ################################################## 
   
-  source(file.path("server/section3.4", "section3.4.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_prevalence.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_setup_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_variables.R"),  local = TRUE)$value

@@ -8,14 +8,20 @@ output$nonpara_bayes_hypoAUC_value = renderPrint({
   pr = c(pr[1], pr[length(pr)])
   cr = sect3.4_cr()$credible_region
   cr = c(cr[1], cr[length(cr)])
-  list("Prior Probability: P(AUC > 1/2)" = sect3.4_AUC_prior()$probAUCprior,
-       "Posterior Probability: P(AUC > 1/2 | data) / Strength of the evidence" = sect3.4_AUC_post()$probAUCpost,
-       "Relative Belief Ratio of AUC > 1/2" = sect3.4_AUC_RBR()$RBprobAUC,
-       "Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$nonpara_bayes_delta), sect3.4_AUC_RBR()$RB_AUC),
-       "Plausible Region for the AUC" = pr,
-       "Posterior Content of the Plausible Region for the AUC" = sect3.4_AUC_RBR()$postPl_AUC,
-       "Credible region for the AUC" = sect3.4_cr()$credible_region
+  newlst = list("Prior Probability: P(AUC > 1/2)" = sect3.4_AUC_prior()$probAUCprior,
+           "Posterior Probability: P(AUC > 1/2 | data) / Strength of the evidence" = sect3.4_AUC_post()$probAUCpost,
+           "Relative Belief Ratio of AUC > 1/2" = sect3.4_AUC_RBR()$RBprobAUC,
+           "Relative Belief Estimate of the AUC from the Relative Belief Ratio" = RBR_estimate_of_AUC(open_bracket_grid(input$nonpara_bayes_delta), sect3.4_AUC_RBR()$RB_AUC),
+           "Plausible Region for the AUC" = pr,
+           "Posterior Content of the Plausible Region for the AUC" = sect3.4_AUC_RBR()$postPl_AUC,
+           "Credible region for the AUC" = sect3.4_cr()$credible_region
   )
+  if(input$nonpara_bayes_DP_method == "epsilon"){
+    a_df = list("Computed a" = sect3.4_a())
+    c(a_df, newlst)
+  } else {
+    newlst
+  }
 })
 
 output$nonpara_bayes_inf_opt_cutoff = renderPrint({

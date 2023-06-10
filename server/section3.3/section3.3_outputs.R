@@ -419,3 +419,35 @@ output$binormal_diag_downloadData = downloadHandler(
     write.csv(binormal_diag_download(), file, row.names = FALSE)
   }
 )
+
+# This is for the sample data
+
+sample_data = reactive({ 
+  nondiseased = c(-0.11315894, 0.03273954, -0.69180664, -0.05459313, -1.22760962)
+  diseased = c(0.8934581, -0.09544302, 1.52694609, 2.30531596, 0.45009081)
+  df = data.frame(nondiseased, diseased)
+  df
+})
+
+output$binormal_diag_sample = downloadHandler(
+  filename = function() {
+    # Use the selected dataset as the suggested file name
+    "sample data for upload.csv"
+  },
+  content = function(file) {
+    # Write the dataset to the `file` that will be downloaded
+    write.csv(sample_data(), file, row.names = FALSE)
+  }
+)
+
+output$binormal_diag_sample_2 = downloadHandler(
+  filename = function() {
+    # Use the selected dataset as the suggested file name
+    "sample data for upload.csv"
+  },
+  content = function(file) {
+    # Write the dataset to the `file` that will be downloaded
+    write.csv(sample_data(), file, row.names = FALSE)
+  }
+)
+

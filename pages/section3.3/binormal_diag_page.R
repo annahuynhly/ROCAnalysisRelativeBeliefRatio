@@ -2,6 +2,15 @@
 # SETUP VARIABLES & PICKING SAMPLING REGIME                    #
 ################################################################
 
+file_upload_example = div(
+  p("When uploading a .csv file, the file must have a header and two columns:"),
+  p(HTML("<ul>
+            <li> The first column must include data for the nondiseased case, </li>
+            <li> The second column must include data for the diseased case. </li>
+         </ul>")),
+  p("Please leave NA/NaN values as blank. You can download an example below of the format:"),
+)
+
 binormal_diag_setup_variables_1 = div( 
   titlePanel("Setup Values"),
   sidebarLayout(
@@ -95,8 +104,13 @@ binormal_diag_setup_variables_1 = div(
                                    label = '$s^{2}_{D}$',
                                    value = 16.778)),
           ),
+        ), # end of conditional panel
+        conditionalPanel(
+          condition = "input.binormal_diag_data_method == 2",
+          file_upload_example,
+          downloadButton(outputId = "binormal_diag_sample", 
+                         label = "Download Sample")
         ),
-        
       )
     )
   )
@@ -219,8 +233,13 @@ binormal_diag_setup_variables_2 = div(
                                      label = '$s^{2}_{D}$',
                                      value = 16.778)),
             ),
+          ), # end of conditional Panel
+          conditionalPanel(
+            condition = "input.binormal_diag_data_method_alt == 2",
+            file_upload_example,
+            downloadButton(outputId = "binormal_diag_sample_2", 
+                           label = "Download Sample")
           ),
-          
         )
       ),
       conditionalPanel(

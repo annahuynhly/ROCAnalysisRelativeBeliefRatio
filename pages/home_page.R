@@ -17,17 +17,16 @@ home_page = fluidPage(
         "by Michael Evans, Luai Al Labadi, and Qiaoyu Liang. All authors are from the 
         University of Toronto. An undergraduate researcher, Anna Ly, programmed this website 
         using R Shiny. The computations here utilize the use of a relative belief ratio 
-        and the dirichlet process."
+        and the Dirichlet process."
       ),
       br(),
       p("This website allows you to select from three sampling regimes and choose from 
         different types of data, such as the finite valued diagnostic, the binormal 
-        diagnostic, and the nonparametric bayes model. Depending on the sampling regime, 
-        inferences for the sampling regime are provided. The calculator provides plots, 
-        the values of the prior, posterior, and the relative belief ratio, the values of 
+        diagnostic, and the nonparametric Bayes model. Depending on the sampling regime, 
+        inferences for the sampling regime are provided. The calculator provides plots
+        of the prior, posterior, and the relative belief ratio, the values of 
         the plausible region, posterior content of the plausible region, credible region, 
-        error characteristics (such as FPR, FNR, Error, FDR, FNDR, PPV), and plots that show 
-        the plots of the optimal cutoff."),
+        error characteristics (such as FPR, FNR, Error, FDR, FNDR, PPV.)"),
       br(),
       p("Due to the complexity of the formulas, some of the computations take a long time to 
         run, hence, switching between pages may take awhile."),
