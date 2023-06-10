@@ -31,7 +31,7 @@ output$nonpara_bayes_inf_opt_cutoff = renderPrint({
                        sect3.4_AUC_RBR_error_char_copt()$FDRest,
                        sect3.4_AUC_RBR_error_char_copt()$FNDRest)
   colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-  list("Copt Estimate" = sect3.4_AUC_RBR_copt()$coptest,
+  newlst = list("Copt Estimate" = sect3.4_AUC_RBR_copt()$coptest,
        "Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$copt_plausible_region,
        "Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$cmod_plausible_region,
        "Posterior Content of the Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$postPlcopt,
@@ -42,6 +42,12 @@ output$nonpara_bayes_inf_opt_cutoff = renderPrint({
   #     "Cmod Estimate" = sect3.4_AUC_RBR_copt()$cmodest,
   #     "Credible Region for Cmod" = sect3.4_cr_copt()$credible_region,
   )
+  if(input$nonpara_bayes_DP_method_alt == "epsilon" & input$nonpara_bayes_optimal_cutoff_denote_variables == "no"){
+    a_df = list("Computed a" = sect3.4_a_copt())
+    c(a_df, newlst)
+  } else {
+    newlst
+  }
 })
 
 
@@ -349,4 +355,33 @@ output$nonpara_bayes_downloadData = downloadHandler(
   }
 )
 
+# This is for the sample data
 
+sample_data_modified = reactive({ 
+  nondiseased = c(-0.11315894, 0.03273954, -0.69180664, -0.05459313, -1.22760962)
+  diseased = c(0.8934581, -0.09544302, 1.52694609, 2.30531596, 0.45009081)
+  df = data.frame(nondiseased, diseased)
+  df
+})
+
+output$nonpara_bayes_sample = downloadHandler(
+  filename = function() {
+    # Use the selected dataset as the suggested file name
+    "sample data for upload.csv"
+  },
+  content = function(file) {
+    # Write the dataset to the `file` that will be downloaded
+    write.csv(sample_data_modified(), file, row.names = FALSE)
+  }
+)
+
+output$nonpara_bayes_sample_2 = downloadHandler(
+  filename = function() {
+    # Use the selected dataset as the suggested file name
+    "sample data for upload.csv"
+  },
+  content = function(file) {
+    # Write the dataset to the `file` that will be downloaded
+    write.csv(sample_data_modified(), file, row.names = FALSE)
+  }
+)
