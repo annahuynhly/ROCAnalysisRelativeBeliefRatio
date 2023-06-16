@@ -57,8 +57,8 @@ sect3.2_pr_short = reactive({
 ################################################################
 
 output$finite_val_diag_prevalence_values1 = renderPrint({
-  list("Plausible Region of Prevalence w" = sect3.2_pr_short(),
-       "Relative Belief Estimate of Prevalence w" = sect3.2_prevalence_info_1()$RB_estimate_of_prevalence_w,
+  list("Relative Belief Estimate of Prevalence w" = sect3.2_prevalence_info_1()$RB_estimate_of_prevalence_w,
+       "Plausible Region of Prevalence w" = sect3.2_pr_short(),
        "Prior Content" = sect3.2_prevalence_info_1()$prior_content,
        "Posterior Content" = sect3.2_prevalence_info_1()$posterior_content,
        "Credible Region of Prevalence w" = sect3.2_prevalence_cred_region()$credible_region,

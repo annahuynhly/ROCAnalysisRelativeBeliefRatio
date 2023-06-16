@@ -15,8 +15,8 @@ finite_val_setup_variables_1 = div(
       conditionalPanel(
         condition = "input.finite_val_condition == 'conditional'",
         selectInput(inputId = "finite_val_condition_resampling",
-                    label = "Do you want to resample to match the size of the Monte Carlo 
-                    sample size?",
+                    label = "Do you want the conditional sample size to match the unconditional sample 
+                    size?",
                     choices = list("Yes" = 'yes',
                                    "No" = 'no'),
                     selected = 'no'
