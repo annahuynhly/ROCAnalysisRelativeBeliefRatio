@@ -2,6 +2,22 @@
 # VARIABLES                                                    #
 ################################################################
 
+sect3.4_prevalence_n = reactive({
+  if(input$nonpara_bayes_data_method == 1){ # inserting descriptive statistics
+    as.numeric(input$nonpara_bayes_nD) + as.numeric(input$nonpara_bayes_nND)
+  } else if(input$nonpara_bayes_data_method == 2){
+    length(nonpara_bayes_df()$nondiseased) + length(nonpara_bayes_df()$diseased)
+  }
+})
+
+sect3.4_prevalence_nD = reactive({
+  if(input$nonpara_bayes_data_method == 1){ # inserting descriptive statistics
+    as.numeric(input$nonpara_bayes_nD)
+  } else if(input$nonpara_bayes_data_method == 2){
+    length(nonpara_bayes_df()$diseased)
+  }
+})
+
 sect3.4_prevalence_grid = reactive({
   if(input$nonpara_bayes_case2 == 'A'){
     open_bracket_grid(input$nonpara_bayes_prevalence_delta_alt)
@@ -13,16 +29,16 @@ sect3.4_prevalence_grid = reactive({
 sect3.4_prevalence_info_1 = reactive({
   RBR_compute_values(alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
                      alpha2w = input$nonpara_bayes_prevalence_alpha2w, 
-                     n = input$nonpara_bayes_prevalence_n, 
-                     nD = input$nonpara_bayes_prevalence_nD, 
+                     n = sect3.4_prevalence_n(), #input$nonpara_bayes_prevalence_n, 
+                     nD = sect3.4_prevalence_nD(), #input$nonpara_bayes_prevalence_nD, 
                      grid = sect3.4_prevalence_grid())
 })
 
 sect3.4_prevalence_info_2 = reactive({
   w0_compute_values(alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
                     alpha2w = input$nonpara_bayes_prevalence_alpha2w, 
-                    n = input$nonpara_bayes_prevalence_n, 
-                    nD = input$nonpara_bayes_prevalence_nD, 
+                    n = sect3.4_prevalence_n(), #input$nonpara_bayes_prevalence_n, 
+                    nD = sect3.4_prevalence_nD(), #input$nonpara_bayes_prevalence_nD, 
                     w0 = input$nonpara_bayes_prevalence_w0, 
                     relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
                     grid = sect3.4_prevalence_grid())
@@ -31,8 +47,8 @@ sect3.4_prevalence_info_2 = reactive({
 sect3.4_prevalence_cred_region = reactive({
   compute_credible_region(alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
                           alpha2w = input$nonpara_bayes_prevalence_alpha2w, 
-                          n = input$nonpara_bayes_prevalence_n, 
-                          nD = input$nonpara_bayes_prevalence_nD, 
+                          n = sect3.4_prevalence_n(), #input$nonpara_bayes_prevalence_n, 
+                          nD = sect3.4_prevalence_nD(), #input$nonpara_bayes_prevalence_nD, 
                           grid = sect3.4_prevalence_grid(), 
                           gamma = input$nonpara_bayes_prevalence_gamma, 
                           delta = input$nonpara_bayes_prevalence_delta, 

@@ -208,17 +208,17 @@ generate_rbr_graph = function(relative_belief_ratio, grid,
        xlim = x_interval, ylim = y_interval,
        main = "Graph of the Relative Belief Ratio of w", ylab = "RBR", xlab = "w", 
        col = colour_choice[1])
-  abline(h = 1, col=colour_choice[2], lwd = 2, lty = lty_type[3])
+  abline(h = 1, col = colour_choice[2], lwd = 2, lty = lty_type[2])
   
   rgb_rb = col2rgb(colour_choice[1])
   polygon(grid, relative_belief_ratio, col = rgb(rgb_rb[1]/255, rgb_rb[2]/255, rgb_rb[3]/255, 
                                                  alpha = transparency), border = NA)
   if (typeof(rb_line) == "double") { 
-    abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[2])
+    abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[3])
     rgb_cr = col2rgb(colour_choice[3])
     legend("topleft", legend = c("Relative Belief Ratio", "Credible Region Line"), lwd = 2, 
            col = c(colour_choice[1], colour_choice[3]), 
-           lty = c(lty_type[1], lty_type[3], 1))
+           lty = c(lty_type[1], lty_type[3]))
   } else {
     legend("topleft", legend = c("Relative Belief Ratio"), lwd = 2, 
            col = c(colour_choice[1]), lty = c(lty_type[1]))

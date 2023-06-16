@@ -79,24 +79,24 @@ server = function(input, output, session) {
   # SECTION 3.2 ################################################## 
   
   source(file.path("server/section3.2", "section3.2_definitions.R"),  local = TRUE)$value
-  source(file.path("server/section3.2", "section3.2_prevalence.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_setup_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_variables.R"),  local = TRUE)$value
+  source(file.path("server/section3.2", "section3.2_prevalence.R"),  local = TRUE)$value
   source(file.path("server/section3.2", "section3.2_outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   
   source(file.path("server/section3.3", "section3.3_definitions.R"),  local = TRUE)$value
-  source(file.path("server/section3.3", "section3.3_prevalence.R"),  local = TRUE)$value
   source(file.path("server/section3.3", "section3.3_setup_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.3", "section3.3_variables.R"),  local = TRUE)$value
+  source(file.path("server/section3.3", "section3.3_prevalence.R"),  local = TRUE)$value
   source(file.path("server/section3.3", "section3.3_outputs.R"),  local = TRUE)$value
   
   # SECTION 3.3 ################################################## 
   
-  source(file.path("server/section3.4", "section3.4_prevalence.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_setup_variables.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_variables.R"),  local = TRUE)$value
+  source(file.path("server/section3.4", "section3.4_prevalence.R"),  local = TRUE)$value
   source(file.path("server/section3.4", "section3.4_outputs.R"),  local = TRUE)$value
   
   # ANIMATIONS ###################################################

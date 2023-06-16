@@ -123,9 +123,7 @@ density_hist_AUC_RBR = function(delta, AUC_RBR,
   if(showbars == FALSE){
     colours = "#ffffff" # this is referring to the bins, not the rest.
   } else {
-    colours = rgb(rgb_rbr[1]/255, 
-                  rgb_rbr[2]/255, 
-                  rgb_rbr[3]/255, alpha = transparency)
+    colours = rgb(rgb_rbr[1]/255, rgb_rbr[2]/255, rgb_rbr[3]/255, alpha = transparency)
     #colours = rgb(0/255, 255/255, 204/255, alpha = transparency)
   }
   
@@ -138,7 +136,7 @@ density_hist_AUC_RBR = function(delta, AUC_RBR,
   plot(myhist, xlab = "AUC", ylab = "Relative Belief Ratio", 
        main = "Density Histogram: The Relative Belief Ratio of the AUC",
        col = colours, freq = TRUE, border = "#ffffff")
-  abline(h = 1, col = colour_choice[2], lwd = 2, lty = lty_type[3])
+  abline(h = 1, col = colour_choice[2], lwd = 2, lty = lty_type[2])
   #warning message doesn't seem to be much of an issue
   if(densityplot == TRUE){
     rbr_density_plot = convert_hist_to_density_plot(myhist$counts, myhist$breaks, 

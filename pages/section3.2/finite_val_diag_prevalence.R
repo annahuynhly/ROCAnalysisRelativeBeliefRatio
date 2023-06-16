@@ -47,14 +47,14 @@ finite_val_diag_prevalence_plausible_region = div(
   titlePanel("Relative Belief Estimate of Prevalence w & Plausible Region"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-      numericInput(inputId = "finite_val_diag_prevalence_n", 
-                   label = 'Total Sample Size',
-                   value = 100, min = 1
-      ),
-      numericInput(inputId = "finite_val_diag_prevalence_nD", 
-                   label = 'Total Diseased',
-                   value = 68, min = 0
-      ),
+      #numericInput(inputId = "finite_val_diag_prevalence_n", 
+      #             label = 'Total Sample Size',
+      #             value = 100, min = 1
+      #),
+      #numericInput(inputId = "finite_val_diag_prevalence_nD", 
+      #             label = 'Total Diseased',
+      #             value = 68, min = 0
+      #),
       numericInput(inputId = "finite_val_diag_prevalence_delta", 
                    label = tags$p('Delta (the meaningful difference for the prevalence)', 
                            style = "font-size: 90%;"),

@@ -74,7 +74,7 @@ finite_val_copt_colours = reactive({
     dull
   } else if (input$finite_val_c_opt_carry_colour == 'lovelymei'){
     lovelymei
-  } else if (input$finite_val_colour == 'jackin'){
+  } else if (input$finite_val_c_opt_carry_colour == 'jackin'){
     jackin_execute
   } else if (input$finite_val_c_opt_carry_colour == 'custom'){
     finite_val_colours()[c(1, 2, 3)]

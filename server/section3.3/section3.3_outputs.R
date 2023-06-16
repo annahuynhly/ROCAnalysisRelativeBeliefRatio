@@ -103,7 +103,7 @@ binormal_diag_lty_types_copt = reactive({
   c(as.numeric(input$binormal_diag_priorc_opt_label),
     as.numeric(input$binormal_diag_postc_opt_label),
     as.numeric(input$binormal_diag_rbrc_opt_label),
-    as.numeric(input$binormal_diag_crc_opt_label),
+    as.numeric(input$binormal_diag_line_1c_opt_label),
     as.numeric(input$binormal_diag_crc_opt_label))
 })
 

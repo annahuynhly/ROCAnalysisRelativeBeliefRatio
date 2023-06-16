@@ -514,14 +514,12 @@ binormal_diag_AUC_inferences = div(
 binormal_diag_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
-    sidebarPanel(width = 3,
-      conditionalPanel(
-        condition = "input.binormal_diag_inferences == 'results'",
-        textInput(inputId = "binormal_diag_gamma_copt", 
-                  label = tags$p("Gamma (must be less than posterior content)", 
-                                 style = "font-size: 95%"), 
-                  value = "NA"),
-      ),
+    sidebarPanel(
+      width = 3,
+      textInput(inputId = "binormal_diag_gamma_copt", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"),
       sliderInput(inputId = "binormal_diag_smoother_copt", 
                   label = "Number of Average Points (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2
