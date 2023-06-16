@@ -46,18 +46,19 @@ finite_val_colours = reactive({
   # Total order of ALL colours: prior, posterior, relative belief ratio, 
   # plausible region, y = 1 line, credible region, 
   if(input$finite_val_colour == 'default1'){
-    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+    default1
   } else if (input$finite_val_colour == 'default2'){
-    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+    default2
   } else if (input$finite_val_colour == 'dull'){
-    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+    dull
   } else if (input$finite_val_colour == 'lovelymei'){
-    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+    lovelymei
+  } else if (input$finite_val_colour == 'jackin'){
+    jackin_execute
   } else if (input$finite_val_colour == 'manual'){
     c(convert_to_hex(input$finite_val_colour_prior),
       convert_to_hex(input$finite_val_colour_post),
       convert_to_hex(input$finite_val_colour_rbr),
-      convert_to_hex(input$finite_val_colour_pr),
       convert_to_hex(input$finite_val_colour_line_1),
       convert_to_hex(input$finite_val_colour_cr)
     )
@@ -66,13 +67,15 @@ finite_val_colours = reactive({
 
 finite_val_copt_colours = reactive({
   if(input$finite_val_c_opt_carry_colour == 'default1'){
-    c("#FF6666", "#6699FF", "#05DEB2")
+    default1
   } else if (input$finite_val_c_opt_carry_colour == 'default2'){
-    c("blue", "green", "red")
+    default2
   } else if (input$finite_val_c_opt_carry_colour == 'dull'){
-    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+    dull
   } else if (input$finite_val_c_opt_carry_colour == 'lovelymei'){
-    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+    lovelymei
+  } else if (input$finite_val_colour == 'jackin'){
+    jackin_execute
   } else if (input$finite_val_c_opt_carry_colour == 'custom'){
     finite_val_colours()[c(1, 2, 3)]
   } else if (input$finite_val_c_opt_carry_colour == 'manual'){
@@ -84,14 +87,11 @@ finite_val_copt_colours = reactive({
 
 sect3.2_prior_post_lty = reactive({
   c(as.numeric(input$finite_val_lty_prior),
-    as.numeric(input$finite_val_lty_post),
-    as.numeric(input$finite_val_lty_pr),
-    as.numeric(input$finite_val_lty_cr))
+    as.numeric(input$finite_val_lty_post))
 })
 
 sect3.2_rbr_lty = reactive({
   c(as.numeric(input$finite_val_lty_rbr),
-    as.numeric(input$finite_val_lty_pr),
     as.numeric(input$finite_val_lty_line_1),
     as.numeric(input$finite_val_lty_cr))
 })
@@ -101,10 +101,9 @@ output$finite_val_postprior_graph = renderPlot({
     density_hist_AUC_prior_post(delta = input$finite_val_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
                                 AUC_post = sect3.2_AUC_post()$AUC, 
-                                plausible_region = sect3.2_pr()$plausible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                colour_choice = finite_val_colours()[c(1, 2)],
                                 lty_type = sect3.2_prior_post_lty(), 
                                 transparency = input$finite_val_col_transparency)
     
@@ -112,21 +111,18 @@ output$finite_val_postprior_graph = renderPlot({
     density_hist_AUC_prior_post(delta = input$finite_val_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
                                 AUC_post = sect3.2_AUC_post()$AUC, 
-                                plausible_region = sect3.2_pr()$plausible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                colour_choice = finite_val_colours()[c(1, 2)],
                                 lty_type = sect3.2_prior_post_lty(), 
                                 transparency = input$finite_val_col_transparency)
   } else {
     density_hist_AUC_prior_post(delta = input$finite_val_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
                                 AUC_post = sect3.2_AUC_post()$AUC, 
-                                plausible_region = sect3.2_pr()$plausible_region,
-                                credible_region = sect3.2_cr()$credible_region,
                                 densityplot = TRUE, 
                                 showbars = showbarplots(),
-                                colour_choice = finite_val_colours()[c(1, 2, 4, 6)],
+                                colour_choice = finite_val_colours()[c(1, 2)],
                                 lty_type = sect3.2_prior_post_lty(), 
                                 transparency = input$finite_val_col_transparency)
   }
@@ -136,30 +132,26 @@ output$finite_val_RB_graph = renderPlot({
   if(check.numeric(input$finite_val_gamma) == FALSE){
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
-                         plausible_region = sect3.2_pr()$plausible_region, 
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = finite_val_colours()[c(3:6)],
+                         colour_choice = finite_val_colours()[c(3:5)],
                          lty_type = sect3.2_rbr_lty(), 
                          transparency = input$finite_val_col_transparency)
   } else if (as.numeric(input$finite_val_gamma) >= sect3.2_AUC_post_content()){
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
-                         plausible_region = sect3.2_pr()$plausible_region, 
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = finite_val_colours()[c(3:6)],
+                         colour_choice = finite_val_colours()[c(3:5)],
                          lty_type = sect3.2_rbr_lty(), 
                          transparency = input$finite_val_col_transparency)
   } else {
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
-                         plausible_region = sect3.2_pr()$plausible_region,
-                         credible_region = sect3.2_cr()$credible_region, 
                          rb_line = sect3.2_cr()$rb_line,
                          densityplot = TRUE,
                          showbars = showbarplots(),
-                         colour_choice = finite_val_colours()[c(3:6)],
+                         colour_choice = finite_val_colours()[c(3:5)],
                          lty_type = sect3.2_rbr_lty(), 
                          transparency = input$finite_val_col_transparency)
   }

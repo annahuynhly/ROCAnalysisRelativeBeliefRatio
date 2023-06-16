@@ -12,6 +12,16 @@ finite_val_setup_variables_1 = div(
                                  "Unconditional" = 'unconditional'),
                   selected = 'unconditional'
       ),
+      conditionalPanel(
+        condition = "input.finite_val_condition == 'conditional'",
+        selectInput(inputId = "finite_val_condition_resampling",
+                    label = "Do you want to resample to match the size of the Monte Carlo 
+                    sample size?",
+                    choices = list("Yes" = 'yes',
+                                   "No" = 'no'),
+                    selected = 'no'
+        ),
+      ),
     ),
     mainPanel(
       fluidRow(
@@ -153,22 +163,6 @@ finite_val_hypothesizedAUC = div(
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5
       ),
-      conditionalPanel(
-        condition = "input.finite_val_condition == 'conditional'",
-        selectInput(inputId = "finite_val_condition_resampling",
-                    label = "Do you want to resample to match the size of the Monte Carlo 
-                    sample size?",
-                    choices = list("Yes" = 'yes',
-                                   "No" = 'no'),
-                    selected = 'no'
-        ),
-      ),
-      
-      textInput(inputId = "finite_val_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
-                               style = "font-size: 95%"), 
-                value = "NA"
-      )
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
@@ -206,6 +200,11 @@ finite_val_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
+      textInput(inputId = "finite_val_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      ),
       selectInput(inputId = "finite_val_hist_visual", label = "Choose Visual:",
                    choices = c("With Bars" = "finite_val_withbars",
                                "Without Bars" = "finite_val_withoutbars"),
@@ -257,18 +256,6 @@ finite_val_plots = div(
                       label = 'Select a line type', 
                       choices = default_lty_list, 
                       selected = 2
-          ),
-        ),
-        conditionalPanel(
-          condition = "input.finite_val_modify_colour == 'pr'",
-          textInput(inputId = "finite_val_colour_pr",
-                    label = 'Input the colour of the plausible region',
-                    value = "A717DB"
-          ), 
-          selectInput(inputId = "finite_val_lty_pr", 
-                      label = 'Select a line type', 
-                      choices = default_lty_list, 
-                      selected = 3
           ),
         ),
         conditionalPanel(
@@ -447,8 +434,8 @@ page_finite_val_inference1 = div(
   titlePanel("Finite-valued Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", finite_val_setup_variables_1),
-              tabPanel("Inferences for the AUC", finite_val_hypothesizedAUC),
               tabPanel("Plots for the AUC", finite_val_plots),
+              tabPanel("Inferences for the AUC", finite_val_hypothesizedAUC),
               tabPanel("Download Prior & Posterior", finite_val_download_1),
   )
 )

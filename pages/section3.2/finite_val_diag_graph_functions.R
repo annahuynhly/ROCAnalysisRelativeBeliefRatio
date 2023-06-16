@@ -53,14 +53,13 @@ convert_hist_to_density_plot = function(hist_density, hist_breaks, num_average_p
   return(list("grid" = new_grid, "density" = new_density))
 }
 
-density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_region,
-                                       credible_region = FALSE, densityplot = FALSE, 
+density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post,
+                                       densityplot = FALSE, 
                                        showbars = FALSE, 
-                                       colour_choice = c("#FF6666", "#6699FF", 
-                                                         "#947aff", "#5b10a7"),
-                                       lty_type = c(2, 2, 3, 3),
+                                       colour_choice = c("#FF6666", "#6699FF"),
+                                       lty_type = c(2, 2),
                                        transparency = 0.2){
-  # order: prior, post, pr, cr
+  # order: prior, post
   bins = closed_bracket_grid(delta)
   
   if(densityplot == FALSE & showbars == FALSE){ # this is to extract the density values only
@@ -80,8 +79,6 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
   rgb_post = col2rgb(colour_choice[2])
   prior_line_col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255)
   post_line_col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255)
-  pr_line_col = colour_choice[3]
-  cr_line_col = colour_choice[4]
   
   # Histogram colours
   if(showbars == FALSE){ # Forcing it to look white to disappear
@@ -99,25 +96,11 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
                    col = post_hist_col, border = "#ffffff") 
   hist_prior = hist(AUC_prior, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
                     col = prior_hist_col, border = "#ffffff", add = TRUE)
-  #abline(v = plausible_region[1], col = pr_line_col, lwd = 2, lty = lty_type[3])
-  #abline(v = plausible_region[2], col = pr_line_col, lwd = 2, lty = lty_type[3])
   
-  # credible_region = FALSE
-  if(typeof(credible_region) != "double"){
-    #legend("topleft", legend = c("Prior", "Posterior", "Plausible Region"), 
-    #       lwd = 2,
-    #       col = c(prior_line_col, post_line_col, pr_line_col),
-    #       lty = c(lty_type[1], lty_type[2], lty_type[3]), inset = 0.02, cex = 0.8)
-    legend("topleft", legend = c("Prior", "Posterior"), 
-           lwd = 2,
-           col = c(prior_line_col, post_line_col),
-           lty = c(lty_type[1], lty_type[2]), inset = 0.02, cex = 0.8)
-  } else {
-    legend("topleft", legend = c("Prior", "Posterior", "Plausible Region", "Credible Region"), 
-           lwd = 2,
-           col = c(prior_line_col, post_line_col, pr_line_col, cr_line_col),
-           lty = c(lty_type[1], lty_type[2], lty_type[3], lty_type[4]), inset = 0.02, cex = 0.8)
-  }
+  legend("topleft", legend = c("Prior", "Posterior"), 
+        lwd = 2,
+        col = c(prior_line_col, post_line_col),
+        lty = c(lty_type[1], lty_type[2]), inset = 0.02, cex = 0.8)
   
   if(densityplot == TRUE){
     convert_hist_to_density_plot(hist_post$density, hist_post$breaks, num_average_pts = 3, 
@@ -125,20 +108,15 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
     convert_hist_to_density_plot(hist_prior$density, hist_prior$breaks, num_average_pts = 3, 
                                  showplot = TRUE, colour = prior_line_col, lty_ver = lty_type[1])
   }
-  
-  if(typeof(credible_region) == "double"){
-    abline(v = credible_region[1], col = cr_line_col, lwd = 2, lty = lty_type[4])
-    abline(v = credible_region[2], col = cr_line_col, lwd = 2, lty = lty_type[4])
-  }
 }
 
-density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_region = FALSE,
+density_hist_AUC_RBR = function(delta, AUC_RBR,
                                 rb_line = FALSE, densityplot = FALSE, showbars = FALSE, 
-                                colour_choice = c("#05DEB2", "#947aff", 
+                                colour_choice = c("#05DEB2", 
                                                   "#3333FF", "#5b10a7"),
-                                lty_type = c(2, 3, 2, 3),
+                                lty_type = c(2, 2, 3),
                                 transparency = 0.2){
-  # Order of colours: RBR, plausible region, y = 1 line, credible region
+  # Order of colours: RBR, y = 1 line, credible line
   bins = closed_bracket_grid(delta)
   
   rgb_rbr = col2rgb(colour_choice[1])
@@ -160,53 +138,29 @@ density_hist_AUC_RBR = function(delta, AUC_RBR, plausible_region, credible_regio
   plot(myhist, xlab = "AUC", ylab = "Relative Belief Ratio", 
        main = "Density Histogram: The Relative Belief Ratio of the AUC",
        col = colours, freq = TRUE, border = "#ffffff")
-  abline(h = 1, col = colour_choice[3], lwd = 2, lty = lty_type[3])
-  abline(v = plausible_region[1], col = colour_choice[2], lwd = 2, lty = lty_type[2])
-  abline(v = plausible_region[2], col = colour_choice[2], lwd = 2, lty = lty_type[2])
+  abline(h = 1, col = colour_choice[2], lwd = 2, lty = lty_type[3])
   #warning message doesn't seem to be much of an issue
-  
   if(densityplot == TRUE){
     rbr_density_plot = convert_hist_to_density_plot(myhist$counts, myhist$breaks, 
                                                     num_average_pts = 3, showplot = TRUE,
                                                     lty_ver = lty_type[1],
                                                     colour = colour_choice[1])
-    # Colouring in the area between the plausible region and when the RBR > 1
-    rgb_pr = col2rgb(colour_choice[2])
-    l = min(which(rbr_density_plot$grid >= plausible_region[1]))
-    h = max(which(rbr_density_plot$grid <= plausible_region[2]))
-    polygon(c(rbr_density_plot$grid[c(l, l:h, h)]),
-            c(1, rbr_density_plot$density[l:h], 1),
-            col = rgb(rgb_pr[1]/255, 
-                      rgb_pr[2]/255, 
-                      rgb_pr[3]/255, alpha = 0.2), 
-            # original colours: 255, 75, 195
-            border = NA)
   }
   
-  if((typeof(credible_region) == "double") & (typeof(rb_line) == "double")){
-    abline(h = rb_line, col = colour_choice[4], lwd = 2, lty = lty_type[4])
-    abline(v = credible_region[1], col = colour_choice[4], lwd = 2, lty = lty_type[4]) 
-    abline(v = credible_region[2], col = colour_choice[4], lwd = 2, lty = lty_type[4])
-    
-    rgb_cr = col2rgb(colour_choice[4])
-    polygon(x = c(credible_region[1], credible_region[1], credible_region[2], credible_region[2]), 
-            y = c(0, rb_line, rb_line, 0), 
-            col = rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = 0.2), 
-            #col = rgb(148/255, 180/255, 255/255, alpha = 0.2), 
-            border = NA)
-    
+  if(typeof(rb_line) == "double"){
+    abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[3])
     legend("topleft", 
-           legend = c("Relative Belief Ratio", "Plausible Region", "Credible Region"), 
+           legend = c("Relative Belief Ratio", "Credible Region Line"), 
            lwd = 2, 
-           col = c(colour_choice[1], colour_choice[2], colour_choice[4]), 
-           lty = c(lty_type[1], lty_type[2], lty_type[4]), inset = 0.02, cex = 0.8)
+           col = c(colour_choice[1], colour_choice[3]), 
+           lty = c(lty_type[1], lty_type[3]), inset = 0.02, cex = 0.8)
     
-  } else if (typeof(credible_region) != "double") {
+  } else {
     legend("topleft", 
-           legend = c("Relative Belief Ratio", "Plausible Region"), 
+           legend = c("Relative Belief Ratio"), 
            lwd = 2, 
-           col = c(colour_choice[1], colour_choice[2]), 
-           lty = c(lty_type[1], lty_type[2]), inset = 0.02, cex = 0.8)
+           col = c(colour_choice[1]), 
+           lty = c(lty_type[1]), inset = 0.02, cex = 0.8)
   }
 }
 

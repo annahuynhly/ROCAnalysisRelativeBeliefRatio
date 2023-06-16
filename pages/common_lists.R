@@ -11,6 +11,7 @@ colour_theme_list_custom = list("Default Theme 1" = 'default1',
                                 "Default Theme 2" = 'default2',
                                 "Dull Life" = 'dull',
                                 "Lovely Mei" = 'lovelymei',
+                                "Execute" = 'jackin',
                                 "Custom Theme from AUC Plots" = 'custom',
                                 "Manually Insert" = 'manual')
 

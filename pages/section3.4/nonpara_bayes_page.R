@@ -344,18 +344,24 @@ nonpara_bayes_setup_variables_2 = div(
 
 nonpara_bayes_hypothesizedAUC = div( 
   titlePanel("Inferences for the AUC"),
-  sidebarLayout(
-    sidebarPanel(width = 3, 
-      textInput(inputId = "nonpara_bayes_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
-                               style = "font-size: 95%"), 
-                value = "NA"
-      )
-    ),
-    mainPanel(
-      tabPanel("test title", 
-               withSpinner(verbatimTextOutput("nonpara_bayes_hypoAUC_value"))))
-  )
+  mainPanel(
+    tabPanel("test title", 
+             withSpinner(verbatimTextOutput("nonpara_bayes_hypoAUC_value")))
+  ),
+  br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
+  br(),br(),br(),br(),br(),br(),
+  #sidebarLayout(
+  #  sidebarPanel(width = 3, 
+  #    textInput(inputId = "nonpara_bayes_gamma", 
+  #              label = tags$p("Gamma (must be less than posterior content)", 
+  #                             style = "font-size: 95%"), 
+  #              value = "NA"
+  #    )
+  #  ),
+  #  mainPanel(
+  #    tabPanel("test title", 
+  #             withSpinner(verbatimTextOutput("nonpara_bayes_hypoAUC_value"))))
+  #)
 )
 
 ################################################################
@@ -364,21 +370,25 @@ nonpara_bayes_hypothesizedAUC = div(
 
 nonpara_bayes_inferences_for_copt = div( 
   titlePanel("Inferences for Optimal Cutoff"),
-  sidebarLayout(
-    sidebarPanel(width = 3,
-      textInput(inputId = "nonpara_bayes_gamma_alt", 
-                label = tags$p("Gamma (must be less than posterior content)", 
-                               style = "font-size: 95%"), 
-                value = "NA"
-      )
-    ),
-    mainPanel(
-      tabPanel("test", 
-               withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
-    ),
+  mainPanel(
+    tabPanel("test", 
+             withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
   ),
+  #sidebarLayout(
+  #  sidebarPanel(width = 3,
+  #    textInput(inputId = "nonpara_bayes_gamma_alt", 
+  #              label = tags$p("Gamma (must be less than posterior content)", 
+  #                             style = "font-size: 95%"), 
+  #              value = "NA"
+  #    )
+  #  ),
+  #  mainPanel(
+  #    tabPanel("test", 
+  #             withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
+  #  ),
+  #),
   br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
-  br(),br(),br(),
+  br(),br(),br(),br(),br(),br(),
 )
 
 ################################################################
@@ -389,6 +399,11 @@ nonpara_bayes_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
+      textInput(inputId = "nonpara_bayes_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      ),
       sliderInput(inputId = "nonpara_bayes_smoother", 
                   label = "Number of Average Points (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2),
@@ -438,18 +453,6 @@ nonpara_bayes_plots = div(
                       label = 'Select a line type', 
                       choices = default_lty_list, 
                       selected = 2
-          ),
-        ),
-        conditionalPanel(
-          condition = "input.nonpara_bayes_modify_colour == 'pr'",
-          textInput(inputId = "nonpara_bayes_colour_pr",
-                    label = 'Input the colour of the plausible region',
-                    value = "A717DB"
-          ), 
-          selectInput(inputId = "nonpara_bayes_lty_pr", 
-                      label = 'Select a line type', 
-                      choices = default_lty_list, 
-                      selected = 3
           ),
         ),
         conditionalPanel(
@@ -503,7 +506,13 @@ nonpara_bayes_plots = div(
 nonpara_bayes_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
-    sidebarPanel(width = 3,
+    sidebarPanel(
+      width = 3,
+      textInput(inputId = "nonpara_bayes_gamma_alt", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      ),
       selectInput(inputId = "nonpara_bayes_plot_type",
                   label = "Select the type of plot.",
                   choices = list("Copt" = "copt",
@@ -519,94 +528,83 @@ nonpara_bayes_copt_plots = div(
                   choices = colour_theme_list_custom,
                   selected = 'default'
       ),      
-      selectInput(inputId = "nonpara_bayes_c_opt_modify",
-                  label = "Select which object to modify",
-                  choices = output_line_list,
-                  selected = 'prior'
-      ),
       conditionalPanel(
-        condition = "input.nonpara_bayes_c_opt_modify == 'prior'",
-        selectInput(inputId = "nonpara_bayes_priorc_opt_label", 
-                    label = "Line Type for the Prior",
-                    choices = default_lty_list,
-                    selected = 1
+        condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+        selectInput(inputId = "nonpara_bayes_c_opt_modify",
+                    label = "Select which object to modify",
+                    choices = output_line_list,
+                    selected = 'prior'
         ),
         conditionalPanel(
-          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "nonpara_bayes_priorc_opt_colour",
-                    label = 'Hex Colour for the Prior',
-                    value = "065143"),
-        )
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_c_opt_modify == 'post'",
-        selectInput(inputId = "nonpara_bayes_postc_opt_label", 
-                    label = "Line Type for the Posterior",
-                    choices = default_lty_list,
-                    selected = 2
+          condition = "input.nonpara_bayes_c_opt_modify == 'prior'",
+          selectInput(inputId = "nonpara_bayes_priorc_opt_label", 
+                      label = "Line Type for the Prior",
+                      choices = default_lty_list,
+                      selected = 1
+          ),
+          conditionalPanel(
+            condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "nonpara_bayes_priorc_opt_colour",
+                      label = 'Hex Colour for the Prior',
+                      value = "065143"),
+          )
         ),
         conditionalPanel(
-          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "nonpara_bayes_postc_opt_colour",
-                    label = 'Hex Colour for the Posterior',
-                    value = "70B77E"), 
-        )
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_c_opt_modify == 'rbr'",
-        selectInput(inputId = "nonpara_bayes_rbrc_opt_label", 
-                    label = "Line Type for the RB Ratio",
-                    choices = default_lty_list,
-                    selected = 6
+          condition = "input.nonpara_bayes_c_opt_modify == 'post'",
+          selectInput(inputId = "nonpara_bayes_postc_opt_label", 
+                      label = "Line Type for the Posterior",
+                      choices = default_lty_list,
+                      selected = 2
+          ),
+          conditionalPanel(
+            condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "nonpara_bayes_postc_opt_colour",
+                      label = 'Hex Colour for the Posterior',
+                      value = "70B77E"), 
+          )
         ),
         conditionalPanel(
-          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "nonpara_bayes_rbrc_opt_colour",
-                    label = 'Hex Colour for the RB Ratio',
-                    value = "CE1483"),
-        )
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_c_opt_modify == 'pr'",
-        selectInput(inputId = "nonpara_bayes_prc_opt_label", 
-                    label = "Line Type for the Plausible Region",
-                    choices = default_lty_list,
-                    selected = 2
+          condition = "input.nonpara_bayes_c_opt_modify == 'rbr'",
+          selectInput(inputId = "nonpara_bayes_rbrc_opt_label", 
+                      label = "Line Type for the RB Ratio",
+                      choices = default_lty_list,
+                      selected = 6
+          ),
+          conditionalPanel(
+            condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "nonpara_bayes_rbrc_opt_colour",
+                      label = 'Hex Colour for the RB Ratio',
+                      value = "CE1483"),
+          )
         ),
         conditionalPanel(
-          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "nonpara_bayes_prc_opt_colour",
-                    label = 'Hex Colour for the Plausible Region',
-                    value = "73C1E7"),
-        )
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_c_opt_modify == 'line_1'",
-        selectInput(inputId = "nonpara_bayes_line_1c_opt_label", 
-                    label = "Line Type for the y = 1 Line",
-                    choices = default_lty_list,
-                    selected = 2
+          condition = "input.nonpara_bayes_c_opt_modify == 'line_1'",
+          selectInput(inputId = "nonpara_bayes_line_1c_opt_label", 
+                      label = "Line Type for the y = 1 Line",
+                      choices = default_lty_list,
+                      selected = 2
+          ),
+          conditionalPanel(
+            condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "nonpara_bayes_line_1c_opt_colour",
+                      label = 'Hex Colour for the y = 1 Line',
+                      value = "73C1E7"),
+          )
         ),
         conditionalPanel(
-          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "nonpara_bayes_line_1c_opt_colour",
-                    label = 'Hex Colour for the y = 1 Line',
-                    value = "73C1E7"),
-        )
-      ),
-      conditionalPanel(
-        condition = "input.nonpara_bayes_c_opt_modify == 'cr'",
-        selectInput(inputId = "nonpara_bayes_crc_opt_label", 
-                    label = "Line Type for the Credible Region",
-                    choices = default_lty_list,
-                    selected = 3
+          condition = "input.nonpara_bayes_c_opt_modify == 'cr'",
+          selectInput(inputId = "nonpara_bayes_crc_opt_label", 
+                      label = "Line Type for the Credible Region",
+                      choices = default_lty_list,
+                      selected = 3
+          ),
+          conditionalPanel(
+            condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
+            textInput(inputId = "nonpara_bayes_crc_opt_colour",
+                      label = 'Hex Colour for the Credible Region',
+                      value = "9878C3"),
+          )
         ),
-        conditionalPanel(
-          condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
-          textInput(inputId = "nonpara_bayes_crc_opt_colour",
-                    label = 'Hex Colour for the Credible Region',
-                    value = "9878C3"),
-        )
       ),
       sliderInput(inputId = "nonpara_bayes_c_opt_col_transparency", 
                   label = "Scale for colour transparency",

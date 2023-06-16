@@ -85,18 +85,19 @@ nonpara_bayes_colours = reactive({
   # Total order of ALL colours: prior, posterior, relative belief ratio, 
   # plausible region, y = 1 line, credible region, 
   if(input$nonpara_bayes_colour == 'default1'){
-    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+    default1
   } else if(input$nonpara_bayes_colour == 'default2'){
-    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+    default2
   } else if (input$nonpara_bayes_colour == 'dull'){
-    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+    dull
   } else if (input$nonpara_bayes_colour == 'lovelymei'){
-    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+    lovelymei
+  } else if (input$nonpara_bayes_colour == 'jackin'){
+    jackin_execute
   } else if (input$nonpara_bayes_colour == 'manual'){
     c(convert_to_hex(input$nonpara_bayes_colour_prior),
       convert_to_hex(input$nonpara_bayes_colour_post),
       convert_to_hex(input$nonpara_bayes_colour_rbr),
-      convert_to_hex(input$nonpara_bayes_colour_pr),
       convert_to_hex(input$nonpara_bayes_colour_line_1),
       convert_to_hex(input$nonpara_bayes_colour_cr)
     )
@@ -105,20 +106,21 @@ nonpara_bayes_colours = reactive({
 
 nonpara_bayes_copt_colours = reactive({
   if(input$nonpara_bayes_c_opt_carry_colour == 'default1'){
-    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+    default1
   } else if (input$nonpara_bayes_c_opt_carry_colour == 'default2'){
-    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+    default2
   } else if (input$nonpara_bayes_c_opt_carry_colour == 'dull'){
-    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+    dull
   } else if (input$nonpara_bayes_c_opt_carry_colour == 'lovelymei'){
-    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+    lovelymei
+  } else if (input$nonpara_bayes_c_opt_carry_colour == 'jackin'){
+    jackin_execute
   } else if (input$nonpara_bayes_c_opt_carry_colour == 'custom'){
     nonpara_bayes_colours()
   } else if (input$nonpara_bayes_c_opt_carry_colour == 'manual'){
     c(convert_to_hex(input$nonpara_bayes_priorc_opt_colour),
       convert_to_hex(input$nonpara_bayes_postc_opt_colour),
       convert_to_hex(input$nonpara_bayes_rbrc_opt_colour),
-      convert_to_hex(input$nonpara_bayes_prc_opt_colour),
       convert_to_hex(input$nonpara_bayes_line_1c_opt_colour),
       convert_to_hex(input$nonpara_bayes_crc_opt_colour))
   }
@@ -126,13 +128,15 @@ nonpara_bayes_copt_colours = reactive({
 
 nonpara_bayes_inferences_colours = reactive({
   if(input$nonpara_bayes_inferences_colour == 'default1'){
-    c("#FF6666", "#6699FF", "#05DEB2")
+    default1[c(1, 2, 3)]
   } else if (input$nonpara_bayes_inferences_colour == 'default2'){
-    c("blue", "green", "red", "#b3bfff")
+    default2[c(1, 2, 3)]
   } else if (input$nonpara_bayes_inferences_colour == 'dull'){
-    c("#EE4266", "#3cbbb1", "#b33c86")
+    dull[c(1, 2, 3)]
   } else if (input$nonpara_bayes_inferences_colour == 'lovelymei'){
-    c("#3800c2", "#676bf8", "#58887a")
+    lovelymei[c(1, 2, 3)]
+  } else if (input$nonpara_bayes_inferences_colour == 'jackin'){
+    jackin_execute[c(1, 2, 3)]
   } else if (input$nonpara_bayes_inferences_colour == 'custom'){
     nonpara_bayes_colours()[c(1, 2, 3)]
   } else if (input$nonpara_bayes_inferences_colour == 'manual'){
@@ -182,9 +186,7 @@ output$nonpara_bayes_postprior_graph = renderPlot({
   nonpara_bayes_prior_post_graph(delta = input$nonpara_bayes_delta, 
                                  prior = nonpara_bayes_AUC_smoothing()$priorAUCdensity, #sect3.4_AUC_prior()$priorAUCdensity, 
                                  post = nonpara_bayes_AUC_smoothing()$postAUCdensity, #sect3.4_AUC_post()$postAUCdensity, 
-                                 plausible_region = nonpara_bayes_pr_modified(),
-                                 credible_region = nonpara_bayes_cr_AUC(),
-                                 colour_choice = nonpara_bayes_colours()[c(1, 2, 4, 6)],
+                                 colour_choice = nonpara_bayes_colours()[c(1, 2)],
                                  lty_type = sect3.4_prior_post_lty(),
                                  transparency = input$nonpara_bayes_col_transparency)
 })
@@ -192,10 +194,8 @@ output$nonpara_bayes_postprior_graph = renderPlot({
 output$nonpara_bayes_RB_graph = renderPlot({
   nonpara_bayes_rbr_graph(delta = input$nonpara_bayes_delta,
                           relative_belief_ratio = sect3.4_AUC_RBR()$RB_AUC, #nonpara_bayes_AUC_smoothing()$RB_AUC,
-                          plausible_region = nonpara_bayes_pr_modified(),
-                          credible_region = nonpara_bayes_cr_AUC(),
                           rb_line = nonpara_bayes_rb_line_AUC(),
-                          colour_choice = nonpara_bayes_colours()[c(3:6)],
+                          colour_choice = nonpara_bayes_colours()[c(3:5)],
                           lty_type = sect3.4_rbr_lty(),
                           transparency = input$nonpara_bayes_col_transparency)
 })
@@ -274,8 +274,6 @@ output$nonpara_bayes_postprior_cmod_graph = renderPlot({
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridmod,
                                  prior = nonpara_bayes_AUC_smoothing_copt()$priorcoptmoddensity, 
                                  post = nonpara_bayes_AUC_smoothing_copt()$postcoptmoddensity,
-                                 plausible_region = nonpara_bayes_pr_modified_cmod(),
-                                 credible_region = nonpara_bayes_cr_AUC_cmod(), # see if this works
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
@@ -284,8 +282,6 @@ output$nonpara_bayes_postprior_cmod_graph = renderPlot({
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
                                  prior = nonpara_bayes_AUC_smoothing_copt()$priorcoptdensity,
                                  post = nonpara_bayes_AUC_smoothing_copt()$postcoptdensity,
-                                 plausible_region = nonpara_bayes_pr_modified_copt(),
-                                 credible_region = nonpara_bayes_cr_AUC_copt(),
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
@@ -297,8 +293,6 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
   if(input$nonpara_bayes_plot_type == "cmod"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridmod,
                                  rbr = sect3.4_AUC_RBR_copt()$RBcoptmod, #nonpara_bayes_AUC_smoothing_copt()$RBcoptmod, 
-                                 plausible_region = nonpara_bayes_pr_modified_cmod(),
-                                 credible_region = nonpara_bayes_cr_AUC_cmod(), # see if this works
                                  rb_line = nonpara_bayes_rb_line_AUC_cmod(),
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
@@ -307,8 +301,6 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
   } else if (input$nonpara_bayes_plot_type == "copt"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
                                  rbr = sect3.4_AUC_RBR_copt()$RBcopt, #nonpara_bayes_AUC_smoothing_copt()$RBcopt, 
-                                 plausible_region = nonpara_bayes_pr_modified_copt(),
-                                 credible_region = nonpara_bayes_cr_AUC_copt(),
                                  rb_line = nonpara_bayes_rb_line_AUC_copt(),
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),

@@ -237,8 +237,7 @@ showbarplots = reactive({
 sect3.2_lineplot_area = reactive({
   priorpost = density_hist_AUC_prior_post(delta = input$finite_val_delta, 
                                           AUC_prior = sect3.2_AUC_prior()$AUC, 
-                                          AUC_post = sect3.2_AUC_post()$AUC, 
-                                          plausible_region = sect3.2_pr()$plausible_region)
+                                          AUC_post = sect3.2_AUC_post()$AUC)
   as.data.frame(priorpost)
 })
 

@@ -263,11 +263,6 @@ binormal_diag_hypothesizedAUC = div(
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5
       ),
-      textInput(inputId = "binormal_diag_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
-                        style = "font-size: 95%"), 
-                value = "NA"
-      )
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
@@ -285,15 +280,15 @@ binormal_diag_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
+      textInput(inputId = "binormal_diag_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      ),           
       sliderInput(inputId = "binormal_diag_smoother", 
                   label = "Number of Average Points (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2
       ),
-      #selectInput(inputId = "binormal_diag_hist_visual", 
-      #            label = "Choose Visual:",
-      #            choices = list("With Bars" = "binormal_diag_withbars",
-      #                           "Without Bars" = "binormal_diag_withoutbars"),
-      #            selected = "binormal_diag_withoutbars"),
       selectInput(inputId = "binormal_diag_colour", 
                   label = 'Select a colour', 
                   choices = colour_theme_list, 
@@ -340,18 +335,6 @@ binormal_diag_plots = div(
                       label = 'Select a line type', 
                       choices = default_lty_list, 
                       selected = 2
-          ),
-        ),
-        conditionalPanel(
-          condition = "input.binormal_diag_modify_colour == 'pr'",
-          textInput(inputId = "binormal_diag_colour_pr",
-                    label = 'Input the colour of the plausible region',
-                    value = "A717DB"
-          ), 
-          selectInput(inputId = "binormal_diag_lty_pr", 
-                      label = 'Select a line type', 
-                      choices = default_lty_list, 
-                      selected = 3
           ),
         ),
         conditionalPanel(
@@ -432,14 +415,6 @@ binormal_diag_AUC_inferences = div(
                   choices = c("View Results" = "results", 
                                "View Plots" = "plots"),
                   selected = "results"),
-      
-      conditionalPanel(
-        condition = "input.binormal_diag_inferences == 'results'",
-        textInput(inputId = "binormal_diag_gamma_copt", 
-                  label = tags$p("Gamma (must be less than posterior content)", 
-                                 style = "font-size: 95%"), 
-                  value = "NA"),
-      ),
       
       conditionalPanel(
         condition = "input.binormal_diag_inferences == 'plots'",
@@ -540,6 +515,13 @@ binormal_diag_copt_plots = div(
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
     sidebarPanel(width = 3,
+      conditionalPanel(
+        condition = "input.binormal_diag_inferences == 'results'",
+        textInput(inputId = "binormal_diag_gamma_copt", 
+                  label = tags$p("Gamma (must be less than posterior content)", 
+                                 style = "font-size: 95%"), 
+                  value = "NA"),
+      ),
       sliderInput(inputId = "binormal_diag_smoother_copt", 
                   label = "Number of Average Points (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2
@@ -597,20 +579,6 @@ binormal_diag_copt_plots = div(
           )
         ),
       
-        conditionalPanel(
-          condition = "input.binormal_diag_c_opt_modify == 'pr'",
-          selectInput(inputId = "binormal_diag_prc_opt_label", 
-                      label = "Line Type for the Plausible Region",
-                      choices = default_lty_list,
-                      selected = 2
-          ),
-          conditionalPanel(
-            condition = "input.binormal_diag_c_opt_carry_colour == 'manual'",
-            textInput(inputId = "binormal_diag_prc_opt_colour",
-                      label = 'Hex Colour for the Plausible Region',
-                      value = "73C1E7"),
-          )
-        ),
         conditionalPanel(
           condition = "input.binormal_diag_c_opt_modify == 'line_1'",
           selectInput(inputId = "binormal_diag_line_1c_opt_label", 
@@ -680,7 +648,7 @@ page_binormal_diag_inference2 = div(
   titlePanel("Binormal Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", binormal_diag_setup_variables_2),
-              tabPanel("Plots for the Optimal Cutoff", binormal_diag_copt_plots),
               tabPanel("Inferences for Optimal Cutoff", binormal_diag_AUC_inferences),
+              tabPanel("Plots for the Optimal Cutoff", binormal_diag_copt_plots)
   )
 )
