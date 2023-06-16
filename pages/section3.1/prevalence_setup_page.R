@@ -28,7 +28,7 @@ getting_started_img_text = div(
 )
 
 getting_started_end_text = div(
-  p("To use our online calculator, you need to select the seed and determine whether the prevalence 
+  p("For the rest of the calculations, you need to select the seed and determine whether the prevalence 
   w is known. The seed is a number that determines the randomization of the data and we use the 
   same seeding method as base R."),
   br(),
@@ -39,14 +39,14 @@ getting_started_end_text = div(
   br(),
   p("Note that the seed is sensitive by the order in which you open certain pages."),
   br(),
-  p("Once you have filled out the important information, you can click on the \"Next\" button 
-  to proceed to the next step of the calculator."),
-  br(),
+  #p("Once you have filled out the important information, you can click on the \"Next\" button 
+  #to proceed to the next step of the calculator."),
+  #br(),
 )
 
 
 getting_started_default_description_1 = div(
-  getting_started_start_text, # start text
+  #getting_started_start_text, # start text
   div(
     tags$head(
       tags$style(HTML(getting_started_CSS))

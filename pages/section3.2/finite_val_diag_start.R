@@ -21,9 +21,9 @@ page_finite_val_start = fluidPage(
       ),
       selectizeInput(
         inputId = "finite_val_diag_case1", 
-        label = "Please select whether the prevalence $\\omega$ is known or unknown.",
+        label = "Please select whether the prevalence $w$ is known or unknown.",
         choices = c("\\text{The prevalence is known}" = 1, 
-                    "\\text{The prevalence } \\omega \\text{ is unknown}" = 2),
+                    "\\text{The prevalence } w \\text{ is unknown}" = 2),
         options = list(render = I("
       {
         item: function(item, escape) { 
@@ -40,21 +40,22 @@ page_finite_val_start = fluidPage(
       conditionalPanel(
         condition = "input.finite_val_diag_case1 == 1",
         numericInput(inputId = "finite_val_diag_prevalence_w",
-                     label = 'Please input the prevalence $\\omega$.',
+                     label = 'Please input the prevalence.',
                      value = 0.65), #
-        p("The prevalence $\\omega$ has been determined. Please proceed to the computations. 
-        The Prevalence section may be skipped, as it is used to estimate the prevalence $\\omega$.")
+        p("The prevalence $w$ has been determined. Please proceed to the computations. 
+        The Prevalence section may be skipped, as it is used to estimate the prevalence $w$, when 
+        it is unknown.")
       ),
                  
       conditionalPanel(
         condition = "input.finite_val_diag_case1 == 2",
-        p("Please select the beta prior parameters ($\\alpha_{1\\omega}$ and $\\alpha_{2\\omega}$), 
+        p("Please select the beta prior parameters ($\\alpha_{1w}$ and $\\alpha_{2w}$), 
           and then the sampling regime."),
         numericInput(inputId = "finite_val_diag_prevalence_alpha1w", 
-                     label = '$\\alpha_{1\\omega}$',
+                     label = '$\\alpha_{1w}$',
                      value = 391.72),
         numericInput(inputId = "finite_val_diag_prevalence_alpha2w", 
-                     label = '$\\alpha_{2\\omega}$',
+                     label = '$\\alpha_{2w}$',
                      value = 211.39),
         
         selectizeInput(
@@ -100,12 +101,12 @@ page_finite_val_start = fluidPage(
         conditionalPanel(
           condition ="input.finite_val_diag_case2 == 'A'",
           p("The sampling regime has been chosen. You may observe The Prevalence section to see the prior. 
-          Since we do not have data on the posterior, we cannot make more estimates for the prevalence $\\omega$.")
+          Since we do not have data on the posterior, we cannot make more estimates for the prevalence $w$.")
         ),
         conditionalPanel(
           condition ="input.finite_val_diag_case2 == 'B'",
           p("The sampling regime has been chosen. You may observe The Prevalence section to see the estimation 
-          for the prevalence $\\omega$.")
+          for the prevalence $w$.")
         )
       ),
     ),

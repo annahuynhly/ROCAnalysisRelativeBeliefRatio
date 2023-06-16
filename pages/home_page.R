@@ -4,7 +4,7 @@ home_page = fluidPage(
   hr(),
   sidebarLayout(
     mainPanel(
-      p("ROC stands for Receiver Operating Characteristic, which is a graphical method to 
+      p("ROC stands for Receiver Operating Characteristic, which is a method used to 
         evaluate the performance of a binary classifier. A ROC curve plots the true positive 
         rate (TPR) against the false positive rate (FPR) at different threshold levels. 
         The area under the curve (AUC) is a measure of how well the classifier can discriminate 
@@ -20,13 +20,15 @@ home_page = fluidPage(
         and the Dirichlet process."
       ),
       br(),
-      p("This website allows you to select from three sampling regimes and choose from 
-        different types of data, such as the finite valued diagnostic, the binormal 
-        diagnostic, and the nonparametric Bayes model. Depending on the sampling regime, 
-        inferences for the sampling regime are provided. The calculator provides plots
-        of the prior, posterior, and the relative belief ratio, the values of 
-        the plausible region, posterior content of the plausible region, credible region, 
-        error characteristics (such as FPR, FNR, Error, FDR, FNDR, PPV.)"),
+      p("This website allows you to select from two sampling regimes and choose from 
+        different types of data, such as a finite valued diagnostic, a binormal 
+        diagnostic, and a nonparametric Bayes model. Depending on the sampling regime, 
+        inferences are provided. For example, if interest is in the AUC, then the calculator 
+        provides an estimate as well as plots of the prior, posterior, and the 
+        relative belief ratio, the values of the plausible region, posterior 
+        content of the plausible region, credible region, and quantities of interest. The same
+        inferences are also supplied for the optimal cutoff as well as estimates of quantities
+        such as the FPR, FNR, FDR, FNDR, and PPV."),
       br(),
       p("Due to the complexity of the formulas, some of the computations take a long time to 
         run, hence, switching between pages may take awhile."),

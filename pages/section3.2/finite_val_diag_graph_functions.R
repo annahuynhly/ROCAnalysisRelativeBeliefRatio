@@ -99,15 +99,19 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post, plausible_reg
                    col = post_hist_col, border = "#ffffff") 
   hist_prior = hist(AUC_prior, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
                     col = prior_hist_col, border = "#ffffff", add = TRUE)
-  abline(v = plausible_region[1], col = pr_line_col, lwd = 2, lty = lty_type[3])
-  abline(v = plausible_region[2], col = pr_line_col, lwd = 2, lty = lty_type[3])
+  #abline(v = plausible_region[1], col = pr_line_col, lwd = 2, lty = lty_type[3])
+  #abline(v = plausible_region[2], col = pr_line_col, lwd = 2, lty = lty_type[3])
   
   # credible_region = FALSE
   if(typeof(credible_region) != "double"){
-    legend("topleft", legend = c("Prior", "Posterior", "Plausible Region"), 
+    #legend("topleft", legend = c("Prior", "Posterior", "Plausible Region"), 
+    #       lwd = 2,
+    #       col = c(prior_line_col, post_line_col, pr_line_col),
+    #       lty = c(lty_type[1], lty_type[2], lty_type[3]), inset = 0.02, cex = 0.8)
+    legend("topleft", legend = c("Prior", "Posterior"), 
            lwd = 2,
-           col = c(prior_line_col, post_line_col, pr_line_col),
-           lty = c(lty_type[1], lty_type[2], lty_type[3]), inset = 0.02, cex = 0.8)
+           col = c(prior_line_col, post_line_col),
+           lty = c(lty_type[1], lty_type[2]), inset = 0.02, cex = 0.8)
   } else {
     legend("topleft", legend = c("Prior", "Posterior", "Plausible Region", "Credible Region"), 
            lwd = 2,

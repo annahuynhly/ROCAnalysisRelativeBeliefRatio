@@ -114,7 +114,7 @@ RBR_estimate_of_AUC = function(grid, RBR_of_AUC, condition = "unconditional"){
   if (condition == "conditional"){
     df[1] = df[1] + 0.5
   }
-  colnames(df) = c("Estimate of AUC", "| Relative Belief Ratio of the Estimated AUC")
+  colnames(df) = c("Estimate of AUC", "| Relative Belief Ratio at the Estimated AUC")
   return(df)
 }
 
