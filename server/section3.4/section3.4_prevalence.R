@@ -86,19 +86,20 @@ sect3.4_prevalence_colours = reactive({
   # Total order of ALL colours: prior, posterior, relative belief ratio, 
   # plausible region, y = 1 line, credible region, 
   if(input$nonpara_bayes_prevalence_colour == 'default1'){
-    c("#FF6666", "#6699FF", "#05DEB2", "#947aff", "#3333FF", "#5b10a7")
+    default1
   } else if (input$nonpara_bayes_prevalence_colour == 'default2'){
-    c("blue", "green", "red", "#b3bfff", "royalblue1", "#81ddff")
+    default2
   } else if (input$nonpara_bayes_prevalence_colour == 'dull'){
-    c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
+    dull
   } else if (input$nonpara_bayes_prevalence_colour == 'lovelymei'){
-    c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
+    lovelymei
+  } else if (input$nonpara_bayes_prevalence_colour == 'jackin'){
+    jackin_execute
   } else if (input$nonpara_bayes_prevalence_colour == 'manual'){
     #c("#FF007F", "#FF00FF", "#7F00FF")
     c(convert_to_hex(input$nonpara_bayes_prevalence_colour_prior),
       convert_to_hex(input$nonpara_bayes_prevalence_colour_post),
       convert_to_hex(input$nonpara_bayes_prevalence_colour_rbr),
-      convert_to_hex(input$nonpara_bayes_prevalence_colour_pr),
       convert_to_hex(input$nonpara_bayes_prevalence_colour_line_1),
       convert_to_hex(input$nonpara_bayes_prevalence_colour_cr)
     )
@@ -114,6 +115,8 @@ sect3.4_prevalence_w0_colours = reactive({
     c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c")
   } else if (input$nonpara_bayes_diag_prevalence_colour_w0 == 'lovelymei'){
     c("#3800c2", "#676bf8", "#58887a", "#e69eb7")
+  } else if (input$nonpara_bayes_diag_prevalence_colour_w0 == 'jackin'){
+    c("#0092d6", "#212c57", "#f85210", "#ffc710")
   } else if (input$nonpara_bayes_diag_prevalence_colour_w0 == 'manual'){
     c(convert_to_hex(input$nonpara_bayes_diag_prevalence_colour_rbr_w0),
       convert_to_hex(input$nonpara_bayes_diag_prevalence_colour_rbr_at_w0),
@@ -125,14 +128,11 @@ sect3.4_prevalence_w0_colours = reactive({
 
 sect3.4_prevalence_prior_post_lty = reactive({
   c(as.numeric(input$nonpara_bayes_prevalence_lty_prior),
-    as.numeric(input$nonpara_bayes_prevalence_lty_post),
-    as.numeric(input$nonpara_bayes_prevalence_lty_pr),
-    as.numeric(input$nonpara_bayes_prevalence_lty_cr))
+    as.numeric(input$nonpara_bayes_prevalence_lty_post))
 })
 
 sect3.4_prevalence_rbr_lty = reactive({
   c(as.numeric(input$nonpara_bayes_prevalence_lty_rbr),
-    as.numeric(input$nonpara_bayes_prevalence_lty_pr),
     as.numeric(input$nonpara_bayes_prevalence_lty_line_1),
     as.numeric(input$nonpara_bayes_prevalence_lty_cr))
 })
@@ -147,9 +147,8 @@ output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
   if(check.numeric(input$nonpara_bayes_prevalence_gamma) == FALSE){
     generate_prior_post_graph(prior = sect3.4_prevalence_info_1()$prior, 
                               post = sect3.4_prevalence_info_1()$post, 
-                              plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
                               grid = sect3.4_prevalence_grid(),
-                              colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
+                              colour_choice = sect3.4_prevalence_colours()[c(1, 2)],
                               lty_type = sect3.4_prevalence_prior_post_lty(),
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else if (as.numeric(input$nonpara_bayes_prevalence_gamma) >= sect3.4_prevalence_info_1()$posterior_content){
@@ -157,18 +156,15 @@ output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
     # as.numeric() for input$gamma
     generate_prior_post_graph(prior = sect3.4_prevalence_info_1()$prior, 
                               post = sect3.4_prevalence_info_1()$post, 
-                              plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
                               grid = sect3.4_prevalence_grid(),
-                              colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
+                              colour_choice = sect3.4_prevalence_colours()[c(1, 2)],
                               lty_type = sect3.4_prevalence_prior_post_lty(),
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else {
     generate_prior_post_graph(prior = sect3.4_prevalence_info_1()$prior, 
                               post = sect3.4_prevalence_info_1()$post, 
-                              plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
                               grid = sect3.4_prevalence_grid(),
-                              credible_region = sect3.4_prevalence_cred_region()$credible_region,
-                              colour_choice = sect3.4_prevalence_colours()[c(1, 2, 4, 6)],
+                              colour_choice = sect3.4_prevalence_colours()[c(1, 2)],
                               lty_type = sect3.4_prevalence_prior_post_lty(),
                               transparency = input$nonpara_bayes_prevalence_col_transparency)
   }
@@ -177,25 +173,21 @@ output$nonpara_bayes_prevalence_postprior_graph = renderPlot({
 output$nonpara_bayes_prevalence_RB_graph = renderPlot({
   if(check.numeric(input$nonpara_bayes_prevalence_gamma) == FALSE){
     generate_rbr_graph(relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
-                       plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
                        grid = sect3.4_prevalence_grid(),
-                       colour_choice = sect3.4_prevalence_colours()[c(3:6)],
+                       colour_choice = sect3.4_prevalence_colours()[c(3:5)],
                        lty_type = sect3.4_prevalence_rbr_lty(),
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else if (as.numeric(input$nonpara_bayes_prevalence_gamma) >= sect3.4_prevalence_info_1()$posterior_content){
     generate_rbr_graph(relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
-                       plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
                        grid = sect3.4_prevalence_grid(),
-                       colour_choice = sect3.4_prevalence_colours()[c(3:6)],
+                       colour_choice = sect3.4_prevalence_colours()[c(3:5)],
                        lty_type = sect3.4_prevalence_rbr_lty(),
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
   } else {
     generate_rbr_graph(relative_belief_ratio = sect3.4_prevalence_info_1()$relative_belief_ratio, 
-                       plausible_region = sect3.4_prevalence_info_1()$plausible_region, 
                        grid = sect3.4_prevalence_grid(),
-                       credible_region = sect3.4_prevalence_cred_region()$credible_region, 
                        rb_line = sect3.4_prevalence_cred_region()$rb_line,
-                       colour_choice = sect3.4_prevalence_colours()[c(3:6)],
+                       colour_choice = sect3.4_prevalence_colours()[c(3:5)],
                        lty_type = sect3.4_prevalence_rbr_lty(),
                        transparency = input$nonpara_bayes_prevalence_col_transparency)
   }

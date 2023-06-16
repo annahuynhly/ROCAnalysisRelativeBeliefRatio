@@ -131,18 +131,6 @@ binormal_diag_prevalence_plots = div(
           ),
         ),
         conditionalPanel(
-          condition = "input.binormal_diag_prevalence_modify_colour == 'pr'",
-          textInput(inputId = "binormal_diag_prevalence_colour_pr",
-                    label = 'Input the hex colour of the plausible region',
-                    value = "A717DB"
-          ), 
-          selectInput(inputId = "binormal_diag_prevalence_lty_pr", 
-                      label = 'Select a line type', 
-                      choices = default_lty_list, 
-                      selected = 3
-          ),
-        ),
-        conditionalPanel(
           condition = "input.binormal_diag_prevalence_modify_colour == 'line_1'",
           textInput(inputId = "binormal_diag_prevalence_colour_line_1",
                     label = 'Input the hex colour of the y = 1 line',

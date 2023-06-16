@@ -132,12 +132,12 @@ w0_compute_values = function(alpha1w, alpha2w, n, nD, w0, relative_belief_ratio,
 # PLOTS                                                        #
 ################################################################
 
-generate_prior_post_graph = function(prior, post, plausible_region, grid, credible_region = FALSE,
-                                     colour_choice = c("blue", "green", "#b3bfff", "#81ddff"),
-                                     lty_type = c(2, 2, 3, 3),
+generate_prior_post_graph = function(prior, post, grid,
+                                     colour_choice = c("blue", "green"),
+                                     lty_type = c(2, 2),
                                      transparency = 0.1){
   # This generates the graph for the prior and the posterior of the prevalence.
-  # colour choice goes in the following order: prior, posterior, plausible region, and credible region.
+  # colour choice goes in the following order: prior, posterior..
   
   # Determining what x-axis to show for a better graph
   x_prior = obtain_x_interval(prior, grid, 0.1)
@@ -153,8 +153,8 @@ generate_prior_post_graph = function(prior, post, plausible_region, grid, credib
        main = "Graph of the Prior and Posterior of w", ylab = "Densities", xlab = "w", 
        col = colour_choice[1])
   lines(grid, post, col = colour_choice[2], type = "l", lty = lty_type[2], lwd = 2)
-  abline(v = plausible_region[1], col = colour_choice[3], lwd = 2, lty = lty_type[3])
-  abline(v = plausible_region[length(plausible_region)], col = colour_choice[3], lwd = 2, lty = lty_type[3])
+  #abline(v = plausible_region[1], col = colour_choice[3], lwd = 2, lty = lty_type[3])
+  #abline(v = plausible_region[length(plausible_region)], col = colour_choice[3], lwd = 2, lty = lty_type[3])
   
   # Getting inner rgb colour for transparent effect
   rgb_prior = col2rgb(colour_choice[1])
@@ -167,18 +167,9 @@ generate_prior_post_graph = function(prior, post, plausible_region, grid, credib
   #original colours: green rgb(146/255, 255/255, 133/255, alpha = 0.3) 
   # blue rgb(133/255, 198/255, 255/255, alpha = 0.3)
   
-  if (typeof(credible_region) == "double") { # need both to run properly
-    abline(v=credible_region[1], col=colour_choice[4], lwd = 2, lty = lty_type[4]) 
-    abline(v=credible_region[2], col=colour_choice[4], lwd = 2, lty = lty_type[4])
-    #abline(h=rb_line, col="#81ddff", lwd = 2, lty = 2)
-    legend("topleft", legend = c("Prior", "Posterior", "Plausible Region", "Credible Region"), lwd = 2, 
-           col = c(colour_choice[1], colour_choice[2], colour_choice[3], colour_choice[4]), 
-           lty = c(lty_type[1], lty_type[2], lty_type[3], lty_type[4]))
-  } else {
-    legend("topleft", legend = c("Prior", "Posterior", "Plausible Region"), lwd = 2, 
-           col = c(colour_choice[1], colour_choice[2], colour_choice[3]), 
-           lty = c(lty_type[1], lty_type[2], lty_type[3]))
-  }
+  legend("topleft", legend = c("Prior", "Posterior"), lwd = 2, 
+          col = c(colour_choice[1], colour_choice[2]), 
+          lty = c(lty_type[1], lty_type[2]))
 }
 
 # This is for constructing the prior only
@@ -201,60 +192,38 @@ generate_prior_graph = function(prior, grid, colour_choice = "blue", lty_type = 
   # colour originally used: rgb(133/255, 198/255, 255/255, alpha = 0.3)
 }
 
-generate_rbr_graph = function(relative_belief_ratio, plausible_region, grid, credible_region = FALSE,
+generate_rbr_graph = function(relative_belief_ratio, grid,
                               rb_line = FALSE, 
-                              colour_choice = c("red", "#b3bfff", "royalblue1", "#81ddff"),
-                              lty_type = c(2, 3, 2, 3),
+                              colour_choice = c("red", "royalblue1", "#81ddff"),
+                              lty_type = c(2, 3, 3),
                               transparency = 0.1){
   # This generates the graph for the relative belief ratio of the prevalence.
-  # colour choice goes in the following order: relative belief ratio, plausible region,
-  # line of y = 1, credible region.
+  # colour choice goes in the following order: relative belief ratio, line of y = 1, cr line
   
   # Constructs an interval for the x and y region
   x_interval = obtain_x_interval(relative_belief_ratio, grid, 0.05)
   y_interval = c(0, max(relative_belief_ratio))
-  # For the Plausible Region
-  lower_bd = plausible_region[1]
-  upper_bd = plausible_region[length(plausible_region)]
-  
+
   plot(grid, relative_belief_ratio, type='l', lty = lty_type[1], lwd = 2, 
        xlim = x_interval, ylim = y_interval,
        main = "Graph of the Relative Belief Ratio of w", ylab = "RBR", xlab = "w", 
        col = colour_choice[1])
-  abline(h = 1, col=colour_choice[3], lwd = 2, lty = lty_type[3])
+  abline(h = 1, col=colour_choice[2], lwd = 2, lty = lty_type[3])
   
-  abline(v = lower_bd, col = colour_choice[2], lwd = 2, lty = lty_type[2])
-  abline(v = upper_bd, col = colour_choice[2], lwd = 2, lty = lty_type[2])
-  # Colouring in the area between the plausible region and when the RBR > 1
-  l = min(which(grid >= plausible_region[1]))
-  h = max(which(grid < plausible_region[length(plausible_region)]))
   rgb_rb = col2rgb(colour_choice[1])
-  polygon(c(grid[c(l, l:h, h)]),
-          c(1, relative_belief_ratio[l:h], 1),
-          col = rgb(rgb_rb[1]/255, rgb_rb[2]/255, rgb_rb[3]/255, alpha = transparency), border = NA)
-  # original colour (purple): rgb(197/255, 132/255, 255/255, alpha = 0.3)
-  
-  if ((typeof(credible_region) == "double") & (typeof(rb_line) == "double")) { # need both to run properly
-    abline(v=credible_region[1], col=colour_choice[4], lwd = 2, lty = lty_type[4])
-    abline(v=credible_region[2], col=colour_choice[4], lwd = 2, lty = lty_type[4])
-    abline(h = rb_line, col=colour_choice[4], lwd = 2, lty = lty_type[4])
-    rgb_cr = col2rgb(colour_choice[4])
-    # Original colour: rgb(148/255, 180/255, 255/255, alpha = 0.2)
-    legend("bottomleft", legend = c("Relative Belief Ratio", "Plausible Region", "Credible Region",
-                                    "Gamma (Area)"), lwd = 2, 
-           col = c(colour_choice[1], colour_choice[2], colour_choice[4], 
-                   rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = transparency)), 
-           lty = c(lty_type[1], lty_type[2], lty_type[4], 1))
-    polygon(x = c(credible_region[1], credible_region[1], credible_region[2], credible_region[2]), 
-            y = c(0, rb_line, rb_line, 0), 
-            col = rgb(rgb_cr[1]/255, rgb_cr[2]/255, rgb_cr[3]/255, alpha = transparency), 
-            border = NA)   
+  polygon(grid, relative_belief_ratio, col = rgb(rgb_rb[1]/255, rgb_rb[2]/255, rgb_rb[3]/255, 
+                                                 alpha = transparency), border = NA)
+  if (typeof(rb_line) == "double") { 
+    abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[2])
+    rgb_cr = col2rgb(colour_choice[3])
+    legend("bottomleft", legend = c("Relative Belief Ratio", "Credible Region Line"), lwd = 2, 
+           col = c(colour_choice[1], colour_choice[3]), 
+           lty = c(lty_type[1], lty_type[3], 1))
   } else {
-    legend("topleft", legend = c("Relative Belief Ratio", "Plausible Region"), lwd = 2, 
-           col = c(colour_choice[1], colour_choice[2]), lty = c(lty_type[1], lty_type[2]))
+    legend("topleft", legend = c("Relative Belief Ratio"), lwd = 2, 
+           col = c(colour_choice[1]), lty = c(lty_type[1]))
   }
 }
-
 
 generate_relative_belief_ratio_at_w0_graph = function(relative_belief_ratio, 
                                                       relative_belief_ratio_at_w0, 
