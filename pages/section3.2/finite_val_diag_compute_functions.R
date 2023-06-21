@@ -388,9 +388,9 @@ compute_AUC_error_char_copt = function(delta, c_optfDfND, priorFPRc_opt, priorFN
   RBPPVc_opt = postPPVc_opt/priorPPVc_opt
   PPVc_optfDfND=grid[which.max(RBPPVc_opt)]
   
-  newlist = list("FPRest(copt_est)" = FPRc_optfDfND, "FNRest(copt_est)" = FNRc_optfDfND,
-                 "ERRORwest(copt_est)" = ERROR_wc_optfDfND, "FDRest(copt_est)" = FDRc_optfDfND,
-                 "FNDRest(copt_est)" = FNDRc_optfDfND, "PPVest(copt_est)" = PPVc_optfDfND)
+  newlist = list("FPRest" = FPRc_optfDfND, "FNRest" = FNRc_optfDfND,
+                 "ERRORest" = ERROR_wc_optfDfND, "FDRest" = FDRc_optfDfND,
+                 "FNDRest" = FNDRc_optfDfND, "PPVest" = PPVc_optfDfND)
   return(newlist)
 }
 

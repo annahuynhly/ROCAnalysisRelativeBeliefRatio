@@ -190,9 +190,6 @@ nonpara_bayes_df_alt = reactive({
        "diseased" = diseased)
 })
 
-
-# NEED TO EDIT BELOW
-
 # Setting up which vector to use for the copt case
 sect3.4_copt_nonpara_bayes_diseased_vector = reactive({
   if(input$nonpara_bayes_optimal_cutoff_denote_variables == 'no'){
@@ -212,55 +209,4 @@ sect3.4_copt_nonpara_bayes_nondiseased_vector = reactive({
   }
 })
 
-################################################################
-# copt - choosing between descriptive statistics vs raw data   #
-################################################################
-
-sect3.4_copt_xDdata_post = reactive({
-  if(input$nonpara_bayes_data_method_alt == 1){
-    NA
-  } else if (input$nonpara_bayes_data_method_alt == 2){
-    sect3.4_copt_nonpara_bayes_diseased_vector()
-  }
-})
-
-sect3.4_copt_xNDdata_post = reactive({
-  if(input$nonpara_bayes_data_method_alt == 1){
-    NA
-  } else if (input$nonpara_bayes_data_method_alt == 2){
-    sect3.4_copt_nonpara_bayes_nondiseased_vector()
-  }
-})
-
-sect3.4_copt_meanD_post = reactive({
-  if(input$nonpara_bayes_data_method_alt == 1){
-    sect3.4_copt_meanD()
-  } else if (input$nonpara_bayes_data_method_alt == 2){
-    NA
-  }
-})
-
-sect3.4_copt_meanND_post = reactive({
-  if(input$nonpara_bayes_data_method_alt == 1){
-    sect3.4_copt_meanND()
-  } else if (input$nonpara_bayes_data_method_alt == 2){
-    NA
-  }
-})
-
-sect3.4_copt_sD_squared_post = reactive({
-  if(input$nonpara_bayes_data_method_alt == 1){
-    sect3.4_copt_sD_squared()
-  } else if (input$nonpara_bayes_data_method_alt == 2){
-    NA
-  }
-})
-
-sect3.4_copt_sND_squared_post = reactive({
-  if(input$nonpara_bayes_data_method_alt == 1){
-    sect3.4_copt_sND_squared()
-  } else if (input$nonpara_bayes_data_method_alt == 2){
-    NA
-  }
-})
 

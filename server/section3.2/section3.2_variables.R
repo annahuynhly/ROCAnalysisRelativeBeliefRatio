@@ -109,7 +109,7 @@ sect3.2_cr = reactive({
 sect3.2_copt_prior = reactive({
   set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
-    AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+    AUC_prior_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                               nMonteCarlo = input$finite_val_nMonteCarlo, 
                               w = input$finite_val_diag_prevalence_w, 
                               delta = input$finite_val_delta, 
@@ -121,7 +121,7 @@ sect3.2_copt_prior = reactive({
                               PPV = sect3.2_AUC_prior()$PPV, 
                               priorc_opt = sect3.2_AUC_prior()$priorc_opt)
   } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){
-    AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+    AUC_prior_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                               nMonteCarlo = input$finite_val_nMonteCarlo, 
                               w = FALSE, 
                               alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
@@ -140,7 +140,7 @@ sect3.2_copt_prior = reactive({
 sect3.2_copt_post = reactive({
   set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
-    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = input$finite_val_nMonteCarlo, 
                              w = input$finite_val_diag_prevalence_w, 
                              delta = input$finite_val_delta, 
@@ -152,7 +152,7 @@ sect3.2_copt_post = reactive({
                              PPV = sect3.2_AUC_post()$PPV, 
                              postc_opt = sect3.2_AUC_post()$postc_opt)
   } else if (input$finite_val_diag_case2 == "A"){ # know the prior only
-    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = input$finite_val_nMonteCarlo, 
                              w = FALSE, 
                              alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
@@ -167,7 +167,7 @@ sect3.2_copt_post = reactive({
                              PPV = sect3.2_AUC_post()$PPV, 
                              postc_opt = sect3.2_AUC_post()$postc_opt)
   } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
-    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = input$finite_val_nMonteCarlo, 
                              w = FALSE, 
                              alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
@@ -191,26 +191,7 @@ sect3.2_copt_post = reactive({
 
 sect3.2_copt_est = reactive({
   compute_AUC_error_char_copt(delta = input$finite_val_delta, 
-                              c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
-                              priorFPRc_opt = sect3.2_copt_prior()$priorFPRc_opt, 
-                              priorFNRc_opt = sect3.2_copt_prior()$priorFNRc_opt, 
-                              priorERROR_wc_opt = sect3.2_copt_prior()$priorERROR_wc_opt, 
-                              priorFDRc_opt = sect3.2_copt_prior()$priorFDRc_opt, 
-                              priorFNDRc_opt = sect3.2_copt_prior()$priorFNDRc_opt,
-                              priorPPVc_opt = sect3.2_copt_prior()$priorPPVc_opt,
-                              postFPRc_opt = sect3.2_copt_post()$postFPRc_opt, 
-                              postFNRc_opt = sect3.2_copt_post()$postFNRc_opt, 
-                              postERROR_wc_opt = sect3.2_copt_post()$postERROR_wc_opt, 
-                              postFDRc_opt = sect3.2_copt_post()$postFDRc_opt, 
-                              postFNDRc_opt = sect3.2_copt_post()$postFNDRc_opt,
-                              postPPVc_opt = sect3.2_copt_post()$postPPVc_opt)
-})
-
-
-
-sect3.2_copt_est = reactive({
-  compute_AUC_error_char_copt(delta = input$finite_val_delta, 
-                              c_optfDfND = sect3.2_AUC_RBR()$c_optfDfND, 
+                              c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                               priorFPRc_opt = sect3.2_copt_prior()$priorFPRc_opt, 
                               priorFNRc_opt = sect3.2_copt_prior()$priorFNRc_opt, 
                               priorERROR_wc_opt = sect3.2_copt_prior()$priorERROR_wc_opt, 

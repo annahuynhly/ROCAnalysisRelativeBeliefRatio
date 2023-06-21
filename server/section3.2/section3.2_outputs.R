@@ -30,12 +30,27 @@ output$finite_val_hypoAUC_value = renderPrint({
 })
 
 output$finite_val_output1 = renderPrint({
-  list("Prior Copt" = sect3.2_AUC_prior()$priorc_opt,
-       "Post Copt" = sect3.2_AUC_post()$postc_opt,
+  temp_df = data.frame(sect3.3_AUC_RBR_error_char_copt()$FNRest,
+                       sect3.3_AUC_RBR_error_char_copt()$FPRest,
+                       sect3.3_AUC_RBR_error_char_copt()$Errorest,
+                       sect3.3_AUC_RBR_error_char_copt()$FDRest,
+                       sect3.3_AUC_RBR_error_char_copt()$FNDRest)
+  colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
+  RBR_copt = c()
+  for(i in 1:length(sect3.2_AUC_prior()$priorc_opt)){
+    if(sect3.2_AUC_prior()$priorc_opt[i] > 0){
+      RBR_copt = sect3.2_AUC_post()$postc_opt/sect3.2_AUC_prior()$priorc_opt 
+    } else {
+      NA
+    }
+  }
+  
+  list("Prior Probabilities for the Cs" = sect3.2_AUC_prior()$priorc_opt,
+       "Posterior Probabilities for the Cs" = sect3.2_AUC_post()$postc_opt,
+       "Relative Belief Ratio Probabilities for the Cs" = RBR_copt,
        "Copt Estimate" = sect3.2_AUC_RBR()$c_optfDfND,
        "Error Characteristics" = as.data.frame(sect3.2_copt_est())) # will need to specify when
   # providing a vector
-  # TODO: specify credible region
 })
 
 ################################################################

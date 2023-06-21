@@ -3,10 +3,6 @@ page_binormal_diag_start = fluidPage(
   titlePanel("Getting Started"),
   sidebarLayout(
     sidebarPanel(width = 4, 
-      numericInput(inputId = "binormal_diag_seed",
-                   label = "Please select a seed for the computations.",
-                   value = 1
-      ),
 
       selectizeInput(
         inputId = "binormal_diag_case1", 

@@ -170,9 +170,11 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
       return("Error: length of priorc_opt and postc_opt are not the same.")
     }
     m = length(priorc_opt)
-    plot(1:m,priorc_opt,xlab="X",ylab="probability", pch=prior_label, lwd = 2, col = colour_choice[1], 
+    plot(1:m, priorc_opt, type = "b", xlab = "X",ylab = "probability", pch = prior_label, 
+         lwd = 2, col = colour_choice[1], 
          main = "Plot of the Prior and the Posterior of Copt")
-    points(1:m,postc_opt, pch=post_label, lwd = 2, col = colour_choice[2])
+    #points(1:m,postc_opt, pch=post_label, lwd = 2, col = colour_choice[2])
+    lines(1:m, postc_opt, pch = post_label, col = colour_choice[2], type = "b", lwd = 2)
     
     legend("topright", legend = c("Prior", "Posterior"),
            lwd = 2, cex = 1.2, col = c(colour_choice[1], colour_choice[2]), 
@@ -180,7 +182,7 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
     
   } else if(typeof(RBc_opt) == "double"){
     m = length(RBc_opt)
-    plot(1:m, RBc_opt, xlab="X", ylab="Relative Belief Ratio", pch = rb_label, 
+    plot(1:m, RBc_opt, type = "b", xlab="X", ylab="Relative Belief Ratio", pch = rb_label, lwd = 2,
          col = colour_choice[3],
          main = "Plot of the Relative Belief Ratio of Copt")
     legend("topright", legend = c("Relative Belief Ratio"),

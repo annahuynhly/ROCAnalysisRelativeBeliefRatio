@@ -15,10 +15,6 @@ page_finite_val_start = fluidPage(
                   crossorigin="anonymous")
       ),
       
-      numericInput(inputId = "finite_val_diag_seed",
-                   label = "Please select a seed for the computations.",
-                   value = 1
-      ),
       selectizeInput(
         inputId = "finite_val_diag_case1", 
         label = "Please select whether the prevalence $w$ is known or unknown.",

@@ -5,9 +5,14 @@
 finite_val_setup_variables_1 = div(
   titlePanel("Setup Values"),
   sidebarLayout(
-    sidebarPanel(width = 3,
+    sidebarPanel(
+      width = 3,
+      numericInput(inputId = "finite_val_diag_seed",
+                   label = "Please select a seed for the computations.",
+                   value = 1
+      ),
       selectInput(inputId = "finite_val_condition",
-                  label = "Select whether to use the conditional or non conditional prior.",
+                  label = "Select whether to use the conditional or unconditional prior.",
                   choices = list("Conditional" = 'conditional',
                                  "Unconditional" = 'unconditional'),
                   selected = 'unconditional'
@@ -163,6 +168,11 @@ finite_val_hypothesizedAUC = div(
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5
       ),
+      textInput(inputId = "finite_val_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      ),
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
@@ -179,11 +189,28 @@ finite_val_hypothesizedAUC = div(
 ################################################################
 
 finite_val_plausible_region = div( 
-  titlePanel("Inferences for Optimal Cutoff"),
+  titlePanel("Inferences for the Optimal Cutoff"),
   
-  mainPanel(
-    tabPanel("Inferences for Optimal Cutoff", 
-      withSpinner(verbatimTextOutput("finite_val_output1"))
+  sidebarLayout(
+    sidebarPanel(
+      width = 3,
+      selectInput(inputId = "finite_val_cutoff_denote_copt",
+                  label = "Would you like to hardcode the copt estimate?",
+                  choice = c("Yes" = "yes",
+                             "No" = "no"),
+                  selected = "no"
+      ),
+      conditionalPanel(
+        condition = "input.finite_val_cutoff_denote_copt == 'yes'",
+        numericInput(inputId = "finite_val_optimal_cutoff_copt",
+                     label = 'Input the copt estimate.',
+                     value = 2), 
+      ),
+    ),
+    mainPanel(
+      tabPanel("Inferences for the Optimal Cutoff", 
+               withSpinner(verbatimTextOutput("finite_val_output1"))
+      ),
     ),
   ),
   br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
@@ -200,11 +227,6 @@ finite_val_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-      textInput(inputId = "finite_val_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
-                               style = "font-size: 95%"), 
-                value = "NA"
-      ),
       selectInput(inputId = "finite_val_hist_visual", label = "Choose Visual:",
                    choices = c("With Bars" = "finite_val_withbars",
                                "Without Bars" = "finite_val_withoutbars"),
@@ -434,8 +456,8 @@ page_finite_val_inference1 = div(
   titlePanel("Finite-valued Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", finite_val_setup_variables_1),
-              tabPanel("Plots for the AUC", finite_val_plots),
               tabPanel("Inferences for the AUC", finite_val_hypothesizedAUC),
+              tabPanel("Plots for the AUC", finite_val_plots),
               tabPanel("Download Prior & Posterior", finite_val_download_1),
   )
 )
@@ -444,7 +466,7 @@ page_finite_val_inference2 = div(
   titlePanel("Finite-valued Diagnostic"),
   tabsetPanel(type = "tabs",
               #tabPanel("Setup Values", finite_val_setup_variables_2),
-              tabPanel("Inferences for Optimal Cutoff", finite_val_plausible_region),
+              tabPanel("Inferences for the Optimal Cutoff", finite_val_plausible_region),
               tabPanel("Plots for the Optimal Cutoff", finite_val_copt_plots),
   )
 )

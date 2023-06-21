@@ -38,43 +38,18 @@ sect3.4_AUC_prior = reactive({
 sect3.4_AUC_post = reactive({
   set.seed(SECT3.4_SEED()) # SETTING THE SEED 
   # check whether or not setting the seed is necessary
-  if(input$nonpara_bayes_data_method == 1){ # inserting descriptive statistics
-    nonpara_bayes_AUC_post(condition = input$nonpara_bayes_condition, 
-                           nMontepost = input$nonpara_bayes_nMonteCarlo, 
-                           nstar = input$nonpara_bayes_nstar, 
-                           a = sect3.4_a(), 
-                           delta = input$nonpara_bayes_delta,
-                           mu0 = input$nonpara_bayes_mu0, 
-                           tau0 = input$nonpara_bayes_tau0, 
-                           lambda1 = input$nonpara_bayes_lambda1, 
-                           lambda2 = input$nonpara_bayes_lambda2, 
-                           xDdata = NA, 
-                           xNDdata = NA,
-                           nD = input$nonpara_bayes_nD, 
-                           nND = input$nonpara_bayes_nND, 
-                           sD_squared = input$nonpara_bayes_sD_squared, 
-                           sND_squared = input$nonpara_bayes_sND_squared, 
-                           meanD = input$nonpara_bayes_meanD, 
-                           meanND = input$nonpara_bayes_meanND)
-  } else if (input$nonpara_bayes_data_method == 2){
-    nonpara_bayes_AUC_post(condition = input$nonpara_bayes_condition, 
-                           nMontepost = input$nonpara_bayes_nMonteCarlo, 
-                           nstar = input$nonpara_bayes_nstar, 
-                           a = sect3.4_a(), 
-                           delta = input$nonpara_bayes_delta,
-                           mu0 = input$nonpara_bayes_mu0, 
-                           tau0 = input$nonpara_bayes_tau0, 
-                           lambda1 = input$nonpara_bayes_lambda1, 
-                           lambda2 = input$nonpara_bayes_lambda2, 
-                           xDdata = nonpara_bayes_df()$diseased, #nonpara_bayes_diseased_vector$x, 
-                           xNDdata = nonpara_bayes_df()$nondiseased, #nonpara_bayes_nondiseased_vector$x,
-                           nD = NA, 
-                           nND = NA, 
-                           sD_squared = NA, 
-                           sND_squared = NA, 
-                           meanD = NA, 
-                           meanND = NA)
-  }
+  nonpara_bayes_AUC_post(condition = input$nonpara_bayes_condition, 
+                         nMontepost = input$nonpara_bayes_nMonteCarlo, 
+                         nstar = input$nonpara_bayes_nstar, 
+                         a = sect3.4_a(), 
+                         delta = input$nonpara_bayes_delta,
+                         mu0 = input$nonpara_bayes_mu0, 
+                         tau0 = input$nonpara_bayes_tau0, 
+                         lambda1 = input$nonpara_bayes_lambda1, 
+                         lambda2 = input$nonpara_bayes_lambda2, 
+                         xDdata = nonpara_bayes_df()$diseased, #nonpara_bayes_diseased_vector$x, 
+                         xNDdata = nonpara_bayes_df()$nondiseased, #nonpara_bayes_nondiseased_vector$x,
+                         nD = NA, nND = NA, sD_squared = NA, sND_squared = NA, meanD = NA, meanND = NA)
 })
 
 sect3.4_AUC_RBR = reactive({
@@ -134,12 +109,9 @@ sect3.4_AUC_post_copt = reactive({
                                 tau0 = sect3.4_copt_tau0(), 
                                 lambda1 = sect3.4_copt_lambda1(), 
                                 lambda2 = sect3.4_copt_lambda2(),
-                                xDdata = sect3.4_copt_xDdata_post(), 
-                                xNDdata = sect3.4_copt_xNDdata_post(),
-                                sD_squared = sect3.4_copt_sD_squared_post(), 
-                                sND_squared = sect3.4_copt_sND_squared_post(), 
-                                meanD = sect3.4_copt_meanD_post(), 
-                                meanND = sect3.4_copt_meanND_post())
+                                xDdata = sect3.4_copt_nonpara_bayes_diseased_vector(), 
+                                xNDdata = sect3.4_copt_nonpara_bayes_nondiseased_vector(),
+                                sD_squared = NA, sND_squared = NA, meanD = NA, meanND = NA)
   } else if (input$nonpara_bayes_case2 == "A"){
     nonpara_bayes_AUC_post_copt(w = FALSE, 
                                 alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
@@ -155,12 +127,9 @@ sect3.4_AUC_post_copt = reactive({
                                 tau0 = sect3.4_copt_tau0(), 
                                 lambda1 = sect3.4_copt_lambda1(), 
                                 lambda2 = sect3.4_copt_lambda2(),
-                                xDdata = sect3.4_copt_xDdata_post(), 
-                                xNDdata = sect3.4_copt_xNDdata_post(),
-                                sD_squared = sect3.4_copt_sD_squared_post(), 
-                                sND_squared = sect3.4_copt_sND_squared_post(), 
-                                meanD = sect3.4_copt_meanD_post(), 
-                                meanND = sect3.4_copt_meanND_post())
+                                xDdata = sect3.4_copt_nonpara_bayes_diseased_vector(), 
+                                xNDdata = sect3.4_copt_nonpara_bayes_nondiseased_vector(),
+                                sD_squared = NA, sND_squared = NA, meanD = NA, meanND = NA)
   } else if (input$nonpara_bayes_case2 == "B"){
     nonpara_bayes_AUC_post_copt(w = FALSE, 
                                 alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
@@ -176,12 +145,9 @@ sect3.4_AUC_post_copt = reactive({
                                 tau0 = sect3.4_copt_tau0(), 
                                 lambda1 = sect3.4_copt_lambda1(), 
                                 lambda2 = sect3.4_copt_lambda2(),
-                                xDdata = sect3.4_copt_xDdata_post(), 
-                                xNDdata = sect3.4_copt_xNDdata_post(),
-                                sD_squared = sect3.4_copt_sD_squared_post(), 
-                                sND_squared = sect3.4_copt_sND_squared_post(), 
-                                meanD = sect3.4_copt_meanD_post(), 
-                                meanND = sect3.4_copt_meanND_post())
+                                xDdata = sect3.4_copt_nonpara_bayes_diseased_vector(), 
+                                xNDdata = sect3.4_copt_nonpara_bayes_nondiseased_vector(),
+                                sD_squared = NA, sND_squared = NA, meanD = NA, meanND = NA)
   }
 })
 

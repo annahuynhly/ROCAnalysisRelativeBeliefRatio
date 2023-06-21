@@ -2,6 +2,15 @@
 # SETUP VARIABLES                                              #
 ################################################################
 
+sect3.2_copt_est_hardcode = reactive({
+  if(input$finite_val_cutoff_denote_copt == 'yes'){
+    input$finite_val_optimal_cutoff_copt
+  } else {
+    2
+    #sect3.2_AUC_RBR()$c_optfDfND
+  }
+})
+
 sect3.2_resample = reactive({
   if(input$finite_val_condition_resampling == 'no'){
     FALSE

@@ -6,20 +6,17 @@ nonpara_bayes_setup_variables_1 = div(
   titlePanel("Setup Values"),
   
   sidebarLayout(
-    sidebarPanel(width = 4,
+    sidebarPanel(
+      width = 4,
+      numericInput(inputId = "nonpara_bayes_seed",
+                   label = "Please select a seed for the computations.",
+                   value = 1),
       selectInput(inputId = "nonpara_bayes_condition",
                   label = "Select whether to use the conditional or non conditional prior.",
                   choices = list("Conditional" = 'cond',
                                  "Unconditional" = 'uncond'),
                   selected = 'cond'
       ),
-      #selectInput(inputId = "nonpara_bayes_DP_method", 
-      #            label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
-      #            choices = c("Choose a_D" = "aD", 
-      #                        "Choose epsilon" = "epsilon"),
-      #            selected = "epsilon"
-      #),
-      
       selectizeInput(
         inputId = "nonpara_bayes_DP_method", 
         label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?", 
@@ -44,21 +41,19 @@ nonpara_bayes_setup_variables_1 = div(
         selected = "aD"
       ), # end
       
-      selectInput(inputId = "nonpara_bayes_data_method",
-                  label = "Insert the data for the diseased and non-diseased groups,
-                  or use the minimal sufficient statistics instead?",
-                  choices = c("Use the minimal sufficient statistics" = 1,
-                              "Use the raw data" = 2),
-                  selected = 1
-      ),
+      # THIS WAS THE PREVIOUS METHOD FOR SELECTING
+      #selectInput(inputId = "nonpara_bayes_data_method",
+      #            label = "Insert the data for the diseased and non-diseased groups,
+      #            or use the minimal sufficient statistics instead?",
+      #            choices = c("Use the minimal sufficient statistics" = 1,
+      #                        "Use the raw data" = 2),
+      #            selected = 1
+      #),
       
-      conditionalPanel(
-        condition = "input.nonpara_bayes_data_method == 2",
-        fileInput(inputId = "nonpara_bayes_csv", 
-                  label = "Choose CSV File",
-                  multiple = FALSE,
-                  accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
-        ),
+      fileInput(inputId = "nonpara_bayes_csv", 
+                label = "Choose CSV File",
+                multiple = FALSE,
+                accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
       ),
       
     ),
@@ -120,44 +115,10 @@ nonpara_bayes_setup_variables_1 = div(
                                  label = '$\\lambda_{2}$',
                                  value = 1.056)),
         ),
-        
-        conditionalPanel(
-          condition = "input.nonpara_bayes_data_method == 1",
-          fluidRow(
-            column(3, h4("Data Sample Size:")),
-            column(3, numericInput(inputId = "nonpara_bayes_nND",
-                                   label = '$n_{ND}$',
-                                   value = 25)),
-            column(3, numericInput(inputId = "nonpara_bayes_nD", 
-                                   label = '$n_{D}$',
-                                   value = 20)),
-          ),
-          fluidRow(
-            
-            column(3, h4("Data Means:")),
-            column(3, numericInput(inputId = "nonpara_bayes_meanND", 
-                                   label = '$\\bar{x}_{ND}$',
-                                   value = -0.072)),
-            column(3, numericInput(inputId = "nonpara_bayes_meanD", 
-                                   label = '$\\bar{x}_{D}$',
-                                   value = 0.976)),
-          ),
-          fluidRow(
-            column(3, h4("Data Sum of Squares:")),
-            column(3, numericInput(inputId = "nonpara_bayes_sND_squared", 
-                                   label = '$s^{2}_{ND}$',
-                                   value = 19.638)),
-            column(3, numericInput(inputId = "nonpara_bayes_sD_squared", 
-                                   label = '$s^{2}_{D}$',
-                                   value = 16.778)),
-          ),
-        ), # end of conditional panel
-        conditionalPanel(
-          condition = "input.nonpara_bayes_data_method == 2",
-          file_upload_example,
-          downloadButton(outputId = "nonpara_bayes_sample", 
-                         label = "Download Sample")
-        ),
+
+        file_upload_example,
+        downloadButton(outputId = "nonpara_bayes_sample", 
+                       label = "Download Sample")
       ), # end of fluid page
     ),
   ),
@@ -179,12 +140,6 @@ nonpara_bayes_setup_variables_2 = div(
       ),
       conditionalPanel(
         condition = "input.nonpara_bayes_optimal_cutoff_denote_variables == 'no'",
-        #selectInput(inputId = "nonpara_bayes_DP_method_alt", 
-        #            label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?",
-        #            choices = c("Choose a_D" = "aD", 
-        #                        "Choose epsilon" = "epsilon"),
-        #            selected = "epsilon"
-        #),
         
         selectizeInput(
           inputId = "nonpara_bayes_DP_method_alt", 
@@ -210,25 +165,14 @@ nonpara_bayes_setup_variables_2 = div(
           selected = "aD"
         ), # end
         
-        selectInput(inputId = "nonpara_bayes_data_method_alt",
-                    label = "Insert the data for the diseased and non-diseased groups,
-                    or use the minimal sufficient statistics instead?",
-                    choices = c("Use the minimal sufficient statistics" = 1,
-                                "Use the raw data" = 2),
-                    selected = 1
+        fileInput(inputId = "nonpara_bayes_csv_alt", 
+                  label = "Choose CSV File",
+                  multiple = FALSE,
+                  accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
         ),
-        conditionalPanel(
-          condition = "input.nonpara_bayes_data_method_alt == 2",
-          fileInput(inputId = "nonpara_bayes_csv_alt", 
-                    label = "Choose CSV File",
-                    multiple = FALSE,
-                    accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
-          ),
           
-          
-        ),
-      ), # end for conditional panel where user puts in new inputs
-    ),
+      ),
+    ), # end for conditional panel where user puts in new inputs
     mainPanel(
       conditionalPanel(
         condition = "input.nonpara_bayes_optimal_cutoff_denote_variables == 'yes'",
@@ -296,42 +240,9 @@ nonpara_bayes_setup_variables_2 = div(
                                    label = '$\\lambda_{2}$',
                                    value = 1.056)),
           ),
-          conditionalPanel(
-            condition = "input.nonpara_bayes_data_method_alt == 1",
-            fluidRow(
-              column(3, h4("Data Sample Size:")),
-              column(3, numericInput(inputId = "nonpara_bayes_nND_alt",
-                                     label = '$n_{ND}$',
-                                     value = 25)),
-              column(3, numericInput(inputId = "nonpara_bayes_nD_alt", 
-                                     label = '$n_{D}$',
-                                     value = 20)),
-            ),
-            fluidRow(
-              column(3, h4("Data Means:")),
-              column(3, numericInput(inputId = "nonpara_bayes_meanND_alt", 
-                                     label = '$\\bar{x}_{ND}$',
-                                     value = -0.072)),
-              column(3, numericInput(inputId = "nonpara_bayes_meanD_alt", 
-                                     label = '$\\bar{x}_{D}$',
-                                     value = 0.976)),
-            ),
-            fluidRow(
-              column(3, h4("Data Sum of Squares:")),
-              column(3, numericInput(inputId = "nonpara_bayes_sND_squared_alt", 
-                                     label = '$s^{2}_{ND}$',
-                                     value = 19.638)),
-              column(3, numericInput(inputId = "nonpara_bayes_sD_squared_alt", 
-                                     label = '$s^{2}_{D}$',
-                                     value = 16.778)),
-            ),
-          ), # end of conditional panel
-          conditionalPanel(
-            condition = "input.nonpara_bayes_data_method_alt == 2",
-            file_upload_example,
-            downloadButton(outputId = "nonpara_bayes_sample_2", 
-                           label = "Download Sample")
-          ),
+          file_upload_example,
+          downloadButton(outputId = "nonpara_bayes_sample_2", 
+                         label = "Download Sample")
         ),
       ),
     ) # end of mainPanel
@@ -344,24 +255,24 @@ nonpara_bayes_setup_variables_2 = div(
 
 nonpara_bayes_hypothesizedAUC = div( 
   titlePanel("Inferences for the AUC"),
-  mainPanel(
-    tabPanel("test title", 
-             withSpinner(verbatimTextOutput("nonpara_bayes_hypoAUC_value")))
+  #mainPanel(
+  #  tabPanel("test title", 
+  #           withSpinner(verbatimTextOutput("nonpara_bayes_hypoAUC_value")))
+  #),
+  sidebarLayout(
+    sidebarPanel(width = 3, 
+      textInput(inputId = "nonpara_bayes_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      )
+    ),
+    mainPanel(
+      tabPanel("inferennces for the AUC", 
+               withSpinner(verbatimTextOutput("nonpara_bayes_hypoAUC_value"))))
   ),
   br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
   br(),br(),br(),br(),br(),br(),
-  #sidebarLayout(
-  #  sidebarPanel(width = 3, 
-  #    textInput(inputId = "nonpara_bayes_gamma", 
-  #              label = tags$p("Gamma (must be less than posterior content)", 
-  #                             style = "font-size: 95%"), 
-  #              value = "NA"
-  #    )
-  #  ),
-  #  mainPanel(
-  #    tabPanel("test title", 
-  #             withSpinner(verbatimTextOutput("nonpara_bayes_hypoAUC_value"))))
-  #)
 )
 
 ################################################################
@@ -369,24 +280,24 @@ nonpara_bayes_hypothesizedAUC = div(
 ################################################################
 
 nonpara_bayes_inferences_for_copt = div( 
-  titlePanel("Inferences for Optimal Cutoff"),
-  mainPanel(
-    tabPanel("test", 
-             withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
-  ),
-  #sidebarLayout(
-  #  sidebarPanel(width = 3,
-  #    textInput(inputId = "nonpara_bayes_gamma_alt", 
-  #              label = tags$p("Gamma (must be less than posterior content)", 
-  #                             style = "font-size: 95%"), 
-  #              value = "NA"
-  #    )
-  #  ),
-  #  mainPanel(
-  #    tabPanel("test", 
-  #             withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
-  #  ),
+  titlePanel("Inferences for the Optimal Cutoff"),
+  #mainPanel(
+  #  tabPanel("test", 
+  #           withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
   #),
+  sidebarLayout(
+    sidebarPanel(width = 3,
+      textInput(inputId = "nonpara_bayes_gamma_alt", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      )
+    ),
+    mainPanel(
+      tabPanel("inferences for the optimal cutoff", 
+               withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
+    ),
+  ),
   br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
   br(),br(),br(),br(),br(),br(),
 )
@@ -399,11 +310,6 @@ nonpara_bayes_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-      textInput(inputId = "nonpara_bayes_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
-                               style = "font-size: 95%"), 
-                value = "NA"
-      ),
       sliderInput(inputId = "nonpara_bayes_smoother", 
                   label = "Number of Average Points (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2),
@@ -508,11 +414,6 @@ nonpara_bayes_copt_plots = div(
   sidebarLayout(
     sidebarPanel(
       width = 3,
-      textInput(inputId = "nonpara_bayes_gamma_alt", 
-                label = tags$p("Gamma (must be less than posterior content)", 
-                               style = "font-size: 95%"), 
-                value = "NA"
-      ),
       selectInput(inputId = "nonpara_bayes_plot_type",
                   label = "Select the type of plot.",
                   choices = list("Copt" = "copt",
@@ -670,8 +571,8 @@ page_nonpara_bayes1 = div(
   # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
               tabPanel("Setup Variables", nonpara_bayes_setup_variables_1),
-              tabPanel("Plots for the AUC", nonpara_bayes_plots),
               tabPanel("Inferences for the AUC", nonpara_bayes_hypothesizedAUC),
+              tabPanel("Plots for the AUC", nonpara_bayes_plots),
               tabPanel("Download Prior & Posterior", nonpara_bayes_download_1),
   )
 )
@@ -680,8 +581,8 @@ page_nonpara_bayes2 = div(
   titlePanel("Nonparametric Bayes Model"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", nonpara_bayes_setup_variables_2),
+              tabPanel("Inferences for the Optimal Cutoff", nonpara_bayes_inferences_for_copt),
               tabPanel("Plots for the Optimal Cutoff", nonpara_bayes_copt_plots),
-              tabPanel("Inferences for Optimal Cutoff", nonpara_bayes_inferences_for_copt)
   )
 )
 

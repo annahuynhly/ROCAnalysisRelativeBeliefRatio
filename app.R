@@ -1,9 +1,4 @@
 ################################################################
-# TODO LIST                                                    #
-################################################################
-# add more colour themes and make the code more efficient for selecting a colour
-
-################################################################
 # LIBRARIES                                                    #
 ################################################################
 
@@ -42,14 +37,14 @@ ui = navbarPage(
     tabPanel("Inferences for the AUC", page_finite_val_inference1),
     tabPanel("Input for the Prevalence", page_finite_val_start),
     tabPanel("Inferences for the Prevalence", page_finite_val_prevalence),
-    tabPanel("Inferences of the Optimal Cutoff", page_finite_val_inference2)
+    tabPanel("Inferences for the Optimal Cutoff", page_finite_val_inference2)
   ),
   navbarMenu("Binormal Diagnostic",
     #tabPanel("Definitions", page_sect3.3_def),
     tabPanel("Inferences for the AUC", page_binormal_diag_inference1),
     tabPanel("Input for the Prevalence", page_binormal_diag_start),
     tabPanel("Inferences for the Prevalence", page_binormal_diag_prevalence),
-    tabPanel("Inferences of the Optimal Cutoff", page_binormal_diag_inference2)
+    tabPanel("Inferences for the Optimal Cutoff", page_binormal_diag_inference2)
   ),
   navbarMenu("Nonparametric Bayes Model",
     #tabPanel("Definitions", page_sect3.4_def),

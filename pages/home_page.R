@@ -6,7 +6,7 @@ home_page = fluidPage(
     mainPanel(
       p("ROC stands for Receiver Operating Characteristic, which is a method used to 
         evaluate the performance of a binary classifier. A ROC curve plots the true positive 
-        rate (TPR) against the false positive rate (FPR) at different threshold levels. 
+        rate (TPR) against the false positive rate (FPR). 
         The area under the curve (AUC) is a measure of how well the classifier can discriminate 
         between the two classes."),
       br(),
@@ -26,11 +26,11 @@ home_page = fluidPage(
         inferences are provided. For example, if interest is in the AUC, then the calculator 
         provides an estimate as well as plots of the prior, posterior, and the 
         relative belief ratio, the values of the plausible region, posterior 
-        content of the plausible region, credible region, and quantities of interest. The same
+        content of the plausible region, and credible region. The same
         inferences are also supplied for the optimal cutoff as well as estimates of quantities
         such as the FPR, FNR, FDR, FNDR, and PPV."),
       br(),
-      p("Due to the complexity of the formulas, some of the computations take a long time to 
+      p("Depending on the Monte Carlo sample sizes, some of the computations may take a long time to 
         run, hence, switching between pages may take awhile."),
       br(),
       p("Ready to try it out? Click on one of the pages above and begin with the \"Getting 

@@ -14,7 +14,12 @@ file_upload_example = div(
 binormal_diag_setup_variables_1 = div( 
   titlePanel("Setup Values"),
   sidebarLayout(
-    sidebarPanel(width = 4, 
+    sidebarPanel(
+      width = 4, 
+      numericInput(inputId = "binormal_diag_seed",
+                   label = "Please select a seed for the computations.",
+                   value = 1
+      ),
       selectInput(inputId = "binormal_case", 
                   label = "Please select the scenario.",
                   choices = c("Assume variances are equal" = "equal_var", 
@@ -263,6 +268,11 @@ binormal_diag_hypothesizedAUC = div(
                    label = 'Hypothesized AUC (greater than)',
                    value = 0.5
       ),
+      textInput(inputId = "binormal_diag_gamma", 
+                label = tags$p("Gamma (must be less than posterior content)", 
+                               style = "font-size: 95%"), 
+                value = "NA"
+      ),     
     ),
     mainPanel(
       tabPanel("Relative Belief Plot of w0", 
@@ -280,11 +290,6 @@ binormal_diag_plots = div(
   titlePanel("Plots for the AUC"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-      textInput(inputId = "binormal_diag_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
-                               style = "font-size: 95%"), 
-                value = "NA"
-      ),           
       sliderInput(inputId = "binormal_diag_smoother", 
                   label = "Number of Average Points (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2
@@ -407,7 +412,7 @@ binormal_diag_download_1 = div(
 ################################################################
 
 binormal_diag_AUC_inferences = div( 
-  titlePanel("Inferences for Optimal Cutoff"),
+  titlePanel("Inferences for the Optimal Cutoff"),
   sidebarLayout(
     sidebarPanel(width = 3, 
       selectInput(inputId = "binormal_diag_inferences", 
@@ -487,13 +492,13 @@ binormal_diag_AUC_inferences = div(
     mainPanel(
       conditionalPanel(
         condition = "input.binormal_diag_inferences == 'results'",
-        tabPanel("Inferences for Optimal Cutoff", 
+        tabPanel("Inferences for the Optimal Cutoff", 
                  withSpinner(verbatimTextOutput("binormal_diag_inf_opt_cutoff"))
         ),
       ),
       conditionalPanel(
         condition = "input.binormal_diag_inferences == 'plots'",
-        tabPanel("Inferences for Optimal Cutoff",
+        tabPanel("Inferences for the Optimal Cutoff",
           fluidRow(
             splitLayout(
               cellWidths = c("50%", "50%"), 
@@ -636,8 +641,8 @@ page_binormal_diag_inference1 = div(
   titlePanel("Binormal Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", binormal_diag_setup_variables_1),
-              tabPanel("Plots for the AUC", binormal_diag_plots),
               tabPanel("Inferences for the AUC", binormal_diag_hypothesizedAUC),
+              tabPanel("Plots for the AUC", binormal_diag_plots),
               tabPanel("Download Prior & Posterior", binormal_diag_download_1),
   )
 )
@@ -646,7 +651,7 @@ page_binormal_diag_inference2 = div(
   titlePanel("Binormal Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", binormal_diag_setup_variables_2),
-              tabPanel("Inferences for Optimal Cutoff", binormal_diag_AUC_inferences),
+              tabPanel("Inferences for the Optimal Cutoff", binormal_diag_AUC_inferences),
               tabPanel("Plots for the Optimal Cutoff", binormal_diag_copt_plots)
   )
 )

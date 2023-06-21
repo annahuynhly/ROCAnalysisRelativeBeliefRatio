@@ -3,9 +3,6 @@ page_nonpara_bayes_start = fluidPage(
   titlePanel("Getting Started"),
   sidebarLayout(
     sidebarPanel(width = 4, 
-      numericInput(inputId = "nonpara_bayes_seed",
-                   label = "Please select a seed for the computations.",
-                   value = 1),
       
       selectizeInput(
         inputId = "nonpara_bayes_case1", 
