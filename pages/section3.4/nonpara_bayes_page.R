@@ -126,7 +126,6 @@ nonpara_bayes_setup_variables_1 = div(
 
 ########## ALT VERSION
 
-
 nonpara_bayes_setup_variables_2 = div(
   titlePanel("Setup Values"),
   sidebarLayout(
@@ -255,10 +254,6 @@ nonpara_bayes_setup_variables_2 = div(
 
 nonpara_bayes_hypothesizedAUC = div( 
   titlePanel("Inferences for the AUC"),
-  #mainPanel(
-  #  tabPanel("test title", 
-  #           withSpinner(verbatimTextOutput("nonpara_bayes_hypoAUC_value")))
-  #),
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "nonpara_bayes_gamma", 
@@ -281,10 +276,6 @@ nonpara_bayes_hypothesizedAUC = div(
 
 nonpara_bayes_inferences_for_copt = div( 
   titlePanel("Inferences for the Optimal Cutoff"),
-  #mainPanel(
-  #  tabPanel("test", 
-  #           withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
-  #),
   sidebarLayout(
     sidebarPanel(width = 3,
       textInput(inputId = "nonpara_bayes_gamma_alt", 
@@ -542,25 +533,11 @@ nonpara_bayes_download_1 = div(
                  downloadButton("nonpara_bayes_downloadData", "Download"),
     ),
     mainPanel(
-      #p("This is a work in progress. Please come back later!")
-      tabPanel("Download Output", dataTableOutput("nonpara_bayes_dataframe"))
+      tabPanel("Download Output", 
+               withSpinner(dataTableOutput("nonpara_bayes_dataframe")))
     )
   )
 )
-
-nonpara_bayes_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
-  grid_pts = nonpara_bayes_grid(delta)
-  #TEMPORARILY CHANGE THE AUC_prior_pts
-  #AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)*delta)
-  #AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)*delta)
-  AUC_prior_pts = c(0, grab_AUC_densities_breaks(delta, AUC_prior)$density)
-  AUC_post_pts = c(0, grab_AUC_densities_breaks(delta, AUC_post)$density)
-  #print(c(length(grid_pts), length(AUC_prior_pts), length(AUC_post_pts), length(AUC_RBR)))
-  df = data.frame(grid_pts, AUC_prior_pts, AUC_post_pts, AUC_RBR)
-  colnames(df) = c("Grid point", "Prior of the AUC", "Posterior of the AUC", 
-                   "Relative Belief Ratio of the AUC")
-  return(df)
-}
 
 ################################################################
 # PAGE LOGIC                                                   #
@@ -585,57 +562,3 @@ page_nonpara_bayes2 = div(
               tabPanel("Plots for the Optimal Cutoff", nonpara_bayes_copt_plots),
   )
 )
-
-################################################################
-# CANCELLED FEATURES (KEPT IF NEEDED)                          #
-################################################################
-
-
-#textInput(inputId = "nonpara_bayes_data_values", 
-#          label = "Please enter in new values.", 
-#          value = "-0.012920,  0.033001, -0.31001"),
-#p("If you are adding multiple values, please separate them by a comma. Note that the values
-#          of the groups won't show if you are currently running another simulation."),
-#h4("Diseased Group"),
-#actionButton(inputId = "nonpara_bayes_add_values_diseased", 
-#             label = "Add Values"),
-#actionButton(inputId = "nonpara_bayes_reset_last_diseased",
-#             label = "Remove Last Entry"),
-#actionButton(inputId = "nonpara_bayes_reset_diseased",
-#             label = "Reset"),
-#verbatimTextOutput("nonpara_bayes_show_diseased_vec"),
-#br(),
-#h4("Non-diseased Group"),
-#actionButton(inputId = "nonpara_bayes_add_values_nondiseased",
-#             label = "Add Values"),
-#actionButton(inputId = "nonpara_bayes_reset_last_nondiseased",
-#             label = "Remove Last Entry"),
-#actionButton(inputId = "nonpara_bayes_reset_nondiseased",
-#             label = "Reset"),
-#verbatimTextOutput("nonpara_bayes_show_nondiseased_vec"),
-
-#textInput(inputId = "nonpara_bayes_data_values_alt", 
-#          label = "Please enter in new values.", 
-#          value = "-0.012920,  0.033001, -0.31001"),
-#p("If you are adding multiple values, please separate them by a comma. Note that the values
-#          of the groups won't show if you are currently running another simulation."),
-#h4("Diseased Group"),
-#actionButton(inputId = "nonpara_bayes_add_values_diseased_alt", 
-#             label = "Add Values"),
-#actionButton(inputId = "nonpara_bayes_reset_last_diseased_alt",
-#             label = "Remove Last Entry"),
-#actionButton(inputId = "nonpara_bayes_reset_diseased_alt",
-#             label = "Reset"),
-#verbatimTextOutput("nonpara_bayes_show_diseased_vec_alt"),
-#br(),
-#h4("Non-diseased Group"),
-#actionButton(inputId = "nonpara_bayes_add_values_nondiseased_alt",
-#             label = "Add Values"),
-#actionButton(inputId = "nonpara_bayes_reset_last_nondiseased_alt",
-#             label = "Remove Last Entry"),
-#actionButton(inputId = "nonpara_bayes_reset_nondiseased_alt",
-#             label = "Reset"),
-#verbatimTextOutput("nonpara_bayes_show_nondiseased_vec_alt"),
-
-
-

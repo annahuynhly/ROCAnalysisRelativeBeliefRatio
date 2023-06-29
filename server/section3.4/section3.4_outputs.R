@@ -330,12 +330,8 @@ nonpara_bayes_generate_dataframe = reactive({
   df
 })
 
-nonpara_bayes_download = reactive({
-  nonpara_bayes_generate_dataframe()
-})
-
 output$nonpara_bayes_dataframe = renderDataTable({
-  nonpara_bayes_download()
+  nonpara_bayes_generate_dataframe()
 })
 
 output$nonpara_bayes_downloadData = downloadHandler(
