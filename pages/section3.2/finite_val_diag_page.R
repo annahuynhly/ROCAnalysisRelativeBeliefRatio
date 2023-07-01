@@ -169,7 +169,8 @@ finite_val_hypothesizedAUC = div(
                    value = 0.5
       ),
       textInput(inputId = "finite_val_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
+                label = tags$p("Gamma for the credible region (must be less than 
+                               the posterior content of the plausible region)", 
                                style = "font-size: 95%"), 
                 value = "NA"
       ),

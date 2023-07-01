@@ -43,9 +43,9 @@ def_problem = fluidPage(
       p("There are two ways to sample from $\\Omega$, either:"),
       HTML("<ol>
               <li>Take samples from $\\Omega_{D}$ and $\\Omega_{ND}$ separately 
-                (relevant in case-control studies),
-              </li>
-              <li>Take a sample from $\\Omega$ (relevant in cross-sectional studies).</li>
+                (relevant in case-control studies), </li>
+              <li>Take a sample from $\\Omega$ (relevant in cross-sectional studies), and
+              classify individuals using a gold standard.</li>
       </ol>"
       ),
       p("In the confusion matrix below, we provide the relevant probabilities for classification into
@@ -101,16 +101,16 @@ def_problem = fluidPage(
                 (1 - \\text{FNR}(c)) + (1 - w)\\text{FPR}(c)}$ </span>
              </p>"
       ),
-      p("In other words, $\\text{FDR}(c)$ is the conditional probability of someone being mistaken
-        as having the disease given that they have the disease."),
+      p("In other words, $\\text{FDR}(c)$ is the conditional probability of someone not having 
+      the disease given that they are classified of having the disease."),
       
       HTML("<p> $\\text{FNDR}(c) = $ False Nondiscovery Rate
                 <span style = 'font-size:20px;'> $ = \\frac{w \\text{FNR}(c)}{w 
                 \\text{FNR}(c) + (1 - w)(1 - \\text{FPR}(c))}$ </span>
              </p>"
       ),
-      p("In simpler terms, $\\text{FNDR}(c)$ is the conditional probability of someone being 
-      mistaken as not being diseased when they have the disease."),
+      p("So, $\\text{FNDR}(c)$ is the conditional probability of someone being 
+        diseased given that they are classified as not having the disease."),
       
       HTML("<p> $\\text{PPV}(c) = $ Positive Predictive Value
                 <span style = 'font-size:20px;'> $ = \\frac{w \\text{TPR}(c)}{w 

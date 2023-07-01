@@ -26,7 +26,7 @@ home_page = fluidPage(
         inferences are provided. For example, if interest is in the AUC, then the calculator 
         provides an estimate as well as plots of the prior, posterior, and the 
         relative belief ratio, the values of the plausible region, posterior 
-        content of the plausible region, and credible region. The same
+        content of the plausible region, and credible regions. The same
         inferences are also supplied for the optimal cutoff as well as estimates of quantities
         such as the FPR, FNR, FDR, FNDR, and PPV."),
       br(),

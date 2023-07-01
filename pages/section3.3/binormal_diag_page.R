@@ -269,7 +269,8 @@ binormal_diag_hypothesizedAUC = div(
                    value = 0.5
       ),
       textInput(inputId = "binormal_diag_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
+                label = tags$p("Gamma for the credible region 
+                               (must be less than the posterior content of the plausible region)", 
                                style = "font-size: 95%"), 
                 value = "NA"
       ),     
@@ -522,7 +523,8 @@ binormal_diag_copt_plots = div(
     sidebarPanel(
       width = 3,
       textInput(inputId = "binormal_diag_gamma_copt", 
-                label = tags$p("Gamma (must be less than posterior content)", 
+                label = tags$p("Gamma for the credible region 
+                               (must be less than the posterior content of the plausible region)", 
                                style = "font-size: 95%"), 
                 value = "NA"),
       sliderInput(inputId = "binormal_diag_smoother_copt", 

@@ -257,7 +257,8 @@ nonpara_bayes_hypothesizedAUC = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "nonpara_bayes_gamma", 
-                label = tags$p("Gamma (must be less than posterior content)", 
+                label = tags$p("Gamma for the credible region 
+                               (must be less than the posterior content of the plausible region)", 
                                style = "font-size: 95%"), 
                 value = "NA"
       )
@@ -279,7 +280,8 @@ nonpara_bayes_inferences_for_copt = div(
   sidebarLayout(
     sidebarPanel(width = 3,
       textInput(inputId = "nonpara_bayes_gamma_alt", 
-                label = tags$p("Gamma (must be less than posterior content)", 
+                label = tags$p("Gamma for the credible region 
+                               (must be less than the posterior content of the plausible region)", 
                                style = "font-size: 95%"), 
                 value = "NA"
       )

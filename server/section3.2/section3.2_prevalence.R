@@ -62,7 +62,7 @@ output$finite_val_diag_prevalence_values1 = renderPrint({
        "Prior Content" = sect3.2_prevalence_info_1()$prior_content,
        "Posterior Content" = sect3.2_prevalence_info_1()$posterior_content,
        "Credible Region of Prevalence w" = sect3.2_prevalence_cred_region()$credible_region,
-       "Max RBR Value for the Credible Region" = sect3.2_prevalence_cred_region()$rb_line)
+       "RBR Value for the Credible Region" = sect3.2_prevalence_cred_region()$rb_line)
 })
 
 output$finite_val_diag_prevalence_values2 = renderPrint({

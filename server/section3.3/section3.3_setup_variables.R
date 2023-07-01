@@ -60,7 +60,7 @@ binormal_diag_df_alt = reactive({
 
 # For inferences for the AUC
 
-sect3.4_AUC_nND = reactive({
+sect3.3_AUC_nND = reactive({
   if(input$binormal_diag_data_method == 1){
     input$binormal_diag_nND
   } else if (input$binormal_diag_data_method == 2){
@@ -68,7 +68,7 @@ sect3.4_AUC_nND = reactive({
   }
 })
 
-sect3.4_AUC_nD = reactive({
+sect3.3_AUC_nD = reactive({
   if(input$binormal_diag_data_method == 1){
     input$binormal_diag_nD
   } else if (input$binormal_diag_data_method == 2){
@@ -76,7 +76,7 @@ sect3.4_AUC_nD = reactive({
   }
 })
 
-sect3.4_AUC_meanND = reactive({
+sect3.3_AUC_meanND = reactive({
   if(input$binormal_diag_data_method == 1){
     input$binormal_diag_meanND
   } else if (input$binormal_diag_data_method == 2){
@@ -84,7 +84,7 @@ sect3.4_AUC_meanND = reactive({
   }
 })
 
-sect3.4_AUC_meanD = reactive({
+sect3.3_AUC_meanD = reactive({
   if(input$binormal_diag_data_method == 1){
     input$binormal_diag_meanD
   } else if (input$binormal_diag_data_method == 2){
@@ -92,7 +92,7 @@ sect3.4_AUC_meanD = reactive({
   }
 })
 
-sect3.4_AUC_sND_squared = reactive({
+sect3.3_AUC_sND_squared = reactive({
   if(input$binormal_diag_data_method == 1){
     input$binormal_diag_sND_squared
   } else if (input$binormal_diag_data_method == 2){
@@ -100,7 +100,7 @@ sect3.4_AUC_sND_squared = reactive({
   }
 })
 
-sect3.4_AUC_sD_squared = reactive({
+sect3.3_AUC_sD_squared = reactive({
   if(input$binormal_diag_data_method == 1){
     input$binormal_diag_sD_squared
   } else if (input$binormal_diag_data_method == 2){
@@ -110,7 +110,7 @@ sect3.4_AUC_sD_squared = reactive({
 
 # for Copt
 
-sect3.4_copt_nND = reactive({
+sect3.3_copt_nND = reactive({
   if(input$binormal_diag_data_method_alt == 1){
     input$binormal_diag_nND_alt
   } else if (input$binormal_diag_data_method_alt == 2){
@@ -118,7 +118,7 @@ sect3.4_copt_nND = reactive({
   }
 })
 
-sect3.4_copt_nD = reactive({
+sect3.3_copt_nD = reactive({
   if(input$binormal_diag_data_method_alt == 1){
     input$binormal_diag_nD_alt
   } else if (input$binormal_diag_data_method_alt == 2){
@@ -126,7 +126,7 @@ sect3.4_copt_nD = reactive({
   }
 })
 
-sect3.4_copt_meanND = reactive({
+sect3.3_copt_meanND = reactive({
   if(input$binormal_diag_data_method_alt == 1){
     input$binormal_diag_meanND_alt
   } else if (input$binormal_diag_data_method_alt == 2){
@@ -134,7 +134,7 @@ sect3.4_copt_meanND = reactive({
   }
 })
 
-sect3.4_copt_meanD = reactive({
+sect3.3_copt_meanD = reactive({
   if(input$binormal_diag_data_method_alt == 1){
     input$binormal_diag_meanD_alt
   } else if (input$binormal_diag_data_method_alt == 2){
@@ -142,7 +142,7 @@ sect3.4_copt_meanD = reactive({
   }
 })
 
-sect3.4_copt_sND_squared = reactive({
+sect3.3_copt_sND_squared = reactive({
   if(input$binormal_diag_data_method_alt == 1){
     input$binormal_diag_sND_squared_alt
   } else if (input$binormal_diag_data_method_alt == 2){
@@ -150,7 +150,7 @@ sect3.4_copt_sND_squared = reactive({
   }
 })
 
-sect3.4_copt_sD_squared = reactive({
+sect3.3_copt_sD_squared = reactive({
   if(input$binormal_diag_data_method_alt == 1){
     input$binormal_diag_sD_squared_alt
   } else if (input$binormal_diag_data_method_alt == 2){
@@ -241,60 +241,60 @@ sect3.3_copt_lambda2 = reactive({
 sect3.3_copt_nND = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_nND_alt
-    sect3.4_copt_nND()
+    sect3.3_copt_nND()
   } else {
     #input$binormal_diag_nND
-    sect3.4_AUC_nND()
+    sect3.3_AUC_nND()
   }
 })
 
 sect3.3_copt_nD = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_nD_alt
-    sect3.4_copt_nD()
+    sect3.3_copt_nD()
   } else {
     #input$binormal_diag_nD
-    sect3.4_AUC_nD()
+    sect3.3_AUC_nD()
   }
 })
 
 sect3.3_copt_meanND = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_meanND_alt
-    sect3.4_copt_meanND()
+    sect3.3_copt_meanND()
   } else {
     #input$binormal_diag_meanND
-    sect3.4_AUC_meanND()
+    sect3.3_AUC_meanND()
   }
 })
 
 sect3.3_copt_meanD = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_meanD_alt
-    sect3.4_copt_meanD()
+    sect3.3_copt_meanD()
   } else {
     #input$binormal_diag_meanD
-    sect3.4_AUC_meanD()
+    sect3.3_AUC_meanD()
   }
 })
 
 sect3.3_copt_sND_squared = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_sND_squared_alt
-    sect3.4_copt_sND_squared()
+    sect3.3_copt_sND_squared()
   } else {
     #input$binormal_diag_sND_squared
-    sect3.4_AUC_sND_squared()
+    sect3.3_AUC_sND_squared()
   }
 })
 
 sect3.3_copt_sD_squared = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_sD_squared_alt
-    sect3.4_copt_sD_squared()
+    sect3.3_copt_sD_squared()
   } else {
     #input$binormal_diag_sD_squared
-    sect3.4_AUC_sD_squared()
+    sect3.3_AUC_sD_squared()
   }
 })
 

@@ -13,16 +13,16 @@ sect3.3_prevalence_grid = reactive({
 sect3.3_prevalence_info_1 = reactive({
   RBR_compute_values(alpha1w = input$binormal_diag_prevalence_alpha1w, 
                      alpha2w = input$binormal_diag_prevalence_alpha2w, 
-                     n = sect3.4_AUC_nND() + sect3.4_AUC_nD(), #input$binormal_diag_prevalence_n, 
-                     nD = sect3.4_AUC_nD(), #input$binormal_diag_prevalence_nD, 
+                     n = sect3.3_AUC_nND() + sect3.3_AUC_nD(), #input$binormal_diag_prevalence_n, 
+                     nD = sect3.3_AUC_nD(), #input$binormal_diag_prevalence_nD, 
                      grid = sect3.3_prevalence_grid())
 })
 
 sect3.3_prevalence_info_2 = reactive({
   w0_compute_values(alpha1w = input$binormal_diag_prevalence_alpha1w, 
                     alpha2w = input$binormal_diag_prevalence_alpha2w, 
-                    n = sect3.4_AUC_nND() + sect3.4_AUC_nD(), #input$binormal_diag_prevalence_n, 
-                    nD = sect3.4_AUC_nD(), #input$binormal_diag_prevalence_nD, 
+                    n = sect3.3_AUC_nND() + sect3.3_AUC_nD(), #input$binormal_diag_prevalence_n, 
+                    nD = sect3.3_AUC_nD(), #input$binormal_diag_prevalence_nD, 
                     w0 = input$binormal_diag_prevalence_w0, 
                     relative_belief_ratio = sect3.3_prevalence_info_1()$relative_belief_ratio, 
                     grid = sect3.3_prevalence_grid())
@@ -31,8 +31,8 @@ sect3.3_prevalence_info_2 = reactive({
 sect3.3_prevalence_cred_region = reactive({
   compute_credible_region(alpha1w = input$binormal_diag_prevalence_alpha1w, 
                           alpha2w = input$binormal_diag_prevalence_alpha2w, 
-                          n = sect3.4_AUC_nND() + sect3.4_AUC_nD(), #input$binormal_diag_prevalence_n, 
-                          nD = sect3.4_AUC_nD(), #input$binormal_diag_prevalence_nD, 
+                          n = sect3.3_AUC_nND() + sect3.3_AUC_nD(), #input$binormal_diag_prevalence_n, 
+                          nD = sect3.3_AUC_nD(), #input$binormal_diag_prevalence_nD, 
                           grid = sect3.3_prevalence_grid(), 
                           gamma = input$binormal_diag_prevalence_gamma, 
                           delta = input$binormal_diag_prevalence_delta, 
@@ -63,7 +63,7 @@ output$binormal_diag_prevalence_values1 = renderPrint({
        "Prior Content" = sect3.3_prevalence_info_1()$prior_content,
        "Posterior Content" = sect3.3_prevalence_info_1()$posterior_content,
        "Credible Region of Prevalence w" = sect3.3_prevalence_cred_region()$credible_region,
-       "Max RBR Value for the Credible Region" = sect3.3_prevalence_cred_region()$rb_line)
+       "RBR Value for the Credible Region" = sect3.3_prevalence_cred_region()$rb_line)
 })
 
 output$binormal_diag_prevalence_values2 = renderPrint({

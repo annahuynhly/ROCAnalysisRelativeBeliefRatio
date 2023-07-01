@@ -3,19 +3,11 @@
 ################################################################
 
 sect3.4_prevalence_n = reactive({
-  if(input$nonpara_bayes_data_method == 1){ # inserting descriptive statistics
-    as.numeric(input$nonpara_bayes_nD) + as.numeric(input$nonpara_bayes_nND)
-  } else if(input$nonpara_bayes_data_method == 2){
-    length(nonpara_bayes_df()$nondiseased) + length(nonpara_bayes_df()$diseased)
-  }
+  length(nonpara_bayes_df()$nondiseased) + length(nonpara_bayes_df()$diseased)
 })
 
 sect3.4_prevalence_nD = reactive({
-  if(input$nonpara_bayes_data_method == 1){ # inserting descriptive statistics
-    as.numeric(input$nonpara_bayes_nD)
-  } else if(input$nonpara_bayes_data_method == 2){
-    length(nonpara_bayes_df()$diseased)
-  }
+  length(nonpara_bayes_df()$diseased)
 })
 
 sect3.4_prevalence_grid = reactive({
@@ -79,7 +71,7 @@ output$nonpara_bayes_prevalence_values1 = renderPrint({
        "Prior Content" = sect3.4_prevalence_info_1()$prior_content,
        "Posterior Content" = sect3.4_prevalence_info_1()$posterior_content,
        "Credible Region of Prevalence w" = sect3.4_prevalence_cred_region()$credible_region,
-       "Max RBR Value for the Credible Region" = sect3.4_prevalence_cred_region()$rb_line)
+       "RBR Value for the Credible Region" = sect3.4_prevalence_cred_region()$rb_line)
 })
 
 output$nonpara_bayes_prevalence_values2 = renderPrint({

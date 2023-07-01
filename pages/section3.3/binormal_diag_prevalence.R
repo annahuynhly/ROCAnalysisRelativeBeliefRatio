@@ -1,44 +1,4 @@
 ################################################################
-# DESCRIPTION PAGE                                             #
-################################################################
-
-binormal_diag_prevalence_description = div( 
-  titlePanel("Page Description"),
-  p("The goal of this section is for the user to compute the prior of w, posterior of w, and the relative belief 
-    ratio of w to estimate the prevalence w. The user is free to download any results."),
-  p("Plot images can be saved by right clicking them."),
-  hr(style = "border-top: 1px solid #363e4f;"),
-  
-  h4("Inputs and their Meanings"),
-  p(HTML("<ul>
-            <li><b>alpha1w:</b> The first parameter for beta. </li>
-            <li><b>alpha2w:</b> The second parameter for beta. </li>
-            <li><b>Total Sample Size:</b> The amount of  </li>
-            <li><b>Total Diseased:</b> the total amount of \"diseased\" individuals from the
-                   total sample size. </li>
-            <li><b>Delta:</b> The distance that matters. It is the distance between any
-                              two points on the grid. </li>
-            <li><b>Gamma:</b> A value that's supposed to be less than the posterior content
-                              of the plausible region.</li>
-            <li><b>Hypothesis w = w0:</b> input what the user hypothesizes w to be. </li>
-            <li><b>Input File Name:</b> The name of the file you want to download. The .csv file
-                                        will include the grid points, the prior, the posterior,
-                                        and the relative belief ratio. </li>
-         </ul>")),
-  
-  h4("Outputs and their Meanings"),
-  p(HTML("<ul>
-            <li><b>plausible_region:</b> plausible region. PR = { w : RB(w | ... ) > 1 }</li>
-            <li><b>RB_estimate_of_prevalence_w:</b> the chosen value for w (when RB(w | ... ) is maximized. 
-            It is actually just n/nD.)</li>
-            <li><b>relative_belief_ratio_at_w0:</b> directly calculated from RB(w0 | ... )</li>
-            <li><b>w0_interval:</b> the region once RB(w | ... ) > RB(w0 | ... )</li>
-            <li><b>strength:</b> given as π({w : RB(w | ... ) <= RB(w0 | ... )| ... }) 
-            It is highlighted in the second graph.</li>
-         </ul>")),
-)
-
-################################################################
 # OUTPUT 1 PAGE                                                #
 ################################################################
 
@@ -46,14 +6,11 @@ binormal_diag_prevalence_plausible_region = div(
   titlePanel("Relative Belief Estimate of Prevalence w & Plausible Region"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-      #numericInput(inputId = "binormal_diag_prevalence_n", 
-      #             label = 'Total Sample Size',
-      #             value = 100, min = 1
-      #),
-      #numericInput(inputId = "binormal_diag_prevalence_nD", 
-      #             label = 'Total Diseased',
-      #             value = 68, min = 0
-      #),
+      textInput(inputId = "binormal_diag_prevalence_gamma", 
+                label = "Gamma for the credible region 
+                (must be less than the posterior content of the plausible region)", 
+                value = "NA"
+      ),
       numericInput(inputId = "binormal_diag_prevalence_delta", 
                    label = tags$p('Delta (the meaningful difference for the prevalence)', 
                            style = "font-size: 90%;"),
@@ -76,10 +33,6 @@ binormal_diag_prevalence_plots = div(
   titlePanel("Plots"), 
   sidebarLayout(
     sidebarPanel(width = 3,
-      textInput(inputId = "binormal_diag_prevalence_gamma", 
-                label = "Gamma (must be less than posterior content)", 
-                value = "NA"
-      ),
       selectInput(inputId = "binormal_diag_prevalence_colour", 
                   label = 'Select colour theme', 
                   choices = colour_theme_list, 
