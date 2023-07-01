@@ -92,7 +92,7 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post,
   }
   
   hist_post = hist(AUC_post, prob = TRUE, breaks = bins, xlab = "AUC", ylab="Density",
-                   main = "Density Histogram: The Prior & Posterior of the AUC", 
+                   main = "Density Histograms: The Prior & Posterior of the AUC", 
                    col = post_hist_col, border = "#ffffff") 
   hist_prior = hist(AUC_prior, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
                     col = prior_hist_col, border = "#ffffff", add = TRUE)
@@ -134,7 +134,7 @@ density_hist_AUC_RBR = function(delta, AUC_RBR,
   myhist$counts = myhist$counts[-length(myhist$counts)] #removing the last element
   
   plot(myhist, xlab = "AUC", ylab = "Relative Belief Ratio", 
-       main = "Density Histogram: The Relative Belief Ratio of the AUC",
+       main = "The Relative Belief Ratio of the AUC",
        col = colours, freq = TRUE, border = "#ffffff")
   abline(h = 1, col = colour_choice[2], lwd = 2, lty = lty_type[2])
   #warning message doesn't seem to be much of an issue

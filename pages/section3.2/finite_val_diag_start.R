@@ -102,7 +102,8 @@ page_finite_val_start = fluidPage(
         conditionalPanel(
           condition ="input.finite_val_diag_case2 == 'B'",
           p("The sampling regime has been chosen. You may observe The Prevalence section to see the estimation 
-          for the prevalence $w$.")
+          for the prevalence $w$."),
+  
         )
       ),
     ),

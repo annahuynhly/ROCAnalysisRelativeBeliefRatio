@@ -4,6 +4,13 @@
 
 # Setting the seed
 SECT3.4_SEED = reactive(input$nonpara_bayes_seed)
+SECT3.4_SEED_COPT = reactive({
+  if(input$nonpara_bayes_optimal_cutoff_denote_variables == "yes"){
+    input$nonpara_bayes_seed
+  } else if(input$nonpara_bayes_optimal_cutoff_denote_variables == "no"){
+    input$nonpara_bayes_seed_copt
+  }
+})
 
 # Getting the value for a... note: need to change this for the copt case
 sect3.4_a = reactive({
@@ -64,7 +71,7 @@ sect3.4_AUC_RBR = reactive({
 })
 
 sect3.4_AUC_prior_copt = reactive({
-  set.seed(SECT3.4_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  set.seed(SECT3.4_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$nonpara_bayes_case1 == 1){
     nonpara_bayes_AUC_prior_copt(w = input$nonpara_bayes_prevalence_w,
                                  alpha1w = NA, 
@@ -93,7 +100,7 @@ sect3.4_AUC_prior_copt = reactive({
 })
 
 sect3.4_AUC_post_copt = reactive({
-  set.seed(SECT3.4_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  set.seed(SECT3.4_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$nonpara_bayes_case1 == 1){
     nonpara_bayes_AUC_post_copt(w = input$nonpara_bayes_prevalence_w, 
                                 alpha1w = NA, 

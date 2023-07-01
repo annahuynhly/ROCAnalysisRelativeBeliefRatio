@@ -45,9 +45,9 @@ output$finite_val_output1 = renderPrint({
     }
   }
   
-  list("Prior Probabilities for the Cs" = sect3.2_AUC_prior()$priorc_opt,
-       "Posterior Probabilities for the Cs" = sect3.2_AUC_post()$postc_opt,
-       "Relative Belief Ratio Probabilities for the Cs" = RBR_copt,
+  list("Prior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_prior()$priorc_opt,
+       "Posterior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_post()$postc_opt,
+       "Relative Belief Ratio Probabilities for the Possible Diagnostic Values" = RBR_copt,
        "Copt Estimate" = sect3.2_AUC_RBR()$c_optfDfND,
        "Error Characteristics" = as.data.frame(sect3.2_copt_est())) # will need to specify when
   # providing a vector

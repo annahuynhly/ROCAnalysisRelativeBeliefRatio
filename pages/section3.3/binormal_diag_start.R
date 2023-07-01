@@ -91,7 +91,7 @@ page_binormal_diag_start = fluidPage(
         conditionalPanel(
           condition ="input.binormal_diag_case2 == 'B'",
           p("The sampling regime has been chosen. You may observe The Prevalence section to see 
-          the estimation for the prevalence $w$.")
+          the estimation for the prevalence $w$."),
         )
       ),
     ),

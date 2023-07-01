@@ -327,7 +327,7 @@ compute_AUC_credible_region = function(gamma, grid, density, AUC_post,
   # Computes the credible region. At first, there's no default input to avoid generating
   # a credible region automatically (it is not necessary.)
   if (check.numeric(gamma) == FALSE){
-    err_msg = "Need to put in a valid input for gamma (see graph 1.)"
+    err_msg = "Need to put in a valid input for gamma."
     return(list("credible_region" = err_msg, "rb_line" = err_msg))
   }
   else { # This condition runs if the user provides an actual numeric input.
@@ -457,33 +457,5 @@ hypothesized_AUC_compute_values = function(hypo_AUC, delta, AUC_prior, AUC_post)
   
   return(RB)
 }
-
-
-
-
-
-
-
-
-
-#"pND_array" = pND_array, "pD_array" = pD_array,
-#"FNR" = FNR, "FPR" = FPR, "ERROR_w" = ERROR_w, 
-#"PPV" = PPV, "priorc_opt" = priorc_opt,
-#"AUC" = AUC)
-
-
-#test = simulate_AUC_mc_prior(condition = "conditional", 
-#                      nND = 50, nD = 100, nMonteCarlo = 10, w = 0.65,
-#                      alpha_ND = c(1, 1, 1, 1, 1), 
-#                      alpha_D = c(1, 1, 1, 1, 1))
-
-#test2 = simulate_AUC_mc_post(condition = "conditional", 
-#                             nND = 50, nD = 100, nMonteCarlo = 10, w = 0.65,
-#                             alpha_ND = c(1, 1, 1, 1, 1), 
-#                             alpha_D = c(1, 1, 1, 1, 1),
-#                             fND = c(29, 7, 4, 5, 5), 
-#                             fD = c(14, 7, 25, 33, 21))
-
-
 
 

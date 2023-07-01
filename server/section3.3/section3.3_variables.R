@@ -2,8 +2,15 @@
 # VARIABLES                                                    #
 ################################################################
 
-# Setting the seed
+# Setting the seeds
 SECT3.3_SEED = reactive(input$binormal_diag_seed)
+SECT3.3_SEED_COPT = reactive({
+  if(input$binormal_optimal_cutoff_denote_variables == "yes"){
+    input$binormal_diag_seed
+  } else if(input$binormal_optimal_cutoff_denote_variables == "no"){
+    input$binormal_diag_seed_copt
+  }
+})
 
 # This is for the equal variances case
 sect3.3_hyperpara = reactive({
@@ -11,12 +18,12 @@ sect3.3_hyperpara = reactive({
                                   tau0 = input$binormal_diag_tau0, 
                                   lambda1 = input$binormal_diag_lambda1, 
                                   lambda2 = input$binormal_diag_lambda2, 
-                                  nND = sect3.4_AUC_nND(), #input$binormal_diag_nND, 
-                                  meanND = sect3.4_AUC_meanND(), #input$binormal_diag_meanND, 
-                                  sND_squared = sect3.4_AUC_sND_squared(), #input$binormal_diag_sND_squared, 
-                                  nD = sect3.4_AUC_nD(), #input$binormal_diag_nD, 
-                                  meanD = sect3.4_AUC_meanD(), #input$binormal_diag_meanD, 
-                                  sD_squared = sect3.4_AUC_sD_squared() #input$binormal_diag_sD_squared)
+                                  nND = sect3.3_AUC_nND(), #input$binormal_diag_nND, 
+                                  meanND = sect3.3_AUC_meanND(), #input$binormal_diag_meanND, 
+                                  sND_squared = sect3.3_AUC_sND_squared(), #input$binormal_diag_sND_squared, 
+                                  nD = sect3.3_AUC_nD(), #input$binormal_diag_nD, 
+                                  meanD = sect3.3_AUC_meanD(), #input$binormal_diag_meanD, 
+                                  sD_squared = sect3.3_AUC_sD_squared() #input$binormal_diag_sD_squared)
   )
 })
 
@@ -25,12 +32,12 @@ sect3.3_hyperpara_copt = reactive({
                                   tau0 = sect3.3_copt_tau0(), 
                                   lambda1 = sect3.3_copt_lambda1(), 
                                   lambda2 = sect3.3_copt_lambda2(), 
-                                  nND = sect3.3_copt_nND(), 
-                                  meanND = sect3.3_copt_meanND(), 
-                                  sND_squared = sect3.3_copt_sND_squared(), 
-                                  nD = sect3.3_copt_nD(), 
-                                  meanD = sect3.3_copt_meanD(), 
-                                  sD_squared = sect3.3_copt_sD_squared())
+                                  nND = sect3.3_copt_nND_use(), 
+                                  meanND = sect3.3_copt_meanND_use(), 
+                                  sND_squared = sect3.3_copt_sND_squared_use(), 
+                                  nD = sect3.3_copt_nD_use(), 
+                                  meanD = sect3.3_copt_meanD_use(), 
+                                  sD_squared = sect3.3_copt_sD_squared_use())
 })
 
 sect3.3_AUC_prior = reactive({
@@ -115,6 +122,7 @@ sect3.3_AUC_prior_copt = reactive({
   }
 })
 
+################### BUG IS CONTAINED HERE
 sect3.3_AUC_post_copt = reactive({
   if(input$binormal_diag_case1 == 1){
     binormal_diag_post_copt(w = input$binormal_diag_prevalence_w,
@@ -150,8 +158,8 @@ sect3.3_AUC_post_copt = reactive({
     binormal_diag_post_copt(w = FALSE,
                             alpha1w = input$binormal_diag_prevalence_alpha1w, 
                             alpha2w = input$binormal_diag_prevalence_alpha2w, 
-                            nND = sect3.3_copt_nND(), 
-                            nD = sect3.3_copt_nD(), 
+                            nND = sect3.3_copt_nND_use(), 
+                            nD = sect3.3_copt_nD_use(), 
                             version = "post",
                             nMontepost = sect3.3_copt_nMonteCarlo(), 
                             delta = sect3.3_copt_delta(), 
@@ -250,8 +258,8 @@ sect3.3_AUC_post_error_char_copt = reactive({
     binormal_diag_AUC_post_error_char_copt(w = FALSE,
                                            alpha1w = input$binormal_diag_prevalence_alpha1w, 
                                            alpha2w = input$binormal_diag_prevalence_alpha2w,
-                                           nND = sect3.3_copt_nND(), 
-                                           nD = sect3.3_copt_nD(),
+                                           nND = sect3.3_copt_nND_use(), 
+                                           nD = sect3.3_copt_nD_use(),
                                            version = "post",
                                            coptest = sect3.3_copt(),
                                            nMontepost = sect3.3_copt_nMonteCarlo(),
@@ -326,12 +334,12 @@ sect3.3_hyperpara_unequal = reactive({
                                   tau0 = input$binormal_diag_tau0, 
                                   lambda1 = input$binormal_diag_lambda1, 
                                   lambda2 = input$binormal_diag_lambda2, 
-                                  nND = sect3.4_AUC_nND(), #input$binormal_diag_nND, 
-                                  meanND = sect3.4_AUC_meanND(), #input$binormal_diag_meanND, 
-                                  sND_squared = sect3.4_AUC_sND_squared(), #input$binormal_diag_sND_squared, 
-                                  nD = sect3.4_AUC_nD(), #input$binormal_diag_nD, 
-                                  meanD = sect3.4_AUC_meanD(), #input$binormal_diag_meanD, 
-                                  sD_squared = sect3.4_AUC_sD_squared() #input$binormal_diag_sD_squared)
+                                  nND = sect3.3_AUC_nND(), #input$binormal_diag_nND, 
+                                  meanND = sect3.3_AUC_meanND(), #input$binormal_diag_meanND, 
+                                  sND_squared = sect3.3_AUC_sND_squared(), #input$binormal_diag_sND_squared, 
+                                  nD = sect3.3_AUC_nD(), #input$binormal_diag_nD, 
+                                  meanD = sect3.3_AUC_meanD(), #input$binormal_diag_meanD, 
+                                  sD_squared = sect3.3_AUC_sD_squared() #input$binormal_diag_sD_squared)
   )
 })
 
@@ -340,12 +348,12 @@ sect3.3_hyperpara_copt_unequal = reactive({
                                   tau0 = sect3.3_copt_tau0(), 
                                   lambda1 = sect3.3_copt_lambda1(), 
                                   lambda2 = sect3.3_copt_lambda2(), 
-                                  nND = sect3.3_copt_nND(), 
-                                  meanND = sect3.3_copt_meanND(), 
-                                  sND_squared = sect3.3_copt_sND_squared(), 
-                                  nD = sect3.3_copt_nD(), 
-                                  meanD = sect3.3_copt_meanD(), 
-                                  sD_squared = sect3.3_copt_sD_squared())
+                                  nND = sect3.3_copt_nND_use(), 
+                                  meanND = sect3.3_copt_meanND_use(), 
+                                  sND_squared = sect3.3_copt_sND_squared_use(), 
+                                  nD = sect3.3_copt_nD_use(), 
+                                  meanD = sect3.3_copt_meanD_use(), 
+                                  sD_squared = sect3.3_copt_sD_squared_use())
 })
 
 sect3.3_AUC_prior_unequal = reactive({

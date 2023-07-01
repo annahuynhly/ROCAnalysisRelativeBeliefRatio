@@ -28,6 +28,10 @@ contact_page = fluidPage(
     [firstname]huynh.[lastname]@mail.utoronto.ca.'),
   p(""),
   p("The weird formatting of the email is to avoid spam."),
+  p(""),
+  p("A known issue of the site is that sometimes when you change 1 value, it does not re-generate."),
+  p("One easy fix is to quickly switch 1 value via a drop-down menu and then switch back to the value you wanted to keep."),
+  p(""),
   
   tags$style("#project-grid {
                       display: grid;

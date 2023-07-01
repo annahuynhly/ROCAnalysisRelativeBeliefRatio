@@ -91,68 +91,36 @@ finite_val_setup_variables_1 = div(
 
 finite_val_setup_variables_2 = fluidPage(
   titlePanel("Setup Values"),
-  br(),
   
   sidebarLayout(
-    sidebarPanel(width = 3, 
-      selectInput(inputId = "finite_val_optimal_cutoff_denote_variables", 
-                  label = "Do you want to use the same values that was used for the inferences 
-                  for the AUC?",
-                  choices = c("Yes" = "yes", 
-                              "No" = "no"),
-                  selected = "yes"
+    sidebarPanel(
+      width = 3, 
+      # NOTE: this needs to be implemented!!!
+      numericInput(inputId = "finite_val_diag_seed_copt",
+                   label = "Please select a seed for the computations.",
+                   value = 1),
+      # note: should add this for the other sections as well.
+      # need to code the other two sections!
+      selectInput(inputId = "finite_val_cutoff_denote_copt",
+                  label = "How would you like to select Copt??",
+                  choice = c("Use the directly computed Copt" = "no", # yes is leftover from a changed q
+                             "Manually insert Copt" = "yes"),#,
+                             #"Use Youden’s index" = "youden",
+                             #"Use Closest to (0, 1) estimate" = "closest"),
+                  selected = "no"
+      ),
+      conditionalPanel(
+        condition = "input.finite_val_cutoff_denote_copt == 'yes'",
+        numericInput(inputId = "finite_val_optimal_cutoff_copt",
+                     label = 'Input the copt estimate.',
+                     value = 2), 
       ),
     ),
     mainPanel(
-      conditionalPanel(
-        condition = "input.finite_val_optimal_cutoff_denote_variables == 'no'",
-        fluidPage(
-          fluidRow(
-            column(3, h3("Simulation Sizes:")),
-            column(3, numericInput(inputId = "finite_val_nMonteCarlo_alt", 
-                                   label = 'Monte Carlo (Simulation) Sample Size',
-                                   value = 100000, min = 0)),
-            column(3, numericInput(inputId = "finite_val_delta_alt", 
-                                   label = "Delta", 
-                                   value = 0.04, min = 0, max = 1)),
-          ),
-          fluidRow(
-            column(3, h3("Hyperparameters:")),
-            column(3, textInput(inputId = "finite_val_alpha_ND_alt",
-                                label = 'alphaND1, ..., alphaNDm',
-                                value = "1, 1, 1, 1, 1")),
-            column(3, textInput(inputId = "finite_val_alpha_D_alt",
-                                label = 'alphaD1, ..., alphaDm',
-                                value = "1, 1, 1, 1, 1")),
-          ),
-          fluidRow(
-            column(3, h3("Data (Sample Count):")),
-            column(3, numericInput(inputId = "finite_val_nND_alt",
-                                   label = 'Total Non-Diseased',
-                                   value = 50, min = 1)),
-            column(3, numericInput(inputId = "finite_val_nD_alt", 
-                                   label = 'Total Diseased',
-                                   value = 100, min = 1)),
-          ),
-          fluidRow(
-            column(3, h3("Data (Distribution)")),
-            column(3, textInput(inputId = "finite_val_fND_alt",
-                                label = 'fNd',
-                                value = "29, 7, 4, 5, 5")),
-            column(3, textInput(inputId = "finite_val_fD_alt",
-                                label = 'fD',
-                                value = "14, 7, 25, 33, 21")),
-          ),
-        )
-      ),
-      conditionalPanel(
-        condition = "input.finite_val_optimal_cutoff_denote_variables == 'yes'",
-        p("Currently the variables will be used from the previous section instead.")
-      ),
+      p("Placeholder text")
     )
   ),
-  
-  br(style = "line-height:10;"),
+  br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br()
 )
 
 
@@ -160,7 +128,7 @@ finite_val_setup_variables_2 = fluidPage(
 # OUTPUT 1 PAGE                                                #
 ################################################################
 
-finite_val_hypothesizedAUC = div( 
+finite_val_AUCinferences = div( 
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3, 
@@ -193,20 +161,8 @@ finite_val_plausible_region = div(
   titlePanel("Inferences for the Optimal Cutoff"),
   
   sidebarLayout(
-    sidebarPanel(
-      width = 3,
-      selectInput(inputId = "finite_val_cutoff_denote_copt",
-                  label = "Would you like to hardcode the copt estimate?",
-                  choice = c("Yes" = "yes",
-                             "No" = "no"),
-                  selected = "no"
-      ),
-      conditionalPanel(
-        condition = "input.finite_val_cutoff_denote_copt == 'yes'",
-        numericInput(inputId = "finite_val_optimal_cutoff_copt",
-                     label = 'Input the copt estimate.',
-                     value = 2), 
-      ),
+    sidebarPanel(width = 3,
+      p("placeholder text"),
     ),
     mainPanel(
       tabPanel("Inferences for the Optimal Cutoff", 
@@ -457,7 +413,7 @@ page_finite_val_inference1 = div(
   titlePanel("Finite-valued Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", finite_val_setup_variables_1),
-              tabPanel("Inferences for the AUC", finite_val_hypothesizedAUC),
+              tabPanel("Inferences for the AUC", finite_val_AUCinferences),
               tabPanel("Plots for the AUC", finite_val_plots),
               tabPanel("Download Prior & Posterior", finite_val_download_1),
   )
@@ -466,7 +422,7 @@ page_finite_val_inference1 = div(
 page_finite_val_inference2 = div(
   titlePanel("Finite-valued Diagnostic"),
   tabsetPanel(type = "tabs",
-              #tabPanel("Setup Values", finite_val_setup_variables_2),
+              tabPanel("Setup Values", finite_val_setup_variables_2),
               tabPanel("Inferences for the Optimal Cutoff", finite_val_plausible_region),
               tabPanel("Plots for the Optimal Cutoff", finite_val_copt_plots),
   )

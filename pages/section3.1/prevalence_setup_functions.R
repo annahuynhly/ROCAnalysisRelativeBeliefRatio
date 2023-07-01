@@ -49,7 +49,7 @@ compute_credible_region = function(alpha1w, alpha2w, n, nD, grid, gamma, delta, 
   # Computes the credible region. At first, there's no default input to avoid generating
   # a credible region automatically (it is not necessary.)
   if (check.numeric(gamma) == FALSE){
-    err_msg = "Need to put in a valid input for gamma (see graph 1.)"
+    err_msg = "Need to put in a valid input for gamma."
     return(list("credible_region" = err_msg, "rb_line" = err_msg))
   }
   else{ # This condition runs if the user provides an actual numeric input.

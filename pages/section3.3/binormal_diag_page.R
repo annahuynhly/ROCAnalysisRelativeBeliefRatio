@@ -139,6 +139,11 @@ binormal_diag_setup_variables_2 = div(
       ),
       conditionalPanel(
         condition = "input.binormal_optimal_cutoff_denote_variables == 'no'",
+        numericInput(inputId = "binormal_diag_seed_copt",
+                     label = "Please select a seed for the computations.",
+                     value = 1
+        ),
+        
         selectInput(inputId = "binormal_case_alt", 
                     label = "Please select the scenario.",
                     choices = c("Assume variances are equal" = "equal_var", 
@@ -260,7 +265,7 @@ binormal_diag_setup_variables_2 = div(
 # PAGE FOR INFERENCES FOR THE AUC                              #
 ################################################################
 
-binormal_diag_hypothesizedAUC = div( 
+binormal_diag_AUCinferences = div( 
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3,
@@ -643,7 +648,7 @@ page_binormal_diag_inference1 = div(
   titlePanel("Binormal Diagnostic"),
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", binormal_diag_setup_variables_1),
-              tabPanel("Inferences for the AUC", binormal_diag_hypothesizedAUC),
+              tabPanel("Inferences for the AUC", binormal_diag_AUCinferences),
               tabPanel("Plots for the AUC", binormal_diag_plots),
               tabPanel("Download Prior & Posterior", binormal_diag_download_1),
   )

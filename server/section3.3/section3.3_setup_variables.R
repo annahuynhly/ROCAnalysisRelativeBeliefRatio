@@ -238,7 +238,7 @@ sect3.3_copt_lambda2 = reactive({
   }
 })
 
-sect3.3_copt_nND = reactive({
+sect3.3_copt_nND_use = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_nND_alt
     sect3.3_copt_nND()
@@ -248,7 +248,7 @@ sect3.3_copt_nND = reactive({
   }
 })
 
-sect3.3_copt_nD = reactive({
+sect3.3_copt_nD_use = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_nD_alt
     sect3.3_copt_nD()
@@ -258,7 +258,7 @@ sect3.3_copt_nD = reactive({
   }
 })
 
-sect3.3_copt_meanND = reactive({
+sect3.3_copt_meanND_use = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_meanND_alt
     sect3.3_copt_meanND()
@@ -268,7 +268,7 @@ sect3.3_copt_meanND = reactive({
   }
 })
 
-sect3.3_copt_meanD = reactive({
+sect3.3_copt_meanD_use = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_meanD_alt
     sect3.3_copt_meanD()
@@ -278,7 +278,7 @@ sect3.3_copt_meanD = reactive({
   }
 })
 
-sect3.3_copt_sND_squared = reactive({
+sect3.3_copt_sND_squared_use = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_sND_squared_alt
     sect3.3_copt_sND_squared()
@@ -288,7 +288,7 @@ sect3.3_copt_sND_squared = reactive({
   }
 })
 
-sect3.3_copt_sD_squared = reactive({
+sect3.3_copt_sD_squared_use = reactive({
   if(input$binormal_optimal_cutoff_denote_variables == 'no'){
     #input$binormal_diag_sD_squared_alt
     sect3.3_copt_sD_squared()

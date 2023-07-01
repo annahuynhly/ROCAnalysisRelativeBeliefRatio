@@ -140,6 +140,10 @@ nonpara_bayes_setup_variables_2 = div(
       conditionalPanel(
         condition = "input.nonpara_bayes_optimal_cutoff_denote_variables == 'no'",
         
+        numericInput(inputId = "nonpara_bayes_seed_copt",
+                     label = "Please select a seed for the computations.",
+                     value = 1),
+        
         selectizeInput(
           inputId = "nonpara_bayes_DP_method_alt", 
           label = "Manually input $a_{D}$ or input $\\epsilon$ to generate $a_{D}$?", 
@@ -252,7 +256,7 @@ nonpara_bayes_setup_variables_2 = div(
 # HYPOTHESIS TESTING                                           #
 ################################################################
 
-nonpara_bayes_hypothesizedAUC = div( 
+nonpara_bayes_AUCinferences = div( 
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3, 
@@ -550,7 +554,7 @@ page_nonpara_bayes1 = div(
   # OUTPUTTING THE VALUES
   tabsetPanel(type = "tabs",
               tabPanel("Setup Variables", nonpara_bayes_setup_variables_1),
-              tabPanel("Inferences for the AUC", nonpara_bayes_hypothesizedAUC),
+              tabPanel("Inferences for the AUC", nonpara_bayes_AUCinferences),
               tabPanel("Plots for the AUC", nonpara_bayes_plots),
               tabPanel("Download Prior & Posterior", nonpara_bayes_download_1),
   )
