@@ -15,7 +15,7 @@ binormal_diag_setup_variables_1 = div(
   titlePanel("Setup Values"),
   sidebarLayout(
     sidebarPanel(
-      width = 4, 
+      width = 3, 
       numericInput(inputId = "binormal_diag_seed",
                    label = "Please select a seed for the computations.",
                    value = 1
@@ -124,7 +124,7 @@ binormal_diag_setup_variables_1 = div(
 binormal_diag_setup_variables_2 = div( 
   titlePanel("Setup Values"),
   sidebarLayout(
-    sidebarPanel(width = 4, 
+    sidebarPanel(width = 3, 
       selectInput(inputId = "binormal_optimal_cutoff_denote_variables", 
                   label = "Do you want to use the same values that was used for the inferences 
                   for the AUC?",
@@ -254,7 +254,7 @@ binormal_diag_setup_variables_2 = div(
       ),
       conditionalPanel(
         condition = "input.binormal_optimal_cutoff_denote_variables == 'yes'",
-        p("Currently the variables will be used from the previous section instead.")
+        p("Currently the same variables will be used from the inferences for the AUC.")
       ),
     )
   ),

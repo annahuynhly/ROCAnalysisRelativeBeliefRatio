@@ -7,81 +7,28 @@ SECT3.2_SEED = reactive(input$finite_val_diag_seed)
 
 sect3.2_AUC_prior = reactive({
   set.seed(SECT3.2_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
-  if(input$finite_val_diag_case1 == 1){
-    simulate_AUC_mc_prior(condition = input$finite_val_condition,
-                          resample = sect3.2_resample(),
-                          nND = input$finite_val_nND, 
-                          nD = input$finite_val_nD, 
-                          nMonteCarlo = input$finite_val_nMonteCarlo,
-                          w = input$finite_val_diag_prevalence_w, 
-                          alpha_ND = input$finite_val_alpha_ND, 
-                          alpha_D = input$finite_val_alpha_D)
-  } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){ 
-    simulate_AUC_mc_prior(condition = input$finite_val_condition,
-                          resample = sect3.2_resample(),
-                          nND = input$finite_val_nND, 
-                          nD = input$finite_val_nD, 
-                          nMonteCarlo = input$finite_val_nMonteCarlo, 
-                          w = FALSE, 
-                          alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
-                          alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
-                          alpha_ND = input$finite_val_alpha_ND, 
-                          alpha_D = input$finite_val_alpha_D)
-  }
+  finite_val_prior(condition = input$finite_val_condition,
+                   resample = sect3.2_resample(),
+                   nMonteCarlo = input$finite_val_nMonteCarlo,
+                   alpha_ND = input$finite_val_alpha_ND, 
+                   alpha_D = input$finite_val_alpha_D)
 })
 
 sect3.2_AUC_post = reactive({
   set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
-  if(input$finite_val_diag_case1 == 1){
-    simulate_AUC_mc_post(condition = input$finite_val_condition,
-                         resample = sect3.2_resample(),
-                         nND = input$finite_val_nND, 
-                         nD = input$finite_val_nD, 
-                         nMonteCarlo = input$finite_val_nMonteCarlo, 
-                         w = input$finite_val_diag_prevalence_w, 
-                         alpha_ND = input$finite_val_alpha_ND, 
-                         alpha_D = input$finite_val_alpha_D, 
-                         fND = input$finite_val_fND, 
-                         fD = input$finite_val_fD)
-  } else if (input$finite_val_diag_case2 == "A"){ # only know the prior
-    simulate_AUC_mc_post(condition = input$finite_val_condition,
-                         resample = sect3.2_resample(),
-                         nND = input$finite_val_nND, 
-                         nD = input$finite_val_nD, 
-                         nMonteCarlo = input$finite_val_nMonteCarlo, 
-                         w = FALSE, 
-                         alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
-                         alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
-                         version = "prior", 
-                         alpha_ND = input$finite_val_alpha_ND, 
-                         alpha_D = input$finite_val_alpha_D, 
-                         fND = input$finite_val_fND, 
-                         fD = input$finite_val_fD)
-  } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
-    simulate_AUC_mc_post(condition = input$finite_val_condition,
-                         resample = sect3.2_resample(),
-                         nND = input$finite_val_nND, 
-                         nD = input$finite_val_nD, 
-                         nMonteCarlo = input$finite_val_nMonteCarlo, 
-                         w = FALSE, 
-                         alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
-                         alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
-                         version = "post",
-                         alpha_ND = input$finite_val_alpha_ND, 
-                         alpha_D = input$finite_val_alpha_D, 
-                         fND = input$finite_val_fND, 
-                         fD = input$finite_val_fD)
-  }
+  finite_val_post(condition = input$finite_val_condition,
+                  resample = sect3.2_resample(),
+                  nMonteCarlo = input$finite_val_nMonteCarlo, 
+                  alpha_ND = input$finite_val_alpha_ND, 
+                  alpha_D = input$finite_val_alpha_D, 
+                  fND = input$finite_val_fND, 
+                  fD = input$finite_val_fD)
 })
 
-################
-
 sect3.2_AUC_RBR = reactive({
-  compute_AUC_RBR(delta = input$finite_val_delta, 
-                  AUC_prior = sect3.2_AUC_prior()$AUC, 
-                  AUC_post = sect3.2_AUC_post()$AUC, 
-                  priorc_opt = sect3.2_AUC_prior()$priorc_opt, 
-                  postc_opt = sect3.2_AUC_post()$postc_opt)
+  finite_val_RBR(delta = input$finite_val_delta, 
+                 AUC_prior = sect3.2_AUC_prior()$AUC, 
+                 AUC_post = sect3.2_AUC_post()$AUC)
 })
 
 sect3.2_pr = reactive({
@@ -104,36 +51,113 @@ sect3.2_cr = reactive({
                               plausible_region = sect3.2_pr()$plausible_region)
 }) # Short for credible region
 
-######################################
+###################################################
+
+sect3.2_AUC_prior_copt = reactive({
+  set.seed(SECT3.2_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  if(input$finite_val_diag_case1 == 1){
+    simulate_AUC_mc_prior(condition = sect3.2_copt_condition(), #input$finite_val_condition,
+                          resample = sect3.2_resample_copt(), #sect3.2_resample(),
+                          nND = sect3.2_copt_nND(), #input$finite_val_nND, 
+                          nD = sect3.2_copt_nD(), #input$finite_val_nD, 
+                          nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo,
+                          w = input$finite_val_diag_prevalence_w, 
+                          alpha_ND = sect3.2_copt_alpha_ND(), #input$finite_val_alpha_ND, 
+                          alpha_D = sect3.2_copt_alpha_D()) #input$finite_val_alpha_D)
+  } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){ 
+    simulate_AUC_mc_prior(condition = sect3.2_copt_condition(), #input$finite_val_condition,
+                          resample = sect3.2_resample_copt(), #sect3.2_resample(),
+                          nND = sect3.2_copt_nND(), #input$finite_val_nND, 
+                          nD = sect3.2_copt_nD(), #input$finite_val_nD, 
+                          nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
+                          w = FALSE, 
+                          alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                          alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
+                          alpha_ND = sect3.2_copt_alpha_ND(), #input$finite_val_alpha_ND, 
+                          alpha_D = sect3.2_copt_alpha_D())#input$finite_val_alpha_D)
+  }
+})
+
+sect3.2_AUC_post_copt = reactive({
+  set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
+  if(input$finite_val_diag_case1 == 1){
+    simulate_AUC_mc_post(condition = sect3.2_copt_condition(), #input$finite_val_condition,
+                         resample = sect3.2_resample_copt(), #sect3.2_resample(),
+                         nND = sect3.2_copt_nND(), #input$finite_val_nND, 
+                         nD = sect3.2_copt_nD(), #input$finite_val_nD, 
+                         nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
+                         w = input$finite_val_diag_prevalence_w, 
+                         alpha_ND = sect3.2_copt_alpha_ND(), #input$finite_val_alpha_ND, 
+                         alpha_D = sect3.2_copt_alpha_D(), #input$finite_val_alpha_D, 
+                         fND = sect3.2_copt_fND(), #input$finite_val_fND, 
+                         fD = sect3.2_copt_fD()) #input$finite_val_fD)
+  } else if (input$finite_val_diag_case2 == "A"){ # only know the prior
+    simulate_AUC_mc_post(condition = sect3.2_copt_condition(), #input$finite_val_condition,
+                         resample = sect3.2_resample_copt(), #sect3.2_resample(),
+                         nND = sect3.2_copt_nND(), #input$finite_val_nND, 
+                         nD = sect3.2_copt_nD(), #input$finite_val_nD, 
+                         nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
+                         w = FALSE, 
+                         alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                         alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
+                         version = "prior", 
+                         alpha_ND = sect3.2_copt_alpha_ND(), #input$finite_val_alpha_ND, 
+                         alpha_D = sect3.2_copt_alpha_D(), #input$finite_val_alpha_D, 
+                         fND = sect3.2_copt_fND(), #input$finite_val_fND, 
+                         fD = sect3.2_copt_fD()) #input$finite_val_fD)
+  } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
+    simulate_AUC_mc_post(condition = sect3.2_copt_condition(), #input$finite_val_condition,
+                         resample = sect3.2_resample_copt(), #sect3.2_resample(),
+                         nND = sect3.2_copt_nND(), #input$finite_val_nND, 
+                         nD = sect3.2_copt_nD(), #input$finite_val_nD, 
+                         nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
+                         w = FALSE, 
+                         alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                         alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
+                         version = "post",
+                         alpha_ND = sect3.2_copt_alpha_ND(), #input$finite_val_alpha_ND, 
+                         alpha_D = sect3.2_copt_alpha_D(), #input$finite_val_alpha_D, 
+                         fND = sect3.2_copt_fND(), #input$finite_val_fND, 
+                         fD = sect3.2_copt_fD())#input$finite_val_fD)
+  }
+})
+
+sect3.2_AUC_RBR_copt = reactive({
+  compute_AUC_RBR(delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                  AUC_prior = sect3.2_AUC_prior_copt()$AUC, 
+                  AUC_post = sect3.2_AUC_post_copt()$AUC, 
+                  priorc_opt = sect3.2_AUC_prior_copt()$priorc_opt, 
+                  postc_opt = sect3.2_AUC_post_copt()$postc_opt)
+})
 
 sect3.2_copt_prior = reactive({
   set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
     AUC_prior_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
-                              nMonteCarlo = input$finite_val_nMonteCarlo, 
+                              nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
                               w = input$finite_val_diag_prevalence_w, 
-                              delta = input$finite_val_delta, 
-                              pND_array = sect3.2_AUC_prior()$pND_array, 
-                              pD_array = sect3.2_AUC_prior()$pD_array, 
-                              FNR = sect3.2_AUC_prior()$FNR, 
-                              FPR = sect3.2_AUC_prior()$FPR, 
-                              ERROR_w = sect3.2_AUC_prior()$ERROR_w, 
-                              PPV = sect3.2_AUC_prior()$PPV, 
-                              priorc_opt = sect3.2_AUC_prior()$priorc_opt)
+                              delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                              pND_array = sect3.2_AUC_prior_copt()$pND_array, 
+                              pD_array = sect3.2_AUC_prior_copt()$pD_array, 
+                              FNR = sect3.2_AUC_prior_copt()$FNR, 
+                              FPR = sect3.2_AUC_prior_copt()$FPR, 
+                              ERROR_w = sect3.2_AUC_prior_copt()$ERROR_w, 
+                              PPV = sect3.2_AUC_prior_copt()$PPV, 
+                              priorc_opt = sect3.2_AUC_prior_copt()$priorc_opt)
   } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){
     AUC_prior_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
-                              nMonteCarlo = input$finite_val_nMonteCarlo, 
+                              nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
                               w = FALSE, 
                               alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
                               alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence 
-                              delta = input$finite_val_delta, 
-                              pND_array = sect3.2_AUC_prior()$pND_array, 
-                              pD_array = sect3.2_AUC_prior()$pD_array, 
-                              FNR = sect3.2_AUC_prior()$FNR, 
-                              FPR = sect3.2_AUC_prior()$FPR, 
-                              ERROR_w = sect3.2_AUC_prior()$ERROR_w, 
-                              PPV = sect3.2_AUC_prior()$PPV, 
-                              priorc_opt = sect3.2_AUC_prior()$priorc_opt)
+                              delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                              pND_array = sect3.2_AUC_prior_copt()$pND_array, 
+                              pD_array = sect3.2_AUC_prior_copt()$pD_array, 
+                              FNR = sect3.2_AUC_prior_copt()$FNR, 
+                              FPR = sect3.2_AUC_prior_copt()$FPR, 
+                              ERROR_w = sect3.2_AUC_prior_copt()$ERROR_w, 
+                              PPV = sect3.2_AUC_prior_copt()$PPV, 
+                              priorc_opt = sect3.2_AUC_prior_copt()$priorc_opt)
   }
 })
 
@@ -141,56 +165,53 @@ sect3.2_copt_post = reactive({
   set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
     AUC_post_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
-                             nMonteCarlo = input$finite_val_nMonteCarlo, 
+                             nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
                              w = input$finite_val_diag_prevalence_w, 
-                             delta = input$finite_val_delta, 
-                             pND_array = sect3.2_AUC_post()$pND_array, 
-                             pD_array = sect3.2_AUC_post()$pD_array, 
-                             FNR = sect3.2_AUC_post()$FNR, 
-                             FPR = sect3.2_AUC_post()$FPR, 
-                             ERROR_w = sect3.2_AUC_post()$ERROR_w, 
-                             PPV = sect3.2_AUC_post()$PPV, 
-                             postc_opt = sect3.2_AUC_post()$postc_opt)
+                             delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                             pND_array = sect3.2_AUC_post_copt()$pND_array, 
+                             pD_array = sect3.2_AUC_post_copt()$pD_array, 
+                             FNR = sect3.2_AUC_post_copt()$FNR, 
+                             FPR = sect3.2_AUC_post_copt()$FPR, 
+                             ERROR_w = sect3.2_AUC_post_copt()$ERROR_w, 
+                             PPV = sect3.2_AUC_post_copt()$PPV, 
+                             postc_opt = sect3.2_AUC_post_copt()$postc_opt)
   } else if (input$finite_val_diag_case2 == "A"){ # know the prior only
     AUC_post_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
-                             nMonteCarlo = input$finite_val_nMonteCarlo, 
+                             nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
                              w = FALSE, 
                              alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
                              alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
                              version = "prior", 
-                             delta = input$finite_val_delta, 
-                             pND_array = sect3.2_AUC_post()$pND_array, 
-                             pD_array = sect3.2_AUC_post()$pD_array, 
-                             FNR = sect3.2_AUC_post()$FNR,
-                             FPR = sect3.2_AUC_post()$FPR,
-                             ERROR_w = sect3.2_AUC_post()$ERROR_w, 
-                             PPV = sect3.2_AUC_post()$PPV, 
-                             postc_opt = sect3.2_AUC_post()$postc_opt)
+                             delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                             pND_array = sect3.2_AUC_post_copt()$pND_array, 
+                             pD_array = sect3.2_AUC_post_copt()$pD_array, 
+                             FNR = sect3.2_AUC_post_copt()$FNR,
+                             FPR = sect3.2_AUC_post_copt()$FPR,
+                             ERROR_w = sect3.2_AUC_post_copt()$ERROR_w, 
+                             PPV = sect3.2_AUC_post_copt()$PPV, 
+                             postc_opt = sect3.2_AUC_post_copt()$postc_opt)
   } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
     AUC_post_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
-                             nMonteCarlo = input$finite_val_nMonteCarlo, 
+                             nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
                              w = FALSE, 
                              alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
                              alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
-                             nD = input$finite_val_nD, 
-                             nND = input$finite_val_nND, 
+                             nD = sect3.2_copt_nD(), #input$finite_val_nD, 
+                             nND = sect3.2_copt_nND(), #input$finite_val_nND, 
                              version = "post", 
-                             delta = input$finite_val_delta, 
-                             pND_array = sect3.2_AUC_post()$pND_array, 
-                             pD_array = sect3.2_AUC_post()$pD_array, 
-                             FNR = sect3.2_AUC_post()$FNR, 
-                             FPR = sect3.2_AUC_post()$FPR, 
-                             ERROR_w = sect3.2_AUC_post()$ERROR_w, 
-                             PPV = sect3.2_AUC_post()$PPV, 
-                             postc_opt = sect3.2_AUC_post()$postc_opt)
+                             delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                             pND_array = sect3.2_AUC_post_copt()$pND_array, 
+                             pD_array = sect3.2_AUC_post_copt()$pD_array, 
+                             FNR = sect3.2_AUC_post_copt()$FNR, 
+                             FPR = sect3.2_AUC_post_copt()$FPR, 
+                             ERROR_w = sect3.2_AUC_post_copt()$ERROR_w, 
+                             PPV = sect3.2_AUC_post_copt()$PPV, 
+                             postc_opt = sect3.2_AUC_post_copt()$postc_opt)
   }
 })
 
-########################################
-
-
 sect3.2_copt_est = reactive({
-  compute_AUC_error_char_copt(delta = input$finite_val_delta, 
+  compute_AUC_error_char_copt(delta = sect3.2_copt_delta(), #input$finite_val_delta, 
                               c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                               priorFPRc_opt = sect3.2_copt_prior()$priorFPRc_opt, 
                               priorFNRc_opt = sect3.2_copt_prior()$priorFNRc_opt, 

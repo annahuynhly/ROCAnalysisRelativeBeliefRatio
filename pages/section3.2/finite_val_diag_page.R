@@ -2,7 +2,7 @@
 # DESCRIPTION                                                  #
 ################################################################
 
-finite_val_setup_variables_1 = div(
+finite_val_setup_variables = div(
   titlePanel("Setup Values"),
   sidebarLayout(
     sidebarPanel(
@@ -89,24 +89,18 @@ finite_val_setup_variables_1 = div(
   br(style = "line-height:10;"),
 )
 
-finite_val_setup_variables_2 = fluidPage(
+finite_val_setup_variables_alt = div(
   titlePanel("Setup Values"),
   
   sidebarLayout(
     sidebarPanel(
-      width = 3, 
-      # NOTE: this needs to be implemented!!!
-      numericInput(inputId = "finite_val_diag_seed_copt",
-                   label = "Please select a seed for the computations.",
-                   value = 1),
-      # note: should add this for the other sections as well.
-      # need to code the other two sections!
+      width = 3,
       selectInput(inputId = "finite_val_cutoff_denote_copt",
                   label = "How would you like to select Copt??",
                   choice = c("Use the directly computed Copt" = "no", # yes is leftover from a changed q
                              "Manually insert Copt" = "yes"),#,
-                             #"Use Youden’s index" = "youden",
-                             #"Use Closest to (0, 1) estimate" = "closest"),
+                  #"Use Youden’s index" = "youden",
+                  #"Use Closest to (0, 1) estimate" = "closest"),
                   selected = "no"
       ),
       conditionalPanel(
@@ -115,12 +109,107 @@ finite_val_setup_variables_2 = fluidPage(
                      label = 'Input the copt estimate.',
                      value = 2), 
       ),
+      
+      
+      selectInput(inputId = "finite_val_optimal_cutoff_denote_variables", 
+                  label = "Do you want to use the same values that was used for the inferences 
+                  for the AUC?",
+                  choices = c("Yes" = "yes", 
+                              "No" = "no"),
+                  selected = "yes"
+      ),
+      
+      conditionalPanel(
+        condition = "input.finite_val_optimal_cutoff_denote_variables == 'no'",
+        # when the values are separate
+        numericInput(inputId = "finite_val_diag_seed_copt",
+                     label = "Please select a seed for the computations.",
+                     value = 1),
+        
+        selectInput(inputId = "finite_val_condition_alt",
+                    label = "Select whether to use the conditional or unconditional prior.",
+                    choices = list("Conditional" = 'conditional',
+                                   "Unconditional" = 'unconditional'),
+                    selected = 'unconditional'
+        ),
+        conditionalPanel(
+          condition = "input.finite_val_condition_alt == 'conditional'",
+          selectInput(inputId = "finite_val_condition_resampling_alt",
+                      label = "Do you want the conditional sample size to match the unconditional sample 
+                    size?",
+                      choices = list("Yes" = 'yes',
+                                     "No" = 'no'),
+                      selected = 'no'
+          ),
+        ),
+      ),
     ),
     mainPanel(
-      p("Placeholder text")
+      conditionalPanel(
+        condition = "input.finite_val_optimal_cutoff_denote_variables == 'no'",
+        fluidRow(
+          column(3, h4("Simulation Sizes:")),
+          column(3, numericInput(inputId = "finite_val_nMonteCarlo_alt",
+                                 label = p(style = 'font-size:14px;',
+                                           "$\\text{Simulation Sample Size}$"),
+                                 value = 100000, min = 0)),
+          column(3, numericInput(inputId = "finite_val_delta_alt", 
+                                 label = p(style = 'font-size:14px;',
+                                           "$\\delta \\text{ }(\\text{the difference that matters}$)"),
+                                 #label = "$\\text{Delta } (\\delta - \\text{the difference that matters}$)",
+                                 value = 0.04, min = 0, max = 1)),
+        ),
+        fluidRow(
+          column(3, h4("Hyperparameters to Specify the Prior:")),
+          column(3, textInput(inputId = "finite_val_alpha_ND_alt",
+                              label = p(style = 'font-size:15px;',
+                                        "$\\alpha_{\\text{ND1}}, ..., \\alpha_{\\text{NDm}} 
+                                      (\\text{nondiseased}$)"),
+                              #label = 'alphaND1, ..., alphaNDm',
+                              value = "1, 1, 1, 1, 1")),
+          column(3, textInput(inputId = "finite_val_alpha_D_alt",
+                              label = p(style = 'font-size:15px;',
+                                        "$\\alpha_{\\text{D1}}, ..., \\alpha_{\\text{Dm}} 
+                                      (\\text{diseased}$)"),
+                              #label = 'alphaD1, ..., alphaDm',
+                              value = "1, 1, 1, 1, 1")),
+        ),
+        fluidRow(
+          column(3, h4("Data (Sample Count):")),
+          column(3, numericInput(inputId = "finite_val_nND_alt",
+                                 label = '$\\text{Total Non-Diseased}$',
+                                 #label = 'Total Non-Diseased',
+                                 value = 50, min = 1)),
+          column(3, numericInput(inputId = "finite_val_nD_alt", 
+                                 label = '$\\text{Total Diseased}$',
+                                 #label = 'Total Diseased',
+                                 value = 100, min = 1)),
+        ),
+        fluidRow(
+          #column(3, h4("Data (counts at $c_{1}, ..., c_{m}$):")),
+          column(3, p(style = 'font-size:18px;',
+                      "Data (counts at $c_{1}, ..., c_{m}$):")),
+          column(3, textInput(inputId = "finite_val_fND_alt",
+                              label = p(style = 'font-size:16px;',
+                                        "$f_{\\text{ND}}$"),
+                              #label = 'fNd',
+                              value = "29, 7, 4, 5, 5")),
+          column(3, textInput(inputId = "finite_val_fD_alt",
+                              label = p(style = 'font-size:16px;',
+                                        "$f_{\\text{D}}$"),
+                              #label = 'fD',
+                              value = "14, 7, 25, 33, 21")),
+        ),
+      ),
+      
+      conditionalPanel(
+        condition = "input.finite_val_optimal_cutoff_denote_variables == 'yes'",
+        p("Currently the same variables will be used from the inferences for the AUC."),
+        br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
+      ),
     )
   ),
-  br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br()
+  br(style = "line-height:10;"),
 )
 
 
@@ -160,16 +249,20 @@ finite_val_AUCinferences = div(
 finite_val_plausible_region = div( 
   titlePanel("Inferences for the Optimal Cutoff"),
   
-  sidebarLayout(
-    sidebarPanel(width = 3,
-      p("placeholder text"),
-    ),
-    mainPanel(
-      tabPanel("Inferences for the Optimal Cutoff", 
-               withSpinner(verbatimTextOutput("finite_val_output1"))
-      ),
-    ),
+  mainPanel(
+    tabPanel("Inferences for the Optimal Cutoff", 
+             withSpinner(verbatimTextOutput("finite_val_optimal_cutoff"))),
   ),
+  #sidebarLayout(
+  #  sidebarPanel(width = 3,
+  #    p("placeholder text"),
+  #  ),
+  #  mainPanel(
+  #    tabPanel("Inferences for the Optimal Cutoff", 
+  #             withSpinner(verbatimTextOutput("finite_val_optimal_cutoff"))
+  #    ),
+  #  ),
+  #),
   br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
   br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
   br(),br(),br(),br(),br(),br(),br(),br()
@@ -412,7 +505,7 @@ finite_val_generate_dataframe = function(delta, AUC_prior, AUC_post, AUC_RBR){
 page_finite_val_inference1 = div(
   titlePanel("Finite-valued Diagnostic"),
   tabsetPanel(type = "tabs",
-              tabPanel("Setup Values", finite_val_setup_variables_1),
+              tabPanel("Setup Values", finite_val_setup_variables),
               tabPanel("Inferences for the AUC", finite_val_AUCinferences),
               tabPanel("Plots for the AUC", finite_val_plots),
               tabPanel("Download Prior & Posterior", finite_val_download_1),
@@ -422,7 +515,7 @@ page_finite_val_inference1 = div(
 page_finite_val_inference2 = div(
   titlePanel("Finite-valued Diagnostic"),
   tabsetPanel(type = "tabs",
-              tabPanel("Setup Values", finite_val_setup_variables_2),
+              tabPanel("Setup Values", finite_val_setup_variables_alt),
               tabPanel("Inferences for the Optimal Cutoff", finite_val_plausible_region),
               tabPanel("Plots for the Optimal Cutoff", finite_val_copt_plots),
   )

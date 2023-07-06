@@ -117,6 +117,102 @@ AUC_post_error_char_copt = function(c_optfDfND, nMonteCarlo, w = FALSE,
 # FUNCTIONS FOR COMPUTATIONS                                   #
 ################################################################
 
+finite_val_prior = function(condition = "unconditional", resample = FALSE,
+                            nMonteCarlo, alpha_ND, alpha_D){ 
+  # This is meant to simulate the prior of the AUC.
+  # Remark: this is because the input can be a string due to R shiny's inputs
+  alpha_priorND = create_necessary_vector(alpha_ND)
+  alpha_priorD = create_necessary_vector(alpha_D)
+  
+  if (length(alpha_priorND) != length(alpha_priorD)){
+    return("Lengths of alpha prior ND and alpha prior D are not the same.")
+  }
+  m = length(alpha_priorND)
+  
+  priorc_opt = rep(0, m) # NEW
+  
+  pND_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  pD_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  FNR = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  
+  AUC = rep(0, nMonteCarlo)
+  i = 1 # changed to while loop
+  num_reject = 0
+  while (i < nMonteCarlo){ # changed to while loop
+    pND_array[i, ] = rdirichlet(1, alpha_priorND)
+    pD_array[i, ] = rdirichlet(1, alpha_priorD)
+    
+    if(condition == "conditional"){
+      check = finite_diag_check_condition(pD_array[i, ], pND_array[i, ])
+      if((check == FALSE) & (resample == TRUE)){
+        next # This forces the function to re-sample instead.
+      } else if ((check == FALSE) & (resample == FALSE)){
+        num_reject = num_reject + 1 
+      }
+    }
+    
+    FNR[i, ] = cumsum(pD_array[i, ]) #sum(pD_prior[1:i])
+    AUC[i] = sum((1 - FNR[i, ])*pND_array[i,])
+    
+    i = i + 1 # changed to while loop
+  }
+  priorc_opt = priorc_opt/nMonteCarlo
+  
+  newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
+                 "FNR" = FNR, "AUC" = AUC, "n_rejected" = num_reject)
+  return(newlist)
+}
+
+finite_val_post = function(condition = "unconditional", resample = FALSE,
+                           nMonteCarlo, alpha_ND, alpha_D, fND, fD){
+  alpha_priorND = create_necessary_vector(alpha_ND)
+  alpha_priorD = create_necessary_vector(alpha_D)
+  fND = create_necessary_vector(fND)
+  fD = create_necessary_vector(fD)
+  
+  test_valid_list = c(length(alpha_priorD), length(fND), length(fD))
+  for(i in test_valid_list){
+    if(i != length(alpha_priorND)){
+      return("At least one of the vectors (alpha ND, alpha D, fND, or fD) 
+             are not the same length.")
+    }
+  }
+  m = length(alpha_priorND)
+  
+  postc_opt = rep(0, m) 
+  
+  pND_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  pD_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  FNR = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
+  
+  AUC = rep(0, nMonteCarlo)
+  i = 1 # changed to while loop 
+  num_reject = 0
+  while (i < nMonteCarlo){ # changed to while loop
+    pND_array[i, ] = rdirichlet(1, alpha_priorND + fND)
+    pD_array[i, ] = rdirichlet(1, alpha_priorD + fD)
+    
+    if(condition == "conditional"){
+      check = finite_diag_check_condition(pD_array[i, ], pND_array[i, ])
+      if(check == FALSE){
+        next # This forces the function to re-sample instead.
+      } else if ((check == FALSE) & (resample == FALSE)){
+        num_reject = num_reject + 1 
+      }
+    }
+    
+    FNR[i, ] = cumsum(pD_array[i, ])
+    AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
+    i = i + 1 # changed to while loop
+  }
+  
+  postc_opt = postc_opt/nMonteCarlo
+  
+  newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
+                 "FNR" = FNR, "AUC" = AUC, "n_rejected" = num_reject)
+  return(newlist)
+}
+
 simulate_AUC_mc_prior = function(condition = "unconditional", resample = FALSE,
                                  nND, nD, nMonteCarlo, w = FALSE, 
                                  alpha1w = NA, alpha2w = NA,
@@ -185,7 +281,6 @@ simulate_AUC_mc_post = function(condition = "unconditional", resample = FALSE,
                                 nND, nD, nMonteCarlo, w = FALSE, 
                                 alpha1w = NA, alpha2w = NA, version = NA,
                                 alpha_ND, alpha_D, fND, fD){
-  
   alpha_priorND = create_necessary_vector(alpha_ND)
   alpha_priorD = create_necessary_vector(alpha_D)
   fND = create_necessary_vector(fND)
@@ -266,6 +361,27 @@ grab_AUC_RBR_densities_breaks = function(delta, AUC){
   class(myhist) = "histogram"
   
   return(list("density" = myhist$density, "breaks" = myhist$breaks, "counts" = myhist$counts))
+}
+
+finite_val_RBR = function(delta, AUC_prior, AUC_post){
+  
+  bins = closed_bracket_grid(delta)
+  AUC_RBR = rep(0, length(bins))
+  AUC_prior_pts = grab_AUC_densities_breaks(delta, AUC_prior)$density
+  AUC_post_pts = grab_AUC_densities_breaks(delta, AUC_post)$density
+  
+  for(i in 1:(length(bins) - 1)){
+    # if statement is to prevent division by 0
+    if((AUC_prior_pts[i] > 0) == TRUE){
+      AUC_RBR[i] = AUC_post_pts[i] / AUC_prior_pts[i]
+    } else {
+      AUC_RBR[i] = NA
+    }
+  }
+  
+  # REMARK: AUC_RBR goes from (0 to bin[1]), ..., to (bin[1/delta], 1)
+  newlist = list("grid" = bins, "AUC_RBR" = AUC_RBR)
+  return(newlist)
 }
 
 compute_AUC_RBR = function(delta, AUC_prior, AUC_post, priorc_opt, postc_opt){

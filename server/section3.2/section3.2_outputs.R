@@ -29,7 +29,7 @@ output$finite_val_hypoAUC_value = renderPrint({
   list2
 })
 
-output$finite_val_output1 = renderPrint({
+output$finite_val_optimal_cutoff = renderPrint({
   temp_df = data.frame(sect3.3_AUC_RBR_error_char_copt()$FNRest,
                        sect3.3_AUC_RBR_error_char_copt()$FPRest,
                        sect3.3_AUC_RBR_error_char_copt()$Errorest,
@@ -37,20 +37,18 @@ output$finite_val_output1 = renderPrint({
                        sect3.3_AUC_RBR_error_char_copt()$FNDRest)
   colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
   RBR_copt = c()
-  for(i in 1:length(sect3.2_AUC_prior()$priorc_opt)){
-    if(sect3.2_AUC_prior()$priorc_opt[i] > 0){
-      RBR_copt = sect3.2_AUC_post()$postc_opt/sect3.2_AUC_prior()$priorc_opt 
+  for(i in 1:length(sect3.2_AUC_prior_copt()$priorc_opt)){
+    if(sect3.2_AUC_prior_copt()$priorc_opt[i] > 0){
+      RBR_copt = sect3.2_AUC_post_copt()$postc_opt/sect3.2_AUC_prior_copt()$priorc_opt 
     } else {
       NA
     }
   }
-  
-  list("Prior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_prior()$priorc_opt,
-       "Posterior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_post()$postc_opt,
+  list("Prior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_prior_copt()$priorc_opt,
+       "Posterior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_post_copt()$postc_opt,
        "Relative Belief Ratio Probabilities for the Possible Diagnostic Values" = RBR_copt,
-       "Copt Estimate" = sect3.2_AUC_RBR()$c_optfDfND,
-       "Error Characteristics" = as.data.frame(sect3.2_copt_est())) # will need to specify when
-  # providing a vector
+       "Copt Estimate" = sect3.2_AUC_RBR_copt()$c_optfDfND,
+       "Error Characteristics" = as.data.frame(sect3.2_copt_est()))
 })
 
 ################################################################
@@ -173,14 +171,14 @@ output$finite_val_RB_graph = renderPlot({
 })
 
 output$finite_val_postprior_copt_graph = renderPlot({
-  plots_AUC_copt(priorc_opt = sect3.2_AUC_prior()$priorc_opt, 
-                 postc_opt = sect3.2_AUC_post()$postc_opt,
+  plots_AUC_copt(priorc_opt = sect3.2_AUC_prior_copt()$priorc_opt, 
+                 postc_opt = sect3.2_AUC_post_copt()$postc_opt,
                  prior_label = as.numeric(input$finite_val_priorc_opt_label), 
                  post_label = as.numeric(input$finite_val_postc_opt_label),
                  colour_choice = finite_val_copt_colours())
 })
 output$finite_val_RB_copt_graph = renderPlot({
-  plots_AUC_copt(RBc_opt = sect3.2_AUC_RBR()$RBc_opt,
+  plots_AUC_copt(RBc_opt = sect3.2_AUC_RBR_copt()$RBc_opt,
                  rb_label = as.numeric(input$finite_val_rbc_opt_label),
                  colour_choice = finite_val_copt_colours())
 })

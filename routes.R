@@ -15,8 +15,6 @@ source("./pages/section3.1/prevalence_setup_functions.R")
 source("./pages/section3.1/prevalence_setup_page.R")
 
 # Section 3.2
-source("./pages/section3.2/finite_val_diag_definitions.R")
-
 source("./pages/section3.2/finite_val_diag_start.R")
 source("./pages/section3.2/finite_val_diag_prevalence.R")
 
@@ -25,7 +23,6 @@ source("./pages/section3.2/finite_val_diag_compute_functions.R")
 source("./pages/section3.2/finite_val_diag_graph_functions.R")
 
 # Section 3.3
-source("./pages/section3.3/binormal_diag_definitions.R")
 source("./pages/section3.3/binormal_diag_start.R")
 source("./pages/section3.3/binormal_diag_prevalence.R")
 source("./pages/section3.3/binormal_diag_page.R")
@@ -36,22 +33,9 @@ source("./pages/section3.3/binormal_diag_compute_functions_unequal.R")
 source("./pages/section3.3/binormal_diag_graph_functions.R")
 
 # Section 3.4
-source("./pages/section3.4/nonpara_bayes_definitions.R")
-
 source("./pages/section3.4/nonpara_bayes_start.R")
 source("./pages/section3.4/nonpara_bayes_prevalence.R")
 
 source("./pages/section3.4/nonpara_bayes_page.R")
 source("./pages/section3.4/nonpara_bayes_compute_functions.R")
 source("./pages/section3.4/nonpara_bayes_graph_functions.R")
-
-# Relevant files, datasets
-# Note: we are not using the gender covid dataset anymore.
-#gender_covid_dataset = read.csv("./pages/section3.4/gender_covid.csv")
-#Females_Covid_Data = subset(gender_covid_dataset, gender_covid_dataset$Gender=='female', select=c(Age, Death))
-#Males_Covid_Data = subset(gender_covid_dataset, gender_covid_dataset$Gender=='male', select=c(Age, Death))
-
-
-
-
-

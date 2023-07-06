@@ -7,7 +7,7 @@ nonpara_bayes_setup_variables_1 = div(
   
   sidebarLayout(
     sidebarPanel(
-      width = 4,
+      width = 3,
       numericInput(inputId = "nonpara_bayes_seed",
                    label = "Please select a seed for the computations.",
                    value = 1),
@@ -129,7 +129,7 @@ nonpara_bayes_setup_variables_1 = div(
 nonpara_bayes_setup_variables_2 = div(
   titlePanel("Setup Values"),
   sidebarLayout(
-    sidebarPanel(width = 4, 
+    sidebarPanel(width = 3, 
       selectInput(inputId = "nonpara_bayes_optimal_cutoff_denote_variables", 
                   label = "Do you want to use the same values that was used for the inferences 
                   for the AUC?",
@@ -179,7 +179,7 @@ nonpara_bayes_setup_variables_2 = div(
     mainPanel(
       conditionalPanel(
         condition = "input.nonpara_bayes_optimal_cutoff_denote_variables == 'yes'",
-        p("Currently the variables will be used from the previous section instead."),
+        p("Currently the same variables will be used from the inferences for the AUC."),
         br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
         br(),br(),br(),
       ),

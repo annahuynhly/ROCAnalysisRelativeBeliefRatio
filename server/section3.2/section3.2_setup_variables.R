@@ -6,8 +6,7 @@ sect3.2_copt_est_hardcode = reactive({
   if(input$finite_val_cutoff_denote_copt == 'yes'){
     input$finite_val_optimal_cutoff_copt
   } else {
-    2
-    #sect3.2_AUC_RBR()$c_optfDfND
+    sect3.2_AUC_RBR_copt()$c_optfDfND
   }
 })
 
@@ -16,6 +15,26 @@ sect3.2_resample = reactive({
     FALSE
   } else if (input$finite_val_condition_resampling == 'yes'){
     TRUE
+  }
+})
+
+sect3.2_resample_copt = reactive({
+  if(input$finite_val_optimal_cutoff_denote_variables == 'no'){
+    if(input$finite_val_condition_resampling_alt == 'no'){
+      FALSE
+    } else if (input$finite_val_condition_resampling_alt == 'yes'){
+      TRUE
+    }
+  } else {
+    sect3.2_resample()
+  }
+})
+
+sect3.2_copt_condition = reactive({
+  if(input$finite_val_optimal_cutoff_denote_variables == 'no'){
+    input$finite_val_condition_resampling_alt
+  } else {
+    input$finite_val_condition_resampling
   }
 })
 
