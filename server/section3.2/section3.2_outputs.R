@@ -30,12 +30,7 @@ output$finite_val_hypoAUC_value = renderPrint({
 })
 
 output$finite_val_optimal_cutoff = renderPrint({
-  temp_df = data.frame(sect3.3_AUC_RBR_error_char_copt()$FNRest,
-                       sect3.3_AUC_RBR_error_char_copt()$FPRest,
-                       sect3.3_AUC_RBR_error_char_copt()$Errorest,
-                       sect3.3_AUC_RBR_error_char_copt()$FDRest,
-                       sect3.3_AUC_RBR_error_char_copt()$FNDRest)
-  colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
+  sect3.2_copt_est()
   RBR_copt = c()
   for(i in 1:length(sect3.2_AUC_prior_copt()$priorc_opt)){
     if(sect3.2_AUC_prior_copt()$priorc_opt[i] > 0){
