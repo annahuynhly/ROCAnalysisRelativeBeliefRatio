@@ -216,7 +216,11 @@ finite_val_post = function(condition = "unconditional", resample = FALSE,
 simulate_AUC_mc_prior = function(condition = "unconditional", resample = FALSE,
                                  nND, nD, nMonteCarlo, w = FALSE, 
                                  alpha1w = NA, alpha2w = NA,
-                                 alpha_ND, alpha_D){ 
+                                 alpha_ND, alpha_D, copt_method = "error"){ 
+  if (copt_method != "error" & copt_method != "closest"){
+    return("copt_method must either be 'error' (minimizing Error(c)) or 'closest' 
+          (closest to (0, 1) index).")
+  }
   # This is meant to simulate the prior of the AUC.
   # Remark: this is because the input can be a string due to R shiny's inputs
   alpha_priorND = create_necessary_vector(alpha_ND)
@@ -263,7 +267,13 @@ simulate_AUC_mc_prior = function(condition = "unconditional", resample = FALSE,
     AUC[i] = sum((1 - FNR[i, ])*pND_array[i,])
     
     # update the prior distribution of c_opt
-    c_opt = which.min(ERROR_w[i, ])
+    
+    if(copt_method == "error"){
+      c_opt = which.min(ERROR_w[i, ])
+    } else if (copt_method == "closest"){
+      c_opt = which.min((FPR[i, ])^{2} + (FNR[i, ])^{2})
+    }
+    
     priorc_opt[c_opt] = priorc_opt[c_opt] + 1
     
     i = i + 1 # changed to while loop
@@ -280,7 +290,11 @@ simulate_AUC_mc_prior = function(condition = "unconditional", resample = FALSE,
 simulate_AUC_mc_post = function(condition = "unconditional", resample = FALSE,
                                 nND, nD, nMonteCarlo, w = FALSE, 
                                 alpha1w = NA, alpha2w = NA, version = NA,
-                                alpha_ND, alpha_D, fND, fD){
+                                alpha_ND, alpha_D, fND, fD, copt_method = "error"){
+  if (copt_method != "error" & copt_method != "closest"){
+    return("copt_method must either be 'error' (minimizing Error(c)) or 'closest' 
+          (closest to (0, 1) index).")
+  }
   alpha_priorND = create_necessary_vector(alpha_ND)
   alpha_priorD = create_necessary_vector(alpha_D)
   fND = create_necessary_vector(fND)
@@ -329,7 +343,11 @@ simulate_AUC_mc_post = function(condition = "unconditional", resample = FALSE,
     
     AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
     # update the posterior distribution of c_opt
-    c_opt = which.min(ERROR_w[i, ])
+    if(copt_method == "error"){
+      c_opt = which.min(ERROR_w[i, ])
+    } else if (copt_method == "closest"){
+      c_opt = which.min((FPR[i, ])^{2} + (FNR[i, ])^{2})
+    }
     postc_opt[c_opt] = postc_opt[c_opt] + 1
     
     i = i + 1 # changed to while loop

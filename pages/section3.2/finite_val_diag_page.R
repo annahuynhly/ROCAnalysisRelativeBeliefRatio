@@ -96,11 +96,11 @@ finite_val_setup_variables_alt = div(
     sidebarPanel(
       width = 3,
       selectInput(inputId = "finite_val_cutoff_denote_copt",
-                  label = "How would you like to select Copt??",
-                  choice = c("Use the directly computed Copt" = "no", # yes is leftover from a changed q
-                             "Manually insert Copt" = "yes"),#,
-                  #"Use Youden’s index" = "youden",
-                  #"Use Closest to (0, 1) estimate" = "closest"),
+                  label = "How would you like to select the cutoff?",
+                  choice = c("Find the cutoff copt minimizing Error(c)." = "no", 
+                             "Find the cutoff maximizing Youden's index." = "youden",
+                             "Find the cutoff minimizing distance to (0, 1)." = "distance", 
+                             "Specify the cutoff." = "yes"),
                   selected = "no"
       ),
       conditionalPanel(
@@ -109,10 +109,8 @@ finite_val_setup_variables_alt = div(
                      label = 'Input the copt estimate.',
                      value = 2), 
       ),
-      
-      
       selectInput(inputId = "finite_val_optimal_cutoff_denote_variables", 
-                  label = "Do you want to use the same values that was used for the inferences 
+                  label = "Do you want to use the same input that were used for the inferences 
                   for the AUC?",
                   choices = c("Yes" = "yes", 
                               "No" = "no"),
@@ -214,7 +212,7 @@ finite_val_setup_variables_alt = div(
 
 
 ################################################################
-# OUTPUT 1 PAGE                                                #
+# OUTPUT FOR THE AUC                                           #
 ################################################################
 
 finite_val_AUCinferences = div( 

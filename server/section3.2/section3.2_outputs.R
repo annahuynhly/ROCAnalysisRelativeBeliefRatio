@@ -30,7 +30,15 @@ output$finite_val_hypoAUC_value = renderPrint({
 })
 
 output$finite_val_optimal_cutoff = renderPrint({
-  sect3.2_copt_est()
+  if(input$finite_val_cutoff_denote_copt == 'yes'){
+    copt_estimate = input$finite_val_optimal_cutoff_copt
+  } else if (input$finite_val_cutoff_denote_copt == 'no') {
+    copt_estimate = sect3.2_AUC_RBR_copt()$c_optfDfND
+  } else if (input$finite_val_cutoff_denote_copt == 'youden'){
+    copt_estimate = sect3.2_AUC_RBR_copt_youden()$c_optfDfND
+  } else if (input$finite_val_cutoff_denote_copt == 'distance'){
+    copt_estimate = sect3.2_AUC_RBR_copt_closest()$c_optfDfND
+  }
   RBR_copt = c()
   for(i in 1:length(sect3.2_AUC_prior_copt()$priorc_opt)){
     if(sect3.2_AUC_prior_copt()$priorc_opt[i] > 0){
@@ -42,7 +50,7 @@ output$finite_val_optimal_cutoff = renderPrint({
   list("Prior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_prior_copt()$priorc_opt,
        "Posterior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_post_copt()$postc_opt,
        "Relative Belief Ratio Probabilities for the Possible Diagnostic Values" = RBR_copt,
-       "Copt Estimate" = sect3.2_AUC_RBR_copt()$c_optfDfND,
+       "Copt Estimate" = copt_estimate,
        "Error Characteristics" = as.data.frame(sect3.2_copt_est()))
 })
 

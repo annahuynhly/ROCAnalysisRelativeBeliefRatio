@@ -4,6 +4,13 @@
 
 # Setting the seed
 SECT3.2_SEED = reactive(input$finite_val_diag_seed)
+SECT3.2_SEED_COPT = reactive({
+  if(input$finite_val_optimal_cutoff_denote_variables == "no"){
+    input$finite_val_diag_seed_copt
+  } else {
+    input$finite_val_diag_seed
+  }
+})
 
 sect3.2_AUC_prior = reactive({
   set.seed(SECT3.2_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
@@ -51,10 +58,8 @@ sect3.2_cr = reactive({
                               plausible_region = sect3.2_pr()$plausible_region)
 }) # Short for credible region
 
-###################################################
-
 sect3.2_AUC_prior_copt = reactive({
-  set.seed(SECT3.2_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  set.seed(SECT3.2_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
   if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_prior(condition = sect3.2_copt_condition(), #input$finite_val_condition,
                           resample = sect3.2_resample_copt(), #sect3.2_resample(),
@@ -79,7 +84,7 @@ sect3.2_AUC_prior_copt = reactive({
 })
 
 sect3.2_AUC_post_copt = reactive({
-  set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
+  set.seed(SECT3.2_SEED_COPT()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_post(condition = sect3.2_copt_condition(), #input$finite_val_condition,
                          resample = sect3.2_resample_copt(), #sect3.2_resample(),
@@ -130,8 +135,20 @@ sect3.2_AUC_RBR_copt = reactive({
                   postc_opt = sect3.2_AUC_post_copt()$postc_opt)
 })
 
+sect3.2_copt_est_hardcode = reactive({
+  if(input$finite_val_cutoff_denote_copt == 'yes'){
+    input$finite_val_optimal_cutoff_copt
+  } else if (input$finite_val_cutoff_denote_copt == 'no') {
+    sect3.2_AUC_RBR_copt()$c_optfDfND
+  } else if (input$finite_val_cutoff_denote_copt == 'youden'){
+    sect3.2_AUC_RBR_copt_youden()$c_optfDfND
+  } else if (input$finite_val_cutoff_denote_copt == 'distance'){
+    sect3.2_AUC_RBR_copt_closest()$c_optfDfND
+  }
+})
+
 sect3.2_copt_prior = reactive({
-  set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
+  set.seed(SECT3.2_SEED_COPT()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
     AUC_prior_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                               nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
@@ -162,7 +179,7 @@ sect3.2_copt_prior = reactive({
 })
 
 sect3.2_copt_post = reactive({
-  set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
+  set.seed(SECT3.2_SEED_COPT()) # seeing what happens when we always set the seed...
   if(input$finite_val_diag_case1 == 1){
     AUC_post_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
