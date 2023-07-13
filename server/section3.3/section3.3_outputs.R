@@ -55,7 +55,7 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                          sect3.3_AUC_RBR_error_char_copt()$FDRest,
                          sect3.3_AUC_RBR_error_char_copt()$FNDRest)
     colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-    list("Copt Estimate" = sect3.3_AUC_RBR_copt()$coptest,
+    list("Copt Estimate" = sect3.3_copt_est_hardcode(), #sect3.3_AUC_RBR_copt()$coptest,
          "Plausible Region for Copt" = copt_transform(sect3.3_AUC_RBR_copt()$plausible_region),
          "Credible Region for Copt" = copt_transform(sect3.3_cr_copt()$credible_region),
          "Cmod Estimate" = sect3.3_AUC_RBR_copt()$cmodest,
@@ -71,7 +71,7 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                          sect3.3_AUC_RBR_error_char_copt_unequal()$FDRest,
                          sect3.3_AUC_RBR_error_char_copt_unequal()$FNDRest)
     colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-    list("Copt Estimate" = sect3.3_AUC_RBR_copt_unequal()$coptest,
+    list("Copt Estimate" = sect3.3_copt_est_hardcode_unequal(), #sect3.3_AUC_RBR_copt_unequal()$coptest,
          "Plausible Region for Copt" = copt_transform(sect3.3_AUC_RBR_copt_unequal()$plausible_region),
          "Credible Region for Copt" = copt_transform(sect3.3_cr_copt_unequal()$credible_region),
          "Cmod Estimate" = sect3.3_AUC_RBR_copt_unequal()$cmodest,

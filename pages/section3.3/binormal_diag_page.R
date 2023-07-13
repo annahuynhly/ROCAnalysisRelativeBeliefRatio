@@ -124,7 +124,23 @@ binormal_diag_setup_variables_1 = div(
 binormal_diag_setup_variables_2 = div( 
   titlePanel("Setup Values"),
   sidebarLayout(
-    sidebarPanel(width = 3, 
+    sidebarPanel(
+      width = 3, 
+      selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
+                  label = "How would you like to select the cutoff?",
+                  choice = c("Find the cutoff copt minimizing Error(c)." = "no", 
+                             "Find the cutoff maximizing Youden's index." = "youden",
+                             #"Find the cutoff minimizing distance to (0, 1)." = "distance", 
+                             "Specify the cutoff." = "yes"),
+                  selected = "no"
+      ),
+      
+      conditionalPanel(
+        condition = "input.binormal_optimal_cutoff_denote_copt == 'yes'",
+        numericInput(inputId = "binormal_diag_optimal_cutoff_copt",
+                     label = 'Input the copt estimate.',
+                     value = 0.715), 
+      ),
       selectInput(inputId = "binormal_optimal_cutoff_denote_variables", 
                   label = "Do you want to use the same values that was used for the inferences 
                   for the AUC?",
@@ -167,18 +183,6 @@ binormal_diag_setup_variables_2 = div(
           ),
         ),
         
-      ),
-      selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
-                  label = "Would you like to hardcode the copt estimate?",
-                  choice = c("Yes" = "yes",
-                             "No" = "no"),
-                  selected = "no"
-      ),
-      conditionalPanel(
-        condition = "input.binormal_optimal_cutoff_denote_copt == 'yes'",
-        numericInput(inputId = "binormal_diag_optimal_cutoff_copt",
-                     label = 'Input the copt estimate.',
-                     value = 0.715), 
       ),
     ),
     

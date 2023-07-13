@@ -99,7 +99,7 @@ finite_val_setup_variables_alt = div(
                   label = "How would you like to select the cutoff?",
                   choice = c("Find the cutoff copt minimizing Error(c)." = "no", 
                              "Find the cutoff maximizing Youden's index." = "youden",
-                             "Find the cutoff minimizing distance to (0, 1)." = "distance", 
+                             #"Find the cutoff minimizing distance to (0, 1)." = "distance", 
                              "Specify the cutoff." = "yes"),
                   selected = "no"
       ),

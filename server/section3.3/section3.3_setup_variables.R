@@ -298,4 +298,186 @@ sect3.3_copt_sD_squared_use = reactive({
   }
 })
 
+################################################################
+# COMPUTATION FOR YOUDEN'S                                     #
+################################################################
 
+sect3.3_AUC_prior_copt_youden = reactive({
+  set.seed(SECT3.3_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  if(input$binormal_diag_case1 == 1){
+    binormal_diag_prior_copt(w = 1/2,
+                             alpha1w = NA, 
+                             alpha2w = NA, 
+                             nMonteprior = sect3.3_copt_nMonteCarlo(), 
+                             delta = sect3.3_copt_delta(), 
+                             lambda1 = sect3.3_copt_lambda1(), 
+                             lambda2 = sect3.3_copt_lambda2(), 
+                             mu0 = sect3.3_copt_mu0(), 
+                             tau0 = sect3.3_copt_tau0())
+  } else if (input$binormal_diag_case2 == "A" | input$binormal_diag_case2 == "B"){ 
+    binormal_diag_prior_copt(w = FALSE,
+                             alpha1w = input$binormal_diag_prevalence_alpha1w, 
+                             alpha2w = input$binormal_diag_prevalence_alpha2w, 
+                             nMonteprior = sect3.3_copt_nMonteCarlo(), 
+                             delta = sect3.3_copt_delta(), 
+                             lambda1 = sect3.3_copt_lambda1(), 
+                             lambda2 = sect3.3_copt_lambda2(), 
+                             mu0 = sect3.3_copt_mu0(), 
+                             tau0 = sect3.3_copt_tau0())
+  }
+})
+
+sect3.3_AUC_post_copt_youden = reactive({
+  if(input$binormal_diag_case1 == 1){
+    binormal_diag_post_copt(w = 1/2,
+                            alpha1w = NA, 
+                            alpha2w = NA, 
+                            nND = NA, 
+                            nD = NA,
+                            version = NA,
+                            nMontepost = sect3.3_copt_nMonteCarlo(), 
+                            delta = sect3.3_copt_delta(), 
+                            lambda1post = sect3.3_hyperpara_copt()$lambda1post, 
+                            lambda2post = sect3.3_hyperpara_copt()$lambda2post, 
+                            mu0Dpost = sect3.3_hyperpara_copt()$mu0Dpost, 
+                            mu0NDpost = sect3.3_hyperpara_copt()$mu0NDpost, 
+                            tau0D = sect3.3_hyperpara_copt()$tau0D, 
+                            tau0ND = sect3.3_hyperpara_copt()$tau0ND)
+  } else if (input$binormal_diag_case2 == "A"){ 
+    binormal_diag_post_copt(w = FALSE,
+                            alpha1w = input$binormal_diag_prevalence_alpha1w, 
+                            alpha2w = input$binormal_diag_prevalence_alpha2w,
+                            nND = NA, 
+                            nD = NA,
+                            version = "prior",
+                            nMontepost = sect3.3_copt_nMonteCarlo(), 
+                            delta = sect3.3_copt_delta(), 
+                            lambda1post = sect3.3_hyperpara_copt()$lambda1post, 
+                            lambda2post = sect3.3_hyperpara_copt()$lambda2post, 
+                            mu0Dpost = sect3.3_hyperpara_copt()$mu0Dpost, 
+                            mu0NDpost = sect3.3_hyperpara_copt()$mu0NDpost, 
+                            tau0D = sect3.3_hyperpara_copt()$tau0D, 
+                            tau0ND = sect3.3_hyperpara_copt()$tau0ND)
+  } else if (input$binormal_diag_case2 == "B"){
+    binormal_diag_post_copt(w = FALSE,
+                            alpha1w = input$binormal_diag_prevalence_alpha1w, 
+                            alpha2w = input$binormal_diag_prevalence_alpha2w, 
+                            nND = sect3.3_copt_nND_use(), 
+                            nD = sect3.3_copt_nD_use(), 
+                            version = "post",
+                            nMontepost = sect3.3_copt_nMonteCarlo(), 
+                            delta = sect3.3_copt_delta(), 
+                            lambda1post = sect3.3_hyperpara_copt()$lambda1post, 
+                            lambda2post = sect3.3_hyperpara_copt()$lambda2post, 
+                            mu0Dpost = sect3.3_hyperpara_copt()$mu0Dpost, 
+                            mu0NDpost = sect3.3_hyperpara_copt()$mu0NDpost, 
+                            tau0D = sect3.3_hyperpara_copt()$tau0D, 
+                            tau0ND = sect3.3_hyperpara_copt()$tau0ND)
+  }
+})
+
+sect3.3_AUC_RBR_copt_youden = reactive({
+  priorcmod_smo = average_vector_values(sect3.3_AUC_prior_copt_youden()$priorcmod, 
+                                        input$binormal_diag_smoother_copt)
+  postcmod_smo = average_vector_values(sect3.3_AUC_post_copt_youden()$postcmod, 
+                                       input$binormal_diag_smoother_copt)
+  binormal_diag_RBR_copt(delta = sect3.3_copt_delta(), 
+                         priorcmod = priorcmod_smo, #sect3.3_AUC_prior_copt()$priorcmod, 
+                         postcmod = postcmod_smo) #sect3.3_AUC_post_copt()$postcmod)
+})
+
+# unequal case
+
+sect3.3_AUC_prior_copt_youden_unequal = reactive({
+  if(input$binormal_diag_case1 == 1){
+    binormal_diag_prior_copt_unequal(w = 1/2,
+                                     alpha1w = NA, 
+                                     alpha2w = NA, 
+                                     nMonteprior = sect3.3_copt_nMonteCarlo(), 
+                                     delta = sect3.3_copt_delta(), 
+                                     lambda1 = sect3.3_copt_lambda1(), 
+                                     lambda2 = sect3.3_copt_lambda2(), 
+                                     mu0 = sect3.3_copt_mu0(), 
+                                     tau0 = sect3.3_copt_tau0(),
+                                     lambda = sect3.3_copt_lambda())
+  } else if (input$binormal_diag_case2 == "A" | input$binormal_diag_case2 == "B"){
+    binormal_diag_prior_copt_unequal(w = FALSE, 
+                                     alpha1w = input$binormal_diag_prevalence_alpha1w, 
+                                     alpha2w = input$binormal_diag_prevalence_alpha2w, 
+                                     nMonteprior = sect3.3_copt_nMonteCarlo(), 
+                                     delta = sect3.3_copt_delta(), 
+                                     lambda1 = sect3.3_copt_lambda1(), 
+                                     lambda2 = sect3.3_copt_lambda2(), 
+                                     mu0 = sect3.3_copt_mu0(), 
+                                     tau0 = sect3.3_copt_tau0(),
+                                     lambda = sect3.3_copt_lambda())
+  }
+})
+
+sect3.3_AUC_post_copt_youden_unequal = reactive({
+  if(input$binormal_diag_case1 == 1){
+    binormal_diag_post_copt_unequal(w = 1/2,
+                                    alpha1w = NA, 
+                                    alpha2w = NA, 
+                                    nND = NA, 
+                                    nD = NA,
+                                    version = NA, 
+                                    nMontepost = sect3.3_copt_nMonteCarlo(), 
+                                    delta = sect3.3_copt_delta(), 
+                                    lambda1Dpost = sect3.3_hyperpara_copt_unequal()$lambda1Dpost, 
+                                    lambda1NDpost = sect3.3_hyperpara_copt_unequal()$lambda1NDpost, 
+                                    lambda2Dpost = sect3.3_hyperpara_copt_unequal()$lambda2Dpost, 
+                                    lambda2NDpost = sect3.3_hyperpara_copt_unequal()$lambda2NDpost, 
+                                    mu0Dpost = sect3.3_hyperpara_copt_unequal()$mu0Dpost, 
+                                    mu0NDpost = sect3.3_hyperpara_copt_unequal()$mu0NDpost, 
+                                    tau0D = sect3.3_hyperpara_copt_unequal()$tau0D, 
+                                    tau0ND = sect3.3_hyperpara_copt_unequal()$tau0ND,
+                                    lambda = sect3.3_copt_lambda())
+  } else if (input$binormal_diag_case2 == "A"){ 
+    binormal_diag_post_copt_unequal(w = FALSE,
+                                    alpha1w = input$binormal_diag_prevalence_alpha1w, 
+                                    alpha2w = input$binormal_diag_prevalence_alpha2w,
+                                    nND = NA, 
+                                    nD = NA,
+                                    version = "prior",
+                                    nMontepost = sect3.3_copt_nMonteCarlo(), 
+                                    delta = sect3.3_copt_delta(), 
+                                    lambda1Dpost = sect3.3_hyperpara_copt_unequal()$lambda1Dpost, 
+                                    lambda1NDpost = sect3.3_hyperpara_copt_unequal()$lambda1NDpost, 
+                                    lambda2Dpost = sect3.3_hyperpara_copt_unequal()$lambda2Dpost, 
+                                    lambda2NDpost = sect3.3_hyperpara_copt_unequal()$lambda2NDpost, 
+                                    mu0Dpost = sect3.3_hyperpara_copt_unequal()$mu0Dpost, 
+                                    mu0NDpost = sect3.3_hyperpara_copt_unequal()$mu0NDpost, 
+                                    tau0D = sect3.3_hyperpara_copt_unequal()$tau0D, 
+                                    tau0ND = sect3.3_hyperpara_copt_unequal()$tau0ND,
+                                    lambda = sect3.3_copt_lambda())
+  } else if (input$binormal_diag_case2 == "B"){
+    binormal_diag_post_copt_unequal(w = FALSE,
+                                    alpha1w = input$binormal_diag_prevalence_alpha1w, 
+                                    alpha2w = input$binormal_diag_prevalence_alpha2w, 
+                                    nND = sect3.3_copt_nND(), 
+                                    nD = sect3.3_copt_nD(), 
+                                    version = "post",
+                                    nMontepost = sect3.3_copt_nMonteCarlo(), 
+                                    delta = sect3.3_copt_delta(), 
+                                    lambda1Dpost = sect3.3_hyperpara_copt_unequal()$lambda1Dpost, 
+                                    lambda1NDpost = sect3.3_hyperpara_copt_unequal()$lambda1NDpost, 
+                                    lambda2Dpost = sect3.3_hyperpara_copt_unequal()$lambda2Dpost, 
+                                    lambda2NDpost = sect3.3_hyperpara_copt_unequal()$lambda2NDpost, 
+                                    mu0Dpost = sect3.3_hyperpara_copt_unequal()$mu0Dpost, 
+                                    mu0NDpost = sect3.3_hyperpara_copt_unequal()$mu0NDpost, 
+                                    tau0D = sect3.3_hyperpara_copt_unequal()$tau0D, 
+                                    tau0ND = sect3.3_hyperpara_copt_unequal()$tau0ND,
+                                    lambda = sect3.3_copt_lambda())
+  }
+})
+
+sect3.3_AUC_RBR_copt_youden_unequal = reactive({
+  priorcmod_smo = average_vector_values(sect3.3_AUC_prior_copt_youden_unequal()$priorcmod, 
+                                        input$binormal_diag_smoother_copt)
+  postcmod_smo = average_vector_values(sect3.3_AUC_post_copt_youden_unequal()$postcmod, 
+                                       input$binormal_diag_smoother_copt)
+  binormal_diag_RBR_copt(delta = sect3.3_copt_delta(), 
+                         priorcmod = priorcmod_smo, #sect3.3_AUC_prior_copt_unequal()$priorcmod, 
+                         postcmod = postcmod_smo) #sect3.3_AUC_post_copt_unequal()$postcmod)
+})

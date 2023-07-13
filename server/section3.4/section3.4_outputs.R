@@ -31,7 +31,7 @@ output$nonpara_bayes_inf_opt_cutoff = renderPrint({
                        sect3.4_AUC_RBR_error_char_copt()$FDRest,
                        sect3.4_AUC_RBR_error_char_copt()$FNDRest)
   colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-  newlst = list("Copt Estimate" = sect3.4_AUC_RBR_copt()$coptest,
+  newlst = list("Copt Estimate" = sect3.4_copt_est_hardcode(), #sect3.4_AUC_RBR_copt()$coptest,
        "Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$copt_plausible_region,
        "Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$cmod_plausible_region,
        "Posterior Content of the Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$postPlcopt,

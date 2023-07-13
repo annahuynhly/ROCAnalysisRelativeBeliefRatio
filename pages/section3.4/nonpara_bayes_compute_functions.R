@@ -1,8 +1,3 @@
-
-#epsilon = 0.25
-#test = dirichlet_process_a(epsilon)
-#plot(test$upper_bounds, main = 'convergence of upper bounds')
-
 ###############################################
 # Choosing a (if inputting epsilon)           #
 ###############################################

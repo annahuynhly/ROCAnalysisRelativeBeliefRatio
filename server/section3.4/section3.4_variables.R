@@ -179,6 +179,17 @@ sect3.4_AUC_RBR_copt = reactive({
                              postcoptmod = postcoptmod_smo) #sect3.4_AUC_post_copt()$postcoptmod)
 })
 
+# need to see where to input copt
+sect3.4_copt_est_hardcode = reactive({
+  if(input$nonpara_bayes_optimal_cutoff_denote_copt == 'yes'){
+    input$nonpara_bayes_optimal_cutoff_copt
+  } else if (input$nonpara_bayes_optimal_cutoff_denote_copt == 'no') {
+    sect3.4_AUC_RBR_copt()$coptest
+  } else if (input$nonpara_bayes_optimal_cutoff_denote_copt == 'youden'){
+    sect3.4_AUC_RBR_copt_youden()$coptest
+  }
+})
+
 sect3.4_AUC_RBR_error_char_copt = reactive({
   nonpara_bayes_AUC_rbr_error_char_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
                                         priorFNR = sect3.4_AUC_prior_copt()$priorFNR, 

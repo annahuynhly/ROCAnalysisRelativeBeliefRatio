@@ -81,7 +81,8 @@ server = function(input, output, session) {
   # SECTION 3.3 ################################################## 
   
   source(file.path("server/section3.3", "section3.3_setup_variables.R"),  local = TRUE)$value
-  source(file.path("server/section3.3", "section3.3_variables.R"),  local = TRUE)$value
+  source(file.path("server/section3.3", "section3.3_variables_equal.R"),  local = TRUE)$value
+  source(file.path("server/section3.3", "section3.3_variables_unequal.R"),  local = TRUE)$value
   source(file.path("server/section3.3", "section3.3_prevalence.R"),  local = TRUE)$value
   source(file.path("server/section3.3", "section3.3_outputs.R"),  local = TRUE)$value
   

@@ -13,25 +13,6 @@ sect3.4_condition = reactive({
   }
 })
 
-#sect3.4_copt_case = reactive({
-#  # this is for variances equal or unequal 
-#  if(input$nonpara_bayes_optimal_cutoff_denote_variables == 'no'){
-#    input$binormal_case_alt
-#  } else {
-#    input$binormal_case
-#  }
-#})
-
-#sect3.4_copt_lambda = reactive({
-#  if(input$nonpara_bayes_optimal_cutoff_denote_variables == 'no'){
-#    # note: this case likely shouldn't work since lambda seems to be for copt only.
-#    input$nonpara_bayes_lambda
-#  } else {
-#    input$nonpara_bayes_lambda
-#  }
-#})
-
-
 sect3.4_copt_epsilon = reactive({
   if(input$nonpara_bayes_optimal_cutoff_denote_variables == 'no'){
     input$nonpara_bayes_epsilon_alt
@@ -209,4 +190,116 @@ sect3.4_copt_nonpara_bayes_nondiseased_vector = reactive({
   }
 })
 
+################################################################
+# COMPUTATION FOR YOUDEN'S                                     #
+################################################################
+
+sect3.4_AUC_prior_copt_youden = reactive({
+  set.seed(SECT3.4_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  if(input$nonpara_bayes_case1 == 1){
+    nonpara_bayes_AUC_prior_copt(w = 1/2,
+                                 alpha1w = NA, 
+                                 alpha2w = NA,
+                                 nMonteprior = sect3.4_copt_nMonteCarlo(), 
+                                 nstar = sect3.4_copt_nstar(), 
+                                 a = sect3.4_a_copt(), 
+                                 delta = sect3.4_copt_delta(),
+                                 mu0 = sect3.4_copt_mu0(), 
+                                 tau0 = sect3.4_copt_tau0(), 
+                                 lambda1 = sect3.4_copt_lambda1(), 
+                                 lambda2 = sect3.4_copt_lambda2())
+  } else if (input$nonpara_bayes_case1 == 2){
+    nonpara_bayes_AUC_prior_copt(w = FALSE,
+                                 alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
+                                 alpha2w = input$nonpara_bayes_prevalence_alpha2w,
+                                 nMonteprior = sect3.4_copt_nMonteCarlo(), 
+                                 nstar = sect3.4_copt_nstar(), 
+                                 a = sect3.4_a_copt(), 
+                                 delta = sect3.4_copt_delta(),
+                                 mu0 = sect3.4_copt_mu0(), 
+                                 tau0 = sect3.4_copt_tau0(), 
+                                 lambda1 = sect3.4_copt_lambda1(), 
+                                 lambda2 = sect3.4_copt_lambda2())
+  }
+})
+
+sect3.4_AUC_post_copt_youden = reactive({
+  set.seed(SECT3.4_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  if(input$nonpara_bayes_case1 == 1){
+    nonpara_bayes_AUC_post_copt(w = 1/2, 
+                                alpha1w = NA, 
+                                alpha2w = NA,
+                                nD = sect3.4_copt_nD(),
+                                nND = sect3.4_copt_nND(),
+                                version = NA,
+                                nMontepost = sect3.4_copt_nMonteCarlo(), 
+                                nstar = sect3.4_copt_nstar(), 
+                                a = sect3.4_a_copt(), 
+                                delta = sect3.4_copt_delta(),
+                                mu0 = sect3.4_copt_mu0(), 
+                                tau0 = sect3.4_copt_tau0(), 
+                                lambda1 = sect3.4_copt_lambda1(), 
+                                lambda2 = sect3.4_copt_lambda2(),
+                                xDdata = sect3.4_copt_nonpara_bayes_diseased_vector(), 
+                                xNDdata = sect3.4_copt_nonpara_bayes_nondiseased_vector(),
+                                sD_squared = NA, sND_squared = NA, meanD = NA, meanND = NA)
+  } else if (input$nonpara_bayes_case2 == "A"){
+    nonpara_bayes_AUC_post_copt(w = FALSE, 
+                                alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
+                                alpha2w = input$nonpara_bayes_prevalence_alpha2w,
+                                nD = sect3.4_copt_nD(),
+                                nND = sect3.4_copt_nND(),
+                                version = "prior",
+                                nMontepost = sect3.4_copt_nMonteCarlo(), 
+                                nstar = sect3.4_copt_nstar(), 
+                                a = sect3.4_a_copt(), 
+                                delta = sect3.4_copt_delta(),
+                                mu0 = sect3.4_copt_mu0(), 
+                                tau0 = sect3.4_copt_tau0(), 
+                                lambda1 = sect3.4_copt_lambda1(), 
+                                lambda2 = sect3.4_copt_lambda2(),
+                                xDdata = sect3.4_copt_nonpara_bayes_diseased_vector(), 
+                                xNDdata = sect3.4_copt_nonpara_bayes_nondiseased_vector(),
+                                sD_squared = NA, sND_squared = NA, meanD = NA, meanND = NA)
+  } else if (input$nonpara_bayes_case2 == "B"){
+    nonpara_bayes_AUC_post_copt(w = FALSE, 
+                                alpha1w = input$nonpara_bayes_prevalence_alpha1w, 
+                                alpha2w = input$nonpara_bayes_prevalence_alpha2w,
+                                nD = sect3.4_copt_nD(),
+                                nND = sect3.4_copt_nND(),
+                                version = "post",
+                                nMontepost = sect3.4_copt_nMonteCarlo(), 
+                                nstar = sect3.4_copt_nstar(), 
+                                a = sect3.4_a_copt(), 
+                                delta = sect3.4_copt_delta(),
+                                mu0 = sect3.4_copt_mu0(), 
+                                tau0 = sect3.4_copt_tau0(), 
+                                lambda1 = sect3.4_copt_lambda1(), 
+                                lambda2 = sect3.4_copt_lambda2(),
+                                xDdata = sect3.4_copt_nonpara_bayes_diseased_vector(), 
+                                xNDdata = sect3.4_copt_nonpara_bayes_nondiseased_vector(),
+                                sD_squared = NA, sND_squared = NA, meanD = NA, meanND = NA)
+  }
+})
+
+sect3.4_AUC_RBR_copt_youden = reactive({
+  # smoothing the results
+  priorcoptdensity_smo = average_vector_values(sect3.4_AUC_prior_copt_youden()$priorcoptdensity, 
+                                               input$nonpara_bayes_smoother_copt)
+  postcoptdensity_smo = average_vector_values(sect3.4_AUC_post_copt_youden()$postcoptdensity, 
+                                              input$nonpara_bayes_smoother_copt)
+  priorcoptmod_smo = average_vector_values(sect3.4_AUC_prior_copt_youden()$priorcoptmod, 
+                                           input$nonpara_bayes_smoother_copt)
+  postcoptmod_smo = average_vector_values(sect3.4_AUC_post_copt_youden()$postcoptmod, 
+                                          input$nonpara_bayes_smoother_copt)
+  nonpara_bayes_AUC_rbr_copt(delta = sect3.4_copt_delta(),
+                             gridcopt = sect3.4_AUC_prior_copt_youden()$gridcopt, 
+                             gridmod = sect3.4_AUC_prior_copt_youden()$gridmod,
+                             priorcoptdensity = priorcoptdensity_smo, #sect3.4_AUC_prior_copt()$priorcoptdensity, 
+                             postcoptdensity = postcoptdensity_smo, #sect3.4_AUC_post_copt()$postcoptdensity,
+                             priorcopt = sect3.4_AUC_prior_copt_youden()$priorcopt, 
+                             postcopt = sect3.4_AUC_post_copt_youden()$postcopt,
+                             priorcoptmod = priorcoptmod_smo, #sect3.4_AUC_prior_copt()$priorcoptmod,
+                             postcoptmod = postcoptmod_smo) #sect3.4_AUC_post_copt()$postcoptmod)
+})
 
