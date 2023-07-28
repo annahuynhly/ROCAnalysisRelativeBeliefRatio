@@ -1,3 +1,4 @@
+# TODO: add feature for someone to change the location of the legend or not have it at all.
 ################################################################
 # LIBRARIES                                                    #
 ################################################################

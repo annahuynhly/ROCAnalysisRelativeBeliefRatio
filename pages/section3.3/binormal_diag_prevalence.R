@@ -1,20 +1,21 @@
 ################################################################
-# OUTPUT 1 PAGE                                                #
+# INPUT VALUES PAGE                                            #
 ################################################################
 
 binormal_diag_prevalence_plausible_region = div( 
   titlePanel("Relative Belief Estimate of Prevalence w & Plausible Region"),
   sidebarLayout(
-    sidebarPanel(width = 3, 
+    sidebarPanel(
+      width = 3, 
+      numericInput(inputId = "binormal_diag_prevalence_delta", 
+                   label = tags$p('Delta (the meaningful difference for the prevalence)', 
+                                  style = "font-size: 90%;"),
+                   value = 0.001, min = 0, max = 1
+      ),           
       textInput(inputId = "binormal_diag_prevalence_gamma", 
                 label = "Gamma for the credible region 
                 (must be less than the posterior content of the plausible region)", 
                 value = "NA"
-      ),
-      numericInput(inputId = "binormal_diag_prevalence_delta", 
-                   label = tags$p('Delta (the meaningful difference for the prevalence)', 
-                           style = "font-size: 90%;"),
-                   value = 0.001, min = 0, max = 1
       ),
     ),
     mainPanel(
@@ -26,7 +27,7 @@ binormal_diag_prevalence_plausible_region = div(
 )
 
 ################################################################
-# GRAPH 1 PAGE                                                 #
+# PREVALENCE PLOTS PAGE                                        #
 ################################################################
 
 binormal_diag_prevalence_plots = div( 
@@ -167,7 +168,7 @@ binormal_diag_prevalence_plot_alt = div(
 
 
 ################################################################
-# OUTPUT + GRAPH 2 PAGE                                        #
+# PLOT ILLUSTRATING TEST OF W = W0                             #
 ################################################################
 
 binormal_diag_prevalence_relative_belief_plot_of_w0 = div( 

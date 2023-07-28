@@ -12,7 +12,8 @@ finite_val_setup_variables = div(
                    value = 1
       ),
       selectInput(inputId = "finite_val_condition",
-                  label = "Select whether to use the conditional or unconditional prior.",
+                  label = "Select whether to use the conditional (given AUC>1/2) 
+                  or unconditional prior.",
                   choices = list("Conditional" = 'conditional',
                                  "Unconditional" = 'unconditional'),
                   selected = 'unconditional'
@@ -38,13 +39,13 @@ finite_val_setup_variables = div(
                                #label = 'Monte Carlo (Simulation) Sample Size',
                                value = 100000, min = 0)),
         column(3, numericInput(inputId = "finite_val_delta", 
-                               label = p(style = 'font-size:14px;',
-                                         "$\\delta \\text{ }(\\text{the difference that matters}$)"),
+                               label = p(style = 'font-size:11px;',
+                                         "$\\delta \\text{ }(\\text{meaningful difference for the AUC}$)"),
                                #label = "$\\text{Delta } (\\delta - \\text{the difference that matters}$)",
                                value = 0.04, min = 0, max = 1)),
       ),
       fluidRow(
-        column(3, h4("Hyperparameters to Specify the Prior:")),
+        column(3, h4("Hyperparameters to Specify the Dirichlet:")),
         column(3, textInput(inputId = "finite_val_alpha_ND",
                             label = p(style = 'font-size:15px;',
                                       "$\\alpha_{\\text{ND1}}, ..., \\alpha_{\\text{NDm}} 
@@ -110,7 +111,7 @@ finite_val_setup_variables_alt = div(
                      value = 2), 
       ),
       selectInput(inputId = "finite_val_optimal_cutoff_denote_variables", 
-                  label = "Do you want to use the same input that were used for the inferences 
+                  label = "Do you want to use the same values that were used for the inferences 
                   for the AUC?",
                   choices = c("Yes" = "yes", 
                               "No" = "no"),
@@ -219,10 +220,11 @@ finite_val_AUCinferences = div(
   titlePanel("Inferences for the AUC"),
   sidebarLayout(
     sidebarPanel(width = 3, 
-      numericInput(inputId = "finite_val_hypoAUC",
-                   label = 'Hypothesized AUC (greater than)',
-                   value = 0.5
-      ),
+      # note: force finite_val_hypo_AUC to be 0.5
+      #numericInput(inputId = "finite_val_hypoAUC",
+      #             label = 'Hypothesized AUC (greater than)',
+      #             value = 0.5
+      #),
       textInput(inputId = "finite_val_gamma", 
                 label = tags$p("Gamma for the credible region (must be less than 
                                the posterior content of the plausible region)", 

@@ -31,11 +31,11 @@ output$nonpara_bayes_inf_opt_cutoff = renderPrint({
                        sect3.4_AUC_RBR_error_char_copt()$FDRest,
                        sect3.4_AUC_RBR_error_char_copt()$FNDRest)
   colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-  newlst = list("Copt Estimate" = sect3.4_copt_est_hardcode(), #sect3.4_AUC_RBR_copt()$coptest,
-       "Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$copt_plausible_region,
-       "Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$cmod_plausible_region,
-       "Posterior Content of the Plausible Region for Copt" = sect3.4_AUC_RBR_copt()$postPlcopt,
-       "Posterior Content of the Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$postPlcmod,
+  newlst = list("Cutoff Estimate" = sect3.4_copt_est_hardcode(), #sect3.4_AUC_RBR_copt()$coptest,
+       "Plausible Region for the Cutoff" = sect3.4_AUC_RBR_copt()$copt_plausible_region,
+       #"Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$cmod_plausible_region,
+       "Posterior Content of the Plausible Region for the Cutoff" = sect3.4_AUC_RBR_copt()$postPlcopt,
+       #"Posterior Content of the Plausible Region for Cmod" = sect3.4_AUC_RBR_copt()$postPlcmod,
        "Error Characteristics" = temp_df
   #     "Plausible Region for Copt" = copt_transform(sect3.4_AUC_RBR_copt()$copt_plausible_region),
   #     "Credible Region for Copt" = copt_transform(sect3.4_cr_copt()$credible_region),

@@ -420,11 +420,21 @@ compute_AUC_RBR = function(delta, AUC_prior, AUC_post, priorc_opt, postc_opt){
     }
   }
   
+  pr = c() # plausible region, & obtaining the posterior content
+  post_content = 0
+  for(i in 1:length(RBc_opt)){
+    if(RBc_opt[i] > 1){
+      pr = c(pr, i)
+      post_content = post_content + postc_opt[i]
+    }
+  }
+  
   c_optfDfND = which.max(RBc_opt)
   
   # REMARK: AUC_RBR goes from (0 to bin[1]), ..., to (bin[1/delta], 1)
   newlist = list("grid" = bins, "AUC_RBR" = AUC_RBR, "RBc_opt" = RBc_opt, 
-                 "c_optfDfND" = c_optfDfND)
+                 "c_optfDfND" = c_optfDfND, "plausible_region" = pr,
+                 "posterior_content" = post_content)
   return(newlist)
 }
 

@@ -216,12 +216,14 @@ generate_rbr_graph = function(relative_belief_ratio, grid,
   if (typeof(rb_line) == "double") { 
     abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[3])
     rgb_cr = col2rgb(colour_choice[3])
-    legend("topleft", legend = c("Relative Belief Ratio", "Credible Region Line"), lwd = 2, 
-           col = c(colour_choice[1], colour_choice[3]), 
-           lty = c(lty_type[1], lty_type[3]))
+    legend("bottomleft", legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
+           lwd = 2, 
+           col = c(colour_choice[1], colour_choice[3], colour_choice[2]), 
+           lty = c(lty_type[1], lty_type[3], lty_type[2]))
   } else {
-    legend("topleft", legend = c("Relative Belief Ratio"), lwd = 2, 
-           col = c(colour_choice[1]), lty = c(lty_type[1]))
+    legend("topleft", legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
+           col = c(colour_choice[1], colour_choice[2]), 
+           lty = c(lty_type[1], lty_type[2]))
   }
 }
 

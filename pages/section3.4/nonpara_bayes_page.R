@@ -4,7 +4,6 @@
 
 nonpara_bayes_setup_variables_1 = div(
   titlePanel("Setup Values"),
-  
   sidebarLayout(
     sidebarPanel(
       width = 3,
@@ -12,7 +11,8 @@ nonpara_bayes_setup_variables_1 = div(
                    label = "Please select a seed for the computations.",
                    value = 1),
       selectInput(inputId = "nonpara_bayes_condition",
-                  label = "Select whether to use the conditional or non conditional prior.",
+                  label = "Select whether to use the conditional (given AUC>1/2) 
+                  or unconditional prior.",
                   choices = list("Conditional" = 'cond',
                                  "Unconditional" = 'uncond'),
                   selected = 'cond'
@@ -312,8 +312,7 @@ nonpara_bayes_inferences_for_copt = div(
                withSpinner(verbatimTextOutput("nonpara_bayes_inf_opt_cutoff"))),
     ),
   ),
-  br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
-  br(),br(),br(),br(),br(),br(),
+  br(),br(),br(),br(),br(),br(),br(),br(),br(),
 )
 
 ################################################################
@@ -325,7 +324,7 @@ nonpara_bayes_plots = div(
   sidebarLayout(
     sidebarPanel(width = 3,
       sliderInput(inputId = "nonpara_bayes_smoother", 
-                  label = "Number of Average Points (Smoother)", 
+                  label = "Number of Successive Points Averaged (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2),
       selectInput(inputId = "nonpara_bayes_colour", 
                   label = 'Select a colour', 
@@ -435,7 +434,7 @@ nonpara_bayes_copt_plots = div(
                   selected = 'copt'
       ),
       sliderInput(inputId = "nonpara_bayes_smoother_copt", 
-                  label = "Number of Average Points (Smoother)", 
+                  label = "Number of Successive Points Averaged (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2
       ),
       selectInput(inputId = "nonpara_bayes_c_opt_carry_colour",

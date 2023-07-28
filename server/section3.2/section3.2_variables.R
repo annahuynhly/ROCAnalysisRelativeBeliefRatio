@@ -263,20 +263,23 @@ sect3.2_lineplot_area = reactive({
 
 # Previous
 sect3.2_hypo_test = reactive({
-  RBR_hypo = hypothesized_AUC_compute_values(hypo_AUC = input$finite_val_hypoAUC, 
+  RBR_hypo = hypothesized_AUC_compute_values(hypo_AUC = 0.5, #input$finite_val_hypoAUC, 
                                              delta = input$finite_val_delta,
                                              AUC_prior = sect3.2_AUC_prior()$AUC, 
                                              AUC_post = sect3.2_AUC_post()$AUC)
   strength = compute_AUC_post_content(delta = input$finite_val_delta, 
                                       AUC_post = sect3.2_AUC_post()$AUC, 
-                                      plausible_region = c(as.numeric(input$finite_val_hypoAUC), 0.99999999))
+                                      #plausible_region = c(as.numeric(input$finite_val_hypoAUC), 0.99999999))
+                                      plausible_region = c(0.5, 0.99999999))
   # header names change depending on context
   
   newlist = list(RBR_header = RBR_hypo, strength_header = strength)
   names(newlist) <- c(paste("Relative Belief Ratio of Event AUC > ", 
-                            as.character(input$finite_val_hypoAUC), sep = ""), 
+                            #as.character(input$finite_val_hypoAUC), sep = ""), 
+                            as.character(0.5), sep = ""), 
                       paste("Posterior Probability of Event AUC > ", 
-                            as.character(input$finite_val_hypoAUC), sep = ""))
+                            #as.character(input$finite_val_hypoAUC), sep = ""))
+                            as.character(0.5), sep = ""))
   
   return(newlist)
 })

@@ -32,12 +32,20 @@ output$finite_val_hypoAUC_value = renderPrint({
 output$finite_val_optimal_cutoff = renderPrint({
   if(input$finite_val_cutoff_denote_copt == 'yes'){
     copt_estimate = input$finite_val_optimal_cutoff_copt
+    pr_region = "No plausible region as the cutoff was hardcoded."
+    posterior_content = "No posterior content of the plausible region for the cutoff as the cutoff was hardcoded."
   } else if (input$finite_val_cutoff_denote_copt == 'no') {
     copt_estimate = sect3.2_AUC_RBR_copt()$c_optfDfND
+    pr_region = sect3.2_AUC_RBR_copt()$plausible_region
+    posterior_content = sect3.2_AUC_RBR_copt()$posterior_content
   } else if (input$finite_val_cutoff_denote_copt == 'youden'){
     copt_estimate = sect3.2_AUC_RBR_copt_youden()$c_optfDfND
+    pr_region = sect3.2_AUC_RBR_copt_youden()$plausible_region
+    posterior_content = sect3.2_AUC_RBR_copt_youden()$posterior_content
   } else if (input$finite_val_cutoff_denote_copt == 'distance'){
     copt_estimate = sect3.2_AUC_RBR_copt_closest()$c_optfDfND
+    pr_region = sect3.2_AUC_RBR_copt_closest()$plausible_region
+    posterior_content = sect3.2_AUC_RBR_copt_closest()$posterior_content
   }
   RBR_copt = c()
   for(i in 1:length(sect3.2_AUC_prior_copt()$priorc_opt)){
@@ -50,7 +58,9 @@ output$finite_val_optimal_cutoff = renderPrint({
   list("Prior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_prior_copt()$priorc_opt,
        "Posterior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_post_copt()$postc_opt,
        "Relative Belief Ratio Probabilities for the Possible Diagnostic Values" = RBR_copt,
-       "Copt Estimate" = copt_estimate,
+       "Cutoff Estimate" = copt_estimate,
+       "Plausible Region of the Cutoff" = pr_region,
+       "Posterior Content of the Plausible Region of the Cutoff" = posterior_content,
        "Error Characteristics" = as.data.frame(sect3.2_copt_est()))
 })
 

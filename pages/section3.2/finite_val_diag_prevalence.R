@@ -1,5 +1,5 @@
 ################################################################
-# OUTPUT 1 PAGE                                                #
+# INPUT VALUES PAGE                                            #
 ################################################################
 
 finite_val_diag_prevalence_plausible_region = div( 
@@ -7,8 +7,7 @@ finite_val_diag_prevalence_plausible_region = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       numericInput(inputId = "finite_val_diag_prevalence_delta", 
-                   label = tags$p('Delta (the meaningful difference for the prevalence)', 
-                           style = "font-size: 90%;"),
+                   label = 'Delta (the meaningful difference for the prevalence)',
                    value = 0.001, min = 0, max = 1
       ),
       textInput(inputId = "finite_val_diag_prevalence_gamma", 
@@ -25,7 +24,7 @@ finite_val_diag_prevalence_plausible_region = div(
 )
 
 ################################################################
-# GRAPH 1 PAGE                                                 #
+# PREVALENCE PLOTS PAGE                                        #
 ################################################################
 
 finite_val_diag_prevalence_plots = div( 
@@ -164,7 +163,7 @@ finite_val_diag_prevalence_plot_alt = div(
 
 
 ################################################################
-# OUTPUT + GRAPH 2 PAGE                                        #
+# PLOT ILLUSTRATING TEST OF W = W0                             #
 ################################################################
 
 finite_val_diag_prevalence_relative_belief_plot_of_w0 = div( 

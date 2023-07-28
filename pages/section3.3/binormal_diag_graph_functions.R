@@ -82,13 +82,14 @@ binormal_diag_rbr_graph = function(condition,
   if (typeof(rb_line) == "double") { 
     abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[3])
     rgb_cr = col2rgb(colour_choice[3])
-    legend("topleft", legend = c("Relative Belief Ratio", "Credible Region Line"), 
+    legend("topleft", legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
            lwd = 2, 
-           col = c(colour_choice[1], colour_choice[3]), 
-           lty = c(lty_type[1], lty_type[3]))
+           col = c(colour_choice[1], colour_choice[3], colour_choice[2]), 
+           lty = c(lty_type[1], lty_type[3], lty_type[2]))
   } else {
-    legend("topleft", legend = c("Relative Belief Ratio"), lwd = 2, 
-           col = c(colour_choice[1]), lty = c(lty_type[1]))
+    legend("topleft", legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
+           col = c(colour_choice[1], colour_choice[2]), 
+           lty = c(lty_type[1], lty_type[2]))
   }
 }
 
@@ -119,6 +120,10 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
     polygon(grid, force_bounds_0(priorcmoddensity), 
             col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, 
             alpha = transparency), border = NA)
+    legend("topleft", legend = c("Prior", "Posterior"), lwd = 2, 
+           col = c(colour_choice[1], colour_choice[2]), 
+           lty = c(lty_type[1], lty_type[2]))
+    
     # TYPE 2: GRAPH OF THE RELATIVE BELIEF RATIO
   } else if(typeof(RBcmod) == "double"){
     # Graph of the relative belief ratio
@@ -136,13 +141,14 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
     # Checking if a credible region exists
     if (typeof(rb_line) == "double") { 
       abline(h = rb_line, col = colour_choice[5], lwd = 2, lty = lty_type[5])
-      legend("topleft", legend = c("Relative Belief Ratio", "Credible Region Line"), 
+      legend("topleft", legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
              lwd = 2, 
-             col = c(colour_choice[3], colour_choice[5]), 
-             lty = c(lty_type[3], lty_type[5]))
+             col = c(colour_choice[3], colour_choice[5], colour_choice[4]), 
+             lty = c(lty_type[3], lty_type[5], lty_type[4]))
     } else {
-      legend("topleft", legend = c("Relative Belief Ratio"), lwd = 2, 
-             col = c(colour_choice[3]), lty = c(lty_type[3]))
+      legend("topleft", legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
+             col = c(colour_choice[3], colour_choice[4]), 
+             lty = c(lty_type[3], lty_type[4]))
     }
   }
 }
@@ -156,10 +162,12 @@ binormal_diag_err_char_plots = function(delta,
   # err_type can either be FNR, FPR, Error, FDR, FNDR
   grid = open_bracket_grid(delta)
   if((typeof(prior_vals) == "double") & (typeof(post_vals) == "double")){
+    # determining ylim
+    y_axis = c(0, max(post_vals, prior_vals))
     # Graph of the posterior
     plot(grid, post_vals, main = paste("Plot of the Prior and the Posterior of ", err_type, sep = ""),
          xlab = err_type, ylab = "Prior and Posterior", type = "l", lty = post_lty, lwd = 2,
-         col = colour_choice[2])
+         col = colour_choice[2], ylim = y_axis)
     # Graph of the prior
     lines(grid, prior_vals, xlab = err_type, type = "l", lty = prior_lty, lwd = 2,
           col = colour_choice[1])
@@ -185,6 +193,12 @@ binormal_diag_err_char_plots = function(delta,
     polygon(grid, force_bounds_0(rbr_vals),
             col = rgb(rgb_rbr[1]/255, rgb_rbr[2]/255, rgb_rbr[3]/255, 
             alpha = transparency), border = NA)
+    
+    abline(h = 1, col = colour_choice[1], lwd = 2, lty = prior_lty)
+    
+    legend("topleft", legend = c("Relative Belief Ratio", "RBR = 1"), 
+           col = c(colour_choice[3], colour_choice[1]), lwd = 2, 
+           lty = c(prior_lty, rbr_lty))
   }
 }
 

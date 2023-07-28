@@ -27,7 +27,8 @@ binormal_diag_setup_variables_1 = div(
                   selected = "equal_var"
       ),
       selectInput(inputId = "binormal_diag_condition",
-                  label = "Select whether to use the conditional or non conditional prior.",
+                  label = "Select whether to use the conditional (given AUC>1/2) 
+                  or unconditional prior.",
                   choices = list("Conditional" = 'cond',
                                  "Unconditional" = 'uncond'),
                   selected = 'uncond'
@@ -101,7 +102,7 @@ binormal_diag_setup_variables_1 = div(
                                    value = 0.976)),
           ),
           fluidRow(
-            column(3, h4("Data Sum of Squares:")),
+            column(3, h4("Data Sum of Squared Deviations from the Sample Mean:")),
             column(3, numericInput(inputId = "binormal_diag_sND_squared", 
                                    label = '$s^{2}_{ND}$',
                                    value = 19.638)),
@@ -239,7 +240,7 @@ binormal_diag_setup_variables_2 = div(
                                      value = 0.976)),
             ),
             fluidRow(
-              column(3, h4("Data Sum of Squares:")),
+              column(3, h4("Data Sum of Squared Deviations from the Sample Mean:")),
               column(3, numericInput(inputId = "binormal_diag_sND_squared_alt", 
                                      label = '$s^{2}_{ND}$',
                                      value = 19.638)),
@@ -301,7 +302,7 @@ binormal_diag_plots = div(
   sidebarLayout(
     sidebarPanel(width = 3,
       sliderInput(inputId = "binormal_diag_smoother", 
-                  label = "Number of Average Points (Smoother)", 
+                  label = "Number of Successive Points Averaged (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2
       ),
       selectInput(inputId = "binormal_diag_colour", 
@@ -432,9 +433,16 @@ binormal_diag_AUC_inferences = div(
                   selected = "results"),
       
       conditionalPanel(
+        condition = "input.binormal_diag_inferences == 'results'",
+        textInput(inputId = "binormal_diag_gamma_copt", 
+                  label = "Gamma for the credible region (must be less than the 
+                  posterior content of the plausible region)",
+                  value = "NA"),
+      ),
+      conditionalPanel(
         condition = "input.binormal_diag_inferences == 'plots'",
         sliderInput(inputId = "binormal_diag_smoother_inferences", 
-                    label = "Number of Average Points (Smoother)", 
+                    label = "Number of Successive Points Averaged (Smoother)", 
                     min = 1, max = 49, value = 3, step = 2
         ),
         selectInput(inputId = "binormal_diag_inferences_plot_type",
@@ -505,6 +513,7 @@ binormal_diag_AUC_inferences = div(
         tabPanel("Inferences for the Optimal Cutoff", 
                  withSpinner(verbatimTextOutput("binormal_diag_inf_opt_cutoff"))
         ),
+        br(),br(),br(),br(),br(),br(),br(),br(),br(),
       ),
       conditionalPanel(
         condition = "input.binormal_diag_inferences == 'plots'",
@@ -519,7 +528,7 @@ binormal_diag_AUC_inferences = div(
         ),
       )
     )
-  )
+  ),
 )
 
 ################################################################
@@ -531,13 +540,8 @@ binormal_diag_copt_plots = div(
   sidebarLayout(
     sidebarPanel(
       width = 3,
-      textInput(inputId = "binormal_diag_gamma_copt", 
-                label = tags$p("Gamma for the credible region 
-                               (must be less than the posterior content of the plausible region)", 
-                               style = "font-size: 95%"), 
-                value = "NA"),
       sliderInput(inputId = "binormal_diag_smoother_copt", 
-                  label = "Number of Average Points (Smoother)", 
+                  label = "Number of Successive Points Averaged (Smoother)", 
                   min = 1, max = 49, value = 3, step = 2
       ),
       selectInput(inputId = "binormal_diag_c_opt_carry_colour",

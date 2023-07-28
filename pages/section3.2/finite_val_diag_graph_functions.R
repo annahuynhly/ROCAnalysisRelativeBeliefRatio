@@ -148,17 +148,18 @@ density_hist_AUC_RBR = function(delta, AUC_RBR,
   if(typeof(rb_line) == "double"){
     abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[3])
     legend("topleft", 
-           legend = c("Relative Belief Ratio", "Credible Region Line"), 
+           legend = c("Relative Belief Ratio", "Credible Region Line",
+                      "RBR = 1"), 
            lwd = 2, 
-           col = c(colour_choice[1], colour_choice[3]), 
-           lty = c(lty_type[1], lty_type[3]), inset = 0.02, cex = 0.8)
+           col = c(colour_choice[1], colour_choice[3], colour_choice[2]), 
+           lty = c(lty_type[1], lty_type[3], lty_type[2]), inset = 0.02, cex = 0.8)
     
   } else {
     legend("topleft", 
-           legend = c("Relative Belief Ratio"), 
+           legend = c("Relative Belief Ratio", "RBR = 1"), 
            lwd = 2, 
-           col = c(colour_choice[1]), 
-           lty = c(lty_type[1]), inset = 0.02, cex = 0.8)
+           col = c(colour_choice[1], colour_choice[2]), 
+           lty = c(lty_type[1], lty_type[2]), inset = 0.02, cex = 0.8)
   }
 }
 
@@ -172,7 +173,7 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
     m = length(priorc_opt)
     plot(1:m, priorc_opt, type = "b", xlab = "X",ylab = "probability", pch = prior_label, 
          lwd = 2, col = colour_choice[1], 
-         main = "Plot of the Prior and the Posterior of Copt")
+         main = "Plot of the Prior and the Posterior of the Cutoff")
     #points(1:m,postc_opt, pch=post_label, lwd = 2, col = colour_choice[2])
     lines(1:m, postc_opt, pch = post_label, col = colour_choice[2], type = "b", lwd = 2)
     
@@ -184,7 +185,7 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
     m = length(RBc_opt)
     plot(1:m, RBc_opt, type = "b", xlab="X", ylab="Relative Belief Ratio", pch = rb_label, lwd = 2,
          col = colour_choice[3],
-         main = "Plot of the Relative Belief Ratio of Copt")
+         main = "Plot of the Relative Belief Ratio of the Cutoff")
     legend("topright", legend = c("Relative Belief Ratio"),
            lwd = 2, cex = 1.2, col = c(colour_choice[3]), 
            pch = c(rb_label), lty = c(NA))
