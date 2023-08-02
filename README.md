@@ -16,7 +16,7 @@ Due to the complexity of the formulas, some of the computations take a long time
 This tutorial assumes you have R downloaded on your computer and you are completely new to GitHub. Although to frequent GitHub users this part seems trivial, there are a plethora of statistical and medical researchers that are unaware of the existence of deploying R Shiny applications and how to use GitHub. This is meant to serve as a guide for these researchers.
 
 If you are completely new to GitHub, then I recommend instead of going through the process of downloading Git... You can simply just download the zip files here by going through Code then Download Zip:
-![image](https://github.com/annahuynhly/ROCAnalysis_RelativeBelief/assets/97189987/abfaeac1-6ee7-4941-aa68-f4dede1ea427)
+![githubpart1](https://github.com/annahuynhly/ROCAnalysisRelativeBeliefRatio/assets/97189987/6d807329-a67c-4efb-87bc-6ea4f2b09773)
 
 Then, un-zip the file anywhere in your computer. Note that you will open this folder so please un-zip it within a good location.
 
@@ -43,7 +43,6 @@ install.packages("tidyverse")
 Note that for some reason if there are actual errors with installing these packages (not warnings), try to run R Studio in adminstrator mode instead (if you are using Windows).
 
 Now while you have the "app.R" file open (hopefully in R Studio!) in the "source" pane (in default R Studio, it is the top left quandrant) you should see a "Run App" button here:
-
-![image](https://github.com/annahuynhly/ROCAnalysis_RelativeBelief/assets/97189987/3492ef96-727d-4696-95ca-9de8a8f060e2)
+![githubpart2](https://github.com/annahuynhly/ROCAnalysisRelativeBeliefRatio/assets/97189987/8dead77e-aaee-4f8f-bab6-cfc6edc6a9a4)
 
 Click on that, and the application should run. Sometimes there are bugs in R Studio where for some reason, it gives a cryptic error messsage. An easy solution is to highlight the whole text in app.R and then use ctrl + enter (on Windows). The command for Mac should be command + return.
