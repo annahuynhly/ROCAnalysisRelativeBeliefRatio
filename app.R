@@ -95,22 +95,8 @@ server = function(input, output, session) {
   source(file.path("server/section3.4", "section3.4_outputs.R"),  local = TRUE)$value
   
   # ANIMATIONS ###################################################
-  # Note: may make a separate .R file based on the number of animations
   
-  observe(addHoverAnim(session, 'finite_val_diag_prevalence_arrow', 'wobble'))
-  observe(addHoverAnim(session, 'binormal_diag_prevalence_arrow', 'wobble'))
-  observe(addHoverAnim(session, 'nonpara_bayes_prevalence_arrow', 'wobble'))
-  observe(addHoverAnim(session, 'AnnaImg', 'rubberBand'))
-  observe(addHoverAnim(session, 'MikeImg', 'tada'))
-  observe(addHoverAnim(session, 'LuaiImg', 'flip'))
-  observe(addHoverAnim(session, 'QiaoyuImg', 'fadeOutDown'))
-  observe(addHoverAnim(session, 'calculator', 'pulse'))
-  observe(addHoverAnim(session, 'diseased_group', 'pulse'))
-  observe(addHoverAnim(session, 'diseased_group2', 'pulse'))
-  observe(addHoverAnim(session, 'diseased_group3', 'pulse'))
-  observe(addHoverAnim(session, 'groups', 'pulse'))
-  observe(addHoverAnim(session, 'chart', 'pulse'))
-  observe(addHoverAnim(session, 'ROC_AUC_graph', 'pulse'))
+  source(file.path("server", "animations.R"),  local = TRUE)$value
 }
 
 shinyApp(ui, server)

@@ -2,7 +2,6 @@
 # NUMERIC/TEXT OUTPUTS                                         #
 ################################################################
 
-# numbers of samples that were accepted - seems like all are accepted now...?
 binormal_diag_accepted_samples = reactive({
   if (sect3.3_condition() == "conditional" & input$binormal_case == "equal_var"){
     temp_df = data.frame(sect3.3_AUC_prior()$n_accepted,
@@ -48,6 +47,14 @@ output$binormal_diag_hypoAUC_value = renderPrint({
 })
 
 output$binormal_diag_inf_opt_cutoff = renderPrint({
+  # denoting the type of cutoff estimate
+  if(input$binormal_optimal_cutoff_denote_copt == 'yes'){
+    list1 = list("Specified Cutoff Estimate" = sect3.3_copt_est_hardcode())
+  } else if (input$binormal_optimal_cutoff_denote_copt == 'no') {
+    list1 = list("Cutoff Minimizing Error(c)" = sect3.3_copt_est_hardcode())
+  } else if (input$binormal_optimal_cutoff_denote_copt == 'youden'){
+    list1 = list("Cutoff Maximizing Youden's Index" = sect3.3_copt_est_hardcode())
+  }
   if (sect3.3_copt_case() == "equal_var"){
     temp_df = data.frame(sect3.3_AUC_RBR_error_char_copt()$FNRest,
                          sect3.3_AUC_RBR_error_char_copt()$FPRest,
@@ -55,14 +62,14 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                          sect3.3_AUC_RBR_error_char_copt()$FDRest,
                          sect3.3_AUC_RBR_error_char_copt()$FNDRest)
     colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-    list("Cutoff Estimate" = sect3.3_copt_est_hardcode(), #sect3.3_AUC_RBR_copt()$coptest,
+    list2 = list(#"Cutoff Estimate" = sect3.3_copt_est_hardcode(), #sect3.3_AUC_RBR_copt()$coptest,
          "Plausible Region for the Cutoff" = copt_transform(sect3.3_AUC_RBR_copt()$plausible_region),
          "Credible Region for the Cutoff" = copt_transform(sect3.3_cr_copt()$credible_region),
-         #"Cmod Estimate" = sect3.3_AUC_RBR_copt()$cmodest,
-         #"Plausible Region for Cmod" = sect3.3_AUC_RBR_copt()$plausible_region,
-         #"Posterior Content of the Plausible Region for Cmod" = sect3.3_AUC_RBR_copt()$postPlcmod,
-         #"Credible Region for Cmod" = sect3.3_cr_copt()$credible_region,
-         "Error Characteristics" = temp_df)
+    #     #"Cmod Estimate" = sect3.3_AUC_RBR_copt()$cmodest,
+    #     #"Plausible Region for Cmod" = sect3.3_AUC_RBR_copt()$plausible_region,
+    #     #"Posterior Content of the Plausible Region for Cmod" = sect3.3_AUC_RBR_copt()$postPlcmod,
+    #     #"Credible Region for Cmod" = sect3.3_cr_copt()$credible_region,
+          "Error Characteristics" = temp_df)
   } else if (sect3.3_copt_case() == "unequal_var"){
     # BELOW REPRESENTS ACTUAL CODE
     temp_df = data.frame(sect3.3_AUC_RBR_error_char_copt_unequal()$FNRest,
@@ -71,7 +78,7 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                          sect3.3_AUC_RBR_error_char_copt_unequal()$FDRest,
                          sect3.3_AUC_RBR_error_char_copt_unequal()$FNDRest)
     colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-    list("Cutoff Estimate" = sect3.3_copt_est_hardcode_unequal(), #sect3.3_AUC_RBR_copt_unequal()$coptest,
+    list2 = list(#"Cutoff Estimate" = sect3.3_copt_est_hardcode_unequal(), #sect3.3_AUC_RBR_copt_unequal()$coptest,
          "Plausible Region for the Cutoff" = copt_transform(sect3.3_AUC_RBR_copt_unequal()$plausible_region),
          "Credible Region for the Cutoff" = copt_transform(sect3.3_cr_copt_unequal()$credible_region),
          #"Cmod Estimate" = sect3.3_AUC_RBR_copt_unequal()$cmodest,
@@ -80,13 +87,14 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
          #"Credible Region for Cmod" = sect3.3_cr_copt_unequal()$credible_region,
          "Error Characteristics" = temp_df)
   }
+  c(list1, list2)
 })
 
 ################################################################
 # HISTOGRAMS                                                   #
 ################################################################
 
-# Denoting line type (note: support for 1 function, for now)
+# Denoting line type ###########################################
 
 sect3.3_prior_post_lty = reactive({
   c(as.numeric(input$binormal_diag_lty_prior),
@@ -107,7 +115,16 @@ binormal_diag_lty_types_copt = reactive({
     as.numeric(input$binormal_diag_crc_opt_label))
 })
 
-# Denoting colours
+binormal_diag_lty_types_cutoff = reactive({
+  c(as.numeric(input$binormal_diag_prior_cutoff_label),
+    as.numeric(input$binormal_diag_post_cutoff_label),
+    as.numeric(input$binormal_diag_rbr_cutoff_label),
+    as.numeric(input$binormal_diag_line_1_cutoff_label),
+    as.numeric(input$binormal_diag_cr_cutoff_label))
+})
+
+# Denoting colours #############################################
+
 binormal_diag_colours = reactive({
   # Total order of ALL colours: prior, posterior, relative belief ratio, 
   # plausible region, y = 1 line, credible region, 
@@ -153,6 +170,28 @@ binormal_diag_copt_colours = reactive({
   }
 })
 
+binormal_diag_cutoff_colours = reactive({
+  if(input$binormal_diag_cutoff_carry_colour == 'default1'){
+    default1
+  } else if (input$binormal_diag_cutoff_carry_colour == 'default2'){
+    default2
+  } else if (input$binormal_diag_cutoff_carry_colour == 'dull'){
+    dull
+  } else if (input$binormal_diag_cutoff_carry_colour == 'lovelymei'){
+    lovelymei
+  } else if (input$binormal_diag_cutoff_carry_colour == 'jackin'){
+    jackin_execute
+  } else if (input$binormal_diag_cutoff_carry_colour == 'custom'){
+    binormal_diag_colours()
+  } else if (input$binormal_diag_cutoff_carry_colour == 'manual'){
+    c(convert_to_hex(input$binormal_diag_prior_cutoff_colour),
+      convert_to_hex(input$binormal_diag_post_cutoff_colour),
+      convert_to_hex(input$binormal_diag_rbr_cutoff_colour),
+      convert_to_hex(input$binormal_diag_line_1_cutoff_colour),
+      convert_to_hex(input$binormal_diag_cr_cutoff_colour))
+  }
+})
+
 binormal_diag_inferences_colours = reactive({
   if(input$binormal_diag_inferences_colour == 'default1'){
     default1[c(1, 2, 3)]
@@ -173,7 +212,11 @@ binormal_diag_inferences_colours = reactive({
   }
 })
 
-# Determining the existence of a credible region
+################################################################
+# PLOTS FOR THE AUC                                            #
+################################################################
+
+# Determining the existence of a credible region ###############
 
 binormal_diag_cr_AUC = reactive({
   # For the plots, determines if there will be a credible region.
@@ -194,7 +237,26 @@ binormal_diag_rb_line_AUC = reactive({
   }
 })
 
-# Outputting the graphs of the inferences for the AUC
+binormal_diag_cr_AUC_unequal = reactive({
+  # For the plots, determines if there will be a credible region.
+  if (check.numeric(input$binormal_diag_gamma) == TRUE){
+    sect3.3_cr_unequal()$credible_region
+  } else {
+    FALSE
+  }
+})
+
+binormal_diag_rb_line_AUC_unequal = reactive({
+  # Assuming there will be a credible region, there will be a line associated
+  # to make the graph.
+  if (check.numeric(input$binormal_diag_gamma) == TRUE){
+    sect3.3_cr_unequal()$rb_line
+  } else {
+    FALSE
+  }
+})
+
+# Plotting the AUC #############################################
 
 output$binormal_diag_postprior_graph = renderPlot({
   if (input$binormal_case == "equal_var"){
@@ -237,14 +299,18 @@ output$binormal_diag_RB_graph = renderPlot({
     binormal_diag_rbr_graph(condition = sect3.3_condition(),
                             delta = input$binormal_diag_delta,
                             relative_belief_ratio = sect3.3_AUC_RBR_unequal()$RB_AUC, 
-                            rb_line = binormal_diag_rb_line_AUC(),
+                            rb_line = binormal_diag_rb_line_AUC_unequal(),
                             colour_choice = binormal_diag_colours()[c(3:5)],
                             lty_type = sect3.3_rbr_lty(),
                             transparency = input$binormal_diag_col_transparency)
   }
 })
 
-# Determining the existence of a credible region (for the cmod plots)
+################################################################
+# PLOTS FOR CMOD                                               #
+################################################################
+
+# Determining the existence of a credible region (cmod) ########
 
 binormal_diag_cr_AUC_cmod = reactive({
   if (check.numeric(input$binormal_diag_gamma_copt) == TRUE){
@@ -262,55 +328,115 @@ binormal_diag_rb_line_AUC_cmod = reactive({
   }
 })
 
-# Plots for cmod
+binormal_diag_cr_AUC_cmod_unequal = reactive({
+  if (check.numeric(input$binormal_diag_gamma_copt) == TRUE){
+    sect3.3_cr_copt_unequal()$credible_region
+  } else {
+    FALSE
+  }
+})
+
+binormal_diag_rb_line_AUC_cmod_unequal = reactive({
+  if (check.numeric(input$binormal_diag_gamma_copt) == TRUE){
+    sect3.3_cr_copt_unequal()$rb_line
+  } else {
+    FALSE
+  }
+})
+
+# Plots for cmod ###############################################
+
 output$binormal_diag_postprior_cmod_graph = renderPlot({
   if (sect3.3_copt_case() == "equal_var"){
     priorcmoddensity_smo = average_vector_values(sect3.3_AUC_prior_copt()$priorcmoddensity, 
                                                 input$binormal_diag_smoother_copt)
     postcmoddensity_smo = average_vector_values(sect3.3_AUC_post_copt()$postcmoddensity, 
                                                input$binormal_diag_smoother_copt)
-    
-    binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
-                                 priorcmoddensity = priorcmoddensity_smo, #sect3.3_AUC_prior_copt()$priorcmoddensity, 
-                                 postcmoddensity = postcmoddensity_smo, #sect3.3_AUC_post_copt()$postcmoddensity,
-                                 lty_type = binormal_diag_lty_types_copt(),
-                                 colour_choice = binormal_diag_copt_colours(),
-                                 transparency = input$binormal_diag_c_opt_col_transparency)
   } else if (sect3.3_copt_case() == "unequal_var"){
     priorcmoddensity_smo = average_vector_values(sect3.3_AUC_prior_copt_unequal()$priorcmoddensity, 
                                                  input$binormal_diag_smoother_copt)
     postcmoddensity_smo = average_vector_values(sect3.3_AUC_post_copt_unequal()$postcmoddensity, 
                                                 input$binormal_diag_smoother_copt)
-    
-    binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
-                                 priorcmoddensity = priorcmoddensity_smo, #sect3.3_AUC_prior_copt_unequal()$priorcmoddensity, 
-                                 postcmoddensity = postcmoddensity_smo, #sect3.3_AUC_post_copt_unequal()$postcmoddensity,
-                                 lty_type = binormal_diag_lty_types_copt(),
-                                 colour_choice = binormal_diag_copt_colours(),
-                                 transparency = input$binormal_diag_c_opt_col_transparency)
   }
+  binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                               prior = priorcmoddensity_smo, #sect3.3_AUC_prior_copt_unequal()$priorcmoddensity, 
+                               post = postcmoddensity_smo, #sect3.3_AUC_post_copt_unequal()$postcmoddensity,
+                               lty_type = binormal_diag_lty_types_copt(),
+                               colour_choice = binormal_diag_copt_colours(),
+                               transparency = input$binormal_diag_c_opt_col_transparency,
+                               main_title = "Plot of the Prior and the Posterior of Cmod")
 })
 
 output$binormal_diag_RB_cmod_graph = renderPlot({
   if (sect3.3_copt_case() == "equal_var"){
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
-                                 RBcmod = sect3.3_AUC_RBR_copt()$RBcmod, 
+                                 RBR = sect3.3_AUC_RBR_copt()$RBcmod, 
                                  rb_line = binormal_diag_rb_line_AUC_cmod(),
                                  lty_type = binormal_diag_lty_types_copt(),
                                  colour_choice = binormal_diag_copt_colours(),
-                                 transparency = input$binormal_diag_c_opt_col_transparency)
+                                 transparency = input$binormal_diag_c_opt_col_transparency,
+                                 main_title = "Plot of the Relative Belief Ratio of Cmod")
   } else if (sect3.3_copt_case() == "unequal_var"){
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
-                                 RBcmod = sect3.3_AUC_RBR_copt_unequal()$RBcmod, 
-                                 rb_line = binormal_diag_rb_line_AUC_cmod(),
+                                 RBR = sect3.3_AUC_RBR_copt_unequal()$RBcmod, 
+                                 rb_line = binormal_diag_rb_line_AUC_cmod_unequal(),
                                  lty_type = binormal_diag_lty_types_copt(),
                                  colour_choice = binormal_diag_copt_colours(),
-                                 transparency = input$binormal_diag_c_opt_col_transparency)
+                                 transparency = input$binormal_diag_c_opt_col_transparency,
+                                 main_title = "Plot of the Relative Belief Ratio of Cmod")
   }
 })
 
-# Plots for error characteristics
-# Note: colour situation here is temporary -- needs to be modified!!
+################################################################
+# PLOTS FOR THE CUTOFF                                         #
+################################################################
+
+output$binormal_diag_postprior_cutoff_graph = renderPlot({
+  if (sect3.3_copt_case() == "equal_var"){
+    priorcopt_smo = average_vector_values(sect3.3_AUC_prior_copt()$priorcopt, 
+                                          input$binormal_diag_smoother_cutoff)
+    postcopt_smo = average_vector_values(sect3.3_AUC_post_copt()$postcopt, 
+                                         input$binormal_diag_smoother_cutoff)
+  } else if (sect3.3_copt_case() == "unequal_var"){
+    priorcopt_smo = average_vector_values(sect3.3_AUC_prior_copt_unequal()$priorcopt, 
+                                          input$binormal_diag_smoother_cutoff)
+    postcopt_smo = average_vector_values(sect3.3_AUC_post_copt_unequal()$postcopt, 
+                                         input$binormal_diag_smoother_cutoff)
+  }
+  binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                               prior = priorcopt_smo,
+                               post = postcopt_smo,
+                               lty_type = binormal_diag_lty_types_cutoff(),
+                               colour_choice = binormal_diag_cutoff_colours(),
+                               transparency = input$binormal_diag_cutoff_col_transparency,
+                               main_title = "Plot of the Prior and the Posterior of the Cutoff")
+})
+
+output$binormal_diag_RB_cutoff_graph = renderPlot({
+  if (sect3.3_copt_case() == "equal_var"){
+    binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                                 RBR = sect3.3_AUC_RBR_copt()$RBcutoff, 
+                                 rb_line = binormal_diag_rb_line_AUC_cmod(),
+                                 lty_type = binormal_diag_lty_types_cutoff(),
+                                 colour_choice = binormal_diag_cutoff_colours(),
+                                 transparency = input$binormal_diag_cutoff_col_transparency,
+                                 main_title = "Plot of the Relative Belief Ratio of the Cutoff")
+  } else if (sect3.3_copt_case() == "unequal_var"){
+    binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                                 RBR = sect3.3_AUC_RBR_copt_unequal()$RBcutoff, 
+                                 rb_line = binormal_diag_rb_line_AUC_cmod_unequal(),
+                                 lty_type = binormal_diag_lty_types_cutoff(),
+                                 colour_choice = binormal_diag_cutoff_colours(),
+                                 transparency = input$binormal_diag_cutoff_col_transparency,
+                                 main_title = "Plot of the Relative Belief Ratio of the Cutoff")
+  }
+})
+
+
+################################################################
+# PLOTS FOR ERROR CHARACTERISTICS                              #
+################################################################
+
 output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
   if (sect3.3_copt_case() == "equal_var"){
     prior_vals_smo = average_vector_values(binormal_diag_err_char_plot_type()$prior, 
@@ -403,7 +529,9 @@ output$binormal_diag_downloadData = downloadHandler(
   }
 )
 
-# This is for the sample data
+################################################################
+# DOWNLOADING SAMPLE DATA (EXAMPLE)                            #
+################################################################
 
 sample_data = reactive({ 
   nondiseased = c(-0.11315894, 0.03273954, -0.69180664, -0.05459313, -1.22760962)

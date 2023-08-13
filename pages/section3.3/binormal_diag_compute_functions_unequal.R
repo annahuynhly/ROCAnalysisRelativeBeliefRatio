@@ -78,7 +78,6 @@ binormal_diag_prior_unequal = function(condition, w = FALSE, alpha1w = NA, alpha
       }
     }
   }
-  priorAUC = average_vector_values(priorAUC) # APPLYING SMOOTHER
   
   if (condition == "unconditional"){
     priorAUC = priorAUC/nMonteprior
@@ -153,7 +152,6 @@ binormal_diag_post_unequal = function(condition, w = FALSE, alpha1w = NA, alpha2
       }
     }
   }
-  postAUC = average_vector_values(postAUC) # applying a smoother
 
   if (condition == "unconditional"){
     postAUC = postAUC/nMontepost
@@ -224,11 +222,13 @@ binormal_diag_prior_copt_unequal = function(w = FALSE, alpha1w = NA, alpha2w = N
     }
   }
   
-  priorcmod = average_vector_values(priorcmod)
+  
   priorcmod = priorcmod/sum(priorcmod)
+  priorcopt = tan(pi*priorcmod-pi/2) # trying to get the cutoff
   priorcmoddensity = L*priorcmod
   
-  newlist = list("priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity)
+  newlist = list("priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity,
+                 "priorcopt" = priorcopt)
   return(newlist)
 }
 
@@ -287,11 +287,12 @@ binormal_diag_post_copt_unequal = function(w = FALSE, alpha1w = NA, alpha2w = NA
     }
   }
   
-  postcmod = average_vector_values(postcmod)
   postcmod = postcmod/sum(postcmod)
+  postcopt = tan(pi*postcmod-pi/2)
   postcmoddensity = L*postcmod
   
-  newlist = list("postcmod" = postcmod, "postcmoddensity" = postcmoddensity)
+  newlist = list("postcmod" = postcmod, "postcmoddensity" = postcmoddensity,
+                 "postcopt" = postcopt)
   return(newlist)
 }
 
@@ -351,11 +352,6 @@ binormal_diag_AUC_prior_error_char_copt_unequal = function(w = FALSE, alpha1w = 
         priorFNDR[igrid] = priorFNDR[igrid] + priorimpwt[iMonteprior]}
     }
   }
-  priorFNR = average_vector_values(priorFNR) # applying the smoother
-  priorFPR = average_vector_values(priorFPR) # applying the smoother
-  priorError = average_vector_values(priorError) # applying the smoother
-  priorFDR = average_vector_values(priorFDR) # applying the smoother
-  priorFNDR = average_vector_values(priorFNDR) # applying the smoother
   
   priorFNR = priorFNR/sum(priorFNR)
   priorFNRdensity = L*priorFNR
@@ -428,11 +424,6 @@ binormal_diag_AUC_post_error_char_copt_unequal = function(
         postFNDR[igrid] = postFNDR[igrid] + postimpwt[iMontepost]}
     }
   }
-  postFNR = average_vector_values(postFNR) # applying the smoother
-  postFPR = average_vector_values(postFPR) # applying the smoother
-  postError = average_vector_values(postError) # applying the smoother
-  postFDR = average_vector_values(postFDR) # applying the smoother
-  postFNDR = average_vector_values(postFNDR) # applying the smoother
   
   postFNR = postFNR/sum(postFNR)
   postFNRdensity = L*postFNR

@@ -129,8 +129,6 @@ finite_val_prior = function(condition = "unconditional", resample = FALSE,
   }
   m = length(alpha_priorND)
   
-  priorc_opt = rep(0, m) # NEW
-  
   pND_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
   pD_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
   FNR = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
@@ -156,7 +154,6 @@ finite_val_prior = function(condition = "unconditional", resample = FALSE,
     
     i = i + 1 # changed to while loop
   }
-  priorc_opt = priorc_opt/nMonteCarlo
   
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
                  "FNR" = FNR, "AUC" = AUC, "n_rejected" = num_reject)
@@ -178,8 +175,6 @@ finite_val_post = function(condition = "unconditional", resample = FALSE,
     }
   }
   m = length(alpha_priorND)
-  
-  postc_opt = rep(0, m) 
   
   pND_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
   pD_array = array(0*c(1:nMonteCarlo*m), dim = c(nMonteCarlo, m))
@@ -205,8 +200,6 @@ finite_val_post = function(condition = "unconditional", resample = FALSE,
     AUC[i] = sum((1-FNR[i, ])*pND_array[i,])
     i = i + 1 # changed to while loop
   }
-  
-  postc_opt = postc_opt/nMonteCarlo
   
   newlist = list("pND_array" = pND_array, "pD_array" = pD_array,
                  "FNR" = FNR, "AUC" = AUC, "n_rejected" = num_reject)
@@ -421,15 +414,16 @@ compute_AUC_RBR = function(delta, AUC_prior, AUC_post, priorc_opt, postc_opt){
   }
   
   pr = c() # plausible region, & obtaining the posterior content
-  post_content = 0
+  #post_content = 0
   for(i in 1:length(RBc_opt)){
     if(RBc_opt[i] > 1){
       pr = c(pr, i)
-      post_content = post_content + postc_opt[i]
+  #    post_content = post_content + postc_opt[i]
     }
   }
   
   c_optfDfND = which.max(RBc_opt)
+  post_content = postc_opt[c_optfDfND]
   
   # REMARK: AUC_RBR goes from (0 to bin[1]), ..., to (bin[1/delta], 1)
   newlist = list("grid" = bins, "AUC_RBR" = AUC_RBR, "RBc_opt" = RBc_opt, 

@@ -93,31 +93,32 @@ binormal_diag_rbr_graph = function(condition,
   }
 }
 
-binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE, 
-                                        postcmoddensity = FALSE,
-                                        RBcmod = FALSE,
+binormal_diag_plots_AUC_copt = function(delta, prior = FALSE, 
+                                        post = FALSE,
+                                        RBR = FALSE,
                                         rb_line = FALSE,
                                         lty_type = c(2, 1, 6, 2, 3),
                                         colour_choice = c("blue", "red", "green", "royalblue1",
                                                           "#81ddff"),
-                                        transparency = 0.1){
+                                        transparency = 0.1,
+                                        main_title){
   # Colour choice order: prior, posterior, rbr, plausible region, rb line, credible region
   grid = open_bracket_grid(delta)
   # TYPE 1: GRAPH OF PRIOR AND POSTERIOR
-  if((typeof(priorcmoddensity) == "double") & (typeof(postcmoddensity) == "double")){
+  if((typeof(prior) == "double") & (typeof(post) == "double")){
     #Graph of posterior
-    plot(grid, postcmoddensity, main = "Plot of the Prior and the Posterior of Cmod", 
+    plot(grid, post, main = main_title, 
          xlab = "cmod", ylab = "Prior and Posterior", type = "l", 
          lty = lty_type[2], lwd = 2, col = colour_choice[2])
     # Graph of prior 
-    lines(grid, priorcmoddensity, type = "l", lty = lty_type[1], lwd = 2, col = colour_choice[1])
+    lines(grid, prior, type = "l", lty = lty_type[1], lwd = 2, col = colour_choice[1])
     # The plausible region
     # Fill & Transparency effect
     rgb_prior = col2rgb(colour_choice[1])
     rgb_post = col2rgb(colour_choice[2])
-    polygon(grid, postcmoddensity, col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255, 
+    polygon(grid, post, col = rgb(rgb_post[1]/255, rgb_post[2]/255, rgb_post[3]/255, 
                                   alpha = transparency), border = NA)
-    polygon(grid, force_bounds_0(priorcmoddensity), 
+    polygon(grid, force_bounds_0(prior), 
             col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, 
             alpha = transparency), border = NA)
     legend("topleft", legend = c("Prior", "Posterior"), lwd = 2, 
@@ -125,9 +126,9 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
            lty = c(lty_type[1], lty_type[2]))
     
     # TYPE 2: GRAPH OF THE RELATIVE BELIEF RATIO
-  } else if(typeof(RBcmod) == "double"){
+  } else if(typeof(RBR) == "double"){
     # Graph of the relative belief ratio
-    plot(grid, RBcmod, main = "Plot of the Relative Belief Ratio of Cmod",
+    plot(grid, RBR, main = main_title,
          xlab = "cmod", ylab = expression("Relative Belief Ratio"), type = "l", 
          lty = lty_type[3], lwd = 2, col = colour_choice[3])
     # Fill & Transparency effect
@@ -135,7 +136,7 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
     # Colouring in the area between the plausible region and when the RBR > 1
     abline(h = 1, col = colour_choice[4], lwd = 2, lty = lty_type[4])
     rgb_rb = col2rgb(colour_choice[3])
-    polygon(grid, RBcmod, 
+    polygon(grid, RBR, 
             col = rgb(rgb_rb[1]/255, rgb_rb[2]/255, rgb_rb[3]/255, alpha = transparency), 
             border = NA)
     # Checking if a credible region exists
@@ -152,6 +153,7 @@ binormal_diag_plots_AUC_copt = function(delta, priorcmoddensity = FALSE,
     }
   }
 }
+
 
 binormal_diag_err_char_plots = function(delta, 
                                         prior_vals = FALSE, post_vals = FALSE, rbr_vals = FALSE,

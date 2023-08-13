@@ -129,7 +129,7 @@ binormal_diag_setup_variables_2 = div(
       width = 3, 
       selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
                   label = "How would you like to select the cutoff?",
-                  choice = c("Find the cutoff copt minimizing Error(c)." = "no", 
+                  choice = c("Find the cutoff minimizing Error(c)." = "no", 
                              "Find the cutoff maximizing Youden's index." = "youden",
                              #"Find the cutoff minimizing distance to (0, 1)." = "distance", 
                              "Specify the cutoff." = "yes"),
@@ -536,7 +536,7 @@ binormal_diag_AUC_inferences = div(
 ################################################################
 
 binormal_diag_copt_plots = div( 
-  titlePanel("Plots for the Optimal Cutoff"), 
+  titlePanel("Plots for Cmod"), 
   sidebarLayout(
     sidebarPanel(
       width = 3,
@@ -646,6 +646,120 @@ binormal_diag_copt_plots = div(
   )
 )
 
+binormal_diag_cutoff_plots = div( 
+  titlePanel("Plots for the Optimal Cutoff"), 
+  sidebarLayout(
+    sidebarPanel(
+      width = 3,
+      sliderInput(inputId = "binormal_diag_smoother_cutoff", 
+                  label = "Number of Successive Points Averaged (Smoother)", 
+                  min = 1, max = 49, value = 3, step = 2
+      ),
+      selectInput(inputId = "binormal_diag_cutoff_carry_colour",
+                  label = "Select a colour theme",
+                  choices = colour_theme_list_custom,
+                  selected = 'default'
+      ),      
+      selectInput(inputId = "binormal_diag_cutoff_modify",
+                  label = "Select which object to modify",
+                  choices = output_line_list,
+                  selected = 'prior'
+      ),
+      conditionalPanel(
+        condition = "input.binormal_diag_cutoff_modify == 'prior'",
+        selectInput(inputId = "binormal_diag_prior_cutoff_label", 
+                    label = "Line Type for the Prior",
+                    choices = default_lty_list,
+                    selected = 1
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_cutoff_carry_colour == 'manual'",
+          textInput(inputId = "binormal_diag_prior_cutoff_colour",
+                    label = 'Hex Colour for the Prior',
+                    value = "065143"),
+        )
+      ),
+      conditionalPanel(
+        condition = "input.binormal_diag_cutoff_modify == 'post'",
+        selectInput(inputId = "binormal_diag_post_cutoff_label", 
+                    label = "Line Type for the Posterior",
+                    choices = default_lty_list,
+                    selected = 2
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_cutoff_carry_colour == 'manual'",
+          textInput(inputId = "binormal_diag_post_cutoff_colour",
+                    label = 'Hex Colour for the Posterior',
+                    value = "70B77E"), 
+        )
+      ),
+      conditionalPanel(
+        condition = "input.binormal_diag_cutoff_modify == 'rbr'",
+        selectInput(inputId = "binormal_diag_rbr_cutoff_label", 
+                    label = "Line Type for the RB Ratio",
+                    choices = default_lty_list,
+                    selected = 6
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_cutoff_carry_colour == 'manual'",
+          textInput(inputId = "binormal_diag_rbr_cutoff_colour",
+                    label = 'Hex Colour for the RB Ratio',
+                    value = "CE1483"),
+        )
+      ),
+      
+      conditionalPanel(
+        condition = "input.binormal_diag_cutoff_modify == 'line_1'",
+        selectInput(inputId = "binormal_diag_line_1_cutoff_label", 
+                    label = "Line Type for the y = 1 Line",
+                    choices = default_lty_list,
+                    selected = 2
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_cutoff_carry_colour == 'manual'",
+          textInput(inputId = "binormal_diag_line_1_cutoff_colour",
+                    label = 'Hex Colour for the y = 1 Line',
+                    value = "73C1E7"),
+        )
+      ),
+      conditionalPanel(
+        condition = "input.binormal_diag_cutoff_modify == 'cr'",
+        selectInput(inputId = "binormal_diag_cr_cutoff_label", 
+                    label = "Line Type for the Credible Region",
+                    choices = default_lty_list,
+                    selected = 3
+        ),
+        conditionalPanel(
+          condition = "input.binormal_diag_cutoff_carry_colour == 'manual'",
+          textInput(inputId = "binormal_diag_cr_cutoff_colour",
+                    label = 'Hex Colour for the Credible Region',
+                    value = "9878C3"),
+        )
+      ),
+      # end copy
+      
+      sliderInput(inputId = "binormal_diag_cutoff_col_transparency", 
+                  label = "Scale for colour transparency",
+                  min = 0, max = 1, value = 0.1
+      ), 
+    ),
+    mainPanel(
+      tabPanel("Plots",
+               fluidRow(
+                 splitLayout(
+                   cellWidths = c("50%", "50%"), 
+                   withSpinner(plotOutput("binormal_diag_postprior_cutoff_graph")), 
+                   withSpinner(plotOutput("binormal_diag_RB_cutoff_graph"))
+                 )
+               )
+      ),
+    )
+  )
+)
+
+
+
+
 
 
 ################################################################
@@ -667,6 +781,7 @@ page_binormal_diag_inference2 = div(
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", binormal_diag_setup_variables_2),
               tabPanel("Inferences for the Optimal Cutoff", binormal_diag_AUC_inferences),
-              tabPanel("Plots for the Optimal Cutoff", binormal_diag_copt_plots)
+              tabPanel("Plots for the Optimal Cutoff", binormal_diag_cutoff_plots),
+              tabPanel("Plots for Cmod", binormal_diag_copt_plots)
   )
 )

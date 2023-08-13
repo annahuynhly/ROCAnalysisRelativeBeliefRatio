@@ -175,6 +175,105 @@ sect3.2_AUC_RBR_copt_youden = reactive({
                   postc_opt = sect3.2_AUC_post_copt_youden()$postc_opt)
 })
 
+
+sect3.2_copt_prior_youden = reactive({
+  set.seed(SECT3.2_SEED_COPT()) # seeing what happens when we always set the seed...
+  if(input$finite_val_diag_case1 == 1){
+    AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR_copt_youden()$c_optfDfND, 
+                              nMonteCarlo = sect3.2_copt_nMonteCarlo(),  
+                              w = input$finite_val_diag_prevalence_w, 
+                              delta = sect3.2_copt_delta(), 
+                              pND_array = sect3.2_AUC_prior_copt_youden()$pND_array, 
+                              pD_array = sect3.2_AUC_prior_copt_youden()$pD_array, 
+                              FNR = sect3.2_AUC_prior_copt_youden()$FNR, 
+                              FPR = sect3.2_AUC_prior_copt_youden()$FPR, 
+                              ERROR_w = sect3.2_AUC_prior_copt_youden()$ERROR_w, 
+                              PPV = sect3.2_AUC_prior_copt_youden()$PPV, 
+                              priorc_opt = sect3.2_AUC_prior_copt_youden()$priorc_opt)
+  } else if (input$finite_val_diag_case2 == "A" | input$finite_val_diag_case2 == "B"){
+    AUC_prior_error_char_copt(c_optfDfND = sect3.2_AUC_RBR_copt_youden()$c_optfDfND, 
+                              nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
+                              w = FALSE, 
+                              alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                              alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence 
+                              delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                              pND_array = sect3.2_AUC_prior_copt()$pND_array, 
+                              pD_array = sect3.2_AUC_prior_copt()$pD_array, 
+                              FNR = sect3.2_AUC_prior_copt()$FNR, 
+                              FPR = sect3.2_AUC_prior_copt()$FPR, 
+                              ERROR_w = sect3.2_AUC_prior_copt()$ERROR_w, 
+                              PPV = sect3.2_AUC_prior_copt()$PPV, 
+                              priorc_opt = sect3.2_AUC_prior_copt()$priorc_opt)
+  }
+})
+
+sect3.2_copt_post_youden = reactive({
+  set.seed(SECT3.2_SEED_COPT()) # seeing what happens when we always set the seed...
+  if(input$finite_val_diag_case1 == 1){
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR_copt_youden()$c_optfDfND, 
+                             nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
+                             w = input$finite_val_diag_prevalence_w, 
+                             delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                             pND_array = sect3.2_AUC_post_copt()$pND_array, 
+                             pD_array = sect3.2_AUC_post_copt()$pD_array, 
+                             FNR = sect3.2_AUC_post_copt()$FNR, 
+                             FPR = sect3.2_AUC_post_copt()$FPR, 
+                             ERROR_w = sect3.2_AUC_post_copt()$ERROR_w, 
+                             PPV = sect3.2_AUC_post_copt()$PPV, 
+                             postc_opt = sect3.2_AUC_post_copt()$postc_opt)
+  } else if (input$finite_val_diag_case2 == "A"){ # know the prior only
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR_copt_youden()$c_optfDfND,  
+                             nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
+                             w = FALSE, 
+                             alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                             alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
+                             version = "prior", 
+                             delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                             pND_array = sect3.2_AUC_post_copt_youden()$pND_array, 
+                             pD_array = sect3.2_AUC_post_copt_youden()$pD_array, 
+                             FNR = sect3.2_AUC_post_copt_youden()$FNR,
+                             FPR = sect3.2_AUC_post_copt_youden()$FPR,
+                             ERROR_w = sect3.2_AUC_post_copt_youden()$ERROR_w, 
+                             PPV = sect3.2_AUC_post_copt_youden()$PPV, 
+                             postc_opt = sect3.2_AUC_post_copt_youden()$postc_opt)
+  } else if (input$finite_val_diag_case2 == "B"){ # know both prior and posterior
+    AUC_post_error_char_copt(c_optfDfND = sect3.2_AUC_RBR_copt_youden()$c_optfDfND,  
+                             nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
+                             w = FALSE, 
+                             alpha1w = input$finite_val_diag_prevalence_alpha1w, # from the prevalence
+                             alpha2w = input$finite_val_diag_prevalence_alpha2w, # from the prevalence
+                             nD = sect3.2_copt_nD(), #input$finite_val_nD, 
+                             nND = sect3.2_copt_nND(), #input$finite_val_nND, 
+                             version = "post", 
+                             delta = sect3.2_copt_delta(), #input$finite_val_delta, 
+                             pND_array = sect3.2_AUC_post_copt_youden()$pND_array, 
+                             pD_array = sect3.2_AUC_post_copt_youden()$pD_array, 
+                             FNR = sect3.2_AUC_post_copt_youden()$FNR, 
+                             FPR = sect3.2_AUC_post_copt_youden()$FPR, 
+                             ERROR_w = sect3.2_AUC_post_copt_youden()$ERROR_w, 
+                             PPV = sect3.2_AUC_post_copt_youden()$PPV, 
+                             postc_opt = sect3.2_AUC_post_copt_youden()$postc_opt)
+  }
+})
+
+sect3.2_copt_est_youden = reactive({
+  compute_AUC_error_char_copt(delta = sect3.2_copt_delta(), 
+                              c_optfDfND = sect3.2_AUC_RBR_copt_youden()$c_optfDfND,
+                              priorFPRc_opt = sect3.2_copt_prior_youden()$priorFPRc_opt, 
+                              priorFNRc_opt = sect3.2_copt_prior_youden()$priorFNRc_opt, 
+                              priorERROR_wc_opt = sect3.2_copt_prior_youden()$priorERROR_wc_opt, 
+                              priorFDRc_opt = sect3.2_copt_prior_youden()$priorFDRc_opt, 
+                              priorFNDRc_opt = sect3.2_copt_prior_youden()$priorFNDRc_opt,
+                              priorPPVc_opt = sect3.2_copt_prior_youden()$priorPPVc_opt,
+                              postFPRc_opt = sect3.2_copt_post_youden()$postFPRc_opt, 
+                              postFNRc_opt = sect3.2_copt_post_youden()$postFNRc_opt, 
+                              postERROR_wc_opt = sect3.2_copt_post_youden()$postERROR_wc_opt, 
+                              postFDRc_opt = sect3.2_copt_post_youden()$postFDRc_opt, 
+                              postFNDRc_opt = sect3.2_copt_post_youden()$postFNDRc_opt,
+                              postPPVc_opt = sect3.2_copt_post_youden()$postPPVc_opt)
+})
+
+
 ################################################################
 # COMPUTATION FOR CLOSEST TO (0, 1) INDEX                      #
 ################################################################

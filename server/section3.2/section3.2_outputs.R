@@ -32,21 +32,34 @@ output$finite_val_hypoAUC_value = renderPrint({
 output$finite_val_optimal_cutoff = renderPrint({
   if(input$finite_val_cutoff_denote_copt == 'yes'){
     copt_estimate = input$finite_val_optimal_cutoff_copt
-    pr_region = "No plausible region as the cutoff was hardcoded."
-    posterior_content = "No posterior content of the plausible region for the cutoff as the cutoff was hardcoded."
+    list1 = list("Specified Cutoff Estimate" = copt_estimate)
+    prior_diag_vals = sect3.2_AUC_prior_copt()$priorc_opt
+    post_diag_vals = sect3.2_AUC_post_copt()$postc_opt
+    pr_region = sect3.2_AUC_RBR_copt()$plausible_region
+    posterior_content = sect3.2_AUC_post_copt()$postc_opt[input$finite_val_optimal_cutoff_copt]
+    err_char = sect3.2_copt_est()
   } else if (input$finite_val_cutoff_denote_copt == 'no') {
     copt_estimate = sect3.2_AUC_RBR_copt()$c_optfDfND
+    list1 = list("Cutoff Minimizing Error(c)" = copt_estimate)
+    prior_diag_vals = sect3.2_AUC_prior_copt()$priorc_opt
+    post_diag_vals = sect3.2_AUC_post_copt()$postc_opt
     pr_region = sect3.2_AUC_RBR_copt()$plausible_region
     posterior_content = sect3.2_AUC_RBR_copt()$posterior_content
+    err_char = sect3.2_copt_est()
   } else if (input$finite_val_cutoff_denote_copt == 'youden'){
     copt_estimate = sect3.2_AUC_RBR_copt_youden()$c_optfDfND
+    list1 = list("Cutoff Maximizing Youden's Index" = copt_estimate)
+    prior_diag_vals = sect3.2_AUC_prior_copt_youden()$priorc_opt
+    post_diag_vals = sect3.2_AUC_post_copt_youden()$postc_opt
     pr_region = sect3.2_AUC_RBR_copt_youden()$plausible_region
     posterior_content = sect3.2_AUC_RBR_copt_youden()$posterior_content
-  } else if (input$finite_val_cutoff_denote_copt == 'distance'){
-    copt_estimate = sect3.2_AUC_RBR_copt_closest()$c_optfDfND
-    pr_region = sect3.2_AUC_RBR_copt_closest()$plausible_region
-    posterior_content = sect3.2_AUC_RBR_copt_closest()$posterior_content
-  }
+    err_char = sect3.2_copt_est_youden()
+  } #else if (input$finite_val_cutoff_denote_copt == 'distance'){
+    #copt_estimate = sect3.2_AUC_RBR_copt_closest()$c_optfDfND
+    #list1 = list("Cutoff from the Closest to (0, 1) Estimate" = copt_estimate)
+    #pr_region = sect3.2_AUC_RBR_copt_closest()$plausible_region
+    #posterior_content = sect3.2_AUC_RBR_copt_closest()$posterior_content
+  #}
   RBR_copt = c()
   for(i in 1:length(sect3.2_AUC_prior_copt()$priorc_opt)){
     if(sect3.2_AUC_prior_copt()$priorc_opt[i] > 0){
@@ -55,13 +68,13 @@ output$finite_val_optimal_cutoff = renderPrint({
       NA
     }
   }
-  list("Prior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_prior_copt()$priorc_opt,
-       "Posterior Probabilities for the Possible Diagnostic Values" = sect3.2_AUC_post_copt()$postc_opt,
-       "Relative Belief Ratio Probabilities for the Possible Diagnostic Values" = RBR_copt,
-       "Cutoff Estimate" = copt_estimate,
-       "Plausible Region of the Cutoff" = pr_region,
+  list2 = list("Prior Probabilities for the Possible Diagnostic Values" = prior_diag_vals,
+       "Posterior Probabilities for the Possible Diagnostic Values" = post_diag_vals,
+       "Relative Belief Ratio Probabilities for the Possible Diagnostic Values" = RBR_copt)
+  list3 = list("Plausible Region of the Cutoff" = pr_region,
        "Posterior Content of the Plausible Region of the Cutoff" = posterior_content,
-       "Error Characteristics" = as.data.frame(sect3.2_copt_est()))
+       "Error Characteristics" = as.data.frame(err_char))
+  c(list2, list1, list3)
 })
 
 ################################################################

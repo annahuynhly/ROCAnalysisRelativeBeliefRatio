@@ -64,7 +64,6 @@ binormal_diag_prior = function(condition, nMonteprior, delta, lambda1, lambda2, 
       }
     }
   }
-  #priorAUC = average_vector_values(priorAUC, num_smooth) # APPLYING SMOOTHER
   
   if(condition == "unconditional"){
     priorAUC = priorAUC/nMonteprior
@@ -132,7 +131,6 @@ binormal_diag_post = function(condition, nMontepost, delta, lambda1post, lambda2
       }
     }
   }
-  #postAUC = average_vector_values(postAUC, num_smooth) # applying a smoother
   
   if (condition == "unconditional"){
     postAUC = postAUC/nMontepost
@@ -282,6 +280,7 @@ binormal_diag_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   U = rbeta(nMonteprior,1,1) 
   muND_copt = mu0 + tau0*sigmaND*qnorm(priorimpwt*U) 
   c = 0.5*(muD + muND_copt)+(sigmaD**2)*(log((1 - pre_w)/pre_w))/(muD - muND_copt) 
+  
   cmod = (pi/2 + atan(c))/pi 
   cmodmax = max(cmod) 
   cmodmin = min(cmod) 
@@ -294,12 +293,13 @@ binormal_diag_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
       }
     }
   }
-  #priorcmod = average_vector_values(priorcmod, num_smooth) # APPLYING SMOOTHER
   
   priorcmod = priorcmod/sum(priorcmod) 
+  priorcopt = tan(pi*priorcmod-pi/2) # trying to get the cutoff
   priorcmoddensity = L*priorcmod 
   
-  newlist = list("priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity)
+  newlist = list("priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity,
+                 "priorcopt" = priorcopt)
   
   return(newlist)
 }
@@ -336,19 +336,22 @@ binormal_diag_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = 
       }
     }
   }
-  #postcmod = average_vector_values(postcmod, num_smooth) # applying a smoother
+  
   postcmod = postcmod/sum(postcmod)
+  postcopt = tan(pi*postcmod-pi/2)
   postcmoddensity = L*postcmod
   
-  newlist = list("postcmod" = postcmod, "postcmoddensity" = postcmoddensity)
+  newlist = list("postcmod" = postcmod, "postcmoddensity" = postcmoddensity, 
+                 "postcopt" = postcopt)
   return(newlist)
 }
 
-binormal_diag_RBR_copt = function(delta, priorcmod, postcmod){
+binormal_diag_RBR_copt = function(delta, priorcmod, postcmod, priorcopt, postcopt){
   grid = open_bracket_grid(delta)
   L = ((1/delta) - 1)
   
   RBcmod = postcmod/priorcmod
+  RBcopt = postcopt/priorcopt
   
   # Getting the plausible region for cmod
   postPlcmod = 0 # the posterior content of the plausible region
@@ -371,7 +374,9 @@ binormal_diag_RBR_copt = function(delta, priorcmod, postcmod){
   
   newlist = list("RBcmod" = RBcmod, "postPlcmod" = postPlcmod,
                  "plausible_region" = plausible_region,
-                 "cmodest" = cmodest, "coptest" = coptest)
+                 "cmodest" = cmodest, "coptest" = coptest,
+                 "RBcutoff" = RBcopt)
+  return(newlist)
 }
 
 binormal_diag_AUC_prior_error_char_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
@@ -418,11 +423,6 @@ binormal_diag_AUC_prior_error_char_copt = function(w = FALSE, alpha1w = NA, alph
         priorFNDR[igrid] = priorFNDR[igrid] + priorimpwt[iMonteprior]}
     }
   }
-  #priorFNR = average_vector_values(priorFNR, num_smooth) # applying the smoother
-  #priorFPR = average_vector_values(priorFPR, num_smooth) 
-  #priorError = average_vector_values(priorError, num_smooth) 
-  #priorFDR = average_vector_values(priorFDR, num_smooth) 
-  #priorFNDR = average_vector_values(priorFNDR, num_smooth) 
   
   priorFNR = priorFNR/sum(priorFNR)
   priorFNRdensity = L*priorFNR
@@ -489,11 +489,6 @@ binormal_diag_AUC_post_error_char_copt = function(w = FALSE, alpha1w = NA, alpha
         postFNDR[igrid] = postFNDR[igrid] + postimpwt[iMontepost]}
     }
   }
-  #postFNR = average_vector_values(postFNR, num_smooth) # applying the smoother
-  #postFPR = average_vector_values(postFPR, num_smooth) 
-  #postError = average_vector_values(postError, num_smooth) 
-  #postFDR = average_vector_values(postFDR, num_smooth) 
-  #postFNDR = average_vector_values(postFNDR, num_smooth) 
   
   postFNR = postFNR/sum(postFNR)
   postFNRdensity = L*postFNR

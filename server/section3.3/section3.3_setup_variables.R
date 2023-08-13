@@ -379,11 +379,17 @@ sect3.3_AUC_post_copt_youden = reactive({
 sect3.3_AUC_RBR_copt_youden = reactive({
   priorcmod_smo = average_vector_values(sect3.3_AUC_prior_copt_youden()$priorcmod, 
                                         input$binormal_diag_smoother_copt)
+  priorcopt_smo = average_vector_values(sect3.3_AUC_prior_copt_youden()$priorcopt, 
+                                        input$binormal_diag_smoother_cutoff)
   postcmod_smo = average_vector_values(sect3.3_AUC_post_copt_youden()$postcmod, 
                                        input$binormal_diag_smoother_copt)
+  postcopt_smo = average_vector_values(sect3.3_AUC_post_copt_youden()$postcopt, 
+                                       input$binormal_diag_smoother_cutoff)
   binormal_diag_RBR_copt(delta = sect3.3_copt_delta(), 
                          priorcmod = priorcmod_smo, #sect3.3_AUC_prior_copt()$priorcmod, 
-                         postcmod = postcmod_smo) #sect3.3_AUC_post_copt()$postcmod)
+                         postcmod = postcmod_smo, #sect3.3_AUC_post_copt()$postcmod)
+                         priorcopt = priorcopt_smo,
+                         postcopt = postcopt_smo)
 })
 
 # unequal case
@@ -475,9 +481,15 @@ sect3.3_AUC_post_copt_youden_unequal = reactive({
 sect3.3_AUC_RBR_copt_youden_unequal = reactive({
   priorcmod_smo = average_vector_values(sect3.3_AUC_prior_copt_youden_unequal()$priorcmod, 
                                         input$binormal_diag_smoother_copt)
+  priorcopt_smo = average_vector_values(sect3.3_AUC_prior_copt_youden_unequal()$priorcopt, 
+                                        input$binormal_diag_smoother_cutoff)
   postcmod_smo = average_vector_values(sect3.3_AUC_post_copt_youden_unequal()$postcmod, 
                                        input$binormal_diag_smoother_copt)
+  postcopt_smo = average_vector_values(sect3.3_AUC_post_copt_youden_unequal()$postcopt, 
+                                       input$binormal_diag_smoother_cutoff)
   binormal_diag_RBR_copt(delta = sect3.3_copt_delta(), 
                          priorcmod = priorcmod_smo, #sect3.3_AUC_prior_copt_unequal()$priorcmod, 
-                         postcmod = postcmod_smo) #sect3.3_AUC_post_copt_unequal()$postcmod)
+                         postcmod = postcmod_smo, #sect3.3_AUC_post_copt_unequal()$postcmod)
+                         priorcopt = priorcopt_smo,
+                         postcopt = postcopt_smo)
 })
