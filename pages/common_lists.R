@@ -6,6 +6,13 @@ colour_theme_list = list("Default Theme 1" = 'default1',
                          "Execute" = "jackin",
                          "Manually Insert" = 'manual')
 
+# Notes regarding the colour theme (for anyone who stumbles across this code):
+# Default Theme 1 & 2 were the first combinations of colours I tested with that I thought
+# looked decent. Dull Life was a colour scheme that I thought looked decent but the colours
+# were quite muted.
+# 'Lovely Mei' was a colour scheme sourced from my drawings based on a girl named Mei.
+# 'Execute' are based off of colours of Megaman from the Battle Network series.
+
 # Difference here is that there is a customized option to use from the prev. section
 colour_theme_list_custom = list("Default Theme 1" = 'default1',
                                 "Default Theme 2" = 'default2',
@@ -54,3 +61,12 @@ dull_full = c("#EE4266", "#3cbbb1", "#b33c86", "#403f4c", "#0a0f0d", "#3185fc")
 lovelymei_full = c("#3800c2", "#676bf8", "#58887a", "#e69eb7", "#372f66", "#a2cda3")
 jackin_execute_full = c("#0092d6", "#212c57", "#f85210", "#ffc710", "#0092d6", "#da1a1a")
 
+default_legend_position_list = list("Bottom Right" = "bottomright", 
+                                    "Bottom" = "bottom", 
+                                    "Bottom Left" = "bottomleft", 
+                                    "Left" = "left", 
+                                    "Top Left" = "topleft", 
+                                    "Top" = "top", 
+                                    "Top Right" = "topright", 
+                                    "Right" = "right",
+                                    "Center" = "center")

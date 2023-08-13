@@ -12,8 +12,10 @@ SECT3.2_SEED_COPT = reactive({
   }
 })
 
+# Inferences for the AUC #######################################
+
 sect3.2_AUC_prior = reactive({
-  set.seed(SECT3.2_SEED()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  set.seed(SECT3.2_SEED()) 
   finite_val_prior(condition = input$finite_val_condition,
                    resample = sect3.2_resample(),
                    nMonteCarlo = input$finite_val_nMonteCarlo,
@@ -22,7 +24,7 @@ sect3.2_AUC_prior = reactive({
 })
 
 sect3.2_AUC_post = reactive({
-  set.seed(SECT3.2_SEED()) # seeing what happens when we always set the seed...
+  set.seed(SECT3.2_SEED()) 
   finite_val_post(condition = input$finite_val_condition,
                   resample = sect3.2_resample(),
                   nMonteCarlo = input$finite_val_nMonteCarlo, 
@@ -41,7 +43,7 @@ sect3.2_AUC_RBR = reactive({
 sect3.2_pr = reactive({
   compute_AUC_plausible_region(delta = input$finite_val_delta, 
                                AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR)
-}) # Short for plausible region
+})
 
 sect3.2_AUC_post_content = reactive({
   compute_AUC_post_content(delta = input$finite_val_delta, 
@@ -56,10 +58,13 @@ sect3.2_cr = reactive({
                               AUC_post = sect3.2_AUC_post()$AUC, 
                               posterior_content = sect3.2_AUC_post_content(), 
                               plausible_region = sect3.2_pr()$plausible_region)
-}) # Short for credible region
+}) 
+
+################################################################
+# Inferences for the Cutoff ####################################
 
 sect3.2_AUC_prior_copt = reactive({
-  set.seed(SECT3.2_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  set.seed(SECT3.2_SEED_COPT()) 
   if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_prior(condition = sect3.2_copt_condition(), #input$finite_val_condition,
                           resample = sect3.2_resample_copt(), #sect3.2_resample(),
@@ -84,7 +89,7 @@ sect3.2_AUC_prior_copt = reactive({
 })
 
 sect3.2_AUC_post_copt = reactive({
-  set.seed(SECT3.2_SEED_COPT()) # seeing what happens when we always set the seed...
+  set.seed(SECT3.2_SEED_COPT()) 
   if(input$finite_val_diag_case1 == 1){
     simulate_AUC_mc_post(condition = sect3.2_copt_condition(), #input$finite_val_condition,
                          resample = sect3.2_resample_copt(), #sect3.2_resample(),
@@ -148,7 +153,7 @@ sect3.2_copt_est_hardcode = reactive({
 })
 
 sect3.2_copt_prior = reactive({
-  set.seed(SECT3.2_SEED_COPT()) # seeing what happens when we always set the seed...
+  set.seed(SECT3.2_SEED_COPT()) 
   if(input$finite_val_diag_case1 == 1){
     AUC_prior_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                               nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
@@ -179,7 +184,7 @@ sect3.2_copt_prior = reactive({
 })
 
 sect3.2_copt_post = reactive({
-  set.seed(SECT3.2_SEED_COPT()) # seeing what happens when we always set the seed...
+  set.seed(SECT3.2_SEED_COPT()) 
   if(input$finite_val_diag_case1 == 1){
     AUC_post_error_char_copt(c_optfDfND = sect3.2_copt_est_hardcode(), #sect3.2_AUC_RBR()$c_optfDfND, 
                              nMonteCarlo = sect3.2_copt_nMonteCarlo(), #input$finite_val_nMonteCarlo, 
@@ -261,7 +266,6 @@ sect3.2_lineplot_area = reactive({
 })
 
 
-# Previous
 sect3.2_hypo_test = reactive({
   RBR_hypo = hypothesized_AUC_compute_values(hypo_AUC = 0.5, #input$finite_val_hypoAUC, 
                                              delta = input$finite_val_delta,

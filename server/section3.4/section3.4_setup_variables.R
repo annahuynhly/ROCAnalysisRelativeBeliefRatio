@@ -146,7 +146,7 @@ nonpara_bayes_df = reactive({
   diseased = df[, 2]
   diseased = diseased[!is.na(diseased)]
   
-  list("nondiseased" = nondiseased, # switch this back, seeing if it is a bug...
+  list("nondiseased" = nondiseased, 
        "diseased" = diseased)
 })
 
@@ -167,7 +167,7 @@ nonpara_bayes_df_alt = reactive({
   diseased = df[, 2]
   diseased = diseased[!is.na(diseased)]
   
-  list("nondiseased" = nondiseased, # switch this back, seeing if it is a bug...
+  list("nondiseased" = nondiseased, 
        "diseased" = diseased)
 })
 
@@ -195,7 +195,7 @@ sect3.4_copt_nonpara_bayes_nondiseased_vector = reactive({
 ################################################################
 
 sect3.4_AUC_prior_copt_youden = reactive({
-  set.seed(SECT3.4_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  set.seed(SECT3.4_SEED_COPT()) 
   if(input$nonpara_bayes_case1 == 1){
     nonpara_bayes_AUC_prior_copt(w = 1/2,
                                  alpha1w = NA, 
@@ -224,7 +224,7 @@ sect3.4_AUC_prior_copt_youden = reactive({
 })
 
 sect3.4_AUC_post_copt_youden = reactive({
-  set.seed(SECT3.4_SEED_COPT()) # SETTING THE SEED -> STARTING AT THE PRIOR CASE
+  set.seed(SECT3.4_SEED_COPT()) 
   if(input$nonpara_bayes_case1 == 1){
     nonpara_bayes_AUC_post_copt(w = 1/2, 
                                 alpha1w = NA, 

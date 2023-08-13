@@ -310,6 +310,10 @@ binormal_diag_plots = div(
                   choices = colour_theme_list, 
                   selected = 'default'
       ),
+      selectInput(inputId = "binormal_diag_AUC_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       conditionalPanel(
         condition = "input.binormal_diag_colour == 'manual'",
         selectInput(inputId = "binormal_diag_modify_colour",
@@ -459,6 +463,10 @@ binormal_diag_AUC_inferences = div(
                     choices = colour_theme_list_custom, 
                     selected = 'default'
         ),
+        selectInput(inputId = "binormal_diag_inferences_legend_position",
+                    label = "Select the position of the legends",
+                    choices = default_legend_position_list,
+                    selected = "topleft"),
         conditionalPanel(
           condition = "input.binormal_diag_inferences_colour == 'manual'",
           selectInput(inputId = "binormal_diag_inferences_modify_colour",
@@ -549,6 +557,10 @@ binormal_diag_copt_plots = div(
                   choices = colour_theme_list_custom,
                   selected = 'default'
       ),      
+      selectInput(inputId = "binormal_diag_c_opt_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       selectInput(inputId = "binormal_diag_c_opt_modify",
                   label = "Select which object to modify",
                   choices = output_line_list,
@@ -660,6 +672,10 @@ binormal_diag_cutoff_plots = div(
                   choices = colour_theme_list_custom,
                   selected = 'default'
       ),      
+      selectInput(inputId = "binormal_diag_cutoff_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       selectInput(inputId = "binormal_diag_cutoff_modify",
                   label = "Select which object to modify",
                   choices = output_line_list,
@@ -756,10 +772,6 @@ binormal_diag_cutoff_plots = div(
     )
   )
 )
-
-
-
-
 
 
 ################################################################

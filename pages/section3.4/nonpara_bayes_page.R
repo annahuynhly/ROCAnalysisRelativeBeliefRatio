@@ -331,6 +331,10 @@ nonpara_bayes_plots = div(
                   choices = colour_theme_list, 
                   selected = 'default'
       ),
+      selectInput(inputId = "nonpara_bayes_AUC_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       conditionalPanel(
         condition = "input.nonpara_bayes_colour == 'manual'",
         selectInput(inputId = "nonpara_bayes_modify_colour",
@@ -442,6 +446,10 @@ nonpara_bayes_copt_plots = div(
                   choices = colour_theme_list_custom,
                   selected = 'default'
       ),      
+      selectInput(inputId = "nonpara_bayes_c_opt_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       conditionalPanel(
         condition = "input.nonpara_bayes_c_opt_carry_colour == 'manual'",
         selectInput(inputId = "nonpara_bayes_c_opt_modify",

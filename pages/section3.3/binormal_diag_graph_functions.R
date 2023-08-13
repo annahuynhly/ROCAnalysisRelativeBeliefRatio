@@ -6,7 +6,8 @@ binormal_diag_prior_post_graph = function(condition,
                                           delta, prior, post, 
                                           colour_choice = c("blue", "green"),
                                           lty_type = c(2, 2),
-                                          transparency = 0.1){
+                                          transparency = 0.1,
+                                          legend_position = "topleft"){
   # This generates the graph for the prior and the posterior of the AUC (binom val diag case.)
   # colour choice goes in the following order: prior, posterior, plausible region, 
   # and credible region.
@@ -38,7 +39,7 @@ binormal_diag_prior_post_graph = function(condition,
           alpha = transparency), border = NA)
   #original colours: green rgb(146/255, 255/255, 133/255, alpha = 0.3) 
   # blue rgb(133/255, 198/255, 255/255, alpha = 0.3)
-  legend("topleft", legend = c("Prior", "Posterior"), lwd = 2, 
+  legend(legend_position, legend = c("Prior", "Posterior"), lwd = 2, 
          col = c(colour_choice[1], colour_choice[2]), 
          lty = c(lty_type[1], lty_type[2]))
 }
@@ -48,7 +49,8 @@ binormal_diag_rbr_graph = function(condition,
                                    rb_line = FALSE, 
                                    colour_choice = c("red", "royalblue1", "#81ddff"),
                                    lty_type = c(2, 2, 3),
-                                   transparency = 0.1){
+                                   transparency = 0.1,
+                                   legend_position = "topleft"){
   # This generates the graph for the rbr of the AUC from the binormal valued diagnostic.
   # colour choice goes in the following order: relative belief ratio, plausible region,
   # line of y = 1, credible region.
@@ -82,12 +84,12 @@ binormal_diag_rbr_graph = function(condition,
   if (typeof(rb_line) == "double") { 
     abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[3])
     rgb_cr = col2rgb(colour_choice[3])
-    legend("topleft", legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
+    legend(legend_position, legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
            lwd = 2, 
            col = c(colour_choice[1], colour_choice[3], colour_choice[2]), 
            lty = c(lty_type[1], lty_type[3], lty_type[2]))
   } else {
-    legend("topleft", legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
+    legend(legend_position, legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
            col = c(colour_choice[1], colour_choice[2]), 
            lty = c(lty_type[1], lty_type[2]))
   }
@@ -101,7 +103,8 @@ binormal_diag_plots_AUC_copt = function(delta, prior = FALSE,
                                         colour_choice = c("blue", "red", "green", "royalblue1",
                                                           "#81ddff"),
                                         transparency = 0.1,
-                                        main_title){
+                                        main_title,
+                                        legend_position = "topleft"){
   # Colour choice order: prior, posterior, rbr, plausible region, rb line, credible region
   grid = open_bracket_grid(delta)
   # TYPE 1: GRAPH OF PRIOR AND POSTERIOR
@@ -121,7 +124,7 @@ binormal_diag_plots_AUC_copt = function(delta, prior = FALSE,
     polygon(grid, force_bounds_0(prior), 
             col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, 
             alpha = transparency), border = NA)
-    legend("topleft", legend = c("Prior", "Posterior"), lwd = 2, 
+    legend(legend_position, legend = c("Prior", "Posterior"), lwd = 2, 
            col = c(colour_choice[1], colour_choice[2]), 
            lty = c(lty_type[1], lty_type[2]))
     
@@ -142,12 +145,12 @@ binormal_diag_plots_AUC_copt = function(delta, prior = FALSE,
     # Checking if a credible region exists
     if (typeof(rb_line) == "double") { 
       abline(h = rb_line, col = colour_choice[5], lwd = 2, lty = lty_type[5])
-      legend("topleft", legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
+      legend(legend_position, legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
              lwd = 2, 
              col = c(colour_choice[3], colour_choice[5], colour_choice[4]), 
              lty = c(lty_type[3], lty_type[5], lty_type[4]))
     } else {
-      legend("topleft", legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
+      legend(legend_position, legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
              col = c(colour_choice[3], colour_choice[4]), 
              lty = c(lty_type[3], lty_type[4]))
     }
@@ -160,7 +163,8 @@ binormal_diag_err_char_plots = function(delta,
                                         err_type, 
                                         prior_lty = 2, post_lty = 1, rbr_lty = 6,
                                         colour_choice = c("blue", "red", "green"),
-                                        transparency = 0.1){
+                                        transparency = 0.1,
+                                        legend_position = "topleft"){
   # err_type can either be FNR, FPR, Error, FDR, FNDR
   grid = open_bracket_grid(delta)
   if((typeof(prior_vals) == "double") & (typeof(post_vals) == "double")){
@@ -182,7 +186,7 @@ binormal_diag_err_char_plots = function(delta,
     polygon(grid, force_bounds_0(prior_vals),
             col = rgb(rgb_prior[1]/255, rgb_prior[2]/255, rgb_prior[3]/255, 
             alpha = transparency), border = NA)
-    legend("topleft", legend = c("Prior", "Posterior"), 
+    legend(legend_position, legend = c("Prior", "Posterior"), 
            col = c(colour_choice[1], colour_choice[2]), lwd = 2,
            lty = c(prior_lty, post_lty))
   } else if(typeof(rbr_vals) == "double"){
@@ -198,7 +202,7 @@ binormal_diag_err_char_plots = function(delta,
     
     abline(h = 1, col = colour_choice[1], lwd = 2, lty = prior_lty)
     
-    legend("topleft", legend = c("Relative Belief Ratio", "RBR = 1"), 
+    legend(legend_position, legend = c("Relative Belief Ratio", "RBR = 1"), 
            col = c(colour_choice[3], colour_choice[1]), lwd = 2, 
            lty = c(prior_lty, rbr_lty))
   }

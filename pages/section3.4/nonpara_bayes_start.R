@@ -97,6 +97,8 @@ page_nonpara_bayes_start = fluidPage(
       ),
     ),
     mainPanel(
+      p("WARNING: the following section will not work unless you upload the information for the 'Inferences for 
+    the AUC' page."),
       getting_started_default_description_3
     )
   ),

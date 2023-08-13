@@ -81,6 +81,8 @@ output$finite_val_optimal_cutoff = renderPrint({
 # HISTOGRAMS                                                   #
 ################################################################
 
+# Denoting Colours #############################################
+
 finite_val_colours = reactive({
   # Total order of ALL colours: prior, posterior, relative belief ratio, 
   # plausible region, y = 1 line, credible region, 
@@ -124,6 +126,8 @@ finite_val_copt_colours = reactive({
   }
 })
 
+# Denoting line type ###########################################
+
 sect3.2_prior_post_lty = reactive({
   c(as.numeric(input$finite_val_lty_prior),
     as.numeric(input$finite_val_lty_post))
@@ -135,6 +139,8 @@ sect3.2_rbr_lty = reactive({
     as.numeric(input$finite_val_lty_cr))
 })
 
+# Denoting plots ###############################################
+
 output$finite_val_postprior_graph = renderPlot({
   if(check.numeric(input$finite_val_gamma) == FALSE){
     density_hist_AUC_prior_post(delta = input$finite_val_delta, 
@@ -144,7 +150,8 @@ output$finite_val_postprior_graph = renderPlot({
                                 showbars = showbarplots(),
                                 colour_choice = finite_val_colours()[c(1, 2)],
                                 lty_type = sect3.2_prior_post_lty(), 
-                                transparency = input$finite_val_col_transparency)
+                                transparency = input$finite_val_col_transparency,
+                                legend_position = input$finite_val_diag_AUC_legend_position)
     
   } else if (as.numeric(input$finite_val_gamma) >= sect3.2_AUC_post_content()){
     density_hist_AUC_prior_post(delta = input$finite_val_delta, 
@@ -154,7 +161,8 @@ output$finite_val_postprior_graph = renderPlot({
                                 showbars = showbarplots(),
                                 colour_choice = finite_val_colours()[c(1, 2)],
                                 lty_type = sect3.2_prior_post_lty(), 
-                                transparency = input$finite_val_col_transparency)
+                                transparency = input$finite_val_col_transparency,
+                                legend_position = input$finite_val_diag_AUC_legend_position)
   } else {
     density_hist_AUC_prior_post(delta = input$finite_val_delta, 
                                 AUC_prior = sect3.2_AUC_prior()$AUC, 
@@ -163,7 +171,8 @@ output$finite_val_postprior_graph = renderPlot({
                                 showbars = showbarplots(),
                                 colour_choice = finite_val_colours()[c(1, 2)],
                                 lty_type = sect3.2_prior_post_lty(), 
-                                transparency = input$finite_val_col_transparency)
+                                transparency = input$finite_val_col_transparency,
+                                legend_position = input$finite_val_diag_AUC_legend_position)
   }
 })
 
@@ -175,7 +184,8 @@ output$finite_val_RB_graph = renderPlot({
                          showbars = showbarplots(),
                          colour_choice = finite_val_colours()[c(3:5)],
                          lty_type = sect3.2_rbr_lty(), 
-                         transparency = input$finite_val_col_transparency)
+                         transparency = input$finite_val_col_transparency,
+                         legend_position = input$finite_val_diag_AUC_legend_position)
   } else if (as.numeric(input$finite_val_gamma) >= sect3.2_AUC_post_content()){
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
@@ -183,7 +193,8 @@ output$finite_val_RB_graph = renderPlot({
                          showbars = showbarplots(),
                          colour_choice = finite_val_colours()[c(3:5)],
                          lty_type = sect3.2_rbr_lty(), 
-                         transparency = input$finite_val_col_transparency)
+                         transparency = input$finite_val_col_transparency,
+                         legend_position = input$finite_val_diag_AUC_legend_position)
   } else {
     density_hist_AUC_RBR(delta = input$finite_val_delta, 
                          AUC_RBR = sect3.2_AUC_RBR()$AUC_RBR, 
@@ -192,21 +203,26 @@ output$finite_val_RB_graph = renderPlot({
                          showbars = showbarplots(),
                          colour_choice = finite_val_colours()[c(3:5)],
                          lty_type = sect3.2_rbr_lty(), 
-                         transparency = input$finite_val_col_transparency)
+                         transparency = input$finite_val_col_transparency,
+                         legend_position = input$finite_val_diag_AUC_legend_position)
   }
 })
+
+# Denoting plots for the Cutoff ################################
 
 output$finite_val_postprior_copt_graph = renderPlot({
   plots_AUC_copt(priorc_opt = sect3.2_AUC_prior_copt()$priorc_opt, 
                  postc_opt = sect3.2_AUC_post_copt()$postc_opt,
                  prior_label = as.numeric(input$finite_val_priorc_opt_label), 
                  post_label = as.numeric(input$finite_val_postc_opt_label),
-                 colour_choice = finite_val_copt_colours())
+                 colour_choice = finite_val_copt_colours(),
+                 legend_position = input$finite_val_diag_c_opt_legend_position)
 })
 output$finite_val_RB_copt_graph = renderPlot({
   plots_AUC_copt(RBc_opt = sect3.2_AUC_RBR_copt()$RBc_opt,
                  rb_label = as.numeric(input$finite_val_rbc_opt_label),
-                 colour_choice = finite_val_copt_colours())
+                 colour_choice = finite_val_copt_colours(),
+                 legend_position = input$finite_val_diag_c_opt_legend_position)
 })
 
 

@@ -39,6 +39,10 @@ binormal_diag_prevalence_plots = div(
                   choices = colour_theme_list, 
                   selected = 'default1'
       ),
+      selectInput(inputId = "binormal_diag_prevalence_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       conditionalPanel(
         condition = "input.binormal_diag_prevalence_colour == 'manual'",
         selectInput(inputId = "binormal_diag_prevalence_modify_colour",
@@ -184,6 +188,10 @@ binormal_diag_prevalence_relative_belief_plot_of_w0 = div(
                   label = 'Select colour theme', 
                   choices = colour_theme_list, 
                   selected = 'default1'),
+      selectInput(inputId = "binormal_diag_prevalence_legend_position_w0",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       conditionalPanel(
         condition = "input.binormal_diag_diag_prevalence_colour_w0 == 'manual'",
         selectInput(inputId = "binormal_diag_diag_prevalence_modify_colour_w0",
@@ -267,7 +275,7 @@ binormal_diag_prevalence_download = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "binormal_diag_prevalence_filename", 
-                label = "Input File Name", 
+                label = "Input file name", 
                 value = "Prior Post RBR of W"
       ),
       downloadButton("binormal_diag_prevalence_downloadData", "Download"),

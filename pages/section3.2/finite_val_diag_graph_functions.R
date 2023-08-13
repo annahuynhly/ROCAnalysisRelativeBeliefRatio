@@ -58,7 +58,8 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post,
                                        showbars = FALSE, 
                                        colour_choice = c("#FF6666", "#6699FF"),
                                        lty_type = c(2, 2),
-                                       transparency = 0.2){
+                                       transparency = 0.2,
+                                       legend_position = "topleft"){
   # order: prior, post
   bins = closed_bracket_grid(delta)
   
@@ -97,7 +98,7 @@ density_hist_AUC_prior_post = function(delta, AUC_prior, AUC_post,
   hist_prior = hist(AUC_prior, prob = TRUE, breaks = bins, xlab="AUC", ylab="Density",
                     col = prior_hist_col, border = "#ffffff", add = TRUE)
   
-  legend("topleft", legend = c("Prior", "Posterior"), 
+  legend(legend_position, legend = c("Prior", "Posterior"), 
         lwd = 2,
         col = c(prior_line_col, post_line_col),
         lty = c(lty_type[1], lty_type[2]), inset = 0.02, cex = 0.8)
@@ -115,7 +116,8 @@ density_hist_AUC_RBR = function(delta, AUC_RBR,
                                 colour_choice = c("#05DEB2", 
                                                   "#3333FF", "#5b10a7"),
                                 lty_type = c(2, 2, 3),
-                                transparency = 0.2){
+                                transparency = 0.2,
+                                legend_position = "topleft"){
   # Order of colours: RBR, y = 1 line, credible line
   bins = closed_bracket_grid(delta)
   
@@ -147,7 +149,7 @@ density_hist_AUC_RBR = function(delta, AUC_RBR,
   
   if(typeof(rb_line) == "double"){
     abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[3])
-    legend("topleft", 
+    legend(legend_position, 
            legend = c("Relative Belief Ratio", "Credible Region Line",
                       "RBR = 1"), 
            lwd = 2, 
@@ -155,7 +157,7 @@ density_hist_AUC_RBR = function(delta, AUC_RBR,
            lty = c(lty_type[1], lty_type[3], lty_type[2]), inset = 0.02, cex = 0.8)
     
   } else {
-    legend("topleft", 
+    legend(legend_position, 
            legend = c("Relative Belief Ratio", "RBR = 1"), 
            lwd = 2, 
            col = c(colour_choice[1], colour_choice[2]), 
@@ -165,7 +167,8 @@ density_hist_AUC_RBR = function(delta, AUC_RBR,
 
 plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE,
                           prior_label = 3, post_label = 4, rb_label = 8,
-                          colour_choice = c("red", "blue", "#16957C")){
+                          colour_choice = c("red", "blue", "#16957C"),
+                          legend_position = "topright"){
   if((typeof(priorc_opt) == "double") & (typeof(postc_opt) == "double")){
     if(length(priorc_opt) != length(postc_opt)){
       return("Error: length of priorc_opt and postc_opt are not the same.")
@@ -177,7 +180,7 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
     #points(1:m,postc_opt, pch=post_label, lwd = 2, col = colour_choice[2])
     lines(1:m, postc_opt, pch = post_label, col = colour_choice[2], type = "b", lwd = 2)
     
-    legend("topright", legend = c("Prior", "Posterior"),
+    legend(legend_position, legend = c("Prior", "Posterior"),
            lwd = 2, cex = 1.2, col = c(colour_choice[1], colour_choice[2]), 
            pch = c(prior_label, post_label), lty = c(NA, NA))
     
@@ -186,7 +189,7 @@ plots_AUC_copt = function(priorc_opt = FALSE, postc_opt = FALSE, RBc_opt = FALSE
     plot(1:m, RBc_opt, type = "b", xlab="X", ylab="Relative Belief Ratio", pch = rb_label, lwd = 2,
          col = colour_choice[3],
          main = "Plot of the Relative Belief Ratio of the Cutoff")
-    legend("topright", legend = c("Relative Belief Ratio"),
+    legend(legend_position, legend = c("Relative Belief Ratio"),
            lwd = 2, cex = 1.2, col = c(colour_choice[3]), 
            pch = c(rb_label), lty = c(NA))
   }

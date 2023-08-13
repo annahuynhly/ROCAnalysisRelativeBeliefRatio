@@ -41,7 +41,8 @@ sect3.2_prevalence_cred_region = reactive({
                           plausible_region = sect3.2_prevalence_info_1()$plausible_region)
 })
 
-# This is for the prior case only
+# For: a sample of nD from diseased and nND from non-diseased ##
+
 sect3.2_prevalence_prior = reactive({
   prior_compute_values(alpha1w = input$finite_val_diag_prevalence_alpha1w,
                        alpha2w = input$finite_val_diag_prevalence_alpha2w, 
@@ -80,6 +81,8 @@ output$finite_val_diag_prevalence_prior_values = renderPrint({
 ################################################################
 # PLOTS                                                        #
 ################################################################
+
+# Denoting colours #############################################
 
 sect3.2_prevalence_colours = reactive({
   # Total order of ALL colours: prior, posterior, relative belief ratio, y = 1 line,
@@ -123,6 +126,8 @@ sect3.2_prevalence_w0_colours = reactive({
   }
 })
 
+# Denoting line type ###########################################
+
 sect3.2_prevalence_prior_post_lty = reactive({
   c(as.numeric(input$finite_val_diag_prevalence_lty_prior),
     as.numeric(input$finite_val_diag_prevalence_lty_post))
@@ -140,6 +145,8 @@ sect3.2_prevalence_w0_lty = reactive({
     as.numeric(input$finite_val_diag_prevalence_lty_interval))
 })
 
+# Denoting graphs ##############################################
+
 output$finite_val_diag_prevalence_postprior_graph = renderPlot({
   if(check.numeric(input$finite_val_diag_prevalence_gamma) == FALSE){
     generate_prior_post_graph(prior = sect3.2_prevalence_info_1()$prior, 
@@ -147,7 +154,8 @@ output$finite_val_diag_prevalence_postprior_graph = renderPlot({
                               grid = sect3.2_prevalence_grid(),
                               colour_choice = sect3.2_prevalence_colours()[c(1, 2)],
                               lty_type = sect3.2_prevalence_prior_post_lty(),
-                              transparency = input$finite_val_diag_prevalence_col_transparency)
+                              transparency = input$finite_val_diag_prevalence_col_transparency,
+                              legend_position = input$finite_val_diag_prevalence_legend_position)
   } else if (as.numeric(input$finite_val_diag_prevalence_gamma) >= sect3.2_prevalence_info_1()$posterior_content){
     # Couldn't do the or statement for if because of the case where you can't do
     # as.numeric() for input$gamma
@@ -155,14 +163,16 @@ output$finite_val_diag_prevalence_postprior_graph = renderPlot({
                               grid = sect3.2_prevalence_grid(),
                               colour_choice = sect3.2_prevalence_colours()[c(1, 2)],
                               lty_type = sect3.2_prevalence_prior_post_lty(),
-                              transparency = input$finite_val_diag_prevalence_col_transparency)
+                              transparency = input$finite_val_diag_prevalence_col_transparency,
+                              legend_position = input$finite_val_diag_prevalence_legend_position)
   } else {
     generate_prior_post_graph(prior = sect3.2_prevalence_info_1()$prior, 
                               post = sect3.2_prevalence_info_1()$post, 
                               grid = sect3.2_prevalence_grid(),
                               colour_choice = sect3.2_prevalence_colours()[c(1, 2)],
                               lty_type = sect3.2_prevalence_prior_post_lty(),
-                              transparency = input$finite_val_diag_prevalence_col_transparency)
+                              transparency = input$finite_val_diag_prevalence_col_transparency,
+                              legend_position = input$finite_val_diag_prevalence_legend_position)
   }
 })
 
@@ -172,20 +182,23 @@ output$finite_val_diag_prevalence_RB_graph = renderPlot({
                        grid = sect3.2_prevalence_grid(),
                        colour_choice = sect3.2_prevalence_colours()[c(3:5)],
                        lty_type = sect3.2_prevalence_rbr_lty(),
-                       transparency = input$finite_val_diag_prevalence_col_transparency)
+                       transparency = input$finite_val_diag_prevalence_col_transparency,
+                       legend_position = input$finite_val_diag_prevalence_legend_position)
   } else if (as.numeric(input$finite_val_diag_prevalence_gamma) >= sect3.2_prevalence_info_1()$posterior_content){
     generate_rbr_graph(relative_belief_ratio = sect3.2_prevalence_info_1()$relative_belief_ratio, 
                        grid = sect3.2_prevalence_grid(),
                        colour_choice = sect3.2_prevalence_colours()[c(3:5)],
                        lty_type = sect3.2_prevalence_rbr_lty(),
-                       transparency = input$finite_val_diag_prevalence_col_transparency)
+                       transparency = input$finite_val_diag_prevalence_col_transparency,
+                       legend_position = input$finite_val_diag_prevalence_legend_position)
   } else {
     generate_rbr_graph(relative_belief_ratio = sect3.2_prevalence_info_1()$relative_belief_ratio, 
                        grid = sect3.2_prevalence_grid(),
                        rb_line = sect3.2_prevalence_cred_region()$rb_line,
                        colour_choice = sect3.2_prevalence_colours()[c(3:5)],
                        lty_type = sect3.2_prevalence_rbr_lty(),
-                       transparency = input$finite_val_diag_prevalence_col_transparency)
+                       transparency = input$finite_val_diag_prevalence_col_transparency,
+                       legend_position = input$finite_val_diag_legend_position)
   }
 })
 
@@ -197,10 +210,12 @@ output$finite_val_diag_prevalence_w0_graph = renderPlot({
     grid = sect3.2_prevalence_grid(),
     colour_choice = sect3.2_prevalence_w0_colours(),
     lty_type = sect3.2_prevalence_w0_lty(),
-    transparency = input$finite_val_diag_prevalence_col_transparency_w0)
+    transparency = input$finite_val_diag_prevalence_col_transparency_w0,
+    legend_position = input$finite_val_diag_prevalence_legend_position_w0)
 })
 
-# This is for the prior case only
+# For: a sample of nD from diseased and nND from non-diseased ## 
+
 output$finite_val_diag_prevalence_post_graph_alt = renderPlot({
   if(input$finite_val_diag_prevalence_colour_1 != 'manual'){
     generate_prior_graph(prior = sect3.2_prevalence_prior(), 
@@ -242,7 +257,8 @@ output$finite_val_diag_prevalence_downloadData <- downloadHandler(
   }
 )
 
-# This is for the prior only case
+# For: a sample of nD from diseased and nND from non-diseased ## 
+
 finite_val_diag_prevalence_download_prior = reactive({
   RB_generate_priorframe(grid = sect3.2_prevalence_grid(),
                          prior = sect3.2_prevalence_prior())

@@ -1,5 +1,5 @@
 ################################################################
-# DESCRIPTION                                                  #
+# SETUP VARIABLES & PICKING SAMPLING REGIME                    #
 ################################################################
 
 finite_val_setup_variables = div(
@@ -211,9 +211,8 @@ finite_val_setup_variables_alt = div(
   br(style = "line-height:10;"),
 )
 
-
 ################################################################
-# OUTPUT FOR THE AUC                                           #
+# PAGE FOR INFERENCES FOR THE AUC                              #
 ################################################################
 
 finite_val_AUCinferences = div( 
@@ -241,9 +240,8 @@ finite_val_AUCinferences = div(
   br(style = "line-height:2;"),
 )
 
-
 ################################################################
-# OUTPUT 2 PAGE                                                #
+# PAGE FOR INFERENCES OF THE OPTIMAL CUTOFF                    #
 ################################################################
 
 finite_val_plausible_region = div( 
@@ -270,7 +268,7 @@ finite_val_plausible_region = div(
 )
 
 ################################################################
-# GRAPH 1 PAGE (HISTOGRAM)                                     #
+# HISTOGRAM FOR THE AUC                                        #
 ################################################################
 
 finite_val_plots = div( 
@@ -287,6 +285,10 @@ finite_val_plots = div(
                   choices = colour_theme_list, 
                   selected = 'default'
       ),
+      selectInput(inputId = "finite_val_diag_AUC_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       conditionalPanel(
         condition = "input.finite_val_colour == 'manual'",
         selectInput(inputId = "finite_val_modify_colour",
@@ -380,7 +382,7 @@ finite_val_plots = div(
 )
 
 ################################################################
-# GRAPH 2 PAGE                                                 #
+# GRAPHS FOR THE OPTIMAL CUTOFF                                #
 ################################################################
 
 finite_val_copt_plots = div( 
@@ -391,7 +393,11 @@ finite_val_copt_plots = div(
                   label = "Select a colour theme",
                   choices = colour_theme_list_custom,
                   selected = 'default'
-      ),      
+      ),
+      selectInput(inputId = "finite_val_diag_c_opt_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       selectInput(inputId = "finite_val_c_opt_modify",
                   label = "Select which object to modify",
                   choices = list("Prior" = 'prior',
@@ -463,7 +469,7 @@ finite_val_copt_plots = div(
 
 
 ################################################################
-# DOWNLOAD PAGE                                                #
+# PAGE FOR DOWNLOADING VALUES                                  #
 ################################################################
 
 finite_val_download_1 = div( 

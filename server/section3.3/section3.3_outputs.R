@@ -270,7 +270,8 @@ output$binormal_diag_postprior_graph = renderPlot({
                                    post = postAUCdensity_smo, #sect3.3_AUC_post()$postAUCdensity, 
                                    colour_choice = binormal_diag_colours()[c(1, 2)],
                                    lty_type = sect3.3_prior_post_lty(),
-                                   transparency = input$binormal_diag_col_transparency)
+                                   transparency = input$binormal_diag_col_transparency,
+                                   legend_position = input$binormal_diag_AUC_legend_position)
   } else if (input$binormal_case == "unequal_var"){
     priorAUCdensity_smo = average_vector_values(sect3.3_AUC_prior_unequal()$priorAUCdensity, 
                                                 input$binormal_diag_smoother)
@@ -282,7 +283,8 @@ output$binormal_diag_postprior_graph = renderPlot({
                                    post = postAUCdensity_smo, #sect3.3_AUC_post_unequal()$postAUCdensity, 
                                    colour_choice = binormal_diag_colours()[c(1, 2)],
                                    lty_type = sect3.3_prior_post_lty(),
-                                   transparency = input$binormal_diag_col_transparency) 
+                                   transparency = input$binormal_diag_col_transparency,
+                                   legend_position = input$binormal_diag_AUC_legend_position)
   }
 })
 
@@ -294,7 +296,8 @@ output$binormal_diag_RB_graph = renderPlot({
                             rb_line = binormal_diag_rb_line_AUC(),
                             colour_choice = binormal_diag_colours()[c(3:5)],
                             lty_type = sect3.3_rbr_lty(),
-                            transparency = input$binormal_diag_col_transparency)
+                            transparency = input$binormal_diag_col_transparency,
+                            legend_position = input$binormal_diag_AUC_legend_position)
   } else if (input$binormal_case == "unequal_var"){
     binormal_diag_rbr_graph(condition = sect3.3_condition(),
                             delta = input$binormal_diag_delta,
@@ -302,7 +305,8 @@ output$binormal_diag_RB_graph = renderPlot({
                             rb_line = binormal_diag_rb_line_AUC_unequal(),
                             colour_choice = binormal_diag_colours()[c(3:5)],
                             lty_type = sect3.3_rbr_lty(),
-                            transparency = input$binormal_diag_col_transparency)
+                            transparency = input$binormal_diag_col_transparency,
+                            legend_position = input$binormal_diag_AUC_legend_position)
   }
 })
 
@@ -364,7 +368,8 @@ output$binormal_diag_postprior_cmod_graph = renderPlot({
                                lty_type = binormal_diag_lty_types_copt(),
                                colour_choice = binormal_diag_copt_colours(),
                                transparency = input$binormal_diag_c_opt_col_transparency,
-                               main_title = "Plot of the Prior and the Posterior of Cmod")
+                               main_title = "Plot of the Prior and the Posterior of Cmod",
+                               legend_position = input$binormal_diag_c_opt_legend_position)
 })
 
 output$binormal_diag_RB_cmod_graph = renderPlot({
@@ -375,7 +380,8 @@ output$binormal_diag_RB_cmod_graph = renderPlot({
                                  lty_type = binormal_diag_lty_types_copt(),
                                  colour_choice = binormal_diag_copt_colours(),
                                  transparency = input$binormal_diag_c_opt_col_transparency,
-                                 main_title = "Plot of the Relative Belief Ratio of Cmod")
+                                 main_title = "Plot of the Relative Belief Ratio of Cmod",
+                                 legend_position = input$binormal_diag_c_opt_legend_position)
   } else if (sect3.3_copt_case() == "unequal_var"){
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
                                  RBR = sect3.3_AUC_RBR_copt_unequal()$RBcmod, 
@@ -383,7 +389,8 @@ output$binormal_diag_RB_cmod_graph = renderPlot({
                                  lty_type = binormal_diag_lty_types_copt(),
                                  colour_choice = binormal_diag_copt_colours(),
                                  transparency = input$binormal_diag_c_opt_col_transparency,
-                                 main_title = "Plot of the Relative Belief Ratio of Cmod")
+                                 main_title = "Plot of the Relative Belief Ratio of Cmod",
+                                 legend_position = input$binormal_diag_c_opt_legend_position)
   }
 })
 
@@ -409,7 +416,8 @@ output$binormal_diag_postprior_cutoff_graph = renderPlot({
                                lty_type = binormal_diag_lty_types_cutoff(),
                                colour_choice = binormal_diag_cutoff_colours(),
                                transparency = input$binormal_diag_cutoff_col_transparency,
-                               main_title = "Plot of the Prior and the Posterior of the Cutoff")
+                               main_title = "Plot of the Prior and the Posterior of the Cutoff",
+                               legend_position = input$binormal_diag_cutoff_legend_position)
 })
 
 output$binormal_diag_RB_cutoff_graph = renderPlot({
@@ -420,7 +428,8 @@ output$binormal_diag_RB_cutoff_graph = renderPlot({
                                  lty_type = binormal_diag_lty_types_cutoff(),
                                  colour_choice = binormal_diag_cutoff_colours(),
                                  transparency = input$binormal_diag_cutoff_col_transparency,
-                                 main_title = "Plot of the Relative Belief Ratio of the Cutoff")
+                                 main_title = "Plot of the Relative Belief Ratio of the Cutoff",
+                                 legend_position = input$binormal_diag_cutoff_legend_position)
   } else if (sect3.3_copt_case() == "unequal_var"){
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
                                  RBR = sect3.3_AUC_RBR_copt_unequal()$RBcutoff, 
@@ -428,7 +437,8 @@ output$binormal_diag_RB_cutoff_graph = renderPlot({
                                  lty_type = binormal_diag_lty_types_cutoff(),
                                  colour_choice = binormal_diag_cutoff_colours(),
                                  transparency = input$binormal_diag_cutoff_col_transparency,
-                                 main_title = "Plot of the Relative Belief Ratio of the Cutoff")
+                                 main_title = "Plot of the Relative Belief Ratio of the Cutoff",
+                                 legend_position = input$binormal_diag_cutoff_legend_position)
   }
 })
 
@@ -451,7 +461,8 @@ output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
                                  prior_lty = as.numeric(input$binormal_diag_lty_inferences_prior), 
                                  post_lty = as.numeric(input$binormal_diag_lty_inferences_post),
                                  colour_choice = binormal_diag_inferences_colours(), 
-                                 transparency = input$binormal_diag_inferences_col_transparency)
+                                 transparency = input$binormal_diag_inferences_col_transparency,
+                                 legend_position = input$binormal_diag_inferences_legend_position)
   } else if (sect3.3_copt_case() == "unequal_var"){
     prior_vals_smo = average_vector_values(binormal_diag_err_char_plot_type_unequal()$prior, 
                                            input$binormal_diag_smoother_inferences)
@@ -465,7 +476,8 @@ output$binormal_diag_inf_opt_cutoff_plot1 = renderPlot({
                                  prior_lty = as.numeric(input$binormal_diag_lty_inferences_prior), 
                                  post_lty = as.numeric(input$binormal_diag_lty_inferences_post),
                                  colour_choice = binormal_diag_inferences_colours(), 
-                                 transparency = input$binormal_diag_inferences_col_transparency)
+                                 transparency = input$binormal_diag_inferences_col_transparency,
+                                 legend_position = input$binormal_diag_inferences_legend_position)
   }
 })
 
@@ -476,14 +488,16 @@ output$binormal_diag_inf_opt_cutoff_plot2 = renderPlot({
                                  err_type = input$binormal_diag_inferences_plot_type, 
                                  rbr_lty = as.numeric(input$binormal_diag_lty_inferences_rbr),
                                  colour_choice = binormal_diag_inferences_colours(), 
-                                 transparency = input$binormal_diag_inferences_col_transparency)
+                                 transparency = input$binormal_diag_inferences_col_transparency,
+                                 legend_position = input$binormal_diag_inferences_legend_position)
   } else if (sect3.3_copt_case() == "unequal_var"){
     binormal_diag_err_char_plots(delta = sect3.3_copt_delta(),
                                  rbr_vals = binormal_diag_err_char_plot_type_unequal()$RBR, 
                                  err_type = input$binormal_diag_inferences_plot_type, 
                                  rbr_lty = as.numeric(input$binormal_diag_lty_inferences_rbr),
                                  colour_choice = binormal_diag_inferences_colours(), 
-                                 transparency = input$binormal_diag_inferences_col_transparency)
+                                 transparency = input$binormal_diag_inferences_col_transparency,
+                                 legend_position = input$binormal_diag_inferences_legend_position)
   }
 })
 

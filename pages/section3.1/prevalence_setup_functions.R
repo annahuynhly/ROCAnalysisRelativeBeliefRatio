@@ -135,7 +135,8 @@ w0_compute_values = function(alpha1w, alpha2w, n, nD, w0, relative_belief_ratio,
 generate_prior_post_graph = function(prior, post, grid,
                                      colour_choice = c("blue", "green"),
                                      lty_type = c(2, 2),
-                                     transparency = 0.1){
+                                     transparency = 0.1,
+                                     legend_position = "topleft"){
   # This generates the graph for the prior and the posterior of the prevalence.
   # colour choice goes in the following order: prior, posterior..
   
@@ -167,7 +168,7 @@ generate_prior_post_graph = function(prior, post, grid,
   #original colours: green rgb(146/255, 255/255, 133/255, alpha = 0.3) 
   # blue rgb(133/255, 198/255, 255/255, alpha = 0.3)
   
-  legend("topleft", legend = c("Prior", "Posterior"), lwd = 2, 
+  legend(legend_position, legend = c("Prior", "Posterior"), lwd = 2, 
           col = c(colour_choice[1], colour_choice[2]), 
           lty = c(lty_type[1], lty_type[2]))
 }
@@ -196,7 +197,8 @@ generate_rbr_graph = function(relative_belief_ratio, grid,
                               rb_line = FALSE, 
                               colour_choice = c("red", "royalblue1", "#81ddff"),
                               lty_type = c(2, 3, 3),
-                              transparency = 0.1){
+                              transparency = 0.1,
+                              legend_position = "bottomleft"){
   # This generates the graph for the relative belief ratio of the prevalence.
   # colour choice goes in the following order: relative belief ratio, line of y = 1, cr line
   
@@ -216,12 +218,12 @@ generate_rbr_graph = function(relative_belief_ratio, grid,
   if (typeof(rb_line) == "double") { 
     abline(h = rb_line, col = colour_choice[3], lwd = 2, lty = lty_type[3])
     rgb_cr = col2rgb(colour_choice[3])
-    legend("bottomleft", legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
+    legend(legend_position, legend = c("Relative Belief Ratio", "Credible Region Line", "RBR = 1"), 
            lwd = 2, 
            col = c(colour_choice[1], colour_choice[3], colour_choice[2]), 
            lty = c(lty_type[1], lty_type[3], lty_type[2]))
   } else {
-    legend("topleft", legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
+    legend(legend_position, legend = c("Relative Belief Ratio", "RBR = 1"), lwd = 2, 
            col = c(colour_choice[1], colour_choice[2]), 
            lty = c(lty_type[1], lty_type[2]))
   }
@@ -234,7 +236,8 @@ generate_relative_belief_ratio_at_w0_graph = function(relative_belief_ratio,
                                                       colour_choice = c("red", "navy", 
                                                                         "#7c83e8", "#996DEC"),
                                                       lty_type = c(2, 2, 3),
-                                                      transparency = 0.1){
+                                                      transparency = 0.1,
+                                                      legend_position = "topleft"){
   # order of items: rbr, rbr at w0, bounds, area of strength
   
   # note: the following interval assumes there are breaks (for now):
@@ -252,7 +255,7 @@ generate_relative_belief_ratio_at_w0_graph = function(relative_belief_ratio,
   
   str_col = col2rgb(colour_choice[4])
   
-  legend("topleft", legend = c("Relative Belief Ratio", "Relative Belief Ratio of w0", 
+  legend(legend_position, legend = c("Relative Belief Ratio", "Relative Belief Ratio of w0", 
                                "Interval", "Strength (Area)"), 
          lwd = c(2, 2, 2, 2), 
          col = c(colour_choice[1], colour_choice[2], colour_choice[3], 

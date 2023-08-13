@@ -35,6 +35,10 @@ finite_val_diag_prevalence_plots = div(
                   label = 'Select colour theme', 
                   choices = colour_theme_list, 
                   selected = 'default1'),
+      selectInput(inputId = "finite_val_diag_prevalence_legend_position",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       conditionalPanel(
         condition = "input.finite_val_diag_prevalence_colour == 'manual'",
         selectInput(inputId = "finite_val_diag_prevalence_modify_colour",
@@ -178,6 +182,10 @@ finite_val_diag_prevalence_relative_belief_plot_of_w0 = div(
                   label = 'Select colour theme', 
                   choices = colour_theme_list, 
                   selected = 'default1'),
+      selectInput(inputId = "finite_val_diag_prevalence_legend_position_w0",
+                  label = "Select the position of the legends",
+                  choices = default_legend_position_list,
+                  selected = "topleft"),
       conditionalPanel(
         condition = "input.finite_val_diag_prevalence_colour_w0 == 'manual'",
         selectInput(inputId = "finite_val_diag_prevalence_modify_colour_w0",
@@ -262,7 +270,7 @@ finite_val_diag_prevalence_download = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "finite_val_diag_prevalence_filename", 
-                label = "Input File Name", 
+                label = "Input file name", 
                 value = "Prior Post RBR of W"
       ),
       downloadButton("finite_val_diag_prevalence_downloadData", "Download"),
