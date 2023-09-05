@@ -175,14 +175,15 @@ sect3.3_AUC_RBR_copt = reactive({
   priorcmod_smo = average_vector_values(sect3.3_AUC_prior_copt()$priorcmod, 
                                         input$binormal_diag_smoother_copt)
   priorcopt_smo = average_vector_values(sect3.3_AUC_prior_copt()$priorcopt, 
-                                        input$binormal_diag_smoother_cutoff)
+                                        input$binormal_diag_smoother_copt)
+                                        #input$binormal_diag_smoother_cutoff)
   postcmod_smo = average_vector_values(sect3.3_AUC_post_copt()$postcmod, 
                                        input$binormal_diag_smoother_copt)
   postcopt_smo = average_vector_values(sect3.3_AUC_post_copt()$postcopt, 
-                                       input$binormal_diag_smoother_cutoff)
+                                       #input$binormal_diag_smoother_cutoff)
+                                       input$binormal_diag_smoother_copt)
   #list(#"priorcmod" = priorcmod_smo, "postcmod" = postcmod_smo#,
-  #     "priorcopt" = priorcopt_smo, "postcopt" = postcopt_smo
-  #)
+  #     "priorcopt" = priorcopt_smo, "postcopt" = postcopt_smo)
   binormal_diag_RBR_copt(delta = sect3.3_copt_delta(), 
                          priorcmod = priorcmod_smo, #sect3.3_AUC_prior_copt()$priorcmod, 
                          postcmod = postcmod_smo, #sect3.3_AUC_post_copt()$postcmod)

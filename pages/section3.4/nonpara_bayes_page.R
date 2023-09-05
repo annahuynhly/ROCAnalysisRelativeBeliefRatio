@@ -8,11 +8,11 @@ nonpara_bayes_setup_variables_1 = div(
     sidebarPanel(
       width = 3,
       numericInput(inputId = "nonpara_bayes_seed",
-                   label = "Please select a seed for the computations.",
+                   label = "Please select a seed for the computations",
                    value = 1),
       selectInput(inputId = "nonpara_bayes_condition",
                   label = "Select whether to use the conditional (given AUC>1/2) 
-                  or unconditional prior.",
+                  or unconditional prior",
                   choices = list("Conditional" = 'cond',
                                  "Unconditional" = 'uncond'),
                   selected = 'cond'
@@ -134,16 +134,16 @@ nonpara_bayes_setup_variables_2 = div(
       
       selectInput(inputId = "nonpara_bayes_optimal_cutoff_denote_copt",
                   label = "How would you like to select the cutoff?",
-                  choice = c("Find the cutoff copt minimizing Error(c)." = "no", 
-                             "Find the cutoff maximizing Youden's index." = "youden",
-                             #"Find the cutoff minimizing distance to (0, 1)." = "distance", 
-                             "Specify the cutoff." = "yes"),
+                  choice = c("Find the cutoff copt minimizing Error(c)" = "no", 
+                             "Find the cutoff maximizing Youden's index" = "youden",
+                             #"Find the cutoff minimizing distance to (0, 1)" = "distance", 
+                             "Specify the cutoff" = "yes"),
                   selected = "no"
       ),
       conditionalPanel(
         condition = "input.nonpara_bayes_optimal_cutoff_denote_copt == 'yes'",
         numericInput(inputId = "nonpara_bayes_optimal_cutoff_copt",
-                     label = 'Input the copt estimate.',
+                     label = 'Input the copt estimate',
                      value = 0.15), 
       ),
       
@@ -158,7 +158,7 @@ nonpara_bayes_setup_variables_2 = div(
         condition = "input.nonpara_bayes_optimal_cutoff_denote_variables == 'no'",
         
         numericInput(inputId = "nonpara_bayes_seed_copt",
-                     label = "Please select a seed for the computations.",
+                     label = "Please select a seed for the computations",
                      value = 1),
         
         selectizeInput(
@@ -432,9 +432,9 @@ nonpara_bayes_copt_plots = div(
     sidebarPanel(
       width = 3,
       selectInput(inputId = "nonpara_bayes_plot_type",
-                  label = "Select the type of plot.",
-                  choices = list("Copt" = "copt",
-                                 "Cmod" = "cmod"),
+                  label = "Select the type of plot",
+                  choices = list("Optimal Cutoff" = "copt",
+                                 "Optimal Cutoff (Modified)" = "cmod"),
                   selected = 'copt'
       ),
       sliderInput(inputId = "nonpara_bayes_smoother_copt", 
@@ -544,6 +544,7 @@ nonpara_bayes_copt_plots = div(
           )
         )
       ),
+      htmlOutput("nonpara_bayes_optimal_cutoff_type_description"),
     )
   )
 )
@@ -558,7 +559,7 @@ nonpara_bayes_download_1 = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
                  textInput(inputId = "nonpara_bayes_filename", 
-                           label = "Input File Name", 
+                           label = "Input file name", 
                            value = "AUC Values"),
                  downloadButton("nonpara_bayes_downloadData", "Download"),
     ),

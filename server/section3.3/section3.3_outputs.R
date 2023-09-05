@@ -62,14 +62,11 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                          sect3.3_AUC_RBR_error_char_copt()$FDRest,
                          sect3.3_AUC_RBR_error_char_copt()$FNDRest)
     colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-    list2 = list(#"Cutoff Estimate" = sect3.3_copt_est_hardcode(), #sect3.3_AUC_RBR_copt()$coptest,
+    list2 = list(
          "Plausible Region for the Cutoff" = copt_transform(sect3.3_AUC_RBR_copt()$plausible_region),
          "Credible Region for the Cutoff" = copt_transform(sect3.3_cr_copt()$credible_region),
-    #     #"Cmod Estimate" = sect3.3_AUC_RBR_copt()$cmodest,
-    #     #"Plausible Region for Cmod" = sect3.3_AUC_RBR_copt()$plausible_region,
-    #     #"Posterior Content of the Plausible Region for Cmod" = sect3.3_AUC_RBR_copt()$postPlcmod,
-    #     #"Credible Region for Cmod" = sect3.3_cr_copt()$credible_region,
-          "Error Characteristics" = temp_df)
+         "Error Characteristics" = temp_df
+    )
   } else if (sect3.3_copt_case() == "unequal_var"){
     # BELOW REPRESENTS ACTUAL CODE
     temp_df = data.frame(sect3.3_AUC_RBR_error_char_copt_unequal()$FNRest,
@@ -78,13 +75,9 @@ output$binormal_diag_inf_opt_cutoff = renderPrint({
                          sect3.3_AUC_RBR_error_char_copt_unequal()$FDRest,
                          sect3.3_AUC_RBR_error_char_copt_unequal()$FNDRest)
     colnames(temp_df) = c("FNRest", "FPRest", "Errorest", "FDRest", "FNDRest")
-    list2 = list(#"Cutoff Estimate" = sect3.3_copt_est_hardcode_unequal(), #sect3.3_AUC_RBR_copt_unequal()$coptest,
+    list2 = list(
          "Plausible Region for the Cutoff" = copt_transform(sect3.3_AUC_RBR_copt_unequal()$plausible_region),
          "Credible Region for the Cutoff" = copt_transform(sect3.3_cr_copt_unequal()$credible_region),
-         #"Cmod Estimate" = sect3.3_AUC_RBR_copt_unequal()$cmodest,
-         #"Plausible Region for Cmod" = sect3.3_AUC_RBR_copt_unequal()$plausible_region,
-         #"Posterior Content of the Plausible Region for Cmod" = sect3.3_AUC_RBR_copt_unequal()$postPlcmod,
-         #"Credible Region for Cmod" = sect3.3_cr_copt_unequal()$credible_region,
          "Error Characteristics" = temp_df)
   }
   c(list1, list2)
@@ -411,6 +404,7 @@ output$binormal_diag_postprior_cutoff_graph = renderPlot({
                                          input$binormal_diag_smoother_cutoff)
   }
   binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                               cutoff_plot = TRUE,
                                prior = priorcopt_smo,
                                post = postcopt_smo,
                                lty_type = binormal_diag_lty_types_cutoff(),
@@ -423,6 +417,7 @@ output$binormal_diag_postprior_cutoff_graph = renderPlot({
 output$binormal_diag_RB_cutoff_graph = renderPlot({
   if (sect3.3_copt_case() == "equal_var"){
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                                 cutoff_plot = TRUE,
                                  RBR = sect3.3_AUC_RBR_copt()$RBcutoff, 
                                  rb_line = binormal_diag_rb_line_AUC_cmod(),
                                  lty_type = binormal_diag_lty_types_cutoff(),
@@ -432,6 +427,7 @@ output$binormal_diag_RB_cutoff_graph = renderPlot({
                                  legend_position = input$binormal_diag_cutoff_legend_position)
   } else if (sect3.3_copt_case() == "unequal_var"){
     binormal_diag_plots_AUC_copt(delta = sect3.3_copt_delta(),
+                                 cutoff_plot = TRUE,
                                  RBR = sect3.3_AUC_RBR_copt_unequal()$RBcutoff, 
                                  rb_line = binormal_diag_rb_line_AUC_cmod_unequal(),
                                  lty_type = binormal_diag_lty_types_cutoff(),

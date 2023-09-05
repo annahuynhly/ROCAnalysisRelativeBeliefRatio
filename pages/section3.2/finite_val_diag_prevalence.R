@@ -154,7 +154,7 @@ finite_val_diag_prevalence_plot_alt = div(
       conditionalPanel(
         condition = "input.finite_val_diag_prevalence_colour_1 == 'manual'",
         textInput(inputId = "finite_val_diag_prevalence_colour_2",
-                  label = 'Input the hex colour code.',
+                  label = 'Input the hex colour code',
                   value = "AC2DE2"
         ),
       ),
@@ -288,7 +288,7 @@ finite_val_diag_prevalence_download_alt = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "finite_val_diag_prevalence_filename_alt", 
-                label = "Input File Name", 
+                label = "Input file name", 
                 value = "Prior Of W"
       ),
       downloadButton("finite_val_diag_prevalence_downloadData_alt", "Download"),

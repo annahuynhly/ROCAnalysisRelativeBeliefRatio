@@ -17,18 +17,18 @@ binormal_diag_setup_variables_1 = div(
     sidebarPanel(
       width = 3, 
       numericInput(inputId = "binormal_diag_seed",
-                   label = "Please select a seed for the computations.",
+                   label = "Please select a seed for the computations",
                    value = 1
       ),
       selectInput(inputId = "binormal_case", 
-                  label = "Please select the scenario.",
+                  label = "Please select the scenario",
                   choices = c("Assume variances are equal" = "equal_var", 
                             "Assume variances are unequal" = "unequal_var"),
                   selected = "equal_var"
       ),
       selectInput(inputId = "binormal_diag_condition",
                   label = "Select whether to use the conditional (given AUC>1/2) 
-                  or unconditional prior.",
+                  or unconditional prior",
                   choices = list("Conditional" = 'cond',
                                  "Unconditional" = 'uncond'),
                   selected = 'uncond'
@@ -129,17 +129,17 @@ binormal_diag_setup_variables_2 = div(
       width = 3, 
       selectInput(inputId = "binormal_optimal_cutoff_denote_copt",
                   label = "How would you like to select the cutoff?",
-                  choice = c("Find the cutoff minimizing Error(c)." = "no", 
-                             "Find the cutoff maximizing Youden's index." = "youden",
-                             #"Find the cutoff minimizing distance to (0, 1)." = "distance", 
-                             "Specify the cutoff." = "yes"),
+                  choice = c("Find the cutoff minimizing Error(c)" = "no", 
+                             "Find the cutoff maximizing Youden's index" = "youden",
+                             #"Find the cutoff minimizing distance to (0, 1)" = "distance", 
+                             "Specify the cutoff" = "yes"),
                   selected = "no"
       ),
       
       conditionalPanel(
         condition = "input.binormal_optimal_cutoff_denote_copt == 'yes'",
         numericInput(inputId = "binormal_diag_optimal_cutoff_copt",
-                     label = 'Input the copt estimate.',
+                     label = 'Input the copt estimate',
                      value = 0.715), 
       ),
       selectInput(inputId = "binormal_optimal_cutoff_denote_variables", 
@@ -157,12 +157,12 @@ binormal_diag_setup_variables_2 = div(
       conditionalPanel(
         condition = "input.binormal_optimal_cutoff_denote_variables == 'no'",
         numericInput(inputId = "binormal_diag_seed_copt",
-                     label = "Please select a seed for the computations.",
+                     label = "Please select a seed for the computations",
                      value = 1
         ),
         
         selectInput(inputId = "binormal_case_alt", 
-                    label = "Please select the scenario.",
+                    label = "Please select the scenario",
                     choices = c("Assume variances are equal" = "equal_var", 
                                 "Assume variances are unequal" = "unequal_var"),
                     selected = "equal_var"),
@@ -409,7 +409,7 @@ binormal_diag_download_1 = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "binormal_diag_filename", 
-                label = "Input File Name", 
+                label = "Input file name", 
                 value = "AUC Values"
       ),
       downloadButton("binormal_diag_downloadData", "Download"),
@@ -431,7 +431,7 @@ binormal_diag_AUC_inferences = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       selectInput(inputId = "binormal_diag_inferences", 
-                  label = "Please select what you would like to view.",
+                  label = "Please select what you would like to view",
                   choices = c("View Results" = "results", 
                                "View Plots" = "plots"),
                   selected = "results"),
@@ -450,7 +450,7 @@ binormal_diag_AUC_inferences = div(
                     min = 1, max = 49, value = 3, step = 2
         ),
         selectInput(inputId = "binormal_diag_inferences_plot_type",
-                    label = 'Select which plot to view.',
+                    label = 'Select which plot to view',
                     choices = list("FNR" = 'FNR',
                                    "FPR" = 'FPR',
                                    "Error" = 'Error',
@@ -543,8 +543,11 @@ binormal_diag_AUC_inferences = div(
 # GRAPHS FOR CMOD DENSITY                                      #
 ################################################################
 
+cmod_description = p("The optimal cutoff (modified) is represented as $c_{mod} = 0.5 + arctan(c_{opt})/\\pi \\in [0, 1]$,
+        which is the cauchy cdf. We modified $c_{opt}$ since these distributions can be extremely long-tailed.")
+
 binormal_diag_copt_plots = div( 
-  titlePanel("Plots for Cmod"), 
+  titlePanel("Plots for the Optimal Cutoff (Modified)"), 
   sidebarLayout(
     sidebarPanel(
       width = 3,
@@ -654,10 +657,12 @@ binormal_diag_copt_plots = div(
           )
         )
       ),
+      cmod_description
     )
   )
 )
 
+# Note: not shown since it appears odd.
 binormal_diag_cutoff_plots = div( 
   titlePanel("Plots for the Optimal Cutoff"), 
   sidebarLayout(
@@ -793,7 +798,7 @@ page_binormal_diag_inference2 = div(
   tabsetPanel(type = "tabs",
               tabPanel("Setup Values", binormal_diag_setup_variables_2),
               tabPanel("Inferences for the Optimal Cutoff", binormal_diag_AUC_inferences),
-              tabPanel("Plots for the Optimal Cutoff", binormal_diag_cutoff_plots),
-              tabPanel("Plots for Cmod", binormal_diag_copt_plots)
+              #tabPanel("Plots for the Optimal Cutoff", binormal_diag_cutoff_plots),
+              tabPanel("Plots for Optimal Cutoff (Modified)", binormal_diag_copt_plots)
   )
 )

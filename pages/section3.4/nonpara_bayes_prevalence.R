@@ -158,7 +158,7 @@ nonpara_bayes_prevalence_plot_alt = div(
       conditionalPanel(
         condition = "input.nonpara_bayes_prevalence_colour_1 == 'manual'",
         textInput(inputId = "nonpara_bayes_prevalence_colour_2",
-                  label = 'Input the hex colour code.',
+                  label = 'Input the hex colour code',
                   value = "AC2DE2"
         ),
       ),
@@ -292,7 +292,7 @@ nonpara_bayes_prevalence_download_alt = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "nonpara_bayes_prevalence_filename_alt", 
-                label = "Input File Name", 
+                label = "Input file name", 
                 value = "Prior Of W"),
       downloadButton("nonpara_bayes_prevalence_downloadData_alt", "Download"),
     ),

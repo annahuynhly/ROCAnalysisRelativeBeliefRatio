@@ -95,7 +95,9 @@ binormal_diag_rbr_graph = function(condition,
   }
 }
 
-binormal_diag_plots_AUC_copt = function(delta, prior = FALSE, 
+binormal_diag_plots_AUC_copt = function(delta,
+                                        cutoff_plot = FALSE,
+                                        prior = FALSE, 
                                         post = FALSE,
                                         RBR = FALSE,
                                         rb_line = FALSE,
@@ -106,7 +108,11 @@ binormal_diag_plots_AUC_copt = function(delta, prior = FALSE,
                                         main_title,
                                         legend_position = "topleft"){
   # Colour choice order: prior, posterior, rbr, plausible region, rb line, credible region
+  # note: cutoff_plot indicates whether the plot is for the cutoff instead of cmod.
   grid = open_bracket_grid(delta)
+  if(cutoff_plot == TRUE){
+    grid = tan(pi*(grid- 1/2))
+  }
   # TYPE 1: GRAPH OF PRIOR AND POSTERIOR
   if((typeof(prior) == "double") & (typeof(post) == "double")){
     #Graph of posterior

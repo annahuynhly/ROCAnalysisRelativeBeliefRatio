@@ -282,20 +282,27 @@ binormal_diag_prior_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA,
   c = 0.5*(muD + muND_copt)+(sigmaD**2)*(log((1 - pre_w)/pre_w))/(muD - muND_copt) 
   
   cmod = (pi/2 + atan(c))/pi 
-  cmodmax = max(cmod) 
-  cmodmin = min(cmod) 
+  derivative_cmod = 1/pi * (1/(1+c^2))
+
   priorcmod = rep(0,L) 
+  priorderivative_cmod = rep(0, L)
   
   for (iMonteprior in 1:nMonteprior) {
     for (igrid in 1:L){
-      if ( (A[igrid] < cmod[iMonteprior]) & (cmod[iMonteprior] <= A[igrid+1]) ) {
+      if ((A[igrid] < cmod[iMonteprior]) & (cmod[iMonteprior] <= A[igrid+1]) ) {
         priorcmod[igrid] = priorcmod[igrid] + priorimpwt[iMonteprior]
+      }
+      if ((A[igrid] < derivative_cmod[iMonteprior]) & (derivative_cmod[iMonteprior] <= A[igrid+1]) ) {
+        priorderivative_cmod[igrid] =  priorderivative_cmod[igrid] + priorimpwt[iMonteprior]
       }
     }
   }
   
   priorcmod = priorcmod/sum(priorcmod) 
-  priorcopt = tan(pi*priorcmod-pi/2) # trying to get the cutoff
+  priorderivative_cmod = priorderivative_cmod/sum(priorderivative_cmod)
+  priorcopt = priorcmod * priorderivative_cmod
+  #priorcopt = tan(pi*(priorcmod - 1/2)) * priorderivative_cmod
+  #priorcopt = priorcopt * (1/(pi * (1+priorcopt^2)))
   priorcmoddensity = L*priorcmod 
   
   newlist = list("priorcmod" = priorcmod, "priorcmoddensity" = priorcmoddensity,
@@ -323,22 +330,28 @@ binormal_diag_post_copt = function(w = FALSE, alpha1w = NA, alpha2w = NA, nND = 
   muNDpost_copt = mu0NDpost + tau0ND*sigmaNDpost*qnorm(postimpwt*U) 
   
   c = 0.5*(muDpost + muNDpost_copt) + (sigmaDpost**2)*(log((1-pre_w)/pre_w))/(muDpost-muNDpost_copt) 
-  cmod = (pi/2 + atan(c))/pi 
-  cmodmax = max(cmod) 
-  cmodmin = min(cmod) 
+  cmod = (pi/2 + atan(c))/pi
+  derivative_cmod = 1/pi * (1/(1+c^2))
   
   postcmod = rep(0,L)
+  postderivative_cmod = rep(0, L)
   
   for (iMontepost in 1:nMontepost) {
     for (igrid in 1:L){
-      if ( (A[igrid] < cmod[iMontepost]) & (cmod[iMontepost] <= A[igrid+1]) ) {
+      if ( (A[igrid] < cmod[iMontepost]) & (cmod[iMontepost] <= A[igrid+1])) {
         postcmod[igrid] = postcmod[igrid] + postimpwt[iMontepost] 
+      }
+      if ((A[igrid] < derivative_cmod[iMontepost]) & (derivative_cmod[iMontepost] <= A[igrid+1])) {
+        postderivative_cmod[igrid] = postderivative_cmod[igrid] + postimpwt[iMontepost] 
       }
     }
   }
   
   postcmod = postcmod/sum(postcmod)
-  postcopt = tan(pi*postcmod-pi/2)
+  postderivative_cmod = postderivative_cmod/sum(postderivative_cmod)
+  postcopt = postcmod * postderivative_cmod
+  #postcopt = tan(pi*(postcmod - 1/2)) * postderivative_cmod
+  #postcopt = postcopt * (1/(pi * (1+postcopt^2)))
   postcmoddensity = L*postcmod
   
   newlist = list("postcmod" = postcmod, "postcmoddensity" = postcmoddensity, 

@@ -159,7 +159,7 @@ binormal_diag_prevalence_plot_alt = div(
       conditionalPanel(
         condition = "input.binormal_diag_prevalence_colour_1 == 'manual'",
         textInput(inputId = "binormal_diag_prevalence_colour_2",
-                  label = 'Input the hex colour code.',
+                  label = 'Input the hex colour code',
                   value = "AC2DE2"
         ),
       ),
@@ -293,7 +293,7 @@ binormal_diag_prevalence_download_alt = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "binormal_diag_prevalence_filename_alt", 
-                label = "Input File Name", 
+                label = "Input file name", 
                 value = "Prior Of W"
       ),
       downloadButton("binormal_diag_prevalence_downloadData_alt", "Download"),

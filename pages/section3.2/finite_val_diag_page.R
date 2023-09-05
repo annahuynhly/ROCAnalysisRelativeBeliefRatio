@@ -8,12 +8,12 @@ finite_val_setup_variables = div(
     sidebarPanel(
       width = 3,
       numericInput(inputId = "finite_val_diag_seed",
-                   label = "Please select a seed for the computations.",
+                   label = "Please select a seed for the computations",
                    value = 1
       ),
       selectInput(inputId = "finite_val_condition",
                   label = "Select whether to use the conditional (given AUC>1/2) 
-                  or unconditional prior.",
+                  or unconditional prior",
                   choices = list("Conditional" = 'conditional',
                                  "Unconditional" = 'unconditional'),
                   selected = 'unconditional'
@@ -98,16 +98,16 @@ finite_val_setup_variables_alt = div(
       width = 3,
       selectInput(inputId = "finite_val_cutoff_denote_copt",
                   label = "How would you like to select the cutoff?",
-                  choice = c("Find the cutoff copt minimizing Error(c)." = "no", 
-                             "Find the cutoff maximizing Youden's index." = "youden",
-                             #"Find the cutoff minimizing distance to (0, 1)." = "distance", 
-                             "Specify the cutoff." = "yes"),
+                  choice = c("Find the cutoff copt minimizing Error(c)" = "no", 
+                             "Find the cutoff maximizing Youden's index" = "youden",
+                             #"Find the cutoff minimizing distance to (0, 1)" = "distance", 
+                             "Specify the cutoff" = "yes"),
                   selected = "no"
       ),
       conditionalPanel(
         condition = "input.finite_val_cutoff_denote_copt == 'yes'",
         numericInput(inputId = "finite_val_optimal_cutoff_copt",
-                     label = 'Input the copt estimate.',
+                     label = 'Input the copt estimate',
                      value = 2), 
       ),
       selectInput(inputId = "finite_val_optimal_cutoff_denote_variables", 
@@ -122,11 +122,11 @@ finite_val_setup_variables_alt = div(
         condition = "input.finite_val_optimal_cutoff_denote_variables == 'no'",
         # when the values are separate
         numericInput(inputId = "finite_val_diag_seed_copt",
-                     label = "Please select a seed for the computations.",
+                     label = "Please select a seed for the computations",
                      value = 1),
         
         selectInput(inputId = "finite_val_condition_alt",
-                    label = "Select whether to use the conditional or unconditional prior.",
+                    label = "Select whether to use the conditional or unconditional prior",
                     choices = list("Conditional" = 'conditional',
                                    "Unconditional" = 'unconditional'),
                     selected = 'unconditional'
@@ -477,7 +477,7 @@ finite_val_download_1 = div(
   sidebarLayout(
     sidebarPanel(width = 3, 
       textInput(inputId = "finite_val_filename", 
-                label = "Input File Name", 
+                label = "Input file name", 
                 value = "Finite Value Diag Values"),
       #radioButtons(inputId = "finite_val_choosefile", "Choose Which Data to Download",
       #             choices = list("Prior" = 1, "Posterior" = 2),

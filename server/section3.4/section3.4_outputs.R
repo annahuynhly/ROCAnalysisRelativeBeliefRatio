@@ -2,6 +2,14 @@
 # NUMERIC/TEXT OUTPUTS                                         #
 ################################################################
 
+output$nonpara_bayes_optimal_cutoff_type_description = renderUI({
+  if(input$nonpara_bayes_plot_type == "cmod"){
+    cmod_description
+  } else {
+    p("")
+  }
+})
+
 output$nonpara_bayes_hypoAUC_value = renderPrint({
   #nonpara_bayes_df()
   pr = sect3.4_AUC_RBR()$plausible_region
