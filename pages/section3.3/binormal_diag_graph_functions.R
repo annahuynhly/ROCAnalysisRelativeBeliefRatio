@@ -117,7 +117,7 @@ binormal_diag_plots_AUC_copt = function(delta,
   if((typeof(prior) == "double") & (typeof(post) == "double")){
     #Graph of posterior
     plot(grid, post, main = main_title, 
-         xlab = "cmod", ylab = "Prior and Posterior", type = "l", 
+         xlab = "Optimal Cutoff (Modified)", ylab = "Prior and Posterior", type = "l", 
          lty = lty_type[2], lwd = 2, col = colour_choice[2])
     # Graph of prior 
     lines(grid, prior, type = "l", lty = lty_type[1], lwd = 2, col = colour_choice[1])
@@ -138,7 +138,7 @@ binormal_diag_plots_AUC_copt = function(delta,
   } else if(typeof(RBR) == "double"){
     # Graph of the relative belief ratio
     plot(grid, RBR, main = main_title,
-         xlab = "cmod", ylab = expression("Relative Belief Ratio"), type = "l", 
+         xlab = "Optimal Cutoff (Modified)", ylab = expression("Relative Belief Ratio"), type = "l", 
          lty = lty_type[3], lwd = 2, col = colour_choice[3])
     # Fill & Transparency effect
     rgb_rbr = col2rgb(colour_choice[3])

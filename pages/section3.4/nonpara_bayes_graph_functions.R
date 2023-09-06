@@ -114,7 +114,7 @@ nonpara_bayes_plots_AUC_copt = function(grid, # used gridcopt
     title = paste("Plot of the Relative Belief Ratio of", str_to_title(x_title), sep = " ")
   
     plot(grid, rbr, main = title,
-         xlab="cmod", ylab=expression("Relative Belief Ratio"), type="l", 
+         xlab=x_title, ylab=expression("Relative Belief Ratio"), type="l", 
          lty = lty_type[3], lwd = 2, col = colour_choice[3])
     # Fill & Transparency effect
     rgb_rbr = col2rgb(colour_choice[3])

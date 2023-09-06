@@ -543,8 +543,10 @@ binormal_diag_AUC_inferences = div(
 # GRAPHS FOR CMOD DENSITY                                      #
 ################################################################
 
-cmod_description = p("The optimal cutoff (modified) is represented as $c_{mod} = 0.5 + arctan(c_{opt})/\\pi \\in [0, 1]$,
-        which is the cauchy cdf. We modified $c_{opt}$ since these distributions can be extremely long-tailed.")
+cmod_description = div(
+  p("The optimal cutoff (modified) is represented as $c_{mod} = 0.5 + arctan(c_{opt})/\\pi \\in [0, 1]$,
+     which is the cauchy cdf. We modified $c_{opt}$ since these distributions can be extremely long-tailed.")
+)
 
 binormal_diag_copt_plots = div( 
   titlePanel("Plots for the Optimal Cutoff (Modified)"), 

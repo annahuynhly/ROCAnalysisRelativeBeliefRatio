@@ -544,7 +544,7 @@ nonpara_bayes_copt_plots = div(
           )
         )
       ),
-      htmlOutput("nonpara_bayes_optimal_cutoff_type_description"),
+      tabPanel("type_description", htmlOutput("nonpara_bayes_optimal_cutoff_type_description")),
     )
   )
 )

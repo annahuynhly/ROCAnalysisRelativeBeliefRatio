@@ -3,11 +3,31 @@
 ################################################################
 
 output$nonpara_bayes_optimal_cutoff_type_description = renderUI({
-  if(input$nonpara_bayes_plot_type == "cmod"){
-    cmod_description
-  } else {
-    p("")
-  }
+  fluidPage(
+    tags$head(
+      tags$link(rel="stylesheet", 
+                href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css", 
+                integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ",
+                crossorigin="anonymous"),
+      HTML('<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>'),
+      HTML('<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>'),
+      HTML('
+      <script>
+        document.addEventListener("DOMContentLoaded", function(){
+          renderMathInElement(document.body, {
+            delimiters: [{left: "$", right: "$", display: false}]
+          });
+        })
+      </script>')
+    ),
+    withMathJax(),
+    if(input$nonpara_bayes_plot_type == "cmod"){
+      p("The optimal cutoff (modified) is represented as $$c_{mod} = 0.5 + arctan(c_{opt})/\\pi \\in [0, 1],$$
+     which is the cauchy cdf. We modified the optimal cutoff since these distributions can be extremely long-tailed.")
+    } else {
+      p("")
+    }
+  )
 })
 
 output$nonpara_bayes_hypoAUC_value = renderPrint({
@@ -303,7 +323,7 @@ output$nonpara_bayes_postprior_cmod_graph = renderPlot({
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
-                                 x_title = "cmod",
+                                 x_title = "Optimal Cutoff (Modified)",
                                  legend_position = input$nonpara_bayes_c_opt_legend_position)
   } else if (input$nonpara_bayes_plot_type == "copt"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
@@ -312,7 +332,7 @@ output$nonpara_bayes_postprior_cmod_graph = renderPlot({
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
-                                 x_title = "copt",
+                                 x_title = "Optimal Cutoff",
                                  legend_position = input$nonpara_bayes_c_opt_legend_position)
   }
 })
@@ -325,7 +345,7 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
-                                 x_title = "cmod",
+                                 x_title = "Optimal Cutoff (Modified)",
                                  legend_position = input$nonpara_bayes_c_opt_legend_position)
   } else if (input$nonpara_bayes_plot_type == "copt"){
     nonpara_bayes_plots_AUC_copt(grid = sect3.4_AUC_prior_copt()$gridcopt,
@@ -334,7 +354,7 @@ output$nonpara_bayes_RB_cmod_graph = renderPlot({
                                  lty_type = nonpara_bayes_lty_types_copt(),
                                  colour_choice = nonpara_bayes_copt_colours(),
                                  transparency = input$nonpara_bayes_c_opt_col_transparency,
-                                 x_title = "copt",
+                                 x_title = "Optimal Cutoff",
                                  legend_position = input$nonpara_bayes_c_opt_legend_position)
   }
 })
